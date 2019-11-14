@@ -30,13 +30,15 @@ import javax.inject.Inject;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.shared.EventBus;
 import elemental2.dom.DomGlobal;
+import org.drools.scenariosimulation.api.model.AbstractScesimData;
 import org.drools.scenariosimulation.api.model.AbstractScesimModel;
 import org.drools.scenariosimulation.api.model.AuditLog;
 import org.drools.scenariosimulation.api.model.Background;
+import org.drools.scenariosimulation.api.model.BackgroundData;
 import org.drools.scenariosimulation.api.model.BackgroundDataWithIndex;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.FactMappingType;
-import org.drools.scenariosimulation.api.model.Scenario;
+import org.drools.scenariosimulation.api.model.FactMappingValueStatus;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
 import org.drools.scenariosimulation.api.model.ScesimModelDescriptor;
@@ -369,13 +371,21 @@ public class ScenarioSimulationEditorPresenter {
         context.getStatus().setSimulation(simulation);
 
         // refresh background data
+        boolean hasBackgroundError = false;
         Background background = this.model.getBackground();
         for (BackgroundDataWithIndex backgroundDataWithIndex : newData.getBackgroundDataWithIndex()) {
             int index = backgroundDataWithIndex.getIndex() - 1;
-            background.replaceData(index, backgroundDataWithIndex.getScesimData());
+            BackgroundData scesimData = backgroundDataWithIndex.getScesimData();
+            background.replaceData(index, scesimData);
+            hasBackgroundError |= scesimData.getUnmodifiableFactMappingValues().stream().anyMatch(elem -> !FactMappingValueStatus.SUCCESS.equals(elem.getStatus()));
         }
         scenarioBackgroundGridWidget.refreshContent(background);
         context.getStatus().setBackground(background);
+
+        if (hasBackgroundError) {
+            eventBus.fireEvent(new ScenarioNotificationEvent(ScenarioSimulationEditorConstants.INSTANCE.backgroundErrorNotification(), NotificationEvent.NotificationType.ERROR));
+            selectBackgroundTab();
+        }
 
         scenarioSimulationDocksHandler.expandTestResultsDock();
         testRunnerReportingPanel.onTestRun(newData.getTestResultMessage());
@@ -510,8 +520,8 @@ public class ScenarioSimulationEditorPresenter {
 
     protected RemoteCallback<AbstractScesimModel> getImportCallBack() {
         return scesimModel -> {
+            cleanReadOnlyColumn(scesimModel);
             if (scesimModel instanceof Simulation) {
-                cleanReadOnlyColumn((Simulation) scesimModel);
                 model.setSimulation((Simulation) scesimModel);
                 scenarioMainGridWidget.setContent(model.getSimulation(), context.getSettings().getType());
                 context.getStatus().setSimulation(model.getSimulation());
@@ -563,16 +573,16 @@ public class ScenarioSimulationEditorPresenter {
 
     /**
      * Read only columns should not contains any values
-     * @param simulation
+     * @param abstractScesimModel
      */
-    protected void cleanReadOnlyColumn(Simulation simulation) {
-        ScesimModelDescriptor simulationDescriptor = simulation.getScesimModelDescriptor();
-        for (int i = 0; i < simulation.getUnmodifiableData().size(); i += 1) {
-            Scenario scenario = simulation.getDataByIndex(i);
-            for (FactMapping factMapping : simulationDescriptor.getUnmodifiableFactMappings()) {
+    protected void cleanReadOnlyColumn(AbstractScesimModel abstractScesimModel) {
+        ScesimModelDescriptor scesimModelDescriptor = abstractScesimModel.getScesimModelDescriptor();
+        for (int i = 0; i < abstractScesimModel.getUnmodifiableData().size(); i += 1) {
+            AbstractScesimData abstractScesimData = abstractScesimModel.getDataByIndex(i);
+            for (FactMapping factMapping : scesimModelDescriptor.getUnmodifiableFactMappings()) {
                 if (isColumnReadOnly(factMapping)) {
-                    scenario.getFactMappingValue(factMapping.getFactIdentifier(),
-                                                 factMapping.getExpressionIdentifier())
+                    abstractScesimData.getFactMappingValue(factMapping.getFactIdentifier(),
+                                                           factMapping.getExpressionIdentifier())
                             .ifPresent(fmv -> fmv.setRawValue(null));
                 }
             }

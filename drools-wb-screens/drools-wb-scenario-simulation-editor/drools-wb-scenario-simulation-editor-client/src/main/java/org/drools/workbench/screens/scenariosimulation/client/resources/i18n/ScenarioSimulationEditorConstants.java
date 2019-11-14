@@ -345,4 +345,6 @@ public interface ScenarioSimulationEditorConstants
     String backgroundTabTitle();
 
     String export();
+
+    String backgroundErrorNotification();
 }

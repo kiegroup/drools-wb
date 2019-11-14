@@ -25,12 +25,15 @@ import java.util.function.Supplier;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import com.google.gwtmockito.WithClassesToStub;
+import org.drools.scenariosimulation.api.model.AbstractScesimModel;
+import org.drools.scenariosimulation.api.model.Background;
 import org.drools.scenariosimulation.api.model.BackgroundData;
 import org.drools.scenariosimulation.api.model.BackgroundDataWithIndex;
 import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.FactMappingType;
+import org.drools.scenariosimulation.api.model.FactMappingValue;
 import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
@@ -883,6 +886,23 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         presenterSpy.getValidationCallback().callback(validationErrors);
         verify(confirmPopupPresenterMock, times(1)).show(anyString(), contains(errorId));
         verify(confirmPopupPresenterMock, times(1)).show(anyString(), contains(errorMessage));
+    }
+
+    @Test
+    public void getImportCallback() {
+        List<AbstractScesimModel> toTest = Arrays.asList(new Simulation(), new Background());
+
+        for (AbstractScesimModel abstractScesimModel : toTest) {
+            FactMapping factMapping = abstractScesimModel.getScesimModelDescriptor().addFactMapping(FactIdentifier.EMPTY, ExpressionIdentifier.create("empty", FactMappingType.GIVEN));
+            FactMappingValue toBeRemoved = abstractScesimModel.addData().addOrUpdateMappingValue(factMapping.getFactIdentifier(), factMapping.getExpressionIdentifier(), "toBeRemoved");
+
+            presenterSpy.getImportCallBack().callback(abstractScesimModel);
+
+            verify(presenterSpy, times(1)).cleanReadOnlyColumn(eq(abstractScesimModel));
+            assertNull(toBeRemoved.getRawValue());
+
+            reset(presenterSpy);
+        }
     }
 
     private SettingsPresenter getSettingsPresenterSpy() {
