@@ -164,10 +164,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         when(testToolsViewMock.getPresenter()).thenReturn(testToolsPresenterMock);
         when(testToolsActivityMock.getWidget()).thenReturn(testToolsViewMock);
         when(placeRequestMock.getPath()).thenReturn(pathMock);
-//        when(contextMock.getStatus()).thenReturn(statusMock);
-//        when(contextMock.getSettings()).thenReturn(scenarioSimulationContextLocal.getSettings());
-//        when(statusMock.getSimulation()).thenReturn(simulationMock);
-//        when(statusMock.getBackground()).thenReturn(backgroundMock);
         when(simulationMock.getUnmodifiableData()).thenReturn(Arrays.asList(new Scenario()));
         when(testRunnerReportingPanelMock.asWidget()).thenReturn(testRunnerReportingPanelWidgetMock);
 
@@ -411,16 +407,21 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     }
 
     @Test
-    public void setItemMenuForMainGridEnabled() {
-        presenterSpy.setItemMenuEnabled(false);
-        verify(importMenuItemMock, times(1)).setEnabled(eq(false));
-        verify(exportToCsvMenuItemMock, times(1)).setEnabled(eq(false));
-        verify(downloadMenuItemMock, times(1)).setEnabled(eq(false));
-        //
+    public void setItemMenuEnabledTRUE() {
         presenterSpy.setItemMenuEnabled(true);
+        verify(runScenarioMenuItemMock, times(1)).setEnabled(eq(true));
         verify(importMenuItemMock, times(1)).setEnabled(eq(true));
         verify(exportToCsvMenuItemMock, times(1)).setEnabled(eq(true));
         verify(downloadMenuItemMock, times(1)).setEnabled(eq(true));
+    }
+
+    @Test
+    public void setItemMenuEnabledFALSE() {
+        presenterSpy.setItemMenuEnabled(false);
+        verify(runScenarioMenuItemMock, times(1)).setEnabled(eq(false));
+        verify(importMenuItemMock, times(1)).setEnabled(eq(false));
+        verify(exportToCsvMenuItemMock, times(1)).setEnabled(eq(false));
+        verify(downloadMenuItemMock, times(1)).setEnabled(eq(false));
     }
 
     @Test
@@ -634,13 +635,11 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(simulationMock, times(1)).replaceData(eq(scenarioIndex), eq(scenario));
         assertEquals(scenarioSimulationModelMock, presenterSpy.getModel());
         verify(scenarioGridWidgetSpy, times(1)).refreshContent(eq(simulationMock));
-        // TODO {gcardosi} restore
-//        verify(statusMock, times(1)).setSimulation(eq(simulationMock));
+        assertEquals(scenarioSimulationContextLocal.getStatus().getSimulation(), simulationMock);
 
         verify(backgroundMock, times(1)).replaceData(eq(scenarioIndex), eq(backgroundData));
         verify(backgroundGridWidgetSpy, times(1)).refreshContent(eq(backgroundMock));
-        // TODO {gcardosi} restore
-//        verify(statusMock, times(1)).setBackground(eq(backgroundMock));
+        assertEquals(scenarioSimulationContextLocal.getStatus().getBackground(), backgroundMock);
 
         assertEquals(scenarioSimulationModelMock, presenterSpy.getModel());
         verify(scenarioSimulationDocksHandlerMock, times(1)).expandTestResultsDock();
@@ -671,7 +670,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Test
     public void onEditTabSelected() {
         presenterSpy.onEditTabSelected();
-        verify(runScenarioMenuItemMock, times(1)).setEnabled(eq(true));
         verify(presenterSpy, times(1)).populateRightDocks(eq(TestToolsPresenter.IDENTIFIER));
         verify(presenterSpy, times(1)).setItemMenuEnabled(eq(true));
         verify(scenarioGridWidgetSpy, times(1)).clearSelections();
@@ -682,7 +680,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Test
     public void onBackgroundTabSelected() {
         presenterSpy.onBackgroundTabSelected();
-        verify(runScenarioMenuItemMock, times(1)).setEnabled(eq(false));
         verify(backgroundGridWidgetSpy, times(1)).clearSelections();
         verify(backgroundGridWidgetSpy, times(1)).select();
         verify(scenarioGridWidgetSpy, times(1)).deselect();
@@ -693,7 +690,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Test
     public void onOverviewSelected() {
         presenterSpy.onOverviewSelected();
-        verify(runScenarioMenuItemMock, times(1)).setEnabled(eq(false));
         verify(presenterSpy, times(1)).setItemMenuEnabled(eq(false));
         verify(scenarioGridWidgetSpy, times(1)).clearSelections();
         verify(backgroundGridWidgetSpy, times(1)).clearSelections();
@@ -704,7 +700,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Test
     public void onImportsTabSelected() {
         presenterSpy.onImportsTabSelected();
-        verify(runScenarioMenuItemMock, times(1)).setEnabled(eq(false));
         verify(presenterSpy, times(1)).setItemMenuEnabled(eq(false));
         verify(scenarioGridWidgetSpy, times(1)).clearSelections();
         verify(backgroundGridWidgetSpy, times(1)).clearSelections();

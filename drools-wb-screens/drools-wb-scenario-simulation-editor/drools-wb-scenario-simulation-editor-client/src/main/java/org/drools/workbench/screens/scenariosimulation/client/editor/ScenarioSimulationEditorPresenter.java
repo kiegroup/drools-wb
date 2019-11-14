@@ -287,6 +287,7 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     public void setItemMenuEnabled(boolean enabled) {
+        runScenarioMenuItem.setEnabled(enabled);
         importMenuItem.setEnabled(enabled);
         exportToCSVMenuItem.setEnabled(enabled);
         if (downloadMenuItem != null) {
@@ -450,7 +451,6 @@ public class ScenarioSimulationEditorPresenter {
 
     public void onBackgroundTabSelected() {
         setItemMenuEnabled(true);
-        runScenarioMenuItem.setEnabled(false);
         scenarioBackgroundGridWidget.clearSelections();
         scenarioBackgroundGridWidget.select();
         scenarioMainGridWidget.deselect();
@@ -459,7 +459,6 @@ public class ScenarioSimulationEditorPresenter {
 
     public void onOverviewSelected() {
         setItemMenuEnabled(false);
-        runScenarioMenuItem.setEnabled(false);
         scenarioMainGridWidget.clearSelections();
         scenarioMainGridWidget.deselect();
         scenarioBackgroundGridWidget.clearSelections();
@@ -468,7 +467,6 @@ public class ScenarioSimulationEditorPresenter {
 
     public void onImportsTabSelected() {
         setItemMenuEnabled(false);
-        runScenarioMenuItem.setEnabled(false);
         scenarioMainGridWidget.clearSelections();
         scenarioMainGridWidget.deselect();
         scenarioBackgroundGridWidget.clearSelections();
