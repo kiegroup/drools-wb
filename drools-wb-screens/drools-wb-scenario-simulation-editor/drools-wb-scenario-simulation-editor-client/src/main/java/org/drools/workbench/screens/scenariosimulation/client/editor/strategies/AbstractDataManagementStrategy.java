@@ -163,6 +163,10 @@ public abstract class AbstractDataManagementStrategy implements DataManagementSt
             Set<String> simpleJavaTypeInstancesName = new HashSet<>(simpleDataObjects.keySet());
             simpleJavaTypeInstancesName.addAll(simpleJavaTypeInstanceFieldsMap.keySet());
             context.getAbstractScesimGridModelByGridWidget(gridWidget).setSimpleJavaTypeInstancesName(simpleJavaTypeInstancesName);
+        } else {
+            // Avoid Collections.emptySortedMap() due to "The method emptySortedMap() is undefined for the type Collections" error
+            testToolsPresenter.setInstanceFieldsMap(new TreeMap<>());
+            testToolsPresenter.setSimpleJavaInstanceFieldsMap(new TreeMap<>());
         }
     }
 

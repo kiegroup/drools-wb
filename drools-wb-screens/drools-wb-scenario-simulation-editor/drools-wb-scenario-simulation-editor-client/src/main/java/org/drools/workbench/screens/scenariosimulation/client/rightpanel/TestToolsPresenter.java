@@ -261,16 +261,18 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
                 .stream()
                 .filter(entry -> entry.getKey().toLowerCase().contains(search.toLowerCase()))
                 .forEach(filteredEntry -> addSimpleJavaTypeListGroupItemView(filteredEntry.getKey(), filteredEntry.getValue()));
-        instanceFieldsMap
-                .entrySet()
-                .stream()
-                .filter(entry -> entry.getKey().toLowerCase().contains(search.toLowerCase()))
-                .forEach(filteredEntry -> addInstanceListGroupItemView(filteredEntry.getKey(), filteredEntry.getValue()));
-        simpleJavaInstanceFieldsMap
-                .entrySet()
-                .stream()
-                .filter(entry -> entry.getKey().toLowerCase().contains(search.toLowerCase()))
-                .forEach(filteredEntry -> addSimpleJavaInstanceListGroupItemView(filteredEntry.getKey(), filteredEntry.getValue()));
+//        if (GridWidget.SIMULATION.equals(gridWidget)) {
+            instanceFieldsMap
+                    .entrySet()
+                    .stream()
+                    .filter(entry -> entry.getKey().toLowerCase().contains(search.toLowerCase()))
+                    .forEach(filteredEntry -> addInstanceListGroupItemView(filteredEntry.getKey(), filteredEntry.getValue()));
+            simpleJavaInstanceFieldsMap
+                    .entrySet()
+                    .stream()
+                    .filter(entry -> entry.getKey().toLowerCase().contains(search.toLowerCase()))
+                    .forEach(filteredEntry -> addSimpleJavaInstanceListGroupItemView(filteredEntry.getKey(), filteredEntry.getValue()));
+//        }
         updateSeparators();
     }
 
@@ -287,16 +289,18 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
                 .stream()
                 .filter(entry -> filterTerm(entry.getKey(), search, notEqualsSearch))
                 .forEach(filteredEntry -> addSimpleJavaTypeListGroupItemView(filteredEntry.getKey(), filteredEntry.getValue()));
-        instanceFieldsMap
-                .entrySet()
-                .stream()
-                .filter(entry -> filterTerm(entry.getKey(), search, notEqualsSearch))
-                .forEach(filteredEntry -> addInstanceListGroupItemView(filteredEntry.getKey(), filteredEntry.getValue()));
-        simpleJavaInstanceFieldsMap
-                .entrySet()
-                .stream()
-                .filter(entry -> filterTerm(entry.getKey(), search, notEqualsSearch))
-                .forEach(filteredEntry -> addSimpleJavaInstanceListGroupItemView(filteredEntry.getKey(), filteredEntry.getValue()));
+//        if (GridWidget.SIMULATION.equals(gridWidget)) {
+            instanceFieldsMap
+                    .entrySet()
+                    .stream()
+                    .filter(entry -> filterTerm(entry.getKey(), search, notEqualsSearch))
+                    .forEach(filteredEntry -> addInstanceListGroupItemView(filteredEntry.getKey(), filteredEntry.getValue()));
+            simpleJavaInstanceFieldsMap
+                    .entrySet()
+                    .stream()
+                    .filter(entry -> filterTerm(entry.getKey(), search, notEqualsSearch))
+                    .forEach(filteredEntry -> addSimpleJavaInstanceListGroupItemView(filteredEntry.getKey(), filteredEntry.getValue()));
+//        }
         updateSeparators();
     }
 
