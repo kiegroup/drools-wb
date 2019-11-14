@@ -16,22 +16,28 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
+import java.util.Objects;
+
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.events.DeleteColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DuplicateInstanceEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.InsertColumnEvent;
+import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(GwtMockitoTestRunner.class)
@@ -70,33 +76,69 @@ public class AbstractColumnMenuPresenterTest extends AbstractMenuTest {
     }
 
     @Test
-    public void showFalseFalse() {
-        commonShow(4, 5, false, false);
+    public void showFalseFalseSimulation() {
+        commonShow(GridWidget.SIMULATION, 4, 5, false, false, false);
+    }
+
+    public void showFalseTrueSimulation() {
+        commonShow(GridWidget.SIMULATION, 4, 5, false, true, false);
     }
 
     @Test
-    public void showFalseTrue() {
-        commonShow(4, 5, false, true);
+    public void showTrueFalseSimulation() {
+        commonShow(GridWidget.SIMULATION, 4, 5, true, false, false);
+    }
+
+    public void showTrueTrueSimulation() {
+        commonShow(GridWidget.SIMULATION, 4, 5, true, true, false);
+    }
+
+    public void showTrueTrueSimulation_NullDuplicateElement() {
+        commonShow(GridWidget.SIMULATION, 4, 5, true, true, true);
     }
 
     @Test
-    public void showTrueFalse() {
-        commonShow(4, 5, true, false);
+    public void showFalseFalseBackground() {
+        commonShow(GridWidget.BACKGROUND, 4, 5, false, false, false);
     }
 
     @Test
-    public void showTrueTrue() {
-        commonShow(4, 5, true, true);
+    public void showFalseTrueBackground() {
+        commonShow(GridWidget.BACKGROUND, 4, 5, false, true, false);
     }
 
-    private void commonShow(int mx, int my, boolean asProperty, boolean showDuplicateInstance) {
+    @Test
+    public void showTrueFalseBackground() {
+        commonShow(GridWidget.BACKGROUND, 4, 5, true, false, false);
+    }
+
+    @Test
+    public void showTrueTrueBackground_NotNullDuplicateInstanceLIElement() {
+        commonShow(GridWidget.BACKGROUND, 4, 5, true, true, false);
+    }
+
+    public void showTrueTrueBackground_NullDuplicateInstanceLIElement() {
+        abstractColumnMenuPresenter.duplicateInstanceLIElement = null;
+        commonShow(GridWidget.BACKGROUND, 4, 5, true, true, true);
+    }
+
+    private void commonShow(GridWidget gridWidget, int mx, int my, boolean asProperty, boolean showDuplicateInstance, boolean nullDuplicateElement) {
         abstractColumnMenuPresenterSpy.initMenu();
-        final LIElement duplicateInstanceLIElementOriginal = abstractColumnMenuPresenterSpy.duplicateInstanceLIElement;
+        final LIElement duplicateInstanceLIElementOriginal = nullDuplicateElement ? abstractColumnMenuPresenterSpy.duplicateInstanceLIElement : null;
         final LIElement deleteColumnInstanceLIElementOriginal = abstractColumnMenuPresenterSpy.deleteColumnInstanceLIElement;
-        abstractColumnMenuPresenterSpy.show(GridWidget.SIMULATION, mx, my, 1, "GIVEN", asProperty, showDuplicateInstance);
-        if (!showDuplicateInstance) {
+        abstractColumnMenuPresenterSpy.show(gridWidget, mx, my, 1, "GIVEN", asProperty, showDuplicateInstance);
+        if ((!showDuplicateInstance || GridWidget.BACKGROUND.equals(gridWidget)) && duplicateInstanceLIElementOriginal != null) {
+            verify(abstractColumnMenuPresenterSpy, times(1)).updateMenuItemAttributes(eq(gridTitleElementMock), any(), eq(ScenarioSimulationEditorConstants.INSTANCE.background()), eq("background"));
             verify(abstractColumnMenuPresenterSpy, atLeastOnce()).removeMenuItem(eq(duplicateInstanceLIElementOriginal));
             assertNull(abstractColumnMenuPresenterSpy.duplicateInstanceLIElement);
+        } else if (Objects.equals(GridWidget.SIMULATION, gridWidget) && showDuplicateInstance) {
+            verify(abstractColumnMenuPresenterSpy, times(1)).updateMenuItemAttributes(eq(gridTitleElementMock), any(), eq(ScenarioSimulationEditorConstants.INSTANCE.scenario()), eq("scenario"));
+            if (duplicateInstanceLIElementOriginal == null) {
+                verify(abstractColumnMenuPresenterSpy, times(1)).addExecutableMenuItem(eq(abstractColumnMenuPresenter.COLUMNCONTEXTMENU_DUPLICATE_INSTANCE), eq(abstractColumnMenuPresenter.constants.duplicateInstance()), eq("duplicateInstance"));
+            } else {
+                verify(abstractColumnMenuPresenterSpy, never()).addExecutableMenuItem(eq(abstractColumnMenuPresenter.COLUMNCONTEXTMENU_DUPLICATE_INSTANCE), eq(abstractColumnMenuPresenter.constants.runSingleScenario()), eq("runSingleScenario"));
+            }
+            verify(abstractColumnMenuPresenterSpy, times(1)).mapEvent(eq(executableMenuItemMock), isA(DuplicateInstanceEvent.class));
         }
         verify(abstractColumnMenuPresenterSpy, atLeastOnce()).mapEvent(eq(abstractColumnMenuPresenterSpy.insertColumnLeftLIElement), isA(InsertColumnEvent.class));
         verify(abstractColumnMenuPresenterSpy, atLeastOnce()).mapEvent(eq(abstractColumnMenuPresenterSpy.insertColumnRightLIElement), isA(InsertColumnEvent.class));
@@ -110,7 +152,7 @@ public class AbstractColumnMenuPresenterTest extends AbstractMenuTest {
         if (abstractColumnMenuPresenter.duplicateInstanceLIElement != null) {
             verify(abstractColumnMenuPresenterSpy, atLeastOnce()).mapEvent(eq(abstractColumnMenuPresenterSpy.duplicateInstanceLIElement), isA(DuplicateInstanceEvent.class));
         }
-        verify(abstractColumnMenuPresenterSpy, atLeastOnce()).show(eq(GridWidget.SIMULATION), eq(mx), eq(my));
+        verify(abstractColumnMenuPresenterSpy, atLeastOnce()).show(eq(gridWidget), eq(mx), eq(my));
         reset(abstractColumnMenuPresenterSpy);
     }
 }

@@ -32,6 +32,7 @@ public class OtherContextMenu extends AbstractHeaderMenuPresenter {
     @PostConstruct
     @Override
     public void initMenu() {
+        //todo
         headerContextMenuGridTitleId = OTHERCONTEXTMENU_GRID_TITLE;
         HEADERCONTEXTMENU_PREPEND_ROW = OTHERCONTEXTMENU_INSERT_ROW_ABOVE;
         super.initMenu();
