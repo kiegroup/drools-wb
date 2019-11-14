@@ -25,17 +25,13 @@ import com.ait.lienzo.client.core.types.Point2D;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.shared.EventBus;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
-import org.drools.workbench.screens.scenariosimulation.client.editor.menu.BackgroundGridContextMenu;
-import org.drools.workbench.screens.scenariosimulation.client.editor.menu.BackgroundHeaderGivenContextMenu;
-import org.drools.workbench.screens.scenariosimulation.client.editor.menu.BackgroundHeadersContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.ExpectedContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GivenContextMenu;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderExpectedContextMenu;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderGivenContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.OtherContextMenu;
-import org.drools.workbench.screens.scenariosimulation.client.editor.menu.SimulationGridContextMenu;
-import org.drools.workbench.screens.scenariosimulation.client.editor.menu.SimulationHeaderGivenContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.UnmodifiableColumnGridContextMenu;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.popover.ErrorReportPopoverPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationGridHeaderUtilities;
@@ -48,54 +44,48 @@ import org.uberfire.ext.wires.core.grids.client.util.CoordinateUtilities;
 public class ScenarioContextMenuRegistry {
 
     protected OtherContextMenu otherContextMenu;
-    protected SimulationHeaderGivenContextMenu simulationHeaderGivenContextMenu;
-    protected BackgroundHeaderGivenContextMenu backgroundHeaderGivenContextMenu;
-    protected BackgroundHeadersContextMenu backgroundHeadersContextMenu;
+    protected HeaderGivenContextMenu headerGivenContextMenu;
     protected HeaderExpectedContextMenu headerExpectedContextMenu;
     protected GivenContextMenu givenContextMenu;
     protected ExpectedContextMenu expectedContextMenu;
-    protected SimulationGridContextMenu simulationGridContextMenu;
-    protected BackgroundGridContextMenu backgroundGridContextMenu;
+    protected GridContextMenu gridContextMenu;
     protected UnmodifiableColumnGridContextMenu unmodifiableColumnGridContextMenu;
     protected ErrorReportPopoverPresenter errorReportPopoverPresenter;
 
     @Inject
     public ScenarioContextMenuRegistry(final OtherContextMenu otherContextMenu,
-                                       final SimulationHeaderGivenContextMenu simulationHeaderGivenContextMenu,
-                                       final BackgroundHeaderGivenContextMenu backgroundHeaderGivenContextMenu,
-                                       final BackgroundHeadersContextMenu backgroundHeadersContextMenu,
+                                       final HeaderGivenContextMenu headerGivenContextMenu,
                                        final HeaderExpectedContextMenu headerExpectedContextMenu,
                                        final GivenContextMenu givenContextMenu,
                                        final ExpectedContextMenu expectedContextMenu,
-                                       final SimulationGridContextMenu simulationGridContextMenu,
-                                       final BackgroundGridContextMenu backgroundGridContextMenu,
+                                       final GridContextMenu gridContextMenu,
                                        final UnmodifiableColumnGridContextMenu unmodifiableColumnGridContextMenu) {
         this.otherContextMenu = otherContextMenu;
-        this.simulationHeaderGivenContextMenu = simulationHeaderGivenContextMenu;
+        this.headerGivenContextMenu = headerGivenContextMenu;
         this.headerExpectedContextMenu = headerExpectedContextMenu;
         this.givenContextMenu = givenContextMenu;
         this.expectedContextMenu = expectedContextMenu;
-        this.simulationGridContextMenu = simulationGridContextMenu;
+        this.gridContextMenu = gridContextMenu;
         this.unmodifiableColumnGridContextMenu = unmodifiableColumnGridContextMenu;
     }
 
     public void setEventBus(final EventBus eventBus) {
         otherContextMenu.setEventBus(eventBus);
-        simulationHeaderGivenContextMenu.setEventBus(eventBus);
+        headerGivenContextMenu.setEventBus(eventBus);
         headerExpectedContextMenu.setEventBus(eventBus);
         givenContextMenu.setEventBus(eventBus);
         expectedContextMenu.setEventBus(eventBus);
-        simulationGridContextMenu.setEventBus(eventBus);
+        gridContextMenu.setEventBus(eventBus);
         unmodifiableColumnGridContextMenu.setEventBus(eventBus);
     }
 
     public void hideMenus() {
         otherContextMenu.hide();
-        simulationHeaderGivenContextMenu.hide();
+        headerGivenContextMenu.hide();
         headerExpectedContextMenu.hide();
         givenContextMenu.hide();
         expectedContextMenu.hide();
-        simulationGridContextMenu.hide();
+        gridContextMenu.hide();
         unmodifiableColumnGridContextMenu.hide();
     }
 
@@ -201,15 +191,8 @@ public class ScenarioContextMenuRegistry {
         String group = scenarioGridColumn.getInformationHeaderMetaData().getColumnGroup();
         switch (group) {
             case "GIVEN":
-                GridWidget gridWidget = scenarioGrid.getGridWidget();
-                if (GridWidget.BACKGROUND.equals(gridWidget)) {
-                    backgroundGridContextMenu.show(gridWidget, left, top);
-                } else {
-                    simulationGridContextMenu.show(gridWidget, left, top);
-                }
-                break;
             case "EXPECT":
-                simulationGridContextMenu.show(scenarioGrid.getGridWidget(), left, top, uiRowIndex);
+                gridContextMenu.show(scenarioGrid.getGridWidget(), left, top, uiRowIndex);
                 break;
             default:
                 unmodifiableColumnGridContextMenu.show(scenarioGrid.getGridWidget(), left, top, uiRowIndex);
@@ -254,13 +237,8 @@ public class ScenarioContextMenuRegistry {
                 case "":
                     switch (columnMetadata.getTitle()) {
                     case "GIVEN":
-                        GridWidget gridWidget = scenarioGrid.getGridWidget();
-                        if (GridWidget.BACKGROUND.equals(gridWidget)) {
-                            backgroundHeaderGivenContextMenu.show(gridWidget, left, top);
-                        } else {
-                            simulationHeaderGivenContextMenu.show(gridWidget, left, top);
-                        }
-                        break;
+                            headerGivenContextMenu.show(scenarioGrid.getGridWidget(), left, top);
+                            break;
                     case "EXPECT":
                             headerExpectedContextMenu.show(scenarioGrid.getGridWidget(), left, top);
                             break;
@@ -268,15 +246,10 @@ public class ScenarioContextMenuRegistry {
                             otherContextMenu.show(left, top);
                     }
                     break;
-                case "GIVEN":
-                    GridWidget gridWidget = scenarioGrid.getGridWidget();
-                    if (GridWidget.BACKGROUND.equals(gridWidget)) {
-                        backgroundHeadersContextMenu.show(gridWidget, left, top);
-                    } else {
-                        givenContextMenu.show(scenarioGrid.getGridWidget(), left, top, uiColumnIndex, group, Objects.equals(columnMetadata.getMetadataType(), ScenarioHeaderMetaData.MetadataType.PROPERTY), showDuplicateInstance);
-                    }
+            case "GIVEN":
+                    givenContextMenu.show(scenarioGrid.getGridWidget(), left, top, uiColumnIndex, group, Objects.equals(columnMetadata.getMetadataType(), ScenarioHeaderMetaData.MetadataType.PROPERTY), showDuplicateInstance);
                     break;
-                case "EXPECT":
+            case "EXPECT":
                     expectedContextMenu.show(scenarioGrid.getGridWidget(),left, top, uiColumnIndex, group, Objects.equals(columnMetadata.getMetadataType(), ScenarioHeaderMetaData.MetadataType.PROPERTY), showDuplicateInstance);
                     break;
                 default:
@@ -286,6 +259,7 @@ public class ScenarioContextMenuRegistry {
         return true;
     }
 
+
     public void setErrorReportPopoverPresenter(ErrorReportPopoverPresenter errorReportPopoverPresenter) {
         this.errorReportPopoverPresenter = errorReportPopoverPresenter;
     }
@@ -293,4 +267,5 @@ public class ScenarioContextMenuRegistry {
     public void hideErrorReportPopover() {
         errorReportPopoverPresenter.hide();
     }
+
 }

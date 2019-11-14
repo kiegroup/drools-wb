@@ -24,23 +24,27 @@ import com.google.web.bindery.event.shared.Event;
 import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.events.AppendColumnEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.PrependColumnEvent;
+import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
+import static org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderGivenContextMenu.HEADERGIVENCONTEXTMENU_GRID_TITLE;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class SimulationHeaderGivenColumnGridContextMenuTest {
+public class HeaderGivenColumnGridContextMenuTest {
 
     @Mock
     private RootPanel rootPanelMock;
+
     @Mock
     private LIElement appendColumnElementMock;
     @Mock
@@ -54,13 +58,13 @@ public class SimulationHeaderGivenColumnGridContextMenuTest {
     @Mock
     private Style styleMock;
 
-    private SimulationHeaderGivenContextMenu simulationHeaderGivenContextMenuSpy;
+    private HeaderGivenContextMenu headerGivenContextMenuSpy;
 
     @Before
     public void setup() {
         when(contextMenuDropdownMock.getStyle()).thenReturn(styleMock);
         when(viewMock.getContextMenuDropdown()).thenReturn(contextMenuDropdownMock);
-        simulationHeaderGivenContextMenuSpy = spy(new SimulationHeaderGivenContextMenu() {
+        headerGivenContextMenuSpy = spy(new HeaderGivenContextMenu() {
 
             {
                 this.appendColumnElement = appendColumnElementMock;
@@ -86,7 +90,7 @@ public class SimulationHeaderGivenColumnGridContextMenuTest {
 
             @Override
             public void hide() {
-                //Do nothing
+
             }
 
             @Override
@@ -97,9 +101,20 @@ public class SimulationHeaderGivenColumnGridContextMenuTest {
     }
 
     @Test
-    public void show() {
-        simulationHeaderGivenContextMenuSpy.show(GridWidget.SIMULATION, 0, 0);
-        verify(simulationHeaderGivenContextMenuSpy, times(1)).mapEvent(eq(appendColumnElementMock), isA(AppendColumnEvent.class));
-        verify(simulationHeaderGivenContextMenuSpy, times(1)).mapEvent(eq(prependColumnElementMock), isA(PrependColumnEvent.class));
+    public void show_Simulation() {
+        headerGivenContextMenuSpy.show(GridWidget.SIMULATION, 0, 0);
+        verify(headerGivenContextMenuSpy, never()).updateMenuItemAttributes(eq(gridTitleElementMock), eq(HEADERGIVENCONTEXTMENU_GRID_TITLE), eq(ScenarioSimulationEditorConstants.INSTANCE.background()), eq("background"));
+        verify(headerGivenContextMenuSpy, times(1)).updateMenuItemAttributes(eq(gridTitleElementMock), eq(HEADERGIVENCONTEXTMENU_GRID_TITLE), eq(ScenarioSimulationEditorConstants.INSTANCE.scenario()), eq("scenario"));
+        verify(headerGivenContextMenuSpy, times(1)).mapEvent(eq(appendColumnElementMock), isA(AppendColumnEvent.class));
+        verify(headerGivenContextMenuSpy, times(1)).mapEvent(eq(prependColumnElementMock), isA(PrependColumnEvent.class));
+    }
+
+    @Test
+    public void show_Background() {
+        headerGivenContextMenuSpy.show(GridWidget.BACKGROUND, 0, 0);
+        verify(headerGivenContextMenuSpy, times(1)).updateMenuItemAttributes(eq(gridTitleElementMock), eq(HEADERGIVENCONTEXTMENU_GRID_TITLE), eq(ScenarioSimulationEditorConstants.INSTANCE.background()), eq("background"));
+        verify(headerGivenContextMenuSpy, never()).updateMenuItemAttributes(eq(gridTitleElementMock), eq(HEADERGIVENCONTEXTMENU_GRID_TITLE), eq(ScenarioSimulationEditorConstants.INSTANCE.scenario()), eq("scenario"));
+        verify(headerGivenContextMenuSpy, times(1)).mapEvent(eq(appendColumnElementMock), isA(AppendColumnEvent.class));
+        verify(headerGivenContextMenuSpy, times(1)).mapEvent(eq(prependColumnElementMock), isA(PrependColumnEvent.class));
     }
 }

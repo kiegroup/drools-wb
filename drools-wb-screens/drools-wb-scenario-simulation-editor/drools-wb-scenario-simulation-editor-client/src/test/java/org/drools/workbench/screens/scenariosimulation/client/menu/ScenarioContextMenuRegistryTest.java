@@ -22,15 +22,12 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
-import org.drools.workbench.screens.scenariosimulation.client.editor.menu.BackgroundGridContextMenu;
-import org.drools.workbench.screens.scenariosimulation.client.editor.menu.BackgroundHeaderGivenContextMenu;
-import org.drools.workbench.screens.scenariosimulation.client.editor.menu.BackgroundHeadersContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.ExpectedContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GivenContextMenu;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderExpectedContextMenu;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderGivenContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.OtherContextMenu;
-import org.drools.workbench.screens.scenariosimulation.client.editor.menu.SimulationGridContextMenu;
-import org.drools.workbench.screens.scenariosimulation.client.editor.menu.SimulationHeaderGivenContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.UnmodifiableColumnGridContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.AbstractScenarioSimulationGridHandlerTest;
@@ -56,11 +53,7 @@ public class ScenarioContextMenuRegistryTest extends AbstractScenarioSimulationG
     @Mock
     private OtherContextMenu otherContextMenuMock;
     @Mock
-    private SimulationHeaderGivenContextMenu simulationHeaderGivenContextMenuMock;
-    @Mock
-    private BackgroundHeaderGivenContextMenu backgroundHeaderGivenContextMenuMock;
-    @Mock
-    private BackgroundHeadersContextMenu backgroundHeadersContextMenu;
+    private HeaderGivenContextMenu headerGivenContextMenuMock;
     @Mock
     private HeaderExpectedContextMenu headerExpectedContextMenuMock;
     @Mock
@@ -68,9 +61,7 @@ public class ScenarioContextMenuRegistryTest extends AbstractScenarioSimulationG
     @Mock
     private ExpectedContextMenu expectedContextMenuMock;
     @Mock
-    private SimulationGridContextMenu simulationGridContextMenuMock;
-    @Mock
-    private BackgroundGridContextMenu backgroundGridContextMenuMock;
+    private GridContextMenu gridContextMenuMock;
     @Mock
     private UnmodifiableColumnGridContextMenu unmodifiableColumnGridContextMenuMock;
     @Mock
@@ -93,14 +84,11 @@ public class ScenarioContextMenuRegistryTest extends AbstractScenarioSimulationG
         doReturn(contextMenuEventTargetOwnerMock).when(contextMenuEventTargetMock).getOwnerDocument();
 
         scenarioContextMenuRegistry = new ScenarioContextMenuRegistry(otherContextMenuMock,
-                                                                      simulationHeaderGivenContextMenuMock,
-                                                                      backgroundHeaderGivenContextMenuMock,
-                                                                      backgroundHeadersContextMenu,
+                                                                      headerGivenContextMenuMock,
                                                                       headerExpectedContextMenuMock,
                                                                       givenContextMenuMock,
                                                                       expectedContextMenuMock,
-                                                                      simulationGridContextMenuMock,
-                                                                      backgroundGridContextMenuMock,
+                                                                      gridContextMenuMock,
                                                                       unmodifiableColumnGridContextMenuMock);
     }
 
@@ -171,10 +159,10 @@ public class ScenarioContextMenuRegistryTest extends AbstractScenarioSimulationG
                 .as("Click to expect/given body cell")
                 .isTrue();
         verify(scenarioGridMock, times(1)).clearSelections();
-        verify(simulationGridContextMenuMock).show(GridWidget.SIMULATION,
-                                                   clickPointX,
-                                                   clickPointY,
-                                                   0);
+        verify(gridContextMenuMock).show(GridWidget.SIMULATION,
+                                         clickPointX,
+                                         clickPointY,
+                                         0);
         verify(scenarioGridMock, times(1)).setSelectedCell(eq(0), eq(0));
     }
 

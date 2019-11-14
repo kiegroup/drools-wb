@@ -16,6 +16,8 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
+import java.util.Objects;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 
@@ -30,7 +32,7 @@ import org.drools.workbench.screens.scenariosimulation.client.events.RunSingleSc
  * The contextual menu of a a <i>ROW</i> cell whose <b>GROUP</b> does <b>allow</b> column modification (insert/delete). It has the same items has {@link AbstractColumnMenuPresenter} and specific ones (?)
  */
 @Dependent
-public class SimulationGridContextMenu extends AbstractHeaderMenuPresenter {
+public class GridContextMenu extends AbstractHeaderMenuPresenter {
 
     // This strings are used to give unique id in the final dom
     protected static final String GRIDCONTEXTMENU_GRID_TITLE = "gridcontextmenu-grid-title";
@@ -50,9 +52,6 @@ public class SimulationGridContextMenu extends AbstractHeaderMenuPresenter {
     @Override
     public void initMenu() {
         HEADERCONTEXTMENU_PREPEND_ROW = GRIDCONTEXTMENU_INSERT_ROW_BELOW;
-        headerContextMenuGridTitleId = GRIDCONTEXTMENU_GRID_TITLE;
-        headerContextMenuGridTitleLabel = constants.scenario();
-        headerContextMenuGridTitleI18n = "scenario";
         super.initMenu();
         insertRowAboveLIElement = addExecutableMenuItem(GRIDCONTEXTMENU_INSERT_ROW_ABOVE, constants.insertRowAbove(), "insertRowAbove");
         duplicateRowLIElement = addExecutableMenuItem(GRIDCONTEXTMENU_DUPLICATE_ROW, constants.duplicateRow(), "duplicateRow");
@@ -66,6 +65,17 @@ public class SimulationGridContextMenu extends AbstractHeaderMenuPresenter {
         mapEvent(insertRowBelowLIElement, new InsertRowEvent(gridWidget, rowIndex + 1));
         mapEvent(duplicateRowLIElement, new DuplicateRowEvent(gridWidget, rowIndex));
         mapEvent(deleteRowLIElement, new DeleteRowEvent(gridWidget, rowIndex));
-        mapEvent(runSingleScenarioElement, new RunSingleScenarioEvent(rowIndex));
+        if (Objects.equals(GridWidget.BACKGROUND, gridWidget) && runSingleScenarioElement != null) {
+            updateMenuItemAttributes(gridTitleElement , GRIDCONTEXTMENU_GRID_TITLE, constants.background(), "background");
+            removeMenuItem(runSingleScenarioElement);
+            runSingleScenarioElement = null;
+        } else if (Objects.equals(GridWidget.SIMULATION, gridWidget)) {
+            updateMenuItemAttributes(gridTitleElement , GRIDCONTEXTMENU_GRID_TITLE, constants.scenario(), "scenario");
+            if (runSingleScenarioElement == null) {
+                runSingleScenarioElement = addExecutableMenuItem(GRIDCONTEXTMENU_RUN_SINGLE_SCENARIO, constants.runSingleScenario(), "runSingleScenario");
+            }
+            mapEvent(runSingleScenarioElement, new RunSingleScenarioEvent(rowIndex));
+        }
     }
+
 }

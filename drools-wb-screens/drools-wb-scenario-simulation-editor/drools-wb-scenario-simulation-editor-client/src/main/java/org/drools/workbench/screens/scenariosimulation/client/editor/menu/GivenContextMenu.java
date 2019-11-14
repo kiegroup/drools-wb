@@ -21,13 +21,12 @@ import javax.enterprise.context.Dependent;
 
 /**
  * The contextual menu of a specific <i>GIVEN</i> column
- * It differ from {@link SimulationHeaderGivenContextMenu} because it manage column (insert/remove) in different way
+ * It differ from {@link HeaderGivenContextMenu} because it manage column (insert/remove) in different way
  */
 @Dependent
 public class GivenContextMenu extends AbstractColumnMenuPresenter {
 
     // This strings are used to give unique id in the final dom
-    protected static final String GIVENCONTEXTMENU_GRID_TITLE = "givencontextmenu-grid-title";
     protected static final String GIVENCONTEXTMENU_GIVEN = "givencontextmenu-given";
     protected static final String GIVENCONTEXTMENU_INSERT_COLUMN_LEFT = "givencontextmenu-insert-column-left";
     protected static final String GIVENCONTEXTMENU_INSERT_COLUMN_RIGHT = "givencontextmenu-insert-column-right";
@@ -47,7 +46,6 @@ public class GivenContextMenu extends AbstractColumnMenuPresenter {
         COLUMNCONTEXTMENU_DUPLICATE_INSTANCE = GIVENCONTEXTMENU_DUPLICATE_INSTANCE;
         COLUMNCONTEXTMENU_LABEL = constants.given().toUpperCase();
         COLUMNCONTEXTMENU_I18N = "given";
-        headerContextMenuGridTitleId = GIVENCONTEXTMENU_GRID_TITLE;
         // SCENARIO MENU
         super.initMenu();
     }

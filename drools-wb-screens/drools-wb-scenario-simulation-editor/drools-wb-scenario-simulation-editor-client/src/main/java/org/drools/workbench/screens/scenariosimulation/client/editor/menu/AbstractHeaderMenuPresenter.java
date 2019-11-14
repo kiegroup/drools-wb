@@ -32,10 +32,8 @@ public abstract class AbstractHeaderMenuPresenter extends BaseMenu implements He
 
     protected ScenarioGridModel model;
 
+    protected String HEADERCONTEXTMENU_GRID_TITLE;
     protected String HEADERCONTEXTMENU_PREPEND_ROW;
-    protected String headerContextMenuGridTitleId;
-    protected String headerContextMenuGridTitleLabel;
-    protected String headerContextMenuGridTitleI18n;
 
     /**
      * The <b>Insert row below</b> menu element in the <b>header</b> contextual menu
@@ -52,7 +50,7 @@ public abstract class AbstractHeaderMenuPresenter extends BaseMenu implements He
      */
     public void initMenu() {
         // SCENARIO
-        gridTitleElement = addMenuItem(headerContextMenuGridTitleId, headerContextMenuGridTitleLabel, headerContextMenuGridTitleI18n);
+        gridTitleElement = addMenuItem(HEADERCONTEXTMENU_GRID_TITLE, constants.scenario(), "scenario");
         insertRowBelowElement = addExecutableMenuItem(HEADERCONTEXTMENU_PREPEND_ROW, constants.insertRowBelow(), "insertRowBelow");
     }
 
