@@ -33,6 +33,8 @@ import elemental2.dom.DomGlobal;
 import org.drools.scenariosimulation.api.model.AbstractScesimModel;
 import org.drools.scenariosimulation.api.model.AuditLog;
 import org.drools.scenariosimulation.api.model.Background;
+import org.drools.scenariosimulation.api.model.BackgroundDataWithIndex;
+import org.drools.scenariosimulation.api.model.Background;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.scenariosimulation.api.model.Scenario;
@@ -254,7 +256,9 @@ public class ScenarioSimulationEditorPresenter {
 
     public void onRunScenario(List<Integer> indexOfScenarioToRun) {
         scenarioMainGridWidget.resetErrors();
+        scenarioBackgroundGridWidget.resetErrors();
         model.setSimulation(scenarioMainGridWidget.getScenarioSimulationContext().getStatus().getSimulation());
+        model.setBackground(scenarioMainGridWidget.getScenarioSimulationContext().getStatus().getBackground());
         Simulation simulation = model.getSimulation();
         List<ScenarioWithIndex> toRun = simulation.getScenarioWithIndex().stream()
                 .filter(elem -> indexOfScenarioToRun.contains(elem.getIndex() - 1))
@@ -263,7 +267,8 @@ public class ScenarioSimulationEditorPresenter {
         scenarioSimulationEditorWrapper.onRunScenario(getRefreshModelCallback(), new ScenarioSimulationHasBusyIndicatorDefaultErrorCallback(view),
                                                       simulation.getScesimModelDescriptor(),
                                                       context.getSettings(),
-                                                      toRun);
+                                                      toRun,
+                                                      model.getBackground());
     }
 
     public void onUndo() {
@@ -356,6 +361,7 @@ public class ScenarioSimulationEditorPresenter {
         if (this.model == null) {
             return;
         }
+        // refresh simulation data
         Simulation simulation = this.model.getSimulation();
         for (ScenarioWithIndex scenarioWithIndex : newData.getScenarioWithIndex()) {
             int index = scenarioWithIndex.getIndex() - 1;
@@ -363,6 +369,16 @@ public class ScenarioSimulationEditorPresenter {
         }
         scenarioMainGridWidget.refreshContent(simulation);
         context.getStatus().setSimulation(simulation);
+
+        // refresh background data
+        Background background = this.model.getBackground();
+        for (BackgroundDataWithIndex backgroundDataWithIndex : newData.getBackgroundDataWithIndex()) {
+            int index = backgroundDataWithIndex.getIndex() - 1;
+            background.replaceData(index, backgroundDataWithIndex.getScesimData());
+        }
+        scenarioBackgroundGridWidget.refreshContent(background);
+        context.getStatus().setBackground(background);
+
         scenarioSimulationDocksHandler.expandTestResultsDock();
         testRunnerReportingPanel.onTestRun(newData.getTestResultMessage());
         dataManagementStrategy.setModel(model);
@@ -426,8 +442,7 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     public void onEditTabSelected() {
-        setItemMenuEnabled(true);
-        runScenarioMenuItem.setEnabled(true);
+        setItemMenuForMainGridEnabled(true);
         scenarioMainGridWidget.clearSelections();
         scenarioMainGridWidget.select();
         scenarioBackgroundGridWidget.deselect();
