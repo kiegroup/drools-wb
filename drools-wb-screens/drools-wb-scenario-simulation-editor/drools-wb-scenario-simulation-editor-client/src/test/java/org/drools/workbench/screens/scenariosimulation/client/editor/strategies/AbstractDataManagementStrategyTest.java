@@ -160,8 +160,8 @@ public class AbstractDataManagementStrategyTest extends AbstractScenarioSimulati
         abstractDataManagementStrategySpy.storeData(factModelTuple, testToolsPresenterMock, scenarioSimulationContextSpy, GridWidget.BACKGROUND);
         verify(testToolsPresenterMock, times(1)).setDataObjectFieldsMap(isA(SortedMap.class));
         verify(testToolsPresenterMock, times(1)).setSimpleJavaTypeFieldsMap(isA(SortedMap.class));
-        verify(testToolsPresenterMock, never()).setInstanceFieldsMap(isA(SortedMap.class));
-        verify(testToolsPresenterMock,never()).setSimpleJavaInstanceFieldsMap(isA(SortedMap.class));
+        verify(testToolsPresenterMock, times(1)).setInstanceFieldsMap(isA(SortedMap.class));
+        verify(testToolsPresenterMock, times(1)).setSimpleJavaInstanceFieldsMap(isA(SortedMap.class));
         verify(testToolsPresenterMock, times(1)).setHiddenFieldsMap(isA(SortedMap.class));
         verify(testToolsPresenterMock, times(1)).hideProperties(isA(Map.class));
         verify(scenarioSimulationContextSpy, times(1)).setDataObjectFieldsMap(isA(SortedMap.class));
