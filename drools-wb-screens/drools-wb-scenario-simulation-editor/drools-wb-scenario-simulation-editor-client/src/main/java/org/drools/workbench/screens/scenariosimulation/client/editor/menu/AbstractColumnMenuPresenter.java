@@ -72,7 +72,7 @@ public abstract class AbstractColumnMenuPresenter extends AbstractHeaderMenuPres
                 duplicateInstanceLIElement = null;
             }
         } else if (duplicateInstanceLIElement == null) {
-            duplicateInstanceLIElement = addExecutableMenuItem(COLUMNCONTEXTMENU_DUPLICATE_INSTANCE, constants.duplicateInstance(), "duplicateInstance");
+            duplicateInstanceLIElement = addExecutableMenuItemAfter(COLUMNCONTEXTMENU_DUPLICATE_INSTANCE, constants.duplicateInstance(), "duplicateInstance", deleteColumnInstanceLIElement);
         }
         mapEvent(insertColumnLeftLIElement, new InsertColumnEvent(gridWidget, columnIndex, false, asProperty));
         mapEvent(insertColumnRightLIElement, new InsertColumnEvent(gridWidget, columnIndex, true, asProperty));

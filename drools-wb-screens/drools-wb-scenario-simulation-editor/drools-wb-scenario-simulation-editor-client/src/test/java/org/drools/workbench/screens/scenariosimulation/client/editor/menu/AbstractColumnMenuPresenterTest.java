@@ -121,13 +121,15 @@ public class AbstractColumnMenuPresenterTest extends AbstractMenuTest {
 
     @Test
     public void showTrueTrueBackground_NullDuplicateInstanceLIElement() {
-        abstractColumnMenuPresenter.duplicateInstanceLIElement = null;
         commonShow(GridWidget.BACKGROUND, 4, 5, true, true, true);
     }
 
     private void commonShow(GridWidget gridWidget, int mx, int my, boolean asProperty, boolean showDuplicateInstance, boolean nullDuplicateElement) {
         abstractColumnMenuPresenterSpy.initMenu();
-        final LIElement duplicateInstanceLIElementOriginal = nullDuplicateElement ? null : abstractColumnMenuPresenterSpy.duplicateInstanceLIElement;
+        if (nullDuplicateElement) {
+            abstractColumnMenuPresenterSpy.duplicateInstanceLIElement = null;
+        }
+        final LIElement duplicateInstanceLIElementOriginal = abstractColumnMenuPresenterSpy.duplicateInstanceLIElement;
         final LIElement deleteColumnInstanceLIElementOriginal = abstractColumnMenuPresenterSpy.deleteColumnInstanceLIElement;
         abstractColumnMenuPresenterSpy.show(gridWidget, mx, my, 1, "GIVEN", asProperty, showDuplicateInstance);
         if (Objects.equals(GridWidget.BACKGROUND, gridWidget)) {
@@ -141,7 +143,7 @@ public class AbstractColumnMenuPresenterTest extends AbstractMenuTest {
             }
             assertNull(abstractColumnMenuPresenterSpy.duplicateInstanceLIElement);
         } else if (nullDuplicateElement) {
-            verify(abstractColumnMenuPresenterSpy, times(1)).addExecutableMenuItem(eq(abstractColumnMenuPresenter.COLUMNCONTEXTMENU_DUPLICATE_INSTANCE), eq(abstractColumnMenuPresenter.constants.duplicateInstance()), eq("duplicateInstance"));
+            verify(abstractColumnMenuPresenterSpy, times(1)).addExecutableMenuItemAfter(eq(abstractColumnMenuPresenter.COLUMNCONTEXTMENU_DUPLICATE_INSTANCE), eq(abstractColumnMenuPresenter.constants.duplicateInstance()), eq("duplicateInstance"), eq(deleteColumnInstanceLIElementOriginal));
         }
         verify(abstractColumnMenuPresenterSpy, atLeastOnce()).mapEvent(eq(abstractColumnMenuPresenterSpy.insertColumnLeftLIElement), isA(InsertColumnEvent.class));
         verify(abstractColumnMenuPresenterSpy, atLeastOnce()).mapEvent(eq(abstractColumnMenuPresenterSpy.insertColumnRightLIElement), isA(InsertColumnEvent.class));

@@ -51,9 +51,10 @@ public class GridContextMenu extends AbstractHeaderMenuPresenter {
     @PostConstruct
     @Override
     public void initMenu() {
-        HEADERCONTEXTMENU_PREPEND_ROW = GRIDCONTEXTMENU_INSERT_ROW_BELOW;
         super.initMenu();
+        removeMenuItem(insertRowBelowElement);
         insertRowAboveLIElement = addExecutableMenuItem(GRIDCONTEXTMENU_INSERT_ROW_ABOVE, constants.insertRowAbove(), "insertRowAbove");
+        insertRowBelowLIElement = addExecutableMenuItem(GRIDCONTEXTMENU_INSERT_ROW_BELOW, constants.insertRowBelow(), "insertRowBelow");
         duplicateRowLIElement = addExecutableMenuItem(GRIDCONTEXTMENU_DUPLICATE_ROW, constants.duplicateRow(), "duplicateRow");
         deleteRowLIElement = addExecutableMenuItem(GRIDCONTEXTMENU_DELETE_ROW, constants.deleteRow(), "deleteRow");
         runSingleScenarioElement = addExecutableMenuItem(GRIDCONTEXTMENU_RUN_SINGLE_SCENARIO, constants.runSingleScenario(), "runSingleScenario");
