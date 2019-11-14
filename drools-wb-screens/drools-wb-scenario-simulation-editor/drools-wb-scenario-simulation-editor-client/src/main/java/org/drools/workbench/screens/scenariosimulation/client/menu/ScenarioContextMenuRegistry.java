@@ -72,10 +72,13 @@ public class ScenarioContextMenuRegistry {
                                        final UnmodifiableColumnGridContextMenu unmodifiableColumnGridContextMenu) {
         this.otherContextMenu = otherContextMenu;
         this.simulationHeaderGivenContextMenu = simulationHeaderGivenContextMenu;
+        this.backgroundHeaderGivenContextMenu = backgroundHeaderGivenContextMenu;
+        this.backgroundHeadersContextMenu = backgroundHeadersContextMenu;
         this.headerExpectedContextMenu = headerExpectedContextMenu;
         this.givenContextMenu = givenContextMenu;
         this.expectedContextMenu = expectedContextMenu;
         this.simulationGridContextMenu = simulationGridContextMenu;
+        this.backgroundGridContextMenu = backgroundGridContextMenu;
         this.unmodifiableColumnGridContextMenu = unmodifiableColumnGridContextMenu;
     }
 
