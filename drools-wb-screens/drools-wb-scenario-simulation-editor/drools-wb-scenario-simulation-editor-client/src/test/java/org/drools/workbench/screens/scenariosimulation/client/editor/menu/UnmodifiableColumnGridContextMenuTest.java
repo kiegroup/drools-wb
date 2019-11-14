@@ -38,7 +38,6 @@ import static org.drools.workbench.screens.scenariosimulation.client.editor.menu
 import static org.drools.workbench.screens.scenariosimulation.client.editor.menu.UnmodifiableColumnGridContextMenu.UCGRIDCONTEXTMENU_RUN_SINGLE_SCENARIO;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -117,52 +116,12 @@ public class UnmodifiableColumnGridContextMenuTest {
 
     @Test
     public void show_Simulation_NullRunScenarioElement() {
-        unmodifiableColumnGridContextMenuSpy.runSingleScenarioElement = null;
         unmodifiableColumnGridContextMenuSpy.show(GridWidget.SIMULATION, 0, 0, 1);
         verify(unmodifiableColumnGridContextMenuSpy, times(1)).show(eq(GridWidget.SIMULATION), eq(0), eq(0));
         verify(unmodifiableColumnGridContextMenuSpy, times(1)).mapEvent(eq(insertRowAboveLIElementMock), isA(InsertRowEvent.class));
         verify(unmodifiableColumnGridContextMenuSpy, times(1)).mapEvent(eq(insertRowBelowLIElementMock), isA(InsertRowEvent.class));
         verify(unmodifiableColumnGridContextMenuSpy, times(1)).mapEvent(eq(duplicateRowLIElementMock), isA(DuplicateRowEvent.class));
         verify(unmodifiableColumnGridContextMenuSpy, times(1)).mapEvent(eq(deleteRowLIElementMock), isA(DeleteRowEvent.class));
-        verify(unmodifiableColumnGridContextMenuSpy, times(1)).addExecutableMenuItem(eq(UCGRIDCONTEXTMENU_RUN_SINGLE_SCENARIO),eq(ScenarioSimulationEditorConstants.INSTANCE.runSingleScenario()), eq("runSingleScenario"));
-        verify(unmodifiableColumnGridContextMenuSpy, times(1)).mapEvent(eq(createdElementMock), isA(RunSingleScenarioEvent.class));
-    }
-
-    @Test
-    public void show_Simulation_NotNullRunScenarioElement() {
-        unmodifiableColumnGridContextMenuSpy.show(GridWidget.SIMULATION, 0, 0, 1);
-        verify(unmodifiableColumnGridContextMenuSpy, times(1)).show(eq(GridWidget.SIMULATION), eq(0), eq(0));
-        verify(unmodifiableColumnGridContextMenuSpy, times(1)).mapEvent(eq(insertRowAboveLIElementMock), isA(InsertRowEvent.class));
-        verify(unmodifiableColumnGridContextMenuSpy, times(1)).mapEvent(eq(insertRowBelowLIElementMock), isA(InsertRowEvent.class));
-        verify(unmodifiableColumnGridContextMenuSpy, times(1)).mapEvent(eq(duplicateRowLIElementMock), isA(DuplicateRowEvent.class));
-        verify(unmodifiableColumnGridContextMenuSpy, times(1)).mapEvent(eq(deleteRowLIElementMock), isA(DeleteRowEvent.class));
-        verify(unmodifiableColumnGridContextMenuSpy, never()).addExecutableMenuItem(eq(UCGRIDCONTEXTMENU_RUN_SINGLE_SCENARIO),eq(ScenarioSimulationEditorConstants.INSTANCE.runSingleScenario()), eq("runSingleScenario"));
         verify(unmodifiableColumnGridContextMenuSpy, times(1)).mapEvent(eq(runSingleScenarioElementMock), isA(RunSingleScenarioEvent.class));
-    }
-
-    @Test
-    public void show_Background_NullRunScenarioElement() {
-        unmodifiableColumnGridContextMenuSpy.runSingleScenarioElement = null;
-        unmodifiableColumnGridContextMenuSpy.show(GridWidget.BACKGROUND, 0, 0, 1);
-        verify(unmodifiableColumnGridContextMenuSpy, times(1)).show(eq(GridWidget.BACKGROUND), eq(0), eq(0));
-        verify(unmodifiableColumnGridContextMenuSpy, times(1)).mapEvent(eq(insertRowAboveLIElementMock), isA(InsertRowEvent.class));
-        verify(unmodifiableColumnGridContextMenuSpy, times(1)).mapEvent(eq(insertRowBelowLIElementMock), isA(InsertRowEvent.class));
-        verify(unmodifiableColumnGridContextMenuSpy, times(1)).mapEvent(eq(duplicateRowLIElementMock), isA(DuplicateRowEvent.class));
-        verify(unmodifiableColumnGridContextMenuSpy, times(1)).mapEvent(eq(deleteRowLIElementMock), isA(DeleteRowEvent.class));
-        verify(unmodifiableColumnGridContextMenuSpy, never()).addExecutableMenuItem(eq(UCGRIDCONTEXTMENU_RUN_SINGLE_SCENARIO),eq(ScenarioSimulationEditorConstants.INSTANCE.runSingleScenario()), eq("runSingleScenario"));
-        verify(unmodifiableColumnGridContextMenuSpy, never()).mapEvent(eq(createdElementMock), isA(RunSingleScenarioEvent.class));
-    }
-
-    @Test
-    public void show_Background_NotNullRunScenarioElement() {
-        unmodifiableColumnGridContextMenuSpy.show(GridWidget.BACKGROUND, 0, 0, 1);
-        verify(unmodifiableColumnGridContextMenuSpy, times(1)).show(eq(GridWidget.BACKGROUND), eq(0), eq(0));
-        verify(unmodifiableColumnGridContextMenuSpy, times(1)).mapEvent(eq(insertRowAboveLIElementMock), isA(InsertRowEvent.class));
-        verify(unmodifiableColumnGridContextMenuSpy, times(1)).mapEvent(eq(insertRowBelowLIElementMock), isA(InsertRowEvent.class));
-        verify(unmodifiableColumnGridContextMenuSpy, times(1)).mapEvent(eq(duplicateRowLIElementMock), isA(DuplicateRowEvent.class));
-        verify(unmodifiableColumnGridContextMenuSpy, times(1)).mapEvent(eq(deleteRowLIElementMock), isA(DeleteRowEvent.class));
-        verify(unmodifiableColumnGridContextMenuSpy, never()).addExecutableMenuItem(eq(UCGRIDCONTEXTMENU_RUN_SINGLE_SCENARIO),eq(ScenarioSimulationEditorConstants.INSTANCE.runSingleScenario()), eq("runSingleScenario"));
-        verify(unmodifiableColumnGridContextMenuSpy, never()).mapEvent(eq(createdElementMock), isA(RunSingleScenarioEvent.class));
-        verify(contextMenuDropdownMock, times(1)).removeChild(runSingleScenarioElementMock);
     }
 }

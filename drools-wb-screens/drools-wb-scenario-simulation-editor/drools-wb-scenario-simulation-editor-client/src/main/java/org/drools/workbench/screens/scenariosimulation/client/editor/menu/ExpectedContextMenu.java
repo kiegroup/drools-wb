@@ -27,6 +27,7 @@ import javax.enterprise.context.Dependent;
 public class ExpectedContextMenu extends AbstractColumnMenuPresenter {
 
     // This strings are used to give unique id in the final dom
+    protected static final String EXPECTCONTEXTMENU_GRID_TITLE = "expectcontextmenu-grid-title";
     protected static final String EXPECTCONTEXTMENU_EXPECT = "expectcontextmenu-expect";
     protected static final String EXPECTCONTEXTMENU_INSERT_COLUMN_LEFT = "expectcontextmenu-insert-column-left";
     protected static final String EXPECTCONTEXTMENU_INSERT_COLUMN_RIGHT = "expectcontextmenu-insert-column-right";
@@ -44,6 +45,7 @@ public class ExpectedContextMenu extends AbstractColumnMenuPresenter {
         COLUMNCONTEXTMENU_DELETE_INSTANCE = EXPECTCONTEXTMENU_DELETE_INSTANCE;
         COLUMNCONTEXTMENU_LABEL = constants.expect().toUpperCase();
         COLUMNCONTEXTMENU_I18N = "expect";
+        headerContextMenuGridTitleId = EXPECTCONTEXTMENU_GRID_TITLE;
         // SCENARIO MENU
         super.initMenu();
     }

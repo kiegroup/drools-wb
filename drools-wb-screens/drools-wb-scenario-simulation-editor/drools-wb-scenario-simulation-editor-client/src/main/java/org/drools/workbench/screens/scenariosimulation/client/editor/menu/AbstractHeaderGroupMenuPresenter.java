@@ -17,7 +17,7 @@ package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
 import com.google.gwt.dom.client.LIElement;
 /**
- * This class is meant to provide common methods to <b>group-specific</b> menus {@link HeaderExpectedContextMenu} and {@link HeaderGivenContextMenu}
+ * This class is meant to provide common methods to <b>group-specific</b> menus {@link HeaderExpectedContextMenu} and {@link SimulationHeaderGivenContextMenu}
  * It is provided to avoid code duplication in concrete implementations
  */
 public abstract class AbstractHeaderGroupMenuPresenter extends AbstractHeaderMenuPresenter {

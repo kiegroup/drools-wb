@@ -24,36 +24,36 @@ import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.events.DeleteRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DuplicateRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.InsertRowEvent;
-import org.drools.workbench.screens.scenariosimulation.client.events.RunSingleScenarioEvent;
 
 /**
- * The contextual menu of a <i>ROW</i> cell whose <b>GROUP</b> does <b>not allow</b> column modification (insert/delete). It has the same items has {@link AbstractColumnMenuPresenter} and specific ones (?)
+ * The contextual menu of a a <i>ROW</i> cell whose <b>GROUP</b> does <b>allow</b> column modification (insert/delete). It has the same items has {@link AbstractColumnMenuPresenter} and specific ones (?)
  */
 @Dependent
-public class UnmodifiableColumnGridContextMenu extends AbstractHeaderMenuPresenter {
+public class BackgroundGridContextMenu extends AbstractHeaderMenuPresenter {
 
     // This strings are used to give unique id in the final dom
-    protected static final String UCGRIDCONTEXTMENU_INSERT_ROW_ABOVE = "ucgridcontextmenu-insert-row-above";
-    protected static final String UCGRIDCONTEXTMENU_INSERT_ROW_BELOW = "ucgridcontextmenu-insert-row-below";
-    protected static final String UCGRIDCONTEXTMENU_DELETE_ROW = "ucgridcontextmenu-delete-row";
-    protected static final String UCGRIDCONTEXTMENU_DUPLICATE_ROW = "ucgridcontextmenu-duplicate-row";
-    protected static final String UCGRIDCONTEXTMENU_RUN_SINGLE_SCENARIO = "ucgridcontextmenu-run-single-scenario";
+    protected static final String B_GRIDCONTEXTMENU_GRID_TITLE = "b-gridcontextmenu-grid-title";
+    protected static final String B_GRIDCONTEXTMENU_INSERT_ROW_ABOVE = "b-gridcontextmenu-insert-row-above";
+    protected static final String B_GRIDCONTEXTMENU_INSERT_ROW_BELOW = "b-gridcontextmenu-insert-row-below";
+    protected static final String B_GRIDCONTEXTMENU_DELETE_ROW = "b-gridcontextmenu-delete-row";
+    protected static final String B_GRIDCONTEXTMENU_DUPLICATE_ROW = "b-gridcontextmenu-duplicate-row";
 
     protected LIElement insertRowAboveLIElement;
     protected LIElement insertRowBelowLIElement;
     protected LIElement duplicateRowLIElement;
     protected LIElement deleteRowLIElement;
-    protected LIElement runSingleScenarioElement;
 
     @PostConstruct
     @Override
     public void initMenu() {
-        // SCENARIO MENU
-        insertRowAboveLIElement = addExecutableMenuItem(UCGRIDCONTEXTMENU_INSERT_ROW_ABOVE, constants.insertRowAbove(), "insertRowAbove");
-        insertRowBelowLIElement = addExecutableMenuItem(UCGRIDCONTEXTMENU_INSERT_ROW_BELOW, constants.insertRowBelow(), "insertRowBelow");
-        duplicateRowLIElement = addExecutableMenuItem(UCGRIDCONTEXTMENU_DUPLICATE_ROW, constants.duplicateRow(), "duplicateRow");
-        deleteRowLIElement = addExecutableMenuItem(UCGRIDCONTEXTMENU_DELETE_ROW, constants.deleteRow(), "deleteRow");
-        runSingleScenarioElement = addExecutableMenuItem(UCGRIDCONTEXTMENU_RUN_SINGLE_SCENARIO, constants.runSingleScenario(), "runSingleScenario");
+        HEADERCONTEXTMENU_PREPEND_ROW = B_GRIDCONTEXTMENU_INSERT_ROW_BELOW;
+        headerContextMenuGridTitleId = B_GRIDCONTEXTMENU_GRID_TITLE;
+        headerContextMenuGridTitleLabel = constants.background();
+        headerContextMenuGridTitleI18n = "background";
+        super.initMenu();
+        insertRowAboveLIElement = addExecutableMenuItem(B_GRIDCONTEXTMENU_INSERT_ROW_ABOVE, constants.insertRowAbove(), "insertRowAbove");
+        duplicateRowLIElement = addExecutableMenuItem(B_GRIDCONTEXTMENU_DUPLICATE_ROW, constants.duplicateRow(), "duplicateRow");
+        deleteRowLIElement = addExecutableMenuItem(B_GRIDCONTEXTMENU_DELETE_ROW, constants.deleteRow(), "deleteRow");
     }
 
     public void show(final GridWidget gridWidget, final int mx, final int my, int rowIndex) {
@@ -62,6 +62,5 @@ public class UnmodifiableColumnGridContextMenu extends AbstractHeaderMenuPresent
         mapEvent(insertRowBelowLIElement, new InsertRowEvent(gridWidget, rowIndex + 1));
         mapEvent(duplicateRowLIElement, new DuplicateRowEvent(gridWidget, rowIndex));
         mapEvent(deleteRowLIElement, new DeleteRowEvent(gridWidget, rowIndex));
-        mapEvent(runSingleScenarioElement, new RunSingleScenarioEvent(rowIndex));
     }
 }

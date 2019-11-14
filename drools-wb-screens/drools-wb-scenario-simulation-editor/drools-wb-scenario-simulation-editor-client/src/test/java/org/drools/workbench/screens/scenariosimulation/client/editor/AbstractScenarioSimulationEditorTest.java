@@ -29,8 +29,8 @@ import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.client.AbstractScenarioSimulationTest;
 import org.drools.workbench.screens.scenariosimulation.client.TestProperties;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.BaseMenuView;
-import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridContextMenu;
-import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderGivenContextMenu;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.SimulationGridContextMenu;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.SimulationHeaderGivenContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CoverageReportPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter;
@@ -76,9 +76,9 @@ public abstract class AbstractScenarioSimulationEditorTest extends AbstractScena
     @Mock
     protected Overview overviewMock;
     @Mock
-    protected GridContextMenu gridContextMenuMock;
+    protected SimulationGridContextMenu simulationGridContextMenuMock;
     @Mock
-    protected HeaderGivenContextMenu headerGivenContextMenuMock;
+    protected SimulationHeaderGivenContextMenu simulationHeaderGivenContextMenuMock;
     @Mock
     protected BaseMenuView gridContextMenuViewMock;
     @Mock
@@ -113,8 +113,8 @@ public abstract class AbstractScenarioSimulationEditorTest extends AbstractScena
         when(versionRecordManagerMock.getCurrentPath()).thenReturn(observablePathMock);
         when(versionRecordManagerMock.getPathToLatest()).thenReturn(observablePathMock);
         when(workbenchContextMock.getActiveWorkspaceProject()).thenReturn(Optional.empty());
-        when(gridContextMenuMock.getView()).thenReturn(gridContextMenuViewMock);
-        when(headerGivenContextMenuMock.getView()).thenReturn(headerContextMenuViewMock);
+        when(simulationGridContextMenuMock.getView()).thenReturn(gridContextMenuViewMock);
+        when(simulationHeaderGivenContextMenuMock.getView()).thenReturn(headerContextMenuViewMock);
         this.modelLocal = new ScenarioSimulationModel();
         modelLocal.setSimulation(getSimulation());
         modelLocal.setSettings(settingsLocal);

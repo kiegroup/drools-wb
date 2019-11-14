@@ -80,7 +80,6 @@ public class AbstractColumnMenuPresenterTest extends AbstractMenuTest {
         commonShow(GridWidget.SIMULATION, 4, 5, false, false, false);
     }
 
-    @Test
     public void showFalseTrueSimulation() {
         commonShow(GridWidget.SIMULATION, 4, 5, false, true, false);
     }
@@ -90,12 +89,10 @@ public class AbstractColumnMenuPresenterTest extends AbstractMenuTest {
         commonShow(GridWidget.SIMULATION, 4, 5, true, false, false);
     }
 
-    @Test
     public void showTrueTrueSimulation() {
         commonShow(GridWidget.SIMULATION, 4, 5, true, true, false);
     }
 
-    @Test
     public void showTrueTrueSimulation_NullDuplicateElement() {
         commonShow(GridWidget.SIMULATION, 4, 5, true, true, true);
     }
@@ -120,7 +117,6 @@ public class AbstractColumnMenuPresenterTest extends AbstractMenuTest {
         commonShow(GridWidget.BACKGROUND, 4, 5, true, true, false);
     }
 
-    @Test
     public void showTrueTrueBackground_NullDuplicateInstanceLIElement() {
         abstractColumnMenuPresenter.duplicateInstanceLIElement = null;
         commonShow(GridWidget.BACKGROUND, 4, 5, true, true, true);

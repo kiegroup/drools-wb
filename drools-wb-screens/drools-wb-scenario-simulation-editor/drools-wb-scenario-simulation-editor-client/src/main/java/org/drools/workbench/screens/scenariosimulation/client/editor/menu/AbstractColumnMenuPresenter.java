@@ -15,8 +15,6 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
-import java.util.Objects;
-
 import com.google.gwt.dom.client.LIElement;
 import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.events.DeleteColumnEvent;
@@ -30,6 +28,7 @@ import org.drools.workbench.screens.scenariosimulation.client.events.InsertColum
  */
 public abstract class AbstractColumnMenuPresenter extends AbstractHeaderMenuPresenter {
 
+    protected String COLUMNCONTEXTMENU_GRID_TITLE;
     protected String COLUMNCONTEXTMENU_COLUMN;
     protected String COLUMNCONTEXTMENU_INSERT_COLUMN_LEFT;
     protected String COLUMNCONTEXTMENU_INSERT_COLUMN_RIGHT;
@@ -55,20 +54,16 @@ public abstract class AbstractColumnMenuPresenter extends AbstractHeaderMenuPres
         insertColumnRightLIElement = addExecutableMenuItem(COLUMNCONTEXTMENU_INSERT_COLUMN_RIGHT, constants.insertColumnRight(), "insertColumnRight");
         deleteColumnInstanceLIElement = addExecutableMenuItem(COLUMNCONTEXTMENU_DELETE_COLUMN, constants.deleteColumn(), "deleteColumn");
         duplicateInstanceLIElement = addExecutableMenuItem(COLUMNCONTEXTMENU_DUPLICATE_INSTANCE, constants.duplicateInstance(), "duplicateInstance");
+        headerContextMenuGridTitleId = COLUMNCONTEXTMENU_GRID_TITLE;
+        headerContextMenuGridTitleLabel = constants.scenario();
+        headerContextMenuGridTitleI18n = "scenario";
         super.initMenu();
     }
 
     public void show(final GridWidget gridWidget, final int mx, final int my, int columnIndex, String group, boolean asProperty, boolean showDuplicateInstance) {
-        if((!showDuplicateInstance || Objects.equals(GridWidget.BACKGROUND, gridWidget)) && duplicateInstanceLIElement != null) {
-            updateMenuItemAttributes(gridTitleElement, HEADERCONTEXTMENU_GRID_TITLE, constants.background(), "background");
+        if(!showDuplicateInstance && duplicateInstanceLIElement != null) {
             removeMenuItem(duplicateInstanceLIElement);
             duplicateInstanceLIElement = null;
-        } else if (Objects.equals(GridWidget.SIMULATION, gridWidget) && showDuplicateInstance) {
-            updateMenuItemAttributes(gridTitleElement , HEADERCONTEXTMENU_GRID_TITLE, constants.scenario(), "scenario");
-            if (duplicateInstanceLIElement == null) {
-                duplicateInstanceLIElement = addExecutableMenuItemAfter(COLUMNCONTEXTMENU_DUPLICATE_INSTANCE, constants.duplicateInstance(), "duplicateInstance", deleteColumnInstanceLIElement);
-            }
-            mapEvent(duplicateInstanceLIElement, new DuplicateInstanceEvent(gridWidget, columnIndex));
         }
         mapEvent(insertColumnLeftLIElement, new InsertColumnEvent(gridWidget, columnIndex, false, asProperty));
         mapEvent(insertColumnRightLIElement, new InsertColumnEvent(gridWidget, columnIndex, true, asProperty));
@@ -79,7 +74,9 @@ public abstract class AbstractColumnMenuPresenter extends AbstractHeaderMenuPres
             updateExecutableMenuItemAttributes(deleteColumnInstanceLIElement, COLUMNCONTEXTMENU_DELETE_INSTANCE, constants.deleteInstance(), "deleteInstance");
             mapEvent(deleteColumnInstanceLIElement, new DeleteColumnEvent(gridWidget, columnIndex, group, false));
         }
+        if (duplicateInstanceLIElement != null) {
+            mapEvent(duplicateInstanceLIElement, new DuplicateInstanceEvent(gridWidget, columnIndex));
+        }
         show(gridWidget, mx, my);
     }
-
 }
