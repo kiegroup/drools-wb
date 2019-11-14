@@ -15,6 +15,8 @@
  */
 package org.drools.workbench.screens.scenariosimulation.backend.server.util;
 
+import java.util.function.BiFunction;
+
 import org.drools.scenariosimulation.api.model.AbstractScesimData;
 import org.drools.scenariosimulation.api.model.AbstractScesimModel;
 import org.drools.scenariosimulation.api.model.Background;
@@ -37,18 +39,18 @@ import static org.drools.scenariosimulation.api.model.FactMappingType.GIVEN;
  */
 public interface SimulationSettingsCreationStrategy {
 
-    Simulation createSimulation(Path context, String value) throws Exception;
+    Simulation createSimulation(Path context, String value);
 
-    Settings createSettings(Path context, String value) throws Exception;
+    Settings createSettings(Path context, String value);
 
-    default <T extends AbstractScesimData, E extends ScesimDataWithIndex<T>> E createScesimDataWithIndex(AbstractScesimModel<T> abstractScesimModel, ScesimModelDescriptor simulationDescriptor, Class<E> toInstantiate) throws Exception {
+    default <T extends AbstractScesimData, E extends ScesimDataWithIndex<T>> E createScesimDataWithIndex(AbstractScesimModel<T> abstractScesimModel, ScesimModelDescriptor simulationDescriptor, BiFunction<Integer, T, E> producer) {
         T scenario = abstractScesimModel.addData();
         scenario.setDescription(null);
         int index = abstractScesimModel.getUnmodifiableData().indexOf(scenario) + 1;
-        return toInstantiate.getConstructor(int.class, scenario.getClass()).newInstance(index, scenario);
+        return producer.apply(index, scenario);
     }
 
-    default Background createBackground(Path context, String dmnFilePath) throws Exception {
+    default Background createBackground(Path context, String dmnFilePath) {
         Background toReturn = new Background();
         ScesimModelDescriptor simulationDescriptor = toReturn.getScesimModelDescriptor();
         int index = toReturn.getUnmodifiableData().size() + 1;
