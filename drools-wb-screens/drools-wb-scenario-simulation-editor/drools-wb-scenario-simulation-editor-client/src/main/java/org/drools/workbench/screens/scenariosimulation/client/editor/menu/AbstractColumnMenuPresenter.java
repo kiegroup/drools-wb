@@ -59,16 +59,20 @@ public abstract class AbstractColumnMenuPresenter extends AbstractHeaderMenuPres
     }
 
     public void show(final GridWidget gridWidget, final int mx, final int my, int columnIndex, String group, boolean asProperty, boolean showDuplicateInstance) {
-        if((!showDuplicateInstance || Objects.equals(GridWidget.BACKGROUND, gridWidget)) && duplicateInstanceLIElement != null) {
+        /* Set GridTitle */
+        if (Objects.equals(GridWidget.BACKGROUND, gridWidget)) {
             updateMenuItemAttributes(gridTitleElement, HEADERCONTEXTMENU_GRID_TITLE, constants.background(), "background");
-            removeMenuItem(duplicateInstanceLIElement);
-            duplicateInstanceLIElement = null;
-        } else if (Objects.equals(GridWidget.SIMULATION, gridWidget) && showDuplicateInstance) {
-            updateMenuItemAttributes(gridTitleElement , HEADERCONTEXTMENU_GRID_TITLE, constants.scenario(), "scenario");
-            if (duplicateInstanceLIElement == null) {
-                duplicateInstanceLIElement = addExecutableMenuItemAfter(COLUMNCONTEXTMENU_DUPLICATE_INSTANCE, constants.duplicateInstance(), "duplicateInstance", deleteColumnInstanceLIElement);
+        } else {
+            updateMenuItemAttributes(gridTitleElement, HEADERCONTEXTMENU_GRID_TITLE, constants.scenario(), "scenario");
+        }
+        /* Manage Duplicate Instance menu item */
+        if (!(Objects.equals(GridWidget.SIMULATION, gridWidget) && showDuplicateInstance)) {
+            if (duplicateInstanceLIElement != null) {
+                removeMenuItem(duplicateInstanceLIElement);
+                duplicateInstanceLIElement = null;
             }
-            mapEvent(duplicateInstanceLIElement, new DuplicateInstanceEvent(gridWidget, columnIndex));
+        } else if (duplicateInstanceLIElement == null) {
+            duplicateInstanceLIElement = addExecutableMenuItemAfter(COLUMNCONTEXTMENU_DUPLICATE_INSTANCE, constants.duplicateInstance(), "duplicateInstance", deleteColumnInstanceLIElement);
         }
         mapEvent(insertColumnLeftLIElement, new InsertColumnEvent(gridWidget, columnIndex, false, asProperty));
         mapEvent(insertColumnRightLIElement, new InsertColumnEvent(gridWidget, columnIndex, true, asProperty));
@@ -78,6 +82,9 @@ public abstract class AbstractColumnMenuPresenter extends AbstractHeaderMenuPres
         } else {
             updateExecutableMenuItemAttributes(deleteColumnInstanceLIElement, COLUMNCONTEXTMENU_DELETE_INSTANCE, constants.deleteInstance(), "deleteInstance");
             mapEvent(deleteColumnInstanceLIElement, new DeleteColumnEvent(gridWidget, columnIndex, group, false));
+        }
+        if (duplicateInstanceLIElement != null) {
+            mapEvent(duplicateInstanceLIElement, new DuplicateInstanceEvent(gridWidget, columnIndex));
         }
         show(gridWidget, mx, my);
     }

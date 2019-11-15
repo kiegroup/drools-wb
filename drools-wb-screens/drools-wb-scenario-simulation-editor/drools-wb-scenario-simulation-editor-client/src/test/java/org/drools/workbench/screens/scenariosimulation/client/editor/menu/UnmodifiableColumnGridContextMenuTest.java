@@ -163,6 +163,6 @@ public class UnmodifiableColumnGridContextMenuTest {
         verify(unmodifiableColumnGridContextMenuSpy, times(1)).mapEvent(eq(deleteRowLIElementMock), isA(DeleteRowEvent.class));
         verify(unmodifiableColumnGridContextMenuSpy, never()).addExecutableMenuItem(eq(UCGRIDCONTEXTMENU_RUN_SINGLE_SCENARIO),eq(ScenarioSimulationEditorConstants.INSTANCE.runSingleScenario()), eq("runSingleScenario"));
         verify(unmodifiableColumnGridContextMenuSpy, never()).mapEvent(eq(createdElementMock), isA(RunSingleScenarioEvent.class));
-        verify(contextMenuDropdownMock, times(1)).removeChild(runSingleScenarioElementMock);
+        verify(contextMenuDropdownMock, times(1)).removeChild(eq(runSingleScenarioElementMock));
     }
 }
