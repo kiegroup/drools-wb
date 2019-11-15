@@ -246,11 +246,13 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioGrid
                                                                                         selectedColumn,
                                                                                         propertyNameElements,
                                                                                         propertyClass, context.getStatus().isKeepData(),
-                                                factMappingValueType);
+                                                                                        factMappingValueType);
         if (ScenarioSimulationSharedUtils.isCollection(propertyClass) && factMappingValueType.equals(FactMappingValueType.NOT_EXPRESSION)) {
             manageCollectionProperty(context, selectedColumn, className, columnIndex, propertyNameElements);
         } else {
-            selectedColumn.setFactory(context.getAbstractScesimGridModelByGridWidget(gridWidget).getScenarioCellTextAreaSingletonDOMElementFactory());
+            selectedColumn.setFactory(context.getAbstractScesimGridModelByGridWidget(gridWidget).getDOMElementFactory(propertyClass,
+                                                                                                                      context.getSettings().getType(),
+                                                                                                                      factMappingValueType));
         }
         if (context.getScenarioSimulationEditorPresenter() != null) {
             context.getScenarioSimulationEditorPresenter().reloadTestTools(false);
