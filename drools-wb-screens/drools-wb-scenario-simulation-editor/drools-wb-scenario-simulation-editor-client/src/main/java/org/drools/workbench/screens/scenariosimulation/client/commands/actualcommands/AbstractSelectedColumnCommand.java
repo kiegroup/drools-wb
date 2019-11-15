@@ -331,7 +331,7 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioGrid
     }
 
     protected Optional<String> getMatchingExpressionAlias(ScenarioSimulationContext context, List<String> propertyNameElements, FactIdentifier factIdentifier) {
-        final List<FactMapping> factMappingsByFactName = context.getStatus().getSimulation().getScesimModelDescriptor().getFactMappingsByFactName(factIdentifier.getName());
+        final List<FactMapping> factMappingsByFactName = context.getAbstractScesimModelByGridWidget(gridWidget).getScesimModelDescriptor().getFactMappingsByFactName(factIdentifier.getName());
         return factMappingsByFactName.stream()
                 .filter(factMapping -> {
                     List<String> expressionElements = factMapping.getExpressionElements().stream().map(ExpressionElement::getStep).collect(Collectors.toList());
