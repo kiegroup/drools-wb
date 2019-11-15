@@ -17,8 +17,9 @@ package org.drools.workbench.screens.scenariosimulation.client.commands.actualco
 
 import javax.enterprise.context.Dependent;
 
+import org.drools.scenariosimulation.api.model.AbstractScesimData;
+import org.drools.scenariosimulation.api.model.AbstractScesimModel;
 import org.drools.scenariosimulation.api.model.FactMapping;
-import org.drools.scenariosimulation.api.model.ScesimModelDescriptor;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils;
@@ -36,15 +37,15 @@ public class SetGridCellValueCommand extends AbstractScenarioGridCommand {
     }
 
     private SetGridCellValueCommand() {
-       // CDI
+        // CDI
     }
 
     @Override
     protected void internalExecute(ScenarioSimulationContext context) {
         final ScenarioSimulationContext.Status status = context.getStatus();
-        ScesimModelDescriptor simulationDescriptor = status.getSimulation().getScesimModelDescriptor();
+        AbstractScesimModel<AbstractScesimData> abstractScesimModel = context.getAbstractScesimModelByGridWidget(gridWidget);
         int columnIndex = status.getColumnIndex();
-        FactMapping factMapping = simulationDescriptor.getFactMappingByIndex(columnIndex);
+        FactMapping factMapping = abstractScesimModel.getScesimModelDescriptor().getFactMappingByIndex(columnIndex);
         ScenarioGridColumn selectedColumn = (ScenarioGridColumn) context.getAbstractScesimGridModelByGridWidget(gridWidget).getColumns().get(columnIndex);
         String placeholder = ScenarioSimulationUtils.getPlaceHolder(selectedColumn.isInstanceAssigned(),
                                                                     selectedColumn.isPropertyAssigned(),
@@ -53,7 +54,7 @@ public class SetGridCellValueCommand extends AbstractScenarioGridCommand {
         context.getAbstractScesimGridModelByGridWidget(gridWidget).setCellValue(status.getRowIndex(),
                                                                                 columnIndex,
                                                                                 new ScenarioGridCellValue(status.getGridCellValue(),
-                                                                  placeholder));
+                                                                                                          placeholder));
         context.getAbstractScesimGridModelByGridWidget(gridWidget).resetError(status.getRowIndex(), columnIndex);
     }
 }
