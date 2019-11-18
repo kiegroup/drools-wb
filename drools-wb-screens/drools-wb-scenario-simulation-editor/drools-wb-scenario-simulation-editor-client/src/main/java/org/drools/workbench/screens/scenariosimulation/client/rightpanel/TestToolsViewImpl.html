@@ -20,7 +20,13 @@
     <div id="kieTestToolsContent" class="tab-pane kie-tab-pane--scesim-panel">
         <p>To create a test template, define the "Given" and "Expect" columns by using the expression editor below.</p>
 
-        <label for="kie-search">Select Data Object</label>
+        <label for="kie-search" data-i18n-key="Select_Data_Object">
+            Select Data Object
+            <a href="">
+                <span class="pficon pficon-info" style="padding-top: 4px;"></span>
+            </a>
+        </label>
+        <a href="" class="pull-right">Clear selection</a>
         <div id="kie-search" class="kie-test-tools-content__box"><!-- outlined data object box -->
             <!-- search box -->
             <div class="search-pf has-button">
@@ -77,7 +83,6 @@
                 </ul>
             </div>
 
-            <hr/>
             <div style="margin-bottom: 10px;" data-field="addButtonLabel"></div>
             <button class="btn btn-lg btn-primary" type="button" data-field="addButton">Insert Data Object</button>
         </div>

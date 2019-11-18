@@ -135,4 +135,7 @@ li.list-group-item.kie-object-list__separator, li.list-group-item.kie-object-lis
     padding: 1em;
 }
 
-
+.kie-test-tools-content__box {
+    padding: 10px;
+    border: 1px solid #bbb;
+}

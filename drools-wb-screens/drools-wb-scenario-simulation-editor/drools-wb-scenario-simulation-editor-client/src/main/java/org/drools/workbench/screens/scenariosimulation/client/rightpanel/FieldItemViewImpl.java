@@ -20,6 +20,7 @@ import java.util.Objects;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.LIElement;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
@@ -34,6 +35,12 @@ public class FieldItemViewImpl implements FieldItemView {
 
     @DataField("fieldElement")
     protected LIElement fieldElement = Document.get().createLIElement();
+
+    @DataField("labelElement")
+    protected SpanElement labelElement = Document.get().createSpanElement();
+
+    @DataField("checkElement")
+    protected SpanElement checkElement = Document.get().createSpanElement();
 
     private Presenter fieldItemPresenter;
 
@@ -51,11 +58,11 @@ public class FieldItemViewImpl implements FieldItemView {
                 .append(className)
                 .append("]")
                 .toString();
-        fieldElement.setInnerHTML(innerHtml);
-        fieldElement.setAttribute("id", "fieldElement-" + factName + "-" + fieldName);
-        fieldElement.setAttribute("fieldName", fieldName);
-        fieldElement.setAttribute("className", className);
-        fieldElement.setAttribute("fullPath", fullPath);
+        labelElement.setInnerHTML(innerHtml);
+        labelElement.setAttribute("id", "fieldElement-" + factName + "-" + fieldName);
+        labelElement.setAttribute("fieldName", fieldName);
+        labelElement.setAttribute("className", className);
+        labelElement.setAttribute("fullPath", fullPath);
         this.factName = factName;
         this.fieldName = fieldName;
         this.className = className;
@@ -101,11 +108,13 @@ public class FieldItemViewImpl implements FieldItemView {
     public void onFieldElementClick() {
         fieldElement.addClassName("selected");
         fieldItemPresenter.onFieldElementClick(this);
+        checkElement.getStyle().setDisplay(Style.Display.BLOCK);
     }
 
     @Override
     public void unselect() {
         fieldElement.removeClassName("selected");
+        checkElement.getStyle().setDisplay(Style.Display.NONE);
     }
 
     @Override
