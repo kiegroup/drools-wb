@@ -21,6 +21,7 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.ait.lienzo.client.core.types.Point2D;
+import com.google.gwt.core.client.GWT;
 import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMappingType;
@@ -304,6 +305,7 @@ public class ScenarioSimulationUtils {
         final int cellXMiddle = (int) (context.getAbsoluteCellX() +
                 context.getCellWidth() / 2 +
                 gridLayer.getDomElementContainer().getAbsoluteLeft());
+        GWT.log("context.getAbsoluteCellY() " + context.getAbsoluteCellY());
         final int cellYMiddle = (int) (context.getAbsoluteCellY() +
                 context.getCellHeight() / 2 +
                 gridLayer.getDomElementContainer().getAbsoluteTop());

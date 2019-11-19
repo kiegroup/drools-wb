@@ -18,10 +18,12 @@ package org.drools.workbench.screens.scenariosimulation.client.popover;
 
 import java.util.Optional;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.ui.RootPanel;
 import org.jboss.errai.common.client.dom.Div;
 import org.jboss.errai.common.client.dom.HTMLElement;
+import org.jboss.errai.common.client.dom.NamedNodeMap;
 import org.jboss.errai.common.client.ui.ElementWrapperWidget;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.uberfire.client.views.pfly.widgets.JQueryProducer;
@@ -73,9 +75,9 @@ public abstract class AbstractPopoverView implements PopoverView {
     }
 
     public void init() {
-        final HTMLElement element = this.getElement();
-        popover = jQueryPopover.wrap(element);
-        wrappedWidget = ElementWrapperWidget.getWidget(element);
+//        final HTMLElement element = this.getElement();
+//        popover = jQueryPopover.wrap(element);
+//        wrappedWidget = ElementWrapperWidget.getWidget(element);
     }
 
     @Override
@@ -83,6 +85,10 @@ public abstract class AbstractPopoverView implements PopoverView {
         if (isShown()) {
             hide();
         }
+        final HTMLElement element = this.getElement();
+        GWT.log("element " + element.hashCode());
+        popover = jQueryPopover.wrap(element);
+        wrappedWidget = ElementWrapperWidget.getWidget(element);
         addWidgetToRootPanel();
         editorTitle.ifPresent(t -> popoverElement.setAttribute(TITLE, t));
         popoverElement.getStyle().setProperty(TOP, my + PX);
@@ -99,12 +105,16 @@ public abstract class AbstractPopoverView implements PopoverView {
 
     @Override
     public boolean isShown() {
-        return RootPanel.get().getWidgetIndex(wrappedWidget) != -1;
+        return wrappedWidget != null && RootPanel.get().getWidgetIndex(wrappedWidget) != -1;
     }
 
     @Override
     public void hide() {
-        removeWidgetFromRootPanel();
+        if (isShown()) {
+            removeWidgetFromRootPanel();
+            popover.destroy();
+            wrappedWidget = null;
+        }
     }
 
     /**
@@ -113,7 +123,7 @@ public abstract class AbstractPopoverView implements PopoverView {
      * @return
      */
     public int getActualHeight() {
-        return wrappedWidget.getElement().getScrollHeight();
+        return wrappedWidget != null ? wrappedWidget.getElement().getScrollHeight() : 0;
     }
 
     //indirection for tests
@@ -128,6 +138,8 @@ public abstract class AbstractPopoverView implements PopoverView {
 
     //indirection for tests
     protected void scheduleTask() {
-        Scheduler.get().scheduleDeferred(() -> popover.show());
+        Scheduler.get().scheduleDeferred(() -> {
+            popover.show();
+        });
     }
 }

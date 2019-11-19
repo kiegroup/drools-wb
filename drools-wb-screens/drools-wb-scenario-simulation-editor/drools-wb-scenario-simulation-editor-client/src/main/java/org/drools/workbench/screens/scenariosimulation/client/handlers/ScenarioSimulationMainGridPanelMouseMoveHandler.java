@@ -115,8 +115,6 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandler extends AbstractSce
         int xPosition = (int) cellXYMiddleCoordinates.getX() + xMiddleWidth;
         /* Handling scrolling y-position */
         int yPosition = (int) cellXYMiddleCoordinates.getY();
-        int scrollY = scenarioGridPanel.getScrollPanel().getElement().getScrollTop();
-        yPosition = yPosition - scrollY;
         /* It determines if the popover should be draw on the RIGHT or in the LEFT of the cell */
         if (xPosition + POPOVER_WIDTH > scenarioGrid.getLayer().getWidth()) {
             xPosition = (int) cellXYMiddleCoordinates.getX() - xMiddleWidth;
@@ -134,7 +132,8 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandler extends AbstractSce
         final int absoluteBottom = scenarioGrid.getLayer().getElement().getAbsoluteBottom();
         GWT.log("yPosition " + yPosition + " actualHeight " + actualHeight + " absoluteBottom " + absoluteBottom);
         if ((yPosition + actualHeight) >= absoluteBottom) {
-            yPosition = (int) cellXYMiddleCoordinates.getY() - cellHeight/2 - actualHeight -scrollY;
+            xPosition = (int) cellXYMiddleCoordinates.getX();
+            yPosition = (int) cellXYMiddleCoordinates.getY() - cellHeight/2 - actualHeight;
             position = PopoverView.Position.TOP;
             GWT.log(" yPosition " + yPosition + " position " + position);
         }
@@ -146,6 +145,10 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandler extends AbstractSce
         GWT.log("setupPopupPresenter xPosition " + xPosition + " yPosition " + yPosition + " position " + position);
         int scrollX = scenarioGridPanel.getScrollPanel().getElement().getScrollLeft();
         xPosition = xPosition - scrollX;
+        GWT.log("xPosition " + xPosition + " scrollX " + scrollX);
+        int scrollY = scenarioGridPanel.getScrollPanel().getElement().getScrollTop();
+        //yPosition = yPosition - scrollY;
+        GWT.log("yPosition " + yPosition + " scrollY " + scrollY);
         /* Parameters for the error message */
         final Object expectedValue = toManage.getRawValue();
         final Object errorValue = toManage.getErrorValue();
