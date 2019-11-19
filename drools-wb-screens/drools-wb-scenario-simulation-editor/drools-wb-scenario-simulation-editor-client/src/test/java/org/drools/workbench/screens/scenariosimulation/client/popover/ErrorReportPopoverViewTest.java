@@ -129,7 +129,7 @@ public class ErrorReportPopoverViewTest {
 
     @Test
     public void show() {
-        errorReportPopupView.show(ERROR_TITLE_TEXT, ERROR_CONTENT_TEXT, KEEP_TEXT, APPLY_TEXT, applyCommandMock, MX, MY, PopoverView.Position.RIGHT);
+        errorReportPopupView.setup(ERROR_TITLE_TEXT, ERROR_CONTENT_TEXT, KEEP_TEXT, APPLY_TEXT, applyCommandMock, MX, MY, PopoverView.Position.RIGHT);
         verify(errorReportPopupView, times(1)).addWidgetToRootPanel();
         verify(popoverElementMock, times(1)).setAttribute(TITLE, ERROR_TITLE_TEXT);
         verify(jQueryPopoverMock, times(1)).wrap(elementMock);
@@ -146,7 +146,7 @@ public class ErrorReportPopoverViewTest {
 
     @Test
     public void show_withoutApplyButton() {
-        errorReportPopupView.show(ERROR_TITLE_TEXT, ERROR_CONTENT_TEXT, KEEP_TEXT, MX, MY, PopoverView.Position.RIGHT);
+        errorReportPopupView.setup(ERROR_TITLE_TEXT, ERROR_CONTENT_TEXT, KEEP_TEXT, MX, MY, PopoverView.Position.RIGHT);
         verify(errorReportPopupView, times(1)).addWidgetToRootPanel();
         verify(popoverElementMock, times(1)).setAttribute(TITLE, ERROR_TITLE_TEXT);
         verify(jQueryPopoverMock, times(1)).wrap(elementMock);
@@ -163,7 +163,7 @@ public class ErrorReportPopoverViewTest {
     @Test
     public void show_alreadyVisible() {
         doReturn(Boolean.TRUE).when(errorReportPopupView).isShown();
-        errorReportPopupView.show(ERROR_TITLE_TEXT, ERROR_CONTENT_TEXT, KEEP_TEXT, APPLY_TEXT, applyCommandMock, MX, MY, PopoverView.Position.RIGHT);
+        errorReportPopupView.setup(ERROR_TITLE_TEXT, ERROR_CONTENT_TEXT, KEEP_TEXT, APPLY_TEXT, applyCommandMock, MX, MY, PopoverView.Position.RIGHT);
         verify(errorReportPopupView, times(1)).hide();
         verify(errorReportPopupView, times(1)).addWidgetToRootPanel();
         verify(popoverElementMock, times(1)).setAttribute(TITLE, ERROR_TITLE_TEXT);

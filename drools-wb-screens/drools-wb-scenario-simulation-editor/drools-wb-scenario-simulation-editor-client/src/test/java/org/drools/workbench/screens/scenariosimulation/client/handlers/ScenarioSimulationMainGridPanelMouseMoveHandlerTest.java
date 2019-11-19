@@ -128,7 +128,7 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandlerTest extends Abstrac
         verify(simulationDescriptorMock, times(1)).getFactMappingByIndex(eq(COLUMN_INDEX));
         verify(scenarioMock, times(1)).getFactMappingValue(eq(factMappingMock));
         verify(mouseMoveHandler, times(1)).retrieveCellMiddleXYPosition(gridColumnMock, ROW_INDEX);
-        verify(errorReportPopupPresenterMock, times(1)).show(
+        verify(errorReportPopupPresenterMock, times(1)).setup(
                 eq(ScenarioSimulationEditorConstants.INSTANCE.errorReason()),
                 eq(ScenarioSimulationEditorConstants.INSTANCE.errorPopoverMessageFailedWithError(RAW_VALUE, ERROR_VALUE)),
                 eq(ScenarioSimulationEditorConstants.INSTANCE.keep()),
@@ -147,7 +147,7 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandlerTest extends Abstrac
         verify(simulationDescriptorMock, times(1)).getFactMappingByIndex(eq(COLUMN_INDEX));
         verify(scenarioMock, times(1)).getFactMappingValue(eq(factMappingMock));
         verify(mouseMoveHandler, times(1)).retrieveCellMiddleXYPosition(gridColumnMock, ROW_INDEX);
-        verify(errorReportPopupPresenterMock, times(1)).show(
+        verify(errorReportPopupPresenterMock, times(1)).setup(
                 eq(ScenarioSimulationEditorConstants.INSTANCE.errorReason()),
                 eq(ScenarioSimulationEditorConstants.INSTANCE.errorPopoverMessageFailedWithError(RAW_VALUE, ERROR_VALUE)),
                 eq(ScenarioSimulationEditorConstants.INSTANCE.keep()),
@@ -167,7 +167,7 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandlerTest extends Abstrac
         verify(simulationDescriptorMock, times(1)).getFactMappingByIndex(eq(COLUMN_INDEX));
         verify(scenarioMock, times(1)).getFactMappingValue(eq(factMappingMock));
         verify(mouseMoveHandler, times(1)).retrieveCellMiddleXYPosition(gridColumnMock, ROW_INDEX);
-        verify(errorReportPopupPresenterMock, times(1)).show(
+        verify(errorReportPopupPresenterMock, times(1)).setup(
                 eq(ScenarioSimulationEditorConstants.INSTANCE.errorReason()),
                 eq(ScenarioSimulationEditorConstants.INSTANCE.errorPopoverMessageFailedWithError(NULL, NULL)),
                 eq(ScenarioSimulationEditorConstants.INSTANCE.keep()),
@@ -187,7 +187,7 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandlerTest extends Abstrac
         verify(simulationDescriptorMock, times(1)).getFactMappingByIndex(eq(COLUMN_INDEX));
         verify(scenarioMock, times(1)).getFactMappingValue(eq(factMappingMock));
         verify(mouseMoveHandler, times(1)).retrieveCellMiddleXYPosition(gridColumnMock, ROW_INDEX);
-        verify(errorReportPopupPresenterMock, times(1)).show(
+        verify(errorReportPopupPresenterMock, times(1)).setup(
                 eq(ScenarioSimulationEditorConstants.INSTANCE.errorReason()),
                 eq(ScenarioSimulationEditorConstants.INSTANCE.errorPopoverMessageFailedWithException(EXCEPTION)),
                 eq(ScenarioSimulationEditorConstants.INSTANCE.close()),
@@ -205,7 +205,7 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandlerTest extends Abstrac
         verify(simulationDescriptorMock, times(1)).getFactMappingByIndex(eq(COLUMN_INDEX));
         verify(scenarioMock, times(1)).getFactMappingValue(eq(factMappingMock));
         verify(mouseMoveHandler, times(1)).retrieveCellMiddleXYPosition(gridColumnMock, ROW_INDEX);
-        verify(errorReportPopupPresenterMock, times(1)).show(
+        verify(errorReportPopupPresenterMock, times(1)).setup(
                 eq(ScenarioSimulationEditorConstants.INSTANCE.errorReason()),
                 eq(ScenarioSimulationEditorConstants.INSTANCE.errorPopoverMessageFailedWithError(RAW_VALUE, ERROR_VALUE)),
                 eq(ScenarioSimulationEditorConstants.INSTANCE.keep()),
@@ -224,7 +224,7 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandlerTest extends Abstrac
         verify(simulationDescriptorMock, times(1)).getFactMappingByIndex(eq(COLUMN_INDEX));
         verify(scenarioMock, times(1)).getFactMappingValue(eq(factMappingMock));
         verify(mouseMoveHandler, never()).retrieveCellMiddleXYPosition(any(), isA(Integer.class));
-        verify(errorReportPopupPresenterMock, never()).show(any(), any(), any(), any(), any(), isA(Integer.class), isA(Integer.class), any());
+        verify(errorReportPopupPresenterMock, never()).setup(any(), any(), any(), any(), any(), isA(Integer.class), isA(Integer.class), any());
     }
 
     @Test
@@ -243,7 +243,7 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandlerTest extends Abstrac
         verify(simulationDescriptorMock, never()).getFactMappingByIndex(isA(Integer.class));
         verify(scenarioMock, never()).getFactMappingValue(any());
         verify(mouseMoveHandler, never()).retrieveCellMiddleXYPosition(any(), isA(Integer.class));
-        verify(errorReportPopupPresenterMock, never()).show(any(), any(), any(), any(), any(), isA(Integer.class), isA(Integer.class), any());
+        verify(errorReportPopupPresenterMock, never()).setup(any(), any(), any(), any(), any(), isA(Integer.class), isA(Integer.class), any());
     }
 
     @Test
@@ -272,7 +272,7 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandlerTest extends Abstrac
         verify(simulationDescriptorMock, times(1)).getFactMappingByIndex(eq(COLUMN_INDEX));
         verify(scenarioMock, times(1)).getFactMappingValue(eq(factMappingMock));
         verify(mouseMoveHandler, times(1)).retrieveCellMiddleXYPosition(gridColumnMock, ROW_INDEX);
-        verify(errorReportPopupPresenterMock, times(1)).show(
+        verify(errorReportPopupPresenterMock, times(1)).setup(
                 eq(ScenarioSimulationEditorConstants.INSTANCE.errorReason()),
                 eq(ScenarioSimulationEditorConstants.INSTANCE.errorPopoverMessageFailedWithError(RAW_VALUE, ERROR_VALUE)),
                 eq(ScenarioSimulationEditorConstants.INSTANCE.keep()),
@@ -298,7 +298,7 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandlerTest extends Abstrac
         verify(simulationDescriptorMock, never()).getFactMappingByIndex(isA(Integer.class));
         verify(scenarioMock, never()).getFactMappingValue(any());
         verify(mouseMoveHandler, never()).retrieveCellMiddleXYPosition(any(), isA(Integer.class));
-        verify(errorReportPopupPresenterMock, never()).show(any(), any(), any(), any(), any(), isA(Integer.class), isA(Integer.class), any());
+        verify(errorReportPopupPresenterMock, never()).setup(any(), any(), any(), any(), any(), isA(Integer.class), isA(Integer.class), any());
         assertFalse(inGrid);
     }
 
@@ -309,7 +309,7 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandlerTest extends Abstrac
         verify(simulationDescriptorMock, never()).getFactMappingByIndex(isA(Integer.class));
         verify(scenarioMock, never()).getFactMappingValue(any());
         verify(mouseMoveHandler, never()).retrieveCellMiddleXYPosition(any(), isA(Integer.class));
-        verify(errorReportPopupPresenterMock, never()).show(any(), any(), any(), any(), any(), isA(Integer.class), isA(Integer.class), any());
+        verify(errorReportPopupPresenterMock, never()).setup(any(), any(), any(), any(), any(), isA(Integer.class), isA(Integer.class), any());
         assertFalse(inGrid);
     }
 
