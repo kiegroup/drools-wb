@@ -18,18 +18,19 @@
 <!-- TEST TOOLS -->
 <div id="testtools-panel" class="uf-scroll-panel">
     <div id="kieTestToolsContent" class="tab-pane kie-tab-pane--scesim-panel">
-        <p>To create a test template, define the "Given" and "Expect" columns by using the expression editor below.</p>
-
-        <label for="kie-search" data-i18n-key="Select_Data_Object">
-            Select Data Object
-            <a href="">
-                <span class="pficon pficon-info" style="padding-top: 4px;"></span>
+        <p data-field="testToolsDescriptionElement"></p>
+        <div>
+            <label data-field="testToolObjectSelectionTitleElement" for="kie-search"></label>
+            <a href="#">
+                <span data-field="infoSelectDataObjectElement" class="pficon pficon-info" style="padding-top: 4px;"></span>
             </a>
-        </label>
-        <a href="" class="pull-right">Clear selection</a>
+            <span class="pull-right">
+                <a data-field="clearSelectionElement" href="#"></a>
+            </span>
+        </div>
         <div id="kie-search" class="kie-test-tools-content__box"><!-- outlined data object box -->
             <!-- search box -->
-            <div class="search-pf has-button">
+            <div class="search-pf has-button" style="margin-bottom: 10px">
                 <div class="form-group has-clear">
                     <div class="search-pf-input-group">
                         <input id="search1" type="search" class="form-control" data-field="inputSearch" placeholder="Search">
@@ -46,20 +47,17 @@
             <!-- end search box -->
 
             <!-- data object list expansion -->
-            <label data-field="dataObjectListContainer-separator" style="display: none"></label>
-            <div id="data-object-pf-list-simple-expansion" class="list-group tree-list-view-pf-view kie-tree-list-view-pf-view--compact" data-field="dataObjectListContainer"></div>
+            <div id="data-object-pf-list-simple-expansion" class="tree-list-view-pf-view kie-tree-list-view-pf-view--compact" data-field="dataObjectListContainer"></div>
             <!-- end list expansion -->
             <!-- simple java type list expansion -->
-            <label data-field="simpleJavaTypeListContainer-separator" style="display: none"></label>
-            <div id="simple-java-type-pf-list-simple-expansion" class="list-group tree-list-view-pf-view kie-tree-list-view-pf-view--compact" data-field="simpleJavaTypeListContainer"></div>
+            <div id="simple-java-type-pf-list-simple-expansion" class="tree-list-view-pf-view kie-tree-list-view-pf-view--compact" data-field="simpleJavaTypeListContainer"></div>
             <!-- end list expansion -->
             <!-- instance list expansion -->
-            <label data-field="instanceListContainer-separator" style="display: none"></label>
-            <div id="instance-pf-list-simple-expansion" class="list-group tree-list-view-pf-view kie-tree-list-view-pf-view--compact" data-field="instanceListContainer"></div>
+            <span data-field="instanceListContainer-separator" class="kie-test-tools-instances-list__label" style="display: none"></span>
+            <div id="instance-pf-list-simple-expansion" class="tree-list-view-pf-view kie-tree-list-view-pf-view--compact" data-field="instanceListContainer"></div>
             <!-- end list expansion -->
             <!-- instance list expansion -->
-            <label data-field="simpleJavaInstanceListContainer-separator" style="display: none"></label>
-            <div id="simple-java-instance-pf-list-simple-expansion" class="list-group tree-list-view-pf-view kie-tree-list-view-pf-view--compact" data-field="simpleJavaInstanceListContainer"></div>
+            <div id="simple-java-instance-pf-list-simple-expansion" class="tree-list-view-pf-view kie-tree-list-view-pf-view--compact" data-field="simpleJavaInstanceListContainer"></div>
             <!-- end list expansion -->
 
         </div><!-- end outlined data object box -->
@@ -84,7 +82,7 @@
             </div>
 
             <div style="margin-bottom: 10px;" data-field="addButtonLabel"></div>
-            <button class="btn btn-lg btn-primary" type="button" data-field="addButton">Insert Data Object</button>
+            <button class="btn btn-lg btn-primary" type="button" data-field="addButton"></button>
         </div>
     </div>
 </div>

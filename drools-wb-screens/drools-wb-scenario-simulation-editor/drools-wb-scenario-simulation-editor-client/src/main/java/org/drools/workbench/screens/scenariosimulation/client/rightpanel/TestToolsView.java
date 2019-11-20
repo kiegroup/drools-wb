@@ -22,7 +22,6 @@ import java.util.Optional;
 import java.util.SortedMap;
 
 import com.google.gwt.dom.client.DivElement;
-import com.google.gwt.dom.client.LabelElement;
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
@@ -37,23 +36,27 @@ public interface TestToolsView extends SubDockView<TestToolsView.Presenter> {
 
     void showClearButton();
 
-    LabelElement getDataObjectListContainerSeparator();
+    void clearDataObjectList();
 
-    DivElement getDataObjectListContainer();
+    void clearSimpleJavaTypeList();
 
-    LabelElement getSimpleJavaTypeListContainerSeparator();
+    void clearInstanceList();
 
-    DivElement getSimpleJavaTypeListContainer();
+    void clearSimpleJavaInstanceFieldList();
 
-    LabelElement getInstanceListContainerSeparator();
+    void addDataObjectItem(DivElement item);
 
-    DivElement getInstanceListContainer();
+    void addSimpleJavaTypeItem(DivElement item);
 
-    LabelElement getSimpleJavaInstanceListContainerSeparator();
+    void addInstanceItem(DivElement item);
 
-    DivElement getSimpleJavaInstanceListContainer();
+    void addSimpleJavaInstanceFieldItem(DivElement item);
 
     Presenter getPresenter();
+
+    void updateInstanceListSeparator(boolean hide);
+
+    void showInstanceListContainerSeparator(boolean show);
 
     /**
      * By default the <b>Editor Tab</b> is disabled (no user interaction allowed).
@@ -118,13 +121,7 @@ public interface TestToolsView extends SubDockView<TestToolsView.Presenter> {
 
         void clearSimpleJavaInstanceFieldList();
 
-        void updateDataObjectListSeparator();
-
-        void updateSimpleJavaTypeListSeparator();
-
         void updateInstanceListSeparator();
-
-        void updateSimpleJavaInstanceFieldListSeparator();
 
         void addDataObjectListGroupItemView(String factName, FactModelTree factModelTree);
 
@@ -154,6 +151,8 @@ public interface TestToolsView extends SubDockView<TestToolsView.Presenter> {
         void setEventBus(EventBus eventBus);
 
         void setGridWidget(GridWidget gridWidget);
+
+        void showInstanceListContainerSeparator(boolean show);
 
         Optional<FactModelTree> getFactModelTreeFromFactTypeMap(String factName);
 
@@ -208,5 +207,6 @@ public interface TestToolsView extends SubDockView<TestToolsView.Presenter> {
          */
         void setSelectedElement(FieldItemView selected);
 
+        void clearSelection();
     }
 }

@@ -21,11 +21,14 @@ import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 
+import com.google.gwt.dom.client.AnchorElement;
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.LabelElement;
+import com.google.gwt.dom.client.ParagraphElement;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -33,6 +36,7 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.user.client.ui.Composite;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
+import org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
@@ -44,6 +48,18 @@ public class TestToolsViewImpl
         implements TestToolsView {
 
     protected Presenter presenter;
+
+    @DataField("testToolsDescriptionElement")
+    protected ParagraphElement testToolsDescriptionElement = Document.get().createPElement();
+
+    @DataField("testToolObjectSelectionTitleElement")
+    protected LabelElement testToolObjectSelectionTitleElement = Document.get().createLabelElement();
+
+    @DataField("clearSelectionElement")
+    protected AnchorElement clearSelectionElement = Document.get().createAnchorElement();
+
+    @DataField("infoSelectDataObjectElement")
+    protected SpanElement infoSelectDataObjectElement = Document.get().createSpanElement();
 
     @DataField("clearSearchButton")
     protected ButtonElement clearSearchButton = Document.get().createPushButtonElement();
@@ -57,26 +73,17 @@ public class TestToolsViewImpl
     @DataField("nameField")
     protected InputElement nameField = Document.get().createTextInputElement();
 
-    @DataField("dataObjectListContainer-separator")
-    protected LabelElement dataObjectListContainerSeparator = Document.get().createLabelElement();
-
     @DataField("dataObjectListContainer")
     protected DivElement dataObjectListContainer = Document.get().createDivElement();
-
-    @DataField("simpleJavaTypeListContainer-separator")
-    protected LabelElement simpleJavaTypeListContainerSeparator = Document.get().createLabelElement();
 
     @DataField("simpleJavaTypeListContainer")
     protected DivElement simpleJavaTypeListContainer = Document.get().createDivElement();
 
     @DataField("instanceListContainer-separator")
-    protected LabelElement instanceListContainerSeparator = Document.get().createLabelElement();
+    protected SpanElement instanceListContainerSeparator = Document.get().createSpanElement();
 
     @DataField("instanceListContainer")
     protected DivElement instanceListContainer = Document.get().createDivElement();
-
-    @DataField("simpleJavaInstanceListContainer-separator")
-    protected LabelElement simpleJavaInstanceListContainerSeparator = Document.get().createLabelElement();
 
     @DataField("simpleJavaInstanceListContainer")
     protected DivElement simpleJavaInstanceListContainer = Document.get().createDivElement();
@@ -104,12 +111,12 @@ public class TestToolsViewImpl
         this.presenter = presenter;
         disableEditorTab();
         addButton.setDisabled(true);
+        testToolsDescriptionElement.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.testToolsDescription());
+        testToolObjectSelectionTitleElement.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.testToolObjectSelectionTitle());
+        clearSelectionElement.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.testToolClearSelection());
         addButton.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.testToolsAddButton());
         addButtonLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.testToolsAddButtonLabel());
-        dataObjectListContainerSeparator.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.complexTypes());
-        simpleJavaTypeListContainerSeparator.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.simpleTypes());
-        instanceListContainerSeparator.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.complexCustomInstances());
-        simpleJavaInstanceListContainerSeparator.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.simpleCustomInstances());
+        instanceListContainerSeparator.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.dataObjectInstances());
     }
 
     @Override
@@ -119,14 +126,11 @@ public class TestToolsViewImpl
 
     @Override
     public void reset() {
-        dataObjectListContainerSeparator.getStyle().setDisplay(Style.Display.NONE);
-        dataObjectListContainer.removeAllChildren();
-        simpleJavaTypeListContainerSeparator.getStyle().setDisplay(Style.Display.NONE);
-        simpleJavaTypeListContainer.removeAllChildren();
-        instanceListContainerSeparator.getStyle().setDisplay(Style.Display.NONE);
-        instanceListContainer.removeAllChildren();
-        simpleJavaInstanceListContainerSeparator.getStyle().setDisplay(Style.Display.NONE);
-        simpleJavaInstanceListContainer.removeAllChildren();
+        clearDataObjectList();
+        clearSimpleJavaTypeList();
+        showInstanceListContainerSeparator(false);
+        clearInstanceList();
+        clearSimpleJavaInstanceFieldList();
     }
 
     @EventHandler("clearSearchButton")
@@ -144,6 +148,11 @@ public class TestToolsViewImpl
         if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
             presenter.onSearchedEvent(inputSearch.getValue());
         }
+    }
+
+    @EventHandler("clearSelectionElement")
+    public void onClearSelectionElementClicked(ClickEvent event) {
+        presenter.clearSelection();
     }
 
     @EventHandler("searchButton")
@@ -181,43 +190,70 @@ public class TestToolsViewImpl
     }
 
     @Override
-    public LabelElement getDataObjectListContainerSeparator() {
-        return dataObjectListContainerSeparator;
+    public void clearDataObjectList() {
+        dataObjectListContainer.removeAllChildren();
+        dataObjectListContainer.getStyle().setDisplay(Style.Display.NONE);
     }
 
     @Override
-    public DivElement getDataObjectListContainer() {
-        return dataObjectListContainer;
+    public void clearSimpleJavaTypeList() {
+        simpleJavaTypeListContainer.removeAllChildren();
+        simpleJavaTypeListContainer.getStyle().setDisplay(Style.Display.NONE);
     }
 
     @Override
-    public LabelElement getSimpleJavaTypeListContainerSeparator() {
-        return simpleJavaTypeListContainerSeparator;
+    public void clearInstanceList() {
+        instanceListContainer.removeAllChildren();
+        instanceListContainer.getStyle().setDisplay(Style.Display.NONE);
     }
 
     @Override
-    public DivElement getSimpleJavaTypeListContainer() {
-        return simpleJavaTypeListContainer;
+    public void clearSimpleJavaInstanceFieldList() {
+        simpleJavaInstanceListContainer.removeAllChildren();
+        simpleJavaInstanceListContainer.getStyle().setDisplay(Style.Display.NONE);
     }
 
     @Override
-    public LabelElement getInstanceListContainerSeparator() {
-        return instanceListContainerSeparator;
+    public void addDataObjectItem(DivElement item) {
+        dataObjectListContainer.getStyle().setDisplay(Style.Display.BLOCK);
+        dataObjectListContainer.appendChild(item);
     }
 
     @Override
-    public DivElement getInstanceListContainer() {
-        return instanceListContainer;
+    public void addSimpleJavaTypeItem(DivElement item) {
+        simpleJavaTypeListContainer.getStyle().setDisplay(Style.Display.BLOCK);
+        simpleJavaTypeListContainer.appendChild(item);
     }
 
     @Override
-    public LabelElement getSimpleJavaInstanceListContainerSeparator() {
-        return simpleJavaInstanceListContainerSeparator;
+    public void addInstanceItem(DivElement item) {
+        instanceListContainer.getStyle().setDisplay(Style.Display.BLOCK);
+        instanceListContainer.appendChild(item);
     }
 
     @Override
-    public DivElement getSimpleJavaInstanceListContainer() {
-        return simpleJavaInstanceListContainer;
+    public void addSimpleJavaInstanceFieldItem(DivElement item) {
+        simpleJavaInstanceListContainer.getStyle().setDisplay(Style.Display.BLOCK);
+        simpleJavaInstanceListContainer.appendChild(item);
+    }
+
+    @Override
+    public void updateInstanceListSeparator(boolean toHide) {
+        if (toHide ||
+                (instanceListContainer.getChildCount() < 1 && simpleJavaInstanceListContainer.getChildCount() < 1)) {
+            instanceListContainerSeparator.getStyle().setDisplay(Style.Display.NONE);
+        } else {
+            instanceListContainerSeparator.getStyle().setDisplay(Style.Display.BLOCK);
+        }
+    }
+
+    @Override
+    public void showInstanceListContainerSeparator(boolean show) {
+        if (show) {
+            instanceListContainerSeparator.getStyle().setDisplay(Style.Display.BLOCK);
+        } else {
+            instanceListContainerSeparator.getStyle().setDisplay(Style.Display.NONE);
+        }
     }
 
     @Override
@@ -258,21 +294,39 @@ public class TestToolsViewImpl
     protected void setDisabledStatus(boolean disabled) {
         nameField.setDisabled(disabled);
         conditionsButton.setDisabled(disabled);
+        setClearSelectionAnchorDisabledStatus(disabled);
+        setInfoSelectDataObjectElementDisabledStatus(disabled);
         setContainersDisabledStatus(disabled);
         if (disabled) {
-            kieTestToolsContent.addClassName("disabled");
+            kieTestToolsContent.addClassName(ConstantHolder.DISABLED);
             disableSearch();
             disableAddButton();
         } else {
-            kieTestToolsContent.removeClassName("disabled");
+            kieTestToolsContent.removeClassName(ConstantHolder.DISABLED);
         }
     }
 
     protected void setContainersDisabledStatus(boolean disabled) {
         if (disabled) {
-            managedDivElements.forEach(divElement -> divElement.addClassName("disabled"));
+            managedDivElements.forEach(divElement -> divElement.addClassName(ConstantHolder.DISABLED));
         } else {
-            managedDivElements.forEach(divElement -> divElement.removeClassName("disabled"));
+            managedDivElements.forEach(divElement -> divElement.removeClassName(ConstantHolder.DISABLED));
+        }
+    }
+
+    protected void setClearSelectionAnchorDisabledStatus(boolean disabled) {
+        if (disabled) {
+            clearSelectionElement.addClassName(ConstantHolder.DISABLED);
+        } else {
+            clearSelectionElement.removeClassName(ConstantHolder.DISABLED);
+        }
+    }
+
+    protected void setInfoSelectDataObjectElementDisabledStatus(boolean disabled) {
+        if (disabled) {
+            infoSelectDataObjectElement.addClassName(ConstantHolder.DISABLED);
+        } else {
+            infoSelectDataObjectElement.removeClassName(ConstantHolder.DISABLED);
         }
     }
 }

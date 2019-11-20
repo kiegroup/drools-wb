@@ -31,6 +31,7 @@ public class ConstantHolder {
     public static final String HIDDEN = "hidden";
     public static final String NODE_HIDDEN = "node-hidden";
     public static final String VALUE = "value";
+    public static final String DISABLED = "disabled";
 
     public static final String SAVE = "Save";
 

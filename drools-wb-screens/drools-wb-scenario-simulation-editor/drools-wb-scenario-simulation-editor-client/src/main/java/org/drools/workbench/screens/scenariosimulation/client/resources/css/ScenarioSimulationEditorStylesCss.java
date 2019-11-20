@@ -81,4 +81,13 @@ public interface ScenarioSimulationEditorStylesCss extends CssResource {
 
     @ClassName("kie-test-tools-content__box")
     String kieTestToolsContentBox();
+
+    @ClassName("kie-test-tools-instances-list__label")
+    String kieTestToolsInstancesListLabel();
+
+    @ClassName("kie-list-view-pf-main-info__check")
+    String kieListViewPfMainInfoCheck();
+
+    @ClassName("kie-list-view-pf-main-info__text")
+    String kieListViewPfMainInfoText();
 }

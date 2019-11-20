@@ -29,7 +29,6 @@ For RightPanel
 .kie-tree-list-view-pf-view--compact .list-group-item {
     padding-top: 0;
     padding-bottom: 0;
-    margin-bottom: -2px;
 }
 
 .kie-tree-list-view-pf-view--compact .list-group-item :hover {
@@ -83,7 +82,7 @@ For RightPanel
 }
 
 .kie-tree-list-view-pf-view--compact .ul--plain li {
-    padding: .25em;
+    padding: .25em 15px .25em .25em;
 }
 
 .kie-tree-list-view-pf-view--compact .ul--plain li:hover {
@@ -132,10 +131,28 @@ li.list-group-item.kie-object-list__separator, li.list-group-item.kie-object-lis
 }
 
 .kie-tab-pane--scesim-panel {
-    padding: 1em;
+    padding: 1em 1em 2em 1em;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .kie-test-tools-content__box {
     padding: 10px;
     border: 1px solid #bbb;
+    flex: 1 1 auto;
+    overflow: auto;
+}
+
+.kie-test-tools-instances-list__label {
+    margin: 10px 0px;
+    border-top: 1px solid #bbb;
+}
+
+.kie-list-view-pf-main-info__check {
+    padding-right: 15px;
+}
+
+span.kie-list-view-pf-main-info__text {
+    flex-grow: 1;
 }
