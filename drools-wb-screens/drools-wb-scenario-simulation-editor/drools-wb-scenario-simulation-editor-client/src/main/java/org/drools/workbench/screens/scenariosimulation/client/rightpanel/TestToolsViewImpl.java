@@ -117,6 +117,7 @@ public class TestToolsViewImpl
         addButton.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.testToolsAddButton());
         addButtonLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.testToolsAddButtonLabel());
         instanceListContainerSeparator.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.dataObjectInstances());
+        infoSelectDataObjectElement.setAttribute("title", ScenarioSimulationEditorConstants.INSTANCE.testToolObjectSelectionTooltip());
     }
 
     @Override

@@ -30,6 +30,8 @@ public interface ListGroupItemView extends IsWidget,
 
     boolean isToExpand();
 
+    void showCheck(boolean show);
+
     void setFactName(String factName);
 
     /**

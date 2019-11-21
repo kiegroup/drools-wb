@@ -124,8 +124,17 @@ public class ListGroupItemViewImpl implements ListGroupItemView {
 
     @Override
     public void unselect() {
-        listGroupElement.removeClassName("selected");
-        checkElement.getStyle().setDisplay(Style.Display.NONE);
+        listGroupItem.removeClassName("selected");
+        showCheck(false);
+    }
+
+    @Override
+    public void showCheck(boolean show) {
+        if (show) {
+            checkElement.getStyle().setDisplay(Style.Display.BLOCK);
+        } else {
+            checkElement.getStyle().setDisplay(Style.Display.NONE);
+        }
     }
 
     @Override

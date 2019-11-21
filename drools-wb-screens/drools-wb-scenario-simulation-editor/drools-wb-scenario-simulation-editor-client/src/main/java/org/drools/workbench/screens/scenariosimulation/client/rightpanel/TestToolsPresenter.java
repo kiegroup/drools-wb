@@ -357,7 +357,12 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
 
     @Override
     public void clearSelection() {
-        //TODO
+        if (selectedFieldItemView != null) {
+            selectedFieldItemView.showCheck(false);
+        } else if (selectedListGroupItemView != null) {
+            selectedListGroupItemView.showCheck(false);
+        }
+        view.disableAddButton();
     }
 
     @Override

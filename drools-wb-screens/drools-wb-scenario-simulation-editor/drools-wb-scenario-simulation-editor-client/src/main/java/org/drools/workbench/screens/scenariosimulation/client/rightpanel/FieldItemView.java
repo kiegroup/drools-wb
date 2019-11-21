@@ -52,6 +52,8 @@ public interface FieldItemView {
 
     void setPresenter(FieldItemView.Presenter fieldItemPresenter);
 
+    void onFieldElementSelected();
+
     void onFieldElementClick();
 
     /**
@@ -63,6 +65,8 @@ public interface FieldItemView {
     void setFieldData(String fullPath, String factName, String fieldName, String className);
 
     LIElement getLIElement();
+
+    void showCheck(boolean show);
 
     void unselect();
 

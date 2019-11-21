@@ -354,5 +354,7 @@ public interface ScenarioSimulationEditorConstants
 
     String testToolObjectSelectionTitle();
 
+    String testToolObjectSelectionTooltip();
+
     String testToolClearSelection();
 }
