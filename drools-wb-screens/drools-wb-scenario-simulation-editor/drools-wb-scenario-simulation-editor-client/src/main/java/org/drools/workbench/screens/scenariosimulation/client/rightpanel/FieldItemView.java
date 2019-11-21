@@ -52,9 +52,10 @@ public interface FieldItemView {
 
     void setPresenter(FieldItemView.Presenter fieldItemPresenter);
 
+    /**
+     * It manages the fieldElement when is <b>automatically</b> selected.
+     */
     void onFieldElementSelected();
-
-    void onFieldElementClick();
 
     /**
      * @param fullPath The parent path (empty if the properties belongs to a <b>top-level</b> element)

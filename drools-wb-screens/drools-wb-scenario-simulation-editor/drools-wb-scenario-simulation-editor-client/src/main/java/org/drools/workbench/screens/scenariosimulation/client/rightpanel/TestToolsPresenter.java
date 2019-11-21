@@ -115,7 +115,7 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
 
     @Override
     public void updateInstanceListSeparator() {
-        view.updateInstanceListSeparator(GridWidget.BACKGROUND.equals(gridWidget));
+        view.updateInstanceListSeparator(GridWidget.SIMULATION.equals(gridWidget));
     }
 
     @Override
@@ -211,7 +211,7 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
                 hideInstances();
                 break;
             case SIMULATION:
-                showInstances();
+                showInstanceListContainerSeparator(true);
                 break;
             default:
                 throw new IllegalArgumentException("Illegal GridWidget " + gridWidget);
@@ -272,24 +272,22 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
 
     @Override
     public void addDataObjectListGroupItemView(String factName, FactModelTree factModelTree) {
-        view.addDataObjectItem(listGroupItemPresenter.getDivElement(factName, factModelTree));
+        view.addDataObjectListGroupItem(listGroupItemPresenter.getDivElement(factName, factModelTree));
     }
 
     @Override
     public void addSimpleJavaTypeListGroupItemView(String factName, FactModelTree factModelTree) {
-        view.addSimpleJavaTypeItem(listGroupItemPresenter.getDivElement(factName, factModelTree));
-
+        view.addSimpleJavaTypeListGroupItem(listGroupItemPresenter.getDivElement(factName, factModelTree));
     }
 
     @Override
     public void addInstanceListGroupItemView(String instanceName, FactModelTree factModelTree) {
-        view.addInstanceItem(listGroupItemPresenter.getDivElement(instanceName, factModelTree));
-
+        view.addInstanceListGroupItem(listGroupItemPresenter.getDivElement(instanceName, factModelTree));
     }
 
     @Override
     public void addSimpleJavaInstanceListGroupItemView(String instanceName, FactModelTree factModelTree) {
-        view.addSimpleJavaInstanceFieldItem(listGroupItemPresenter.getDivElement(instanceName, factModelTree));
+        view.addSimpleJavaInstanceListGroupItem(listGroupItemPresenter.getDivElement(instanceName, factModelTree));
     }
 
     @Override
@@ -404,13 +402,6 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
         clearInstanceList();
         clearSimpleJavaInstanceFieldList();
         showInstanceListContainerSeparator(false);
-    }
-
-    /**
-     * Method to show all the <b>instance-related</b> html
-     */
-    protected void showInstances() {
-        showInstanceListContainerSeparator(true);
     }
 
     /**

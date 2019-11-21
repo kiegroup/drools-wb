@@ -105,14 +105,12 @@ public class FieldItemViewImpl implements FieldItemView {
         onFieldElementClick();
     }
 
-
     @Override
     public void onFieldElementSelected() {
         fieldElement.addClassName(ConstantHolder.SELECTED);
         fieldItemPresenter.onFieldElementClick(this);
     }
 
-    @Override
     public void onFieldElementClick() {
         fieldElement.addClassName(ConstantHolder.SELECTED);
         fieldItemPresenter.onFieldElementClick(this);

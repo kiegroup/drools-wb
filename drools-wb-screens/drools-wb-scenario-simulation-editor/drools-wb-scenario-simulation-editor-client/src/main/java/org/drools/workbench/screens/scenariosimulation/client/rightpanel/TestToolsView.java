@@ -44,17 +44,17 @@ public interface TestToolsView extends SubDockView<TestToolsView.Presenter> {
 
     void clearSimpleJavaInstanceFieldList();
 
-    void addDataObjectItem(DivElement item);
+    void addDataObjectListGroupItem(DivElement item);
 
-    void addSimpleJavaTypeItem(DivElement item);
+    void addSimpleJavaTypeListGroupItem(DivElement item);
 
-    void addInstanceItem(DivElement item);
+    void addInstanceListGroupItem(DivElement item);
 
-    void addSimpleJavaInstanceFieldItem(DivElement item);
+    void addSimpleJavaInstanceListGroupItem(DivElement item);
 
     Presenter getPresenter();
 
-    void updateInstanceListSeparator(boolean hide);
+    void updateInstanceListSeparator(boolean show);
 
     void showInstanceListContainerSeparator(boolean show);
 

@@ -215,32 +215,32 @@ public class TestToolsViewImpl
     }
 
     @Override
-    public void addDataObjectItem(DivElement item) {
+    public void addDataObjectListGroupItem(DivElement item) {
         dataObjectListContainer.getStyle().setDisplay(Style.Display.BLOCK);
         dataObjectListContainer.appendChild(item);
     }
 
     @Override
-    public void addSimpleJavaTypeItem(DivElement item) {
+    public void addSimpleJavaTypeListGroupItem(DivElement item) {
         simpleJavaTypeListContainer.getStyle().setDisplay(Style.Display.BLOCK);
         simpleJavaTypeListContainer.appendChild(item);
     }
 
     @Override
-    public void addInstanceItem(DivElement item) {
+    public void addInstanceListGroupItem(DivElement item) {
         instanceListContainer.getStyle().setDisplay(Style.Display.BLOCK);
         instanceListContainer.appendChild(item);
     }
 
     @Override
-    public void addSimpleJavaInstanceFieldItem(DivElement item) {
+    public void addSimpleJavaInstanceListGroupItem(DivElement item) {
         simpleJavaInstanceListContainer.getStyle().setDisplay(Style.Display.BLOCK);
         simpleJavaInstanceListContainer.appendChild(item);
     }
 
     @Override
-    public void updateInstanceListSeparator(boolean toHide) {
-        if (toHide ||
+    public void updateInstanceListSeparator(boolean show) {
+        if (!show ||
                 (instanceListContainer.getChildCount() < 1 && simpleJavaInstanceListContainer.getChildCount() < 1)) {
             instanceListContainerSeparator.getStyle().setDisplay(Style.Display.NONE);
         } else {
