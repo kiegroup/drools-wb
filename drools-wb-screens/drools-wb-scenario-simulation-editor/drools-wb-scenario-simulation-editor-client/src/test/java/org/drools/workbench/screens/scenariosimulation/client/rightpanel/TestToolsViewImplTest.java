@@ -20,6 +20,7 @@ import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.LabelElement;
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -63,22 +64,16 @@ public class TestToolsViewImplTest {
     private LabelElement dataObjectListContainerSeparatorMock;
 
     @Mock
-    private Style dataObjectListStyleMock;
-
-    @Mock
     private DivElement dataObjectListContainerMock;
 
     @Mock
     private LabelElement simpleJavaTypeListContainerSeparatorMock;
 
     @Mock
-    private Style simpleJavaTypeListStyleMock;
-
-    @Mock
     private DivElement simpleJavaTypeListContainerMock;
 
     @Mock
-    private LabelElement instanceListContainerSeparatorMock;
+    private SpanElement instanceListContainerSeparatorMock;
 
     @Mock
     private Style instanceListStyleMock;
@@ -91,9 +86,6 @@ public class TestToolsViewImplTest {
 
     @Mock
     private DivElement simpleJavaInstanceListContainerMock;
-
-    @Mock
-    private Style simpleJavaInstanceListStyleMock;
 
     @Mock
     private DivElement kieTestToolsContentMock;
@@ -112,19 +104,18 @@ public class TestToolsViewImplTest {
                 this.nameField = nameFieldMock;
                 this.kieTestToolsContent = kieTestToolsContentMock;
                 this.dataObjectListContainer = dataObjectListContainerMock;
-                this.dataObjectListContainerSeparator = dataObjectListContainerSeparatorMock;
                 this.simpleJavaTypeListContainer = simpleJavaTypeListContainerMock;
-                this.simpleJavaTypeListContainerSeparator = simpleJavaTypeListContainerSeparatorMock;
                 this.instanceListContainer = instanceListContainerMock;
                 this.instanceListContainerSeparator = instanceListContainerSeparatorMock;
                 this.simpleJavaInstanceListContainer = simpleJavaInstanceListContainerMock;
-                this.simpleJavaInstanceListContainerSeparator = simpleJavaInstanceListContainerSeparatorMock;
             }
         });
-        when(dataObjectListContainerSeparatorMock.getStyle()).thenReturn(dataObjectListStyleMock);
-        when(simpleJavaTypeListContainerSeparatorMock.getStyle()).thenReturn(simpleJavaTypeListStyleMock);
         when(instanceListContainerSeparatorMock.getStyle()).thenReturn(instanceListStyleMock);
-        when(simpleJavaInstanceListContainerSeparatorMock.getStyle()).thenReturn(simpleJavaInstanceListStyleMock);
+    }
+
+    @Test
+    public void init() {
+        testToolsView.init(testToolsPresenterMock);
     }
 
     @Test

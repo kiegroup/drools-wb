@@ -57,7 +57,7 @@ public class ListGroupItemViewImplTest extends AbstractTestToolsTest {
     private DivElement listGroupItemContainerMock;
 
     @Mock
-    private DivElement fullClassNameMock;
+    private SpanElement fullClassNameMock;
 
     @Mock
     private SpanElement faAngleRightMock;
