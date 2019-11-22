@@ -138,6 +138,11 @@ public class ListGroupItemViewImpl implements ListGroupItemView {
     }
 
     @Override
+    public boolean isCheckShown() {
+        return Objects.equals(Style.Display.NONE.getCssName(), checkElement.getStyle().getDisplay());
+    }
+
+    @Override
     public void setFactName(String factName) {
         this.factName = factName;
         this.factType = factName;

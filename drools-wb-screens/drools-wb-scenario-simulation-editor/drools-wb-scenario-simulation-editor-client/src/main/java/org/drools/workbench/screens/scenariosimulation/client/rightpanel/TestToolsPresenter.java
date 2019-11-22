@@ -346,7 +346,7 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
         selectedListGroupItemView = null;
         String factName = selectedFieldItemView.getFullPath().split("\\.")[0];
         boolean isFactNameAssigned = listGroupItemPresenter.isInstanceAssigned(factName);
-        if (filterTerm(factName, listGroupItemPresenter.getFilterTerm(), isFactNameAssigned)) {
+        if (!selectedFieldItemView.isCheckShown() || filterTerm(factName, listGroupItemPresenter.getFilterTerm(), isFactNameAssigned)) {
             view.disableAddButton();
         } else {
             view.enableAddButton();

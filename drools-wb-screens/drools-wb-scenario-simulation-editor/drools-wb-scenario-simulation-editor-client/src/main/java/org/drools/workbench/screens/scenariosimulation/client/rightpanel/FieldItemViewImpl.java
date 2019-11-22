@@ -113,8 +113,8 @@ public class FieldItemViewImpl implements FieldItemView {
 
     public void onFieldElementClick() {
         fieldElement.addClassName(ConstantHolder.SELECTED);
-        fieldItemPresenter.onFieldElementClick(this);
         showCheck(true);
+        fieldItemPresenter.onFieldElementClick(this);
     }
 
     @Override
@@ -124,6 +124,11 @@ public class FieldItemViewImpl implements FieldItemView {
         } else {
             checkElement.getStyle().setDisplay(Style.Display.NONE);
         }
+    }
+
+    @Override
+    public boolean isCheckShown() {
+        return Objects.equals(Style.Display.NONE.getCssName(), checkElement.getStyle().getDisplay());
     }
 
     @Override

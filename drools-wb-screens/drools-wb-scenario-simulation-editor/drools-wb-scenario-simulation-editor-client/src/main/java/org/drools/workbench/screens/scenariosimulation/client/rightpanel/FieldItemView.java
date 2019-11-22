@@ -69,6 +69,8 @@ public interface FieldItemView {
 
     void showCheck(boolean show);
 
+    boolean isCheckShown();
+
     void unselect();
 
     void hide();
