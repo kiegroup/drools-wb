@@ -34,6 +34,8 @@ import static org.drools.workbench.screens.scenariosimulation.client.TestPropert
 import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.ListGroupItemViewImpl.LIST_VIEW_PF_EXPAND_ACTIVE;
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder.FA_ANGLE_DOWN;
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder.HIDDEN;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -72,7 +74,7 @@ public class ListGroupItemViewImplTest extends AbstractTestToolsTest {
     private SpanElement checkElementMock;
 
     @Mock
-    private Style checkElementSytleMock;
+    private Style checkElementStyleMock;
 
     @Mock
     private UListElement factPropertiesMock;
@@ -98,7 +100,7 @@ public class ListGroupItemViewImplTest extends AbstractTestToolsTest {
             }
         });
         listGroupItemViewSpy.init(listGroupItemPresenterMock);
-        when(checkElementMock.getStyle()).thenReturn(checkElementSytleMock);
+        when(checkElementMock.getStyle()).thenReturn(checkElementStyleMock);
     }
 
     @Test
@@ -124,11 +126,21 @@ public class ListGroupItemViewImplTest extends AbstractTestToolsTest {
     @Test
     public void showCheck() {
         listGroupItemViewSpy.showCheck(true);
-        verify(checkElementSytleMock, times(1)).setDisplay(eq(Style.Display.BLOCK));
+        verify(checkElementStyleMock, times(1)).setDisplay(eq(Style.Display.BLOCK));
         //
         reset();
         listGroupItemViewSpy.showCheck(false);
-        verify(checkElementSytleMock, times(1)).setDisplay(eq(Style.Display.NONE));
+        verify(checkElementStyleMock, times(1)).setDisplay(eq(Style.Display.NONE));
+    }
+
+    @Test
+    public void isCheckShown() {
+        when(checkElementStyleMock.getDisplay()).thenReturn(Style.Display.NONE.getCssName());
+        assertFalse(listGroupItemViewSpy.isCheckShown());
+        //
+        reset();
+        when(checkElementStyleMock.getDisplay()).thenReturn(Style.Display.BLOCK.getCssName());
+        assertTrue(listGroupItemViewSpy.isCheckShown());
     }
 
     @Test

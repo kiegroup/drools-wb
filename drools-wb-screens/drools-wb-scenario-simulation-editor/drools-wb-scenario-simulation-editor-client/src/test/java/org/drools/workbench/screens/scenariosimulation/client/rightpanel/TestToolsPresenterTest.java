@@ -433,6 +433,7 @@ public class TestToolsPresenterTest extends AbstractTestToolsTest {
 
     @Test
     public void setSelectedElementProperty_InstanceAssigned() {
+        when(selectedFieldItemViewMock.isCheckShown()).thenReturn(true);
         when(listGroupItemPresenterMock.isInstanceAssigned(FACT_NAME)).thenReturn(true);
         when(selectedFieldItemViewMock.getFullPath()).thenReturn(FACT_NAME);
         when(listGroupItemPresenterMock.getFilterTerm()).thenReturn(FILTER_TERM);
@@ -445,7 +446,22 @@ public class TestToolsPresenterTest extends AbstractTestToolsTest {
     }
 
     @Test
+    public void setSelectedElementProperty_CheckNotShown() {
+        when(selectedFieldItemViewMock.isCheckShown()).thenReturn(false);
+        when(listGroupItemPresenterMock.isInstanceAssigned(FACT_NAME)).thenReturn(true);
+        when(selectedFieldItemViewMock.getFullPath()).thenReturn(FACT_NAME);
+        when(listGroupItemPresenterMock.getFilterTerm()).thenReturn(FILTER_TERM);
+        testToolsPresenterSpy.setSelectedElement(selectedFieldItemViewMock);
+        verify(listGroupItemPresenterMock, times(1)).isInstanceAssigned(eq(FACT_NAME));
+        verify(testToolsPresenterSpy, never()).filterTerm(anyString(), anyString(), anyBoolean());
+        verify(testToolsViewMock, times(1)).disableAddButton();
+        assertNull(testToolsPresenterSpy.selectedListGroupItemView);
+        assertEquals(selectedFieldItemViewMock, testToolsPresenterSpy.selectedFieldItemView);
+    }
+
+    @Test
     public void setSelectedElementProperty_InstanceNotAssignedFactNameAlreadyAssigned() {
+        when(selectedFieldItemViewMock.isCheckShown()).thenReturn(true);
         when(listGroupItemPresenterMock.isInstanceAssigned(FACT_NAME)).thenReturn(false);
         when(selectedFieldItemViewMock.getFullPath()).thenReturn(FACT_NAME);
         when(listGroupItemPresenterMock.getFilterTerm()).thenReturn(FILTER_TERM);
@@ -459,6 +475,7 @@ public class TestToolsPresenterTest extends AbstractTestToolsTest {
 
     @Test
     public void setSelectedElementProperty_InstanceNotAssignedFactNameAlreadyAssigned_NestedProperties() {
+        when(selectedFieldItemViewMock.isCheckShown()).thenReturn(true);
         when(listGroupItemPresenterMock.isInstanceAssigned(FACT_NAME)).thenReturn(false);
         when(selectedFieldItemViewMock.getFullPath()).thenReturn(FACT_NAME + "." + PROPERTY_NAME);
         when(listGroupItemPresenterMock.getFilterTerm()).thenReturn(FILTER_TERM);
@@ -472,6 +489,7 @@ public class TestToolsPresenterTest extends AbstractTestToolsTest {
 
     @Test
     public void setSelectedElementProperty_InstanceNotAssignedFactNameNotAssigned() {
+        when(selectedFieldItemViewMock.isCheckShown()).thenReturn(true);
         when(listGroupItemPresenterMock.isInstanceAssigned(FACT_NAME_2)).thenReturn(false);
         when(selectedFieldItemViewMock.getFullPath()).thenReturn(FACT_NAME_2);
         when(listGroupItemPresenterMock.getFilterTerm()).thenReturn(FILTER_TERM);

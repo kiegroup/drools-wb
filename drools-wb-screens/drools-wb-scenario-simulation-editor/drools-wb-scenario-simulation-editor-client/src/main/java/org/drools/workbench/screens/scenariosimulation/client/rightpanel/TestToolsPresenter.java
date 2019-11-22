@@ -346,7 +346,10 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
         selectedListGroupItemView = null;
         String factName = selectedFieldItemView.getFullPath().split("\\.")[0];
         boolean isFactNameAssigned = listGroupItemPresenter.isInstanceAssigned(factName);
-        if (!selectedFieldItemView.isCheckShown() || filterTerm(factName, listGroupItemPresenter.getFilterTerm(), isFactNameAssigned)) {
+        /* If the check is not shown, the item was not selected by an user but automatically. If it's shown,
+           then it checks if the related instance is already assigned or not. */
+        if (!selectedFieldItemView.isCheckShown() ||
+                filterTerm(factName, listGroupItemPresenter.getFilterTerm(), isFactNameAssigned)) {
             view.disableAddButton();
         } else {
             view.enableAddButton();

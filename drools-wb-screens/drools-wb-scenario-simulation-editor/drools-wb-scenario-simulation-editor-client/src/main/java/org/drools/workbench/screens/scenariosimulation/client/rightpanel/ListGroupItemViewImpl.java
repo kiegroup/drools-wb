@@ -139,7 +139,7 @@ public class ListGroupItemViewImpl implements ListGroupItemView {
 
     @Override
     public boolean isCheckShown() {
-        return Objects.equals(Style.Display.NONE.getCssName(), checkElement.getStyle().getDisplay());
+        return !Objects.equals(Style.Display.NONE.getCssName(), checkElement.getStyle().getDisplay());
     }
 
     @Override

@@ -37,8 +37,8 @@ public class FieldItemViewImpl implements FieldItemView {
     @DataField("fieldElement")
     protected LIElement fieldElement = Document.get().createLIElement();
 
-    @DataField("labelElement")
-    protected SpanElement labelElement = Document.get().createSpanElement();
+    @DataField("fieldNameElement")
+    protected SpanElement fieldNameElement = Document.get().createSpanElement();
 
     @DataField("checkElement")
     protected SpanElement checkElement = Document.get().createSpanElement();
@@ -59,11 +59,11 @@ public class FieldItemViewImpl implements FieldItemView {
                 .append(className)
                 .append("]")
                 .toString();
-        labelElement.setInnerHTML(innerHtml);
-        labelElement.setAttribute("id", "fieldElement-" + factName + "-" + fieldName);
-        labelElement.setAttribute("fieldName", fieldName);
-        labelElement.setAttribute("className", className);
-        labelElement.setAttribute("fullPath", fullPath);
+        fieldNameElement.setInnerHTML(innerHtml);
+        fieldNameElement.setAttribute("id", "fieldElement-" + factName + "-" + fieldName);
+        fieldNameElement.setAttribute("fieldName", fieldName);
+        fieldNameElement.setAttribute("className", className);
+        fieldNameElement.setAttribute("fullPath", fullPath);
         this.factName = factName;
         this.fieldName = fieldName;
         this.className = className;
@@ -128,7 +128,7 @@ public class FieldItemViewImpl implements FieldItemView {
 
     @Override
     public boolean isCheckShown() {
-        return Objects.equals(Style.Display.NONE.getCssName(), checkElement.getStyle().getDisplay());
+        return !Objects.equals(Style.Display.NONE.getCssName(), checkElement.getStyle().getDisplay());
     }
 
     @Override
