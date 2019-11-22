@@ -7,7 +7,7 @@
   <parent>
     <groupId>org.drools</groupId>
     <artifactId>drools-wb-scenario-simulation-editor</artifactId>
-    <version>7.29.0-SNAPSHOT</version>
+    <version>7.31.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>drools-wb-scenario-simulation-editor-kogito-marshaller</artifactId>
@@ -84,6 +84,13 @@
               <includes>
                 <include>SCESIM.js</include>
                 <include>Jsonix-all.js</include>
+              </includes>
+            </fileset>
+            <fileset>
+              <directory>src/main/java/org/drools/workbench/scenariosimulation/kogito/marshaller/mapper</directory>
+              <includes>
+                <include>JsUtils.java</include>
+                <include>JSIName.java</include>
               </includes>
             </fileset>
           </filesets>

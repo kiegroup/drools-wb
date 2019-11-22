@@ -5,16 +5,16 @@
   <parent>
     <artifactId>drools-wb-scenario-simulation-editor</artifactId>
     <groupId>org.drools</groupId>
-    <version>7.29.0-SNAPSHOT</version>
+    <version>7.31.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>drools-wb-scenario-simulation-editor-kogito-webapp-base</artifactId>
+  <artifactId>drools-wb-scenario-simulation-editor-kogito-webapp-common</artifactId>
   <packaging>jar</packaging>
 
 
-  <name>Drools Workbench - Scenario Simulation Editor - Kogito Webapp Base</name>
-  <description>Drools Workbench - Scenario Simulation Editor - Kogito Webapp Base</description>
+  <name>Drools Workbench - Scenario Simulation Editor - Kogito Webapp Common</name>
+  <description>Drools Workbench - Scenario Simulation Editor - Kogito Webapp Common</description>
 
   <properties>
     <errai.jboss.home>${project.build.directory}/wildfly-${version.org.jboss.errai.wildfly}</errai.jboss.home>
@@ -196,7 +196,7 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- UberFire Submarine dependencies -->
+    <!-- UberFire Kogito dependencies -->
     <dependency>
       <groupId>com.google.elemental2</groupId>
       <artifactId>elemental2-promise</artifactId>
@@ -356,10 +356,10 @@
       <artifactId>elemental2-dom</artifactId>
     </dependency>
 
-    <!-- Submarine -->
+    <!-- Kogito -->
     <dependency>
       <groupId>org.kie.workbench</groupId>
-      <artifactId>kie-wb-common-submarine-client</artifactId>
+      <artifactId>kie-wb-common-kogito-client</artifactId>
     </dependency>
 
     <!-- Test dependencies -->
@@ -583,7 +583,7 @@
     <dependencies>
       <dependency>
         <groupId>org.kie.workbench</groupId>
-        <artifactId>kie-wb-common-submarine-client</artifactId>
+        <artifactId>kie-wb-common-kogito-client</artifactId>
         <!-- momentary fix -->
         <version>${version.org.kie}</version>
       </dependency>
@@ -676,7 +676,7 @@
             <compileSourcesArtifact>org.kie.workbench.widgets:kie-wb-common-ui</compileSourcesArtifact>
             <compileSourcesArtifact>org.kie.workbench.services:kie-wb-common-datamodel-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.kie.workbench.services:kie-wb-common-services-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.kie.workbench:kie-wb-common-submarine-client</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench:kie-wb-common-kogito-client</compileSourcesArtifact>
 
             <!-- UF-ext -->
             <compileSourcesArtifact>org.uberfire:uberfire-runtime-plugins-api</compileSourcesArtifact>

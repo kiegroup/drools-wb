@@ -15,32 +15,31 @@
  */
 package org.drools.workbench.screens.scenariosimulation.kogito.client.converters;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import jsinterop.base.Js;
-import jsinterop.base.JsArrayLike;
+import org.drools.scenariosimulation.api.model.AbstractScesimData;
+import org.drools.scenariosimulation.api.model.Background;
+import org.drools.scenariosimulation.api.model.BackgroundData;
 import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
+import org.drools.scenariosimulation.api.model.ScesimModelDescriptor;
+import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
-import org.drools.scenariosimulation.api.model.SimulationDescriptor;
-import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIExpressionElementType;
+import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIBackgroundDatasType;
+import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIBackgroundType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIExpressionElementsType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIExpressionIdentifierType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIFactIdentifierType;
-import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIFactMappingType;
-import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIFactMappingValueType;
+import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIFactMappingValuesType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIGenericTypes;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIImportType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIImportsType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIScenarioSimulationModelType;
-import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIScenarioType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIScenariosType;
-import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSISimulationDescriptorType;
+import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIScesimModelDescriptorType;
+import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSISettingsType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSISimulationType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIWrappedImportsType;
 import org.kie.soup.project.datamodel.imports.Import;
@@ -53,8 +52,28 @@ public class JSInteropApiConverter {
 
     public static ScenarioSimulationModel getScenarioSimulationModel(JSIScenarioSimulationModelType source) {
         ScenarioSimulationModel toReturn = new ScenarioSimulationModel();
+        toReturn.setSettings(getSettings(source.getSettings()));
         toReturn.setImports(getImports(source.getImports()));
         toReturn.setSimulation(getSimulation(source.getSimulation()));
+        toReturn.setBackground(getBackground(source.getBackground()));
+        return toReturn;
+    }
+
+    protected static Settings getSettings(JSISettingsType source) {
+        Settings toReturn = new Settings();
+        if (source != null) {
+            toReturn.setDmoSession(source.getDmoSession());
+            toReturn.setDmnFilePath(source.getDmnFilePath());
+            toReturn.setType(ScenarioSimulationModel.Type.valueOf(source.getType()));
+            toReturn.setDmnFilePath(source.getFileName());
+            toReturn.setKieSession(source.getKieSession());
+            toReturn.setKieBase(source.getKieBase());
+            toReturn.setRuleFlowGroup(source.getRuleFlowGroup());
+            toReturn.setDmnNamespace(source.getDmnNamespace());
+            toReturn.setDmnName(source.getDmnName());
+            toReturn.setSkipFromBuild(source.getSkipFromBuild());
+            toReturn.setStateless(source.getStateless());
+        }
         return toReturn;
     }
 
@@ -63,15 +82,7 @@ public class JSInteropApiConverter {
         if (source != null) {
             final JSIWrappedImportsType imports = source.getImports();
             if (imports != null) {
-//                final List<JSIImportType> importsTypes = imports.getImport();
-//                if (importsTypes != null) {
-                    imports.getImport().forEach(importsType -> toReturn.addImport(getImport(importsType)));
-//
-//                    for (int i = 0; i < imports.getLength(); i++) {
-//                        JSIImportType jsiImportType = Js.uncheckedCast(imports.getAt(i));
-//                        toReturn.addImport(getImport(jsiImportType));
-//                    }
-//                }
+                imports.getImport().forEach(importsType -> toReturn.addImport(getImport(importsType)));
             }
         }
         return toReturn;
@@ -85,29 +96,28 @@ public class JSInteropApiConverter {
 
     protected static Simulation getSimulation(JSISimulationType source) {
         Simulation toReturn = new Simulation();
-        populateSimulationDescriptor(toReturn.getSimulationDescriptor(), source.getSimulationDescriptor());
-        final JSIScenariosType jsiScenariosType = source.getScenarios();
-//        final List<JSIScenarioType> jsiScenarioTypes = jsiScenariosType.getScenario();
+        populateScesimModelDescriptor(toReturn.getScesimModelDescriptor(), source.getScesimModelDescriptor());
+        final JSIScenariosType jsiScenariosType = source.getScesimData();
         jsiScenariosType.getScenario().forEach(jsiScenarioType -> {
-            Scenario added = toReturn.addScenario();
-            populateScenario(added, jsiScenarioType/*, source.getSimulationDescriptor().getFactMappings().getFactMapping()*/);
+            Scenario added = toReturn.addData();
+            populateAbstractScesimData(added, jsiScenarioType.getFactMappingValues());
         });
-//
-//
-//
-//        if (jsiScenarioTypes != null) {
-//            for (int i = 0; i < jsiScenarioTypes.getLength(); i++) {
-//                Scenario added = toReturn.addScenario();
-//                JSIScenarioType jsiScenarioType = Js.uncheckedCast(jsiScenarioTypes.getAt(i));
-//                populateScenario(added, jsiScenarioType, source.getSimulationDescriptor().getFactMappings().getFactMapping());
-//            }
-//        }
         return toReturn;
     }
 
-    protected static void populateScenario(Scenario toPopulate, JSIScenarioType source/*, List<JSIFactMappingType> jsiFactMappingTypes*/) {
-//        final List<JSIFactMappingValueType> factMappingValue = source.getFactMappingValues().getFactMappingValue();
-        source.getFactMappingValues().getFactMappingValue().forEach(jsiFactMappingValueType -> {
+    protected static Background getBackground(JSIBackgroundType source) {
+        Background toReturn = new Background();
+        populateScesimModelDescriptor(toReturn.getScesimModelDescriptor(), source.getScesimModelDescriptor());
+        final JSIBackgroundDatasType jsiBackgroundDatasType = source.getScesimData();
+        jsiBackgroundDatasType.getBackgroundData().forEach(jsiScenarioType -> {
+            BackgroundData added = toReturn.addData();
+            populateAbstractScesimData(added, jsiScenarioType.getFactMappingValues());
+        });
+        return toReturn;
+    }
+
+    protected static void populateAbstractScesimData(AbstractScesimData toPopulate, JSIFactMappingValuesType source) {
+        source.getFactMappingValue().forEach(jsiFactMappingValueType -> {
             JSIFactIdentifierType factIdentifierType = jsiFactMappingValueType.getFactIdentifier();
             final JSIExpressionIdentifierType expressionIdentifierType = jsiFactMappingValueType.getExpressionIdentifier();
             if (factIdentifierType != null && expressionIdentifierType != null) {
@@ -115,84 +125,22 @@ public class JSInteropApiConverter {
                 toPopulate.addMappingValue(getFactIdentifier(factIdentifierType), getExpressionIdentifier(expressionIdentifierType), value);
             }
         });
-//
-//
-//        for (int i = 0; i < factMappingValue.getLength(); i++) {
-//            JSIFactMappingValueType jsiFactMappingValueType = Js.uncheckedCast(factMappingValue.getAt(i));
-//            JSIFactIdentifierType factIdentifierType = jsiFactMappingValueType.getFactIdentifier();
-//            final JSIExpressionIdentifierType expressionIdentifierType = jsiFactMappingValueType.getExpressionIdentifier();
-//            if (factIdentifierType != null && expressionIdentifierType != null) {
-//                String value = jsiFactMappingValueType.getRawValue() != null ? jsiFactMappingValueType.getRawValue().getValue() : null;
-//                toPopulate.addMappingValue(getFactIdentifier(factIdentifierType), getExpressionIdentifier(expressionIdentifierType), value);
-//            }
-//        }
     }
 
-    protected static void populateSimulationDescriptor(SimulationDescriptor toPopulate, JSISimulationDescriptorType source) {
-//        final List<JSIFactMappingType> factMapping = source.getFactMappings().getFactMapping();
+    protected static void populateScesimModelDescriptor(ScesimModelDescriptor toPopulate, JSIScesimModelDescriptorType source) {
         source.getFactMappings().getFactMapping().forEach(jsiFactMappingType -> {
             final FactMapping added = toPopulate.addFactMapping(getFactIdentifier(jsiFactMappingType.getFactIdentifier()), getExpressionIdentifier(jsiFactMappingType.getExpressionIdentifier()));
             added.setFactAlias(jsiFactMappingType.getFactAlias());
             added.setExpressionAlias(jsiFactMappingType.getExpressionAlias());
             final JSIGenericTypes genericTypes = jsiFactMappingType.getGenericTypes();
             if (genericTypes != null && genericTypes.getString() != null) {
-//                List<String> toSet = genericTypes.getString();
-//                List<String> toSet = new ArrayList<>();
-//                for (int j = 0; j < genericString.length; j++) {
-//                    toSet.add(genericString[j]);
-//                }
                 added.setGenericTypes(genericTypes.getString());
             }
             final JSIExpressionElementsType expressionElements = jsiFactMappingType.getExpressionElements();
             if (expressionElements != null) {
-//                final List<JSIExpressionElementType> expressionElement = expressionElements.getExpressionElement();
                 expressionElements.getExpressionElement().forEach(jsiExpressionElementType -> added.addExpressionElement(jsiExpressionElementType.getStep(), jsiFactMappingType.getClassName()));
-//
-//                if (expressionElement != null) {
-//                    for (int j = 0; j < expressionElement.getLength(); j++) {
-//                        JSIExpressionElementType jsiExpressionElementType = Js.uncheckedCast(expressionElement.getAt(j));
-//                        added.addExpressionElement(jsiExpressionElementType.getStep(), jsiFactMappingType.getClassName());
-//                    }
-//                }
             }
         });
-
-//
-//        for (int i = 0; i < factMapping.getLength(); i++) {
-//            JSIFactMappingType jsiFactMappingType = Js.uncheckedCast(factMapping.getAt(i));
-//            final FactMapping added = toPopulate.addFactMapping(getFactIdentifier(jsiFactMappingType.getFactIdentifier()), getExpressionIdentifier(jsiFactMappingType.getExpressionIdentifier()));
-//            added.setFactAlias(jsiFactMappingType.getFactAlias());
-//            added.setExpressionAlias(jsiFactMappingType.getExpressionAlias());
-//            final JSIGenericTypes genericTypes = jsiFactMappingType.getGenericTypes();
-//            if (genericTypes != null && genericTypes.getString() != null) {
-//                final String[] genericString = genericTypes.getString();
-//                List<String> toSet = new ArrayList<>();
-//                for (int j = 0; j < genericString.length; j++) {
-//                    toSet.add(genericString[j]);
-//                }
-//                added.setGenericTypes(toSet);
-//            }
-//            final JSIExpressionElementsType expressionElements = jsiFactMappingType.getExpressionElements();
-//            if (expressionElements != null) {
-//                final JsArrayLike<JSIExpressionElementType> expressionElement = expressionElements.getExpressionElement();
-//                if (expressionElement != null) {
-//                    for (int j = 0; j < expressionElement.getLength(); j++) {
-//                        JSIExpressionElementType jsiExpressionElementType = Js.uncheckedCast(expressionElement.getAt(j));
-//                        added.addExpressionElement(jsiExpressionElementType.getStep(), jsiFactMappingType.getClassName());
-//                    }
-//                }
-//            }
-//        }
-        toPopulate.setDmoSession(source.getDmoSession());
-        toPopulate.setDmnFilePath(source.getDmnFilePath());
-        toPopulate.setType(ScenarioSimulationModel.Type.valueOf(source.getType()));
-        toPopulate.setDmnFilePath(source.getFileName());
-        toPopulate.setKieSession(source.getKieSession());
-        toPopulate.setKieBase(source.getKieBase());
-        toPopulate.setRuleFlowGroup(source.getRuleFlowGroup());
-        toPopulate.setDmnNamespace(source.getDmnNamespace());
-        toPopulate.setDmnName(source.getDmnName());
-        toPopulate.setSkipFromBuild(source.getSkipFromBuild());
     }
 
     protected static ExpressionIdentifier getExpressionIdentifier(JSIExpressionIdentifierType source) {

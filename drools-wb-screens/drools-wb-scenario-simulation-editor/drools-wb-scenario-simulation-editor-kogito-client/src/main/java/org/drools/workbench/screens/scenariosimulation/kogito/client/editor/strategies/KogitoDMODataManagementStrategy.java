@@ -21,7 +21,7 @@ import java.util.SortedMap;
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.AbstractDMODataManagementStrategy;
-import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.fakes.KogitoAsyncPackageDataModelOracle;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
@@ -29,15 +29,10 @@ import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.Fact
 import org.kie.soup.project.datamodel.oracle.ModelField;
 import org.uberfire.backend.vfs.ObservablePath;
 
-//import org.kie.soup.project.datamodel.oracle.ModelField;
-
 public class KogitoDMODataManagementStrategy extends AbstractDMODataManagementStrategy {
 
     protected KogitoAsyncPackageDataModelOracle submarineOracle = new KogitoAsyncPackageDataModelOracle();
 
-    public KogitoDMODataManagementStrategy(final ScenarioSimulationContext scenarioSimulationContext) {
-        this.scenarioSimulationContext = scenarioSimulationContext;
-    }
 
     @Override
     public void manageScenarioSimulationModelContent(ObservablePath currentPath, ScenarioSimulationModelContent toManage) {
@@ -51,15 +46,12 @@ public class KogitoDMODataManagementStrategy extends AbstractDMODataManagementSt
     }
 
     @Override
-    protected void manageDataObjects(List<String> dataObjectsTypes, final TestToolsView.Presenter testToolsPresenter, int expectedElements,
-                                     final SortedMap<String, FactModelTree> dataObjectsFieldsMap,
-                                     final ScenarioGridModel scenarioGridModel,
-                                     final List<String> simpleJavaTypes) {
+    protected void manageDataObjects(List<String> dataObjectsTypes, TestToolsView.Presenter testToolsPresenter, int expectedElements, SortedMap<String, FactModelTree> dataObjectsFieldsMap, ScenarioSimulationContext context, List<String> simpleJavaTypes, GridWidget gridWidget) {
         //                 Iterate over all dataObjects to retrieve their modelfields
         dataObjectsTypes.forEach(factType -> {
             ModelField[] retrieved = submarineOracle.getFieldCompletions(factType);
             FactModelTree toSend = getFactModelTree(factType, retrieved);
-            aggregatorCallbackMethod(testToolsPresenter, expectedElements, dataObjectsFieldsMap, scenarioGridModel, toSend, simpleJavaTypes);
+            aggregatorCallbackMethod(testToolsPresenter, expectedElements, dataObjectsFieldsMap, context, toSend, simpleJavaTypes, gridWidget);
         });
     }
 

@@ -49,7 +49,7 @@
   <inherits name="org.kie.workbench.common.profile.ProfileAPI" />
   <inherits name="org.kie.workbench.common.screens.explorer.KieWorkbenchProjectExplorerAPI"/>
 
-  <inherits name="org.kie.workbench.common.submarine.SubmarineClient" />
+  <inherits name="org.kie.workbench.common.kogito.KogitoClient" />
   <inherits name="org.dashbuilder.DatasetAPI" />
   <inherits name="org.dashbuilder.DatasetClient" />
   <inherits name="org.dashbuilder.DatasetShared" />

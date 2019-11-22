@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import org.drools.scenariosimulation.api.model.Simulation;
+import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
 import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
@@ -63,7 +63,7 @@ public class KogitoDMNTypeService implements DMNTypeService {
     }
 
     @Override
-    public void initializeNameAndNamespace(Simulation simulation, Path path, String dmnPath) {
+    public void initializeNameAndNamespace(Settings settings, Path path, String dmnPath) {
 
     }
 

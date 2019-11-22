@@ -30,7 +30,7 @@ import org.drools.workbench.screens.scenariosimulation.webapp.client.popup.LoadS
 import org.drools.workbench.screens.scenariosimulation.webapp.client.popup.NewScesimPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds.ScesimFilesProvider;
 import org.kie.workbench.common.kogito.webapp.base.client.editor.KogitoScreen;
-import org.kie.workbench.common.submarine.client.editor.MultiPageEditorContainerView;
+import org.kie.workbench.common.kogito.client.editor.MultiPageEditorContainerView;
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
 import org.uberfire.client.annotations.WorkbenchMenu;
 import org.uberfire.client.annotations.WorkbenchPartTitle;

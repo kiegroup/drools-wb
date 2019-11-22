@@ -47,9 +47,9 @@ public class ScenarioSimulationKogitoServiceImplTest {
     public void unmarshal() throws Exception {
         String toUnmarshal = TestUtils.getFileContent("scesim-dmn.scesim");
         final ScenarioSimulationModel retrieved = instance.unmarshal(toUnmarshal);
-        assertEquals(retrieved.getSimulation().getSimulationDescriptor().getType(), ScenarioSimulationModel.Type.DMN);
-        assertNotNull(retrieved.getSimulation().getSimulationDescriptor().getDmnFilePath());
-        assertNull(retrieved.getSimulation().getSimulationDescriptor().getDmoSession());
+        assertEquals(retrieved.getSettings().getType(), ScenarioSimulationModel.Type.DMN);
+        assertNotNull(retrieved.getSettings().getDmnFilePath());
+        assertNull(retrieved.getSettings().getDmoSession());
     }
 
     @Test

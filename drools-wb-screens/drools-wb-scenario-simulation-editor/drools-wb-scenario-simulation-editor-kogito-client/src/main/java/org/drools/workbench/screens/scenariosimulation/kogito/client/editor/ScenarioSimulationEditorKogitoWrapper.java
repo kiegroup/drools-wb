@@ -26,11 +26,15 @@ import javax.inject.Inject;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
 import elemental2.promise.Promise;
+import org.drools.scenariosimulation.api.model.AbstractScesimData;
+import org.drools.scenariosimulation.api.model.AbstractScesimModel;
 import org.drools.scenariosimulation.api.model.AuditLog;
+import org.drools.scenariosimulation.api.model.Background;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.ScesimModelDescriptor;
+import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
-import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.MainJs;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.callbacks.SCESIMMarshallCallback;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.callbacks.SCESIMUnmarshallCallback;
@@ -40,20 +44,26 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSim
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorWrapper;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationHasBusyIndicatorDefaultErrorCallback;
+import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridWidget;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.strategies.KogitoDMNDataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.strategies.KogitoDMODataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
+import org.gwtbootstrap3.client.ui.TabListItem;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
-import org.kie.workbench.common.submarine.client.editor.MultiPageEditorContainerPresenter;
-import org.kie.workbench.common.submarine.client.editor.MultiPageEditorContainerView;
+import org.kie.workbench.common.kogito.client.editor.MultiPageEditorContainerPresenter;
+import org.kie.workbench.common.kogito.client.editor.MultiPageEditorContainerView;
 import org.kie.workbench.common.widgets.client.docks.AuthoringEditorDock;
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
+import org.kie.workbench.common.widgets.client.resources.i18n.CommonConstants;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.backend.vfs.PathFactory;
 import org.uberfire.backend.vfs.impl.ObservablePathImpl;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.mvp.PlaceStatus;
+import org.uberfire.client.views.pfly.multipage.MultiPageEditorViewImpl;
+import org.uberfire.client.views.pfly.multipage.PageImpl;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 
@@ -82,7 +92,7 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
             final PlaceManager placeManager,
             final MultiPageEditorContainerView multiPageEditorContainerView,
             final AuthoringEditorDock authoringWorkbenchDocks) {
-        super(scenarioSimulationEditorPresenter.getView(), fileMenuBuilder, placeManager, multiPageEditorContainerView);
+        super(scenarioSimulationEditorPresenter.getView(), /*fileMenuBuilder, */placeManager, multiPageEditorContainerView);
         this.scenarioSimulationEditorPresenter = scenarioSimulationEditorPresenter;
         this.fileMenuBuilder = fileMenuBuilder;
         this.authoringWorkbenchDocks = authoringWorkbenchDocks;
@@ -115,12 +125,12 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     }
 
     @Override
-    public void onImport(String fileContents, RemoteCallback<Simulation> importCallBack, ErrorCallback<Object> importErrorCallback, Simulation simulation) {
+    public void onImport(String fileContents, RemoteCallback<AbstractScesimModel> importCallBack, ErrorCallback<Object> importErrorCallback, AbstractScesimModel<? extends AbstractScesimData> scesimModel) {
         //
     }
 
     @Override
-    public void onExportToCsv(RemoteCallback<Object> exportCallBack, ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback, Simulation simulation) {
+    public void onExportToCsv(RemoteCallback<Object> exportCallBack, ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback, AbstractScesimModel<? extends AbstractScesimData> scesimModel) {
         //
     }
 
@@ -130,8 +140,49 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     }
 
     @Override
-    public void validate(Simulation simulation, RemoteCallback<?> callback) {
+    public void validate(Simulation simulation, Settings settings, RemoteCallback<?> callback) {
         //
+    }
+
+    /**
+     * This method adds specifically the Background grid and its related onFocus behavior
+     * @param scenarioGridWidget
+     */
+    @Override
+    public void addBackgroundPage(final ScenarioGridWidget scenarioGridWidget) {
+        getWidget().getMultiPage().addPage(BACKGROUND_TAB_INDEX, new PageImpl(scenarioGridWidget, ScenarioSimulationEditorConstants.INSTANCE.backgroundTabTitle()) {
+            @Override
+            public void onFocus() {
+                super.onFocus();
+                onBackgroundTabSelected();
+            }
+        });
+    }
+
+    protected void addImportsTab(IsWidget importsWidget) {
+        addPage(new PageImpl(importsWidget, CommonConstants.INSTANCE.DataObjectsTabTitle()) {
+            @Override
+            public void onFocus() {
+                super.onFocus();
+                onImportsTabSelected();
+            }
+        });
+    }
+
+    @Override
+    public void selectSimulationTab() {
+        final TabListItem item = (TabListItem) ((MultiPageEditorViewImpl) getWidget().getMultiPage().getView()).getTabBar().getWidget(SIMULATION_TAB_INDEX);
+        if (item != null) {
+            item.showTab(false);
+        }
+    }
+
+    @Override
+    public void selectBackgroundTab() {
+        final TabListItem item = (TabListItem) ((MultiPageEditorViewImpl) getWidget().getMultiPage().getView()).getTabBar().getWidget(BACKGROUND_TAB_INDEX);
+        if (item != null) {
+            item.showTab(false);
+        }
     }
 
     @Override
@@ -165,7 +216,7 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     }
 
     @Override
-    public void onRunScenario(RemoteCallback<SimulationRunResult> refreshModelCallback, ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback, SimulationDescriptor simulationDescriptor, List<ScenarioWithIndex> toRun) {
+    public void onRunScenario(RemoteCallback<SimulationRunResult> refreshModelCallback, ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback, ScesimModelDescriptor simulationDescriptor, Settings settings, List<ScenarioWithIndex> toRun, Background background) {
         throw new UnsupportedOperationException("Not available in Submarine");
     }
 
@@ -200,7 +251,7 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     }
 
     protected void unmarshallContent(String toUnmarshal) {
-        MainJs.unmarshall(toUnmarshal,"scesim", getJSInteropUnmarshallConvert());
+        MainJs.unmarshall(toUnmarshal, "scesim", getJSInteropUnmarshallConvert());
     }
 
     protected SCESIMMarshallCallback getJSInteropMarshallConvert() {
@@ -222,12 +273,21 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
         scenarioSimulationEditorPresenter.setPackageName("com");
         resetEditorPages();
         DataManagementStrategy dataManagementStrategy;
-        if (ScenarioSimulationModel.Type.RULE.equals(model.getSimulation().getSimulationDescriptor().getType())) {
-            dataManagementStrategy = new KogitoDMODataManagementStrategy(scenarioSimulationEditorPresenter.getContext());
+        if (ScenarioSimulationModel.Type.RULE.equals(model.getSettings().getType())) {
+            dataManagementStrategy = new KogitoDMODataManagementStrategy();
         } else {
-            dataManagementStrategy = new KogitoDMNDataManagementStrategy(scenarioSimulationEditorPresenter.getContext(), scenarioSimulationEditorPresenter.getEventBus());
+            dataManagementStrategy = new KogitoDMNDataManagementStrategy(scenarioSimulationEditorPresenter.getEventBus());
         }
         dataManagementStrategy.setModel(model);
         scenarioSimulationEditorPresenter.getModelSuccessCallbackMethod(dataManagementStrategy, model);
     }
+
+    protected void onBackgroundTabSelected() {
+        scenarioSimulationEditorPresenter.onBackgroundTabSelected();
+    }
+
+    protected void onImportsTabSelected() {
+        scenarioSimulationEditorPresenter.onImportsTabSelected();
+    }
+
 }

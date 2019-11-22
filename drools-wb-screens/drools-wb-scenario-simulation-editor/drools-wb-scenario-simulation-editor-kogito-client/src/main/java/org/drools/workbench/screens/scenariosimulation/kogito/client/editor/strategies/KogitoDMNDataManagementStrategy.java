@@ -18,7 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.kogito.client.editor.str
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.AbstractDMNDataManagementStrategy;
-import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.fakes.KogitoDMNTypeService;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
@@ -27,14 +27,14 @@ public class KogitoDMNDataManagementStrategy extends AbstractDMNDataManagementSt
 
     private final KogitoDMNTypeService kogitoDmnTypeService = new KogitoDMNTypeService();
 
-    public KogitoDMNDataManagementStrategy(ScenarioSimulationContext scenarioSimulationContext,
-                                           EventBus eventBus) {
-        super(scenarioSimulationContext, eventBus);
+    public KogitoDMNDataManagementStrategy(EventBus eventBus) {
+        super(eventBus);
     }
 
     @Override
-    protected void retrieveFactModelTuple(TestToolsView.Presenter testToolsPresenter, ScenarioGridModel scenarioGridModel, String dmnFilePath) {
+    protected void retrieveFactModelTuple(TestToolsView.Presenter testToolsPresenter, ScenarioSimulationContext context, GridWidget gridWidget, String dmnFilePath) {
         final FactModelTuple factMappingTuple = kogitoDmnTypeService.retrieveFactModelTuple(currentPath, dmnFilePath);
-        getSuccessCallbackMethod(factMappingTuple, testToolsPresenter, scenarioGridModel);
+        getSuccessCallback(testToolsPresenter, context, gridWidget);
     }
+
 }
