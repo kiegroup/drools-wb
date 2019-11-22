@@ -22,5 +22,5 @@ import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioGri
  * <code>EventHandler</code> for {@link ScenarioGridReloadEvent}
  */
 public interface ScenarioGridReloadEventHandler extends EventHandler {
-    void handle(ScenarioGridReloadEvent event);
+    void onEvent(ScenarioGridReloadEvent event);
 }

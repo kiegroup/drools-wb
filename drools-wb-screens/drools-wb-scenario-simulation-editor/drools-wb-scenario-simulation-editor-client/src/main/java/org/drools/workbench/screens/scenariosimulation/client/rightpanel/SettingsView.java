@@ -16,28 +16,30 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
-import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.LabelElement;
 import com.google.gwt.dom.client.SpanElement;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
-import org.drools.scenariosimulation.api.model.SimulationDescriptor;
-import org.uberfire.mvp.Command;
+import org.drools.scenariosimulation.api.model.Settings;
 
 public interface SettingsView
         extends SubDockView<SettingsView.Presenter> {
 
     interface Presenter extends SubDockView.Presenter {
 
-        void setScenarioType(ScenarioSimulationModel.Type scenarioType, SimulationDescriptor simulationDescriptor, String fileName);
+        void setScenarioType(ScenarioSimulationModel.Type scenarioType, Settings settings, String fileName);
 
-        void onSaveButton(String type);
+        void syncDmoSession();
 
-        void setSaveCommand(Command saveCommand);
+        void syncRuleFlowGroup();
 
-        void setSaveEnabled(boolean toSet);
+        void syncStateless();
+
+        void syncDmnFilePath();
+
+        void syncSkipFromBuild();
     }
 
     void setupDropdown(Element dropdownElement);
@@ -77,10 +79,4 @@ public interface SettingsView
     SpanElement getSkipFromBuildLabel();
 
     InputElement getStateless();
-
-    ButtonElement getSaveButton();
-
-    void removeSaveButton();
-
-    void restoreSaveButton();
 }

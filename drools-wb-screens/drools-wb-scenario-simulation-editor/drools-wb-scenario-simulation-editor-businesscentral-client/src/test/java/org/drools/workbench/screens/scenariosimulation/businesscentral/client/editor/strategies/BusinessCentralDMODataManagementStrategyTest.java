@@ -27,14 +27,11 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
-import junit.framework.TestCase;
 import org.drools.workbench.screens.scenariosimulation.client.TestProperties;
 import org.drools.workbench.screens.scenariosimulation.client.editor.AbstractScenarioSimulationEditorTest;
-import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.AbstractDataManagementStrategy;
-import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.AbstractDataManagementStrategyTest;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
-import org.jgroups.util.Util;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -67,9 +64,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class BusinessCentralDMODataManagementStrategyTest extends AbstractDataManagementStrategyTest {
+public class BusinessCentralDMODataManagementStrategyTest extends AbstractScenarioSimulationEditorTest {
 
-    private BusinessCentralDMODataManagementStrategy businessCentralDmoDataManagementStrategy;
+    private BusinessCentralDMODataManagementStrategy businessCentralDmoDataManagementStrategySpy;
 
     @Mock
     private AsyncPackageDataModelOracle oracleMock;
@@ -86,33 +83,32 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractDataMa
         factModelTreeHolderlocal.setFactModelTuple(factModelTupleLocal);
         when(oracleMock.getFQCNByFactName(TestProperties.FACT_NAME)).thenReturn(TestProperties.FULL_FACT_CLASSNAME);
         when(oracleFactoryMock.makeAsyncPackageDataModelOracle(observablePathMock, modelLocal, content.getDataModel())).thenReturn(oracleMock);
-        this.businessCentralDmoDataManagementStrategy = spy(new BusinessCentralDMODataManagementStrategy(oracleFactoryMock, scenarioSimulationContextLocal) {
+        this.businessCentralDmoDataManagementStrategySpy = spy(new BusinessCentralDMODataManagementStrategy(oracleFactoryMock) {
             {
                 this.oracle = oracleMock;
                 this.factModelTreeHolder = factModelTreeHolderlocal;
             }
         });
-        abstractDataManagementStrategySpy = businessCentralDmoDataManagementStrategy;
     }
 
     @Test
     public void populateTestToolsWithFactTuple() {
         final FactModelTuple factModelTupleMock = mock(FactModelTuple.class);
         factModelTreeHolderlocal.setFactModelTuple(factModelTupleMock);
-        doNothing().when(businessCentralDmoDataManagementStrategy).storeData(eq(factModelTupleMock), eq(testToolsPresenterMock), eq(scenarioGridModelMock));
-        businessCentralDmoDataManagementStrategy.populateTestTools(testToolsPresenterMock, scenarioGridModelMock);
-        verify(businessCentralDmoDataManagementStrategy, times(1)).storeData(eq(factModelTupleMock), eq(testToolsPresenterMock), eq(scenarioGridModelMock));
+        doNothing().when(businessCentralDmoDataManagementStrategySpy).storeData(eq(factModelTupleMock), eq(testToolsPresenterMock), eq(scenarioSimulationContextLocal), eq(GridWidget.SIMULATION));
+        businessCentralDmoDataManagementStrategySpy.populateTestTools(testToolsPresenterMock, scenarioSimulationContextLocal, GridWidget.SIMULATION);
+        verify(businessCentralDmoDataManagementStrategySpy, times(1)).storeData(eq(factModelTupleMock), eq(testToolsPresenterMock), eq(scenarioSimulationContextLocal), eq(GridWidget.SIMULATION));
     }
 
     @Test
     public void populateTestToolsWithoutFactTupleEmptyOracle() {
         factModelTreeHolderlocal.setFactModelTuple(null);
         Map<String, List<String>> alreadyAssignedProperties = new HashMap<>();
-        doReturn(alreadyAssignedProperties).when(businessCentralDmoDataManagementStrategy).getPropertiesToHide(scenarioGridModelMock);
+        doReturn(alreadyAssignedProperties).when(businessCentralDmoDataManagementStrategySpy).getPropertiesToHide(scenarioGridModelMock);
         String[] emptyFactTypes = {};
         when(oracleMock.getFactTypes()).thenReturn(emptyFactTypes);
-        businessCentralDmoDataManagementStrategy.populateTestTools(testToolsPresenterMock, scenarioGridModelMock);
-        verify(businessCentralDmoDataManagementStrategy, never()).aggregatorCallback(eq(testToolsPresenterMock), anyInt(), any(SortedMap.class), eq(scenarioGridModelMock), isA(List.class));
+        businessCentralDmoDataManagementStrategySpy.populateTestTools(testToolsPresenterMock, scenarioSimulationContextLocal, GridWidget.SIMULATION);
+        verify(businessCentralDmoDataManagementStrategySpy, never()).aggregatorCallback(eq(testToolsPresenterMock), anyInt(), any(SortedMap.class), eq(scenarioSimulationContextLocal), isA(List.class), eq(GridWidget.SIMULATION));
         verify(oracleMock, never()).getFieldCompletions(anyString(), any(Callback.class));
     }
 
@@ -120,11 +116,11 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractDataMa
     public void populateTestToolsWithoutFactTupleWithOnlyDataObjects() {
         factModelTreeHolderlocal.setFactModelTuple(null);
         Map<String, List<String>> alreadyAssignedProperties = new HashMap<>();
-        doReturn(alreadyAssignedProperties).when(businessCentralDmoDataManagementStrategy).getPropertiesToHide(scenarioGridModelMock);
+        doReturn(alreadyAssignedProperties).when(businessCentralDmoDataManagementStrategySpy).getPropertiesToHide(scenarioGridModelMock);
         String[] notEmptyFactTypes = getRandomStringArray();
         when(oracleMock.getFactTypes()).thenReturn(notEmptyFactTypes);
-        businessCentralDmoDataManagementStrategy.populateTestTools(testToolsPresenterMock, scenarioGridModelMock);
-        verify(businessCentralDmoDataManagementStrategy, times(1)).aggregatorCallback(eq(testToolsPresenterMock), anyInt(), any(SortedMap.class), eq(scenarioGridModelMock), isA(List.class));
+        businessCentralDmoDataManagementStrategySpy.populateTestTools(testToolsPresenterMock, scenarioSimulationContextLocal, GridWidget.SIMULATION);
+        verify(businessCentralDmoDataManagementStrategySpy, times(1)).aggregatorCallback(eq(testToolsPresenterMock), anyInt(), any(SortedMap.class), eq(scenarioSimulationContextLocal), isA(List.class), eq(GridWidget.SIMULATION));
         for (String factType : notEmptyFactTypes) {
             verify(oracleMock, times(1)).getFieldCompletions(eq(factType), any(Callback.class));
         }
@@ -134,13 +130,13 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractDataMa
     public void populateTestToolsWithoutFactTupleWithDataObjectsAndSimpleJavaTypes() {
         factModelTreeHolderlocal.setFactModelTuple(null);
         Map<String, List<String>> alreadyAssignedProperties = new HashMap<>();
-        doReturn(alreadyAssignedProperties).when(businessCentralDmoDataManagementStrategy).getPropertiesToHide(scenarioGridModelMock);
+        doReturn(alreadyAssignedProperties).when(businessCentralDmoDataManagementStrategySpy).getPropertiesToHide(scenarioGridModelMock);
         String[] dataObjectTypes = getRandomStringArray();
         String[] simpleJavaTypes = getSimpleTypeArray();
         String[] notEmptyFactTypes = mergeArrays(dataObjectTypes, simpleJavaTypes);
         when(oracleMock.getFactTypes()).thenReturn(notEmptyFactTypes);
-        businessCentralDmoDataManagementStrategy.populateTestTools(testToolsPresenterMock, scenarioGridModelMock);
-        verify(businessCentralDmoDataManagementStrategy, times(1)).aggregatorCallback(eq(testToolsPresenterMock), anyInt(), any(SortedMap.class), eq(scenarioGridModelMock), isA(List.class));
+        businessCentralDmoDataManagementStrategySpy.populateTestTools(testToolsPresenterMock, scenarioSimulationContextLocal, GridWidget.SIMULATION);
+        verify(businessCentralDmoDataManagementStrategySpy, times(1)).aggregatorCallback(eq(testToolsPresenterMock), anyInt(), any(SortedMap.class), eq(scenarioSimulationContextLocal), isA(List.class), eq(GridWidget.SIMULATION));
         for (String factType : dataObjectTypes) {
             verify(oracleMock, times(1)).getFieldCompletions(eq(factType), any(Callback.class));
         }
@@ -150,23 +146,29 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractDataMa
     public void populateTestToolsWithoutFactTupleWithoutDataObjectsWithSimpleJavaTypes() {
         factModelTreeHolderlocal.setFactModelTuple(null);
         Map<String, List<String>> alreadyAssignedProperties = new HashMap<>();
-        doReturn(alreadyAssignedProperties).when(businessCentralDmoDataManagementStrategy).getPropertiesToHide(scenarioGridModelMock);
+        doReturn(alreadyAssignedProperties).when(businessCentralDmoDataManagementStrategySpy).getPropertiesToHide(scenarioGridModelMock);
         String[] notEmptyFactTypes = getSimpleTypeArray();
         List<String> simpleJavaTypes = Arrays.asList(notEmptyFactTypes);
         when(oracleMock.getFactTypes()).thenReturn(notEmptyFactTypes);
-        businessCentralDmoDataManagementStrategy.populateTestTools(testToolsPresenterMock, scenarioGridModelMock);
-        verify(businessCentralDmoDataManagementStrategy, never()).aggregatorCallback(eq(testToolsPresenterMock), anyInt(), any(SortedMap.class), eq(scenarioGridModelMock), isA(List.class));
-        verify(businessCentralDmoDataManagementStrategy, times(1)).aggregatorCallbackMethod(eq(testToolsPresenterMock), eq(0), any(SortedMap.class), eq(scenarioGridModelMock), eq(null), eq(simpleJavaTypes));
+        businessCentralDmoDataManagementStrategySpy.populateTestTools(testToolsPresenterMock, scenarioSimulationContextLocal, GridWidget.SIMULATION);
+        verify(businessCentralDmoDataManagementStrategySpy, never()).aggregatorCallback(eq(testToolsPresenterMock), anyInt(), any(SortedMap.class), eq(scenarioSimulationContextLocal), isA(List.class), eq(GridWidget.SIMULATION));
+        verify(businessCentralDmoDataManagementStrategySpy, times(1)).aggregatorCallbackMethod(eq(testToolsPresenterMock), eq(0), any(SortedMap.class), eq(scenarioSimulationContextLocal), eq(null), eq(simpleJavaTypes), eq(GridWidget.SIMULATION));
     }
 
     @Test
     public void manageScenarioSimulationModelContent() {
-        businessCentralDmoDataManagementStrategy.manageScenarioSimulationModelContent(observablePathMock, content);
-        assertEquals(businessCentralDmoDataManagementStrategy.oracle, oracleMock);
+        businessCentralDmoDataManagementStrategySpy.manageScenarioSimulationModelContent(observablePathMock, content);
+        assertEquals(businessCentralDmoDataManagementStrategySpy.oracle, oracleMock);
     }
 
     @Test
-    public void isADataType() {
+    public void isADataTypeOracleNull() {
+        businessCentralDmoDataManagementStrategySpy.oracle = null;
+        commonIsADataType("TEST", false);
+    }
+
+    @Test
+    public void isADataTypeOracleNotNull() {
         when(oracleMock.getFactTypes()).thenReturn(new String[]{});
         commonIsADataType("TEST", false);
         when(oracleMock.getFactTypes()).thenReturn(new String[]{"TEST"});
@@ -175,11 +177,25 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractDataMa
     }
 
     @Test
+    public void skipPopulateTestToolsOracleNull() {
+        businessCentralDmoDataManagementStrategySpy.oracle = null;
+        assertTrue(businessCentralDmoDataManagementStrategySpy.skipPopulateTestTools());
+    }
+
+    @Test
+    public void skipPopulateTestToolsOracleNotNull() {
+        when(oracleMock.getFactTypes()).thenReturn(new String[]{});
+        assertTrue(businessCentralDmoDataManagementStrategySpy.skipPopulateTestTools());
+        when(oracleMock.getFactTypes()).thenReturn(new String[]{"TEST"});
+        assertFalse(businessCentralDmoDataManagementStrategySpy.skipPopulateTestTools());
+    }
+
+    @Test
     public void fieldCompletionsCallbackMethod() {
         ModelField[] result = {};
         Callback<FactModelTree> aggregatorCallbackMock = mock(Callback.class);
-        businessCentralDmoDataManagementStrategy.fieldCompletionsCallbackMethod(TestProperties.FACT_NAME, result, aggregatorCallbackMock);
-        verify(businessCentralDmoDataManagementStrategy, times(1)).getFactModelTree(eq(TestProperties.FACT_NAME), eq(result));
+        businessCentralDmoDataManagementStrategySpy.fieldCompletionsCallbackMethod(TestProperties.FACT_NAME, result, aggregatorCallbackMock);
+        verify(businessCentralDmoDataManagementStrategySpy, times(1)).getFactModelTree(eq(TestProperties.FACT_NAME), eq(result));
         verify(aggregatorCallbackMock, times(1)).callback(isA(FactModelTree.class));
     }
 
@@ -187,33 +203,10 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractDataMa
     public void getFactModelTree() {
         Map<String, String> simpleProperties = getSimplePropertiesInner();
         final ModelField[] modelFields = getModelFieldsInner(simpleProperties);
-        final FactModelTree retrieved = businessCentralDmoDataManagementStrategy.getFactModelTree(TestProperties.FACT_NAME, modelFields);
+        final FactModelTree retrieved = businessCentralDmoDataManagementStrategySpy.getFactModelTree(TestProperties.FACT_NAME, modelFields);
         assertNotNull(retrieved);
         Assert.assertEquals(TestProperties.FACT_NAME, retrieved.getFactName());
         assertEquals("", retrieved.getFullPackage());
-    }
-
-    @Test
-    public void getSimpleClassFactModelTree() {
-        Class[] expectedClazzes = {String.class, Boolean.class, Integer.class, Double.class, Number.class};
-        for (Class expectedClazz : expectedClazzes) {
-            final FactModelTree retrieved = AbstractDataManagementStrategy.getSimpleClassFactModelTree(
-                    expectedClazz.getSimpleName(),
-                    expectedClazz.getCanonicalName());
-            assertNotNull(retrieved);
-            String key = expectedClazz.getSimpleName();
-            assertEquals(key, retrieved.getFactName());
-            String fullName = expectedClazz.getCanonicalName();
-            String packageName = fullName.substring(0, fullName.lastIndexOf("."));
-            assertEquals(packageName, retrieved.getFullPackage());
-            Map<String, String> simpleProperties = retrieved.getSimpleProperties();
-            assertNotNull(simpleProperties);
-            assertEquals(1, simpleProperties.size());
-            Util.assertTrue(simpleProperties.containsKey(TestProperties.LOWER_CASE_VALUE));
-            String simplePropertyValue = simpleProperties.get(TestProperties.LOWER_CASE_VALUE);
-            assertNotNull(simplePropertyValue);
-            assertEquals(fullName, simplePropertyValue);
-        }
     }
 
     @Test
@@ -222,7 +215,7 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractDataMa
         final Map<String, String> simpleProperties = toPopulate.getSimpleProperties();
         final Collection<String> values = simpleProperties.values();
         SortedMap<String, FactModelTree> factTypeFieldsMap = getFactTypeFieldsMapInner(values);
-        SortedMap<String, FactModelTree> retrieved = businessCentralDmoDataManagementStrategy.getInstanceMap(factTypeFieldsMap);
+        SortedMap<String, FactModelTree> retrieved = businessCentralDmoDataManagementStrategySpy.getInstanceMap(factTypeFieldsMap);
         assertNotNull(retrieved);
     }
 
@@ -240,13 +233,13 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractDataMa
         when(resultMock.getFactName()).thenReturn(resultName);
         List<String> simpleJavaTypes = Arrays.asList(getSimpleTypeArray());
         factModelTreeHolderlocal.setFactModelTuple(null);
-        businessCentralDmoDataManagementStrategy.aggregatorCallbackMethod(testToolsPresenterMock, factTypeFieldsMap.size() + 1, factTypeFieldsMap, scenarioGridModelMock, resultMock, simpleJavaTypes);
+        businessCentralDmoDataManagementStrategySpy.aggregatorCallbackMethod(testToolsPresenterMock, factTypeFieldsMap.size() + 1, factTypeFieldsMap, scenarioSimulationContextLocal, resultMock, simpleJavaTypes, GridWidget.SIMULATION);
         verify(resultMock, times(1)).getFactName();
         assertTrue(factTypeFieldsMap.containsKey(resultName));
         assertEquals(resultMock, factTypeFieldsMap.get(resultName));
-        factTypeFieldsMap.values().forEach(factModelTree -> verify(businessCentralDmoDataManagementStrategy, times(1)).populateFactModelTree(eq(factModelTree), eq(factTypeFieldsMap)));
+        factTypeFieldsMap.values().forEach(factModelTree -> verify(businessCentralDmoDataManagementStrategySpy, times(1)).populateFactModelTree(eq(factModelTree), eq(factTypeFieldsMap)));
         assertNotNull(factModelTreeHolderlocal.getFactModelTuple());
-        verify(businessCentralDmoDataManagementStrategy, times(1)).storeData(eq(factModelTreeHolderlocal.getFactModelTuple()), eq(testToolsPresenterMock), eq(scenarioGridModelMock));
+        verify(businessCentralDmoDataManagementStrategySpy, times(1)).storeData(eq(factModelTreeHolderlocal.getFactModelTuple()), eq(testToolsPresenterMock), eq(scenarioSimulationContextLocal), eq(GridWidget.SIMULATION));
     }
 
     @Test
@@ -257,13 +250,13 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractDataMa
         when(resultMock.getFactName()).thenReturn(resultName);
         List<String> simpleJavaTypes = Arrays.asList(getSimpleTypeArray());
         factModelTreeHolderlocal.setFactModelTuple(null);
-        businessCentralDmoDataManagementStrategy.aggregatorCallbackMethod(testToolsPresenterMock, factTypeFieldsMap.size() + 10, factTypeFieldsMap, scenarioGridModelMock, resultMock, simpleJavaTypes);
+        businessCentralDmoDataManagementStrategySpy.aggregatorCallbackMethod(testToolsPresenterMock, factTypeFieldsMap.size() + 10, factTypeFieldsMap, scenarioSimulationContextLocal, resultMock, simpleJavaTypes, GridWidget.SIMULATION);
         verify(resultMock, times(1)).getFactName();
         assertTrue(factTypeFieldsMap.containsKey(resultName));
         assertEquals(resultMock, factTypeFieldsMap.get(resultName));
-        verify(businessCentralDmoDataManagementStrategy, never()).populateFactModelTree(isA(FactModelTree.class), isA(SortedMap.class));
+        verify(businessCentralDmoDataManagementStrategySpy, never()).populateFactModelTree(isA(FactModelTree.class), isA(SortedMap.class));
         assertNull(factModelTreeHolderlocal.getFactModelTuple());
-        verify(businessCentralDmoDataManagementStrategy, never()).storeData(isA(FactModelTuple.class), eq(testToolsPresenterMock), eq(scenarioGridModelMock));
+        verify(businessCentralDmoDataManagementStrategySpy, never()).storeData(isA(FactModelTuple.class), eq(testToolsPresenterMock), eq(scenarioSimulationContextLocal), eq(GridWidget.SIMULATION));
     }
 
     @Test
@@ -272,11 +265,11 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractDataMa
         List<String> simpleJavaTypes = Arrays.asList(getSimpleTypeArray());
         factModelTreeHolderlocal.setFactModelTuple(null);
         int previousSizeMap = factTypeFieldsMap.size();
-        businessCentralDmoDataManagementStrategy.aggregatorCallbackMethod(testToolsPresenterMock, factTypeFieldsMap.size(), factTypeFieldsMap, scenarioGridModelMock, null, simpleJavaTypes);
+        businessCentralDmoDataManagementStrategySpy.aggregatorCallbackMethod(testToolsPresenterMock, factTypeFieldsMap.size(), factTypeFieldsMap, scenarioSimulationContextLocal, null, simpleJavaTypes, GridWidget.SIMULATION);
         assertEquals(previousSizeMap, factTypeFieldsMap.size());
-        factTypeFieldsMap.values().forEach(factModelTree -> verify(businessCentralDmoDataManagementStrategy, times(1)).populateFactModelTree(eq(factModelTree), eq(factTypeFieldsMap)));
+        factTypeFieldsMap.values().forEach(factModelTree -> verify(businessCentralDmoDataManagementStrategySpy, times(1)).populateFactModelTree(eq(factModelTree), eq(factTypeFieldsMap)));
         assertNotNull(factModelTreeHolderlocal.getFactModelTuple());
-        verify(businessCentralDmoDataManagementStrategy, times(1)).storeData(eq(factModelTreeHolderlocal.getFactModelTuple()), eq(testToolsPresenterMock), eq(scenarioGridModelMock));
+        verify(businessCentralDmoDataManagementStrategySpy, times(1)).storeData(eq(factModelTreeHolderlocal.getFactModelTuple()), eq(testToolsPresenterMock), eq(scenarioSimulationContextLocal), eq(GridWidget.SIMULATION));
     }
 
     @Test
@@ -285,17 +278,17 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractDataMa
         List<String> simpleJavaTypes = Arrays.asList(getSimpleTypeArray());
         int previousSizeMap = factTypeFieldsMap.size();
         factModelTreeHolderlocal.setFactModelTuple(null);
-        businessCentralDmoDataManagementStrategy.aggregatorCallbackMethod(testToolsPresenterMock, factTypeFieldsMap.size() + 10, factTypeFieldsMap, scenarioGridModelMock, null, simpleJavaTypes);
+        businessCentralDmoDataManagementStrategySpy.aggregatorCallbackMethod(testToolsPresenterMock, factTypeFieldsMap.size() + 10, factTypeFieldsMap, scenarioSimulationContextLocal, null, simpleJavaTypes, GridWidget.SIMULATION);
         assertEquals(previousSizeMap, factTypeFieldsMap.size());
-        verify(businessCentralDmoDataManagementStrategy, never()).populateFactModelTree(isA(FactModelTree.class), isA(SortedMap.class));
+        verify(businessCentralDmoDataManagementStrategySpy, never()).populateFactModelTree(isA(FactModelTree.class), isA(SortedMap.class));
         assertNull(factModelTreeHolderlocal.getFactModelTuple());
-        verify(businessCentralDmoDataManagementStrategy, never()).storeData(isA(FactModelTuple.class), eq(testToolsPresenterMock), eq(scenarioGridModelMock));
+        verify(businessCentralDmoDataManagementStrategySpy, never()).storeData(isA(FactModelTuple.class), eq(testToolsPresenterMock), eq(scenarioSimulationContextLocal), eq(GridWidget.SIMULATION));
     }
 
     private void commonIsADataType(String value, boolean expected) {
-        boolean retrieved = businessCentralDmoDataManagementStrategy.isADataType(value);
+        boolean retrieved = businessCentralDmoDataManagementStrategySpy.isADataType(value);
         if (expected) {
-            TestCase.assertTrue(retrieved);
+            assertTrue(retrieved);
         } else {
             assertFalse(retrieved);
         }
@@ -309,7 +302,7 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractDataMa
         String fullFactType = "com." + factType;
         when(oracleMock.getParametricFieldType(factName, propertyName)).thenReturn(factType);
         when(oracleMock.getFQCNByFactName(factType)).thenReturn(fullFactType);
-        businessCentralDmoDataManagementStrategy.populateGenericTypeMap(toPopulate, factName, propertyName, isList);
+        businessCentralDmoDataManagementStrategySpy.populateGenericTypeMap(toPopulate, factName, propertyName, isList);
         assertTrue(toPopulate.containsKey(propertyName));
         final List<String> retrieved = toPopulate.get(propertyName);
         if (!isList) {

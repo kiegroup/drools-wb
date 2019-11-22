@@ -19,11 +19,13 @@ import java.util.Optional;
 
 import javax.enterprise.context.Dependent;
 
+import com.ait.lienzo.client.core.event.NodeMouseMoveEvent;
 import com.ait.lienzo.client.core.types.Point2D;
+import org.drools.scenariosimulation.api.model.AbstractScesimData;
+import org.drools.scenariosimulation.api.model.AbstractScesimModel;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.FactMappingValue;
 import org.drools.scenariosimulation.api.model.FactMappingValueStatus;
-import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.workbench.screens.scenariosimulation.client.events.SetGridCellValueEvent;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.popover.ErrorReportPopoverPresenter;
@@ -38,25 +40,29 @@ import org.uberfire.ext.wires.core.grids.client.widget.layer.GridLayer;
  * This class is meant to provide common implementations for <b>on hover</b> behavior to be used by both mouse keyboard handler
  */
 @Dependent
-public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHandler {
+public class ScenarioSimulationMainGridPanelMouseMoveHandler extends AbstractScenarioSimulationGridPanelHandler
+        implements ScenarioSimulationGridPanelMouseMoveHandler {
 
     /* This parameter must be synchronized with POPOVER_WIDTH static variable in ErrorReportPopoverView.less */
-    private static int POPOVER_WIDTH = 200;
-    private static String NULL = "null";
+    private static final int POPOVER_WIDTH = 200;
+    private static final String NULL = "null";
 
     protected ErrorReportPopoverPresenter errorReportPopupPresenter;
 
     protected Integer currentlyShownBodyRowIndex = -1;
     protected Integer currentlyShownBodyColumnIndex = -1;
 
-    public void handleOnMove(final int mx, final int my) {
-        manageCoordinates(mx, my);
+    @Override
+    public void onNodeMouseMove(NodeMouseMoveEvent event) {
+        manageCoordinates(event.getX(), event.getY());
     }
 
+    @Override
     public void hidePopover() {
         errorReportPopupPresenter.hide();
     }
 
+    @Override
     public void setErrorReportPopupPresenter(ErrorReportPopoverPresenter errorReportPopupPresenter) {
         this.errorReportPopupPresenter = errorReportPopupPresenter;
     }
@@ -73,14 +79,16 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
             return false;
         }
         /* If the mouse position is the same of the previous one and the popover is already open, it does nothing.
-        * It returns true because the click happened on an column of a grid row */
+         * It returns true because the click happened on an column of a grid row */
         if (uiRowIndex.equals(currentlyShownBodyRowIndex) &&
                 uiColumnIndex.equals(currentlyShownBodyColumnIndex) &&
                 errorReportPopupPresenter.isShown()) {
             return true;
         }
-        final Scenario scenarioByIndex = scenarioGrid.getModel().getSimulation().get().getScenarioByIndex(uiRowIndex);
-        final FactMapping factMapping = scenarioGrid.getModel().getSimulation().get().getSimulationDescriptor().getFactMappingByIndex(uiColumnIndex);
+        final Optional<AbstractScesimModel<? extends AbstractScesimData>> optionalAbstractScesimModel = scenarioGrid.getModel().getAbstractScesimModel();
+        final AbstractScesimModel<? extends AbstractScesimData> scesimModel = optionalAbstractScesimModel.orElseThrow(IllegalStateException::new);
+        final AbstractScesimData scenarioByIndex = scesimModel.getDataByIndex(uiRowIndex);
+        final FactMapping factMapping = scesimModel.getScesimModelDescriptor().getFactMappingByIndex(uiColumnIndex);
         final Optional<FactMappingValue> factMappingValueOptional = scenarioByIndex.getFactMappingValue(factMapping);
         factMappingValueOptional.ifPresent(factMappingValue -> {
             /* If an error is present in the FactMappingValue, it calculates the coordinates for Popover and show it */
@@ -114,11 +122,12 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
                     errorReportPopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.errorReason(),
                                                    ScenarioSimulationEditorConstants.INSTANCE.errorPopoverMessageFailedWithError(
                                                            expectedValue != null ? expectedValue.toString() : NULL,
-                                                           errorValue  != null ? errorValue.toString() : NULL),
+                                                           errorValue != null ? errorValue.toString() : NULL),
                                                    ScenarioSimulationEditorConstants.INSTANCE.keep(),
                                                    ScenarioSimulationEditorConstants.INSTANCE.apply(),
                                                    () -> scenarioGrid.getEventBus().fireEvent(
-                                                           new SetGridCellValueEvent(uiRowIndex,
+                                                           new SetGridCellValueEvent(scenarioGrid.getGridWidget(),
+                                                                                     uiRowIndex,
                                                                                      uiColumnIndex,
                                                                                      errorValue != null ? errorValue.toString() : NULL)),
                                                    xPosition,
@@ -142,5 +151,4 @@ public class CommonOnMoveHandler extends AbstractScenarioSimulationGridPanelHand
     protected Point2D retrieveCellMiddleXYPosition(GridColumn<?> column, int uiRowIndex) {
         return ScenarioSimulationUtils.getMiddleXYCell(scenarioGrid, column, false, uiRowIndex, (GridLayer) scenarioGrid.getLayer());
     }
-
 }

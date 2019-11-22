@@ -25,20 +25,26 @@ import javax.inject.Inject;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import elemental2.promise.Promise;
+import org.drools.scenariosimulation.api.model.AbstractScesimData;
+import org.drools.scenariosimulation.api.model.AbstractScesimModel;
 import org.drools.scenariosimulation.api.model.AuditLog;
+import org.drools.scenariosimulation.api.model.Background;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.ScesimModelDescriptor;
+import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
-import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.businesscentral.client.editor.strategies.BusinessCentralDMNDataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.businesscentral.client.editor.strategies.BusinessCentralDMODataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorWrapper;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationHasBusyIndicatorDefaultErrorCallback;
-import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
+import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridWidget;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
 import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
@@ -47,11 +53,13 @@ import org.drools.workbench.screens.scenariosimulation.service.RunnerReportServi
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.guvnor.common.services.project.model.WorkspaceProject;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
+import org.gwtbootstrap3.client.ui.TabListItem;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracleFactory;
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
+import org.kie.workbench.common.widgets.client.resources.i18n.CommonConstants;
 import org.kie.workbench.common.widgets.configresource.client.widget.bound.ImportsWidgetPresenter;
 import org.kie.workbench.common.widgets.metadata.client.KieEditor;
 import org.uberfire.backend.vfs.ObservablePath;
@@ -62,6 +70,8 @@ import org.uberfire.client.annotations.WorkbenchPartTitle;
 import org.uberfire.client.annotations.WorkbenchPartTitleDecoration;
 import org.uberfire.client.annotations.WorkbenchPartView;
 import org.uberfire.client.mvp.PlaceManager;
+import org.uberfire.client.views.pfly.multipage.MultiPageEditorViewImpl;
+import org.uberfire.client.views.pfly.multipage.PageImpl;
 import org.uberfire.ext.editor.commons.service.support.SupportsCopy;
 import org.uberfire.ext.editor.commons.service.support.SupportsDelete;
 import org.uberfire.ext.editor.commons.service.support.SupportsRename;
@@ -179,16 +189,16 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     }
 
     @Override
-    public void onImport(String fileContents, RemoteCallback<Simulation> importCallBack, ErrorCallback<Object> importErrorCallback, Simulation simulation) {
+    public void onImport(String fileContents, RemoteCallback<AbstractScesimModel> importCallBack, ErrorCallback<Object> importErrorCallback, AbstractScesimModel<? extends AbstractScesimData> scesimModel) {
         importExportService.call(importCallBack,
                                  importErrorCallback)
-                .importSimulation(CSV, fileContents, simulation);
+                .importScesimModel(CSV, fileContents, scesimModel);
     }
 
     @Override
-    public void onExportToCsv(RemoteCallback<Object> exportCallBack, ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback, Simulation simulation) {
+    public void onExportToCsv(RemoteCallback<Object> exportCallBack, ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback, AbstractScesimModel<? extends AbstractScesimData> scesimModel) {
         importExportService.call(exportCallBack, scenarioSimulationHasBusyIndicatorDefaultErrorCallback)
-                .exportSimulation(CSV, simulation);
+                .exportScesimModel(CSV, scesimModel);
     }
 
     @Override
@@ -205,11 +215,13 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     }
 
     @Override
-    public void onRunScenario(RemoteCallback<SimulationRunResult> refreshModelCallback, ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback, SimulationDescriptor simulationDescriptor, List<ScenarioWithIndex> toRun) {
+    public void onRunScenario(RemoteCallback<SimulationRunResult> refreshModelCallback, ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback, ScesimModelDescriptor simulationDescriptor, Settings settings, List<ScenarioWithIndex> toRun, Background background) {
         service.call(refreshModelCallback, scenarioSimulationHasBusyIndicatorDefaultErrorCallback)
                 .runScenario(versionRecordManager.getCurrentPath(),
                              simulationDescriptor,
-                             toRun);
+                             toRun,
+                             settings,
+                             background);
     }
 
     @Override
@@ -228,12 +240,69 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     }
 
     @Override
-    public void validate(Simulation simulation, RemoteCallback<?> callback) {
+    public void validate(Simulation simulation, Settings settings, RemoteCallback<?> callback) {
         scenarioSimulationEditorPresenter.getView().showLoading();
         service.call(
                 callback,
                 scenarioSimulationEditorPresenter.getValidationFailedCallback())
-                .validate(simulation, versionRecordManager.getCurrentPath());
+                .validate(simulation, settings, versionRecordManager.getCurrentPath());
+    }
+
+    /**
+     * This method is called when the main grid tab (Model) is focused
+     */
+    @Override
+    public void onEditTabSelected() {
+        super.onEditTabSelected();
+        scenarioSimulationEditorPresenter.onEditTabSelected();
+    }
+
+    @Override
+    public void onOverviewSelected() {
+        super.onOverviewSelected();
+        scenarioSimulationEditorPresenter.onOverviewSelected();
+    }
+
+    /**
+     * This method adds specifically the Background grid and its related onFocus behavior
+     * @param scenarioGridWidget
+     */
+    @Override
+    public void addBackgroundPage(final ScenarioGridWidget scenarioGridWidget) {
+        kieView.getMultiPage().addPage(BACKGROUND_TAB_INDEX, new PageImpl(scenarioGridWidget, ScenarioSimulationEditorConstants.INSTANCE.backgroundTabTitle()) {
+            @Override
+            public void onFocus() {
+                super.onFocus();
+                onBackgroundTabSelected();
+            }
+        });
+    }
+
+    @Override
+    protected void addImportsTab(IsWidget importsWidget) {
+        kieView.getMultiPage().addPage(new PageImpl(importsWidget, CommonConstants.INSTANCE.DataObjectsTabTitle()) {
+            @Override
+            public void onFocus() {
+                super.onFocus();
+                onImportsTabSelected();
+            }
+        });
+    }
+
+    @Override
+    public void selectSimulationTab() {
+        final TabListItem item = (TabListItem) ((MultiPageEditorViewImpl) kieView.getMultiPage().getView()).getTabBar().getWidget(SIMULATION_TAB_INDEX);
+        if (item != null) {
+            item.showTab(false);
+        }
+    }
+
+    @Override
+    public void selectBackgroundTab() {
+        final TabListItem item = (TabListItem) ((MultiPageEditorViewImpl) kieView.getMultiPage().getView()).getTabBar().getWidget(BACKGROUND_TAB_INDEX);
+        if (item != null) {
+            item.showTab(false);
+        }
     }
 
     protected void registerTestToolsCallback() {
@@ -295,9 +364,8 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     }
 
     protected void synchronizeColumnsDimension() {
-        final ScenarioGridModel scenarioGridModel = scenarioSimulationEditorPresenter.getView().getScenarioGridLayer()
-                .getScenarioGrid().getModel();
-        scenarioGridModel.synchronizeFactMappingsWidths();
+        scenarioSimulationEditorPresenter.getContext().getScenarioGridPanelByGridWidget(GridWidget.SIMULATION).synchronizeFactMappingsWidths();
+        scenarioSimulationEditorPresenter.getContext().getScenarioGridPanelByGridWidget(GridWidget.BACKGROUND).synchronizeFactMappingsWidths();
     }
 
     @Override
@@ -345,10 +413,10 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
         scenarioSimulationEditorPresenter.setPackageName(content.getDataModel().getPackageName());
         resetEditorPages(content.getOverview());
         DataManagementStrategy dataManagementStrategy;
-        if (ScenarioSimulationModel.Type.RULE.equals(content.getModel().getSimulation().getSimulationDescriptor().getType())) {
-            dataManagementStrategy = new BusinessCentralDMODataManagementStrategy(oracleFactory, scenarioSimulationEditorPresenter.getContext());
+        if (ScenarioSimulationModel.Type.RULE.equals(content.getModel().getSettings().getType())) {
+            dataManagementStrategy = new BusinessCentralDMODataManagementStrategy(oracleFactory);
         } else {
-            dataManagementStrategy = new BusinessCentralDMNDataManagementStrategy(dmnTypeService, scenarioSimulationEditorPresenter.getContext(), scenarioSimulationEditorPresenter.getEventBus());
+            dataManagementStrategy = new BusinessCentralDMNDataManagementStrategy(dmnTypeService, scenarioSimulationEditorPresenter.getEventBus());
         }
         dataManagementStrategy.manageScenarioSimulationModelContent(versionRecordManager.getCurrentPath(), content);
         ScenarioSimulationModel model = content.getModel();
@@ -361,6 +429,14 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
         baseView.hideBusyIndicator();
         setOriginalHash(scenarioSimulationEditorPresenter.getJsonModel(model).hashCode());
         scenarioSimulationEditorPresenter.getModelSuccessCallbackMethod(dataManagementStrategy, model);
+    }
+
+    protected void onBackgroundTabSelected() {
+        scenarioSimulationEditorPresenter.onBackgroundTabSelected();
+    }
+
+    protected void onImportsTabSelected() {
+        scenarioSimulationEditorPresenter.onImportsTabSelected();
     }
 
     private RemoteCallback<ScenarioSimulationModelContent> getModelSuccessCallback() {

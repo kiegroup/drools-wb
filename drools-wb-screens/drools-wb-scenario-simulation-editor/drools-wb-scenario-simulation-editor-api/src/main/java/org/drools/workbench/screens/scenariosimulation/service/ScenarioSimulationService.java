@@ -18,10 +18,12 @@ package org.drools.workbench.screens.scenariosimulation.service;
 
 import java.util.List;
 
+import org.drools.scenariosimulation.api.model.Background;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.ScesimModelDescriptor;
+import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
-import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.model.FactMappingValidationError;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
@@ -46,8 +48,10 @@ public interface ScenarioSimulationService
     ScenarioSimulationModelContent loadContent(final Path path);
 
     SimulationRunResult runScenario(Path path,
-                                    SimulationDescriptor simulationDescriptor,
-                                    List<ScenarioWithIndex> scenarios);
+                                    ScesimModelDescriptor simulationDescriptor,
+                                    List<ScenarioWithIndex> scenarios,
+                                    Settings settings,
+                                    Background background);
 
     Path create(final Path context,
                 final String fileName,
@@ -56,5 +60,5 @@ public interface ScenarioSimulationService
                 final ScenarioSimulationModel.Type type,
                 final String value);
 
-    List<FactMappingValidationError> validate(Simulation simulation, Path path);
+    List<FactMappingValidationError> validate(Simulation simulation, Settings settings, Path path);
 }

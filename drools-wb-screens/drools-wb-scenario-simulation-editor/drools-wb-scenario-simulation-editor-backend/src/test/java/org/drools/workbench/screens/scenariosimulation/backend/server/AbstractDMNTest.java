@@ -16,9 +16,12 @@
 
 package org.drools.workbench.screens.scenariosimulation.backend.server;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
+import org.drools.scenariosimulation.api.model.Settings;
 import org.kie.dmn.api.core.DMNModel;
 import org.kie.dmn.api.core.DMNRuntime;
 import org.kie.dmn.api.core.DMNType;
@@ -62,8 +65,11 @@ public class AbstractDMNTest {
     protected DMNType compositeTypeCollection;
     protected Set<InputDataNode> inputDataNodes;
     protected Set<DecisionNode> decisionNodes;
+    protected Settings settingsLocal;
 
     protected void init() {
+        settingsLocal = new Settings();
+        settingsLocal.setType(ScenarioSimulationModel.Type.DMN);
         inputDataNodes = new HashSet<>();
         simpleTypeNoCollection = getSimpleNoCollection();
         InputDataNode inputDataNodeSimpleNoCollection = getInputDataNode(simpleTypeNoCollection, SIMPLE_INPUT_DATA_NAME_NO_COLLECTION);
@@ -233,6 +239,26 @@ public class AbstractDMNTest {
         CompositeTypeImpl toReturn = new CompositeTypeImpl(null, "tPhoneNumber", null, isCollection);
         toReturn.addField(PHONENUMBER_PREFIX, new SimpleTypeImpl(null, SIMPLE_TYPE_NAME, null));
         toReturn.addField(PHONENUMBER_NUMBER, new SimpleTypeImpl(null, SIMPLE_TYPE_NAME, null));
+        return toReturn;
+    }
+
+    /**
+     * Returns a recursive <b>person</b> <code>CompositeTypeImpl</code>
+     * @param isCollection
+     * @return
+     */
+    protected CompositeTypeImpl getRecursivePersonComposite(boolean isCollection) {
+        CompositeTypeImpl toReturn = new CompositeTypeImpl(null, "tPerson", null, isCollection);
+        CompositeTypeImpl tPersonList = new CompositeTypeImpl(null, "tPersonList", null, true, new HashMap<>(), toReturn, null);
+
+        toReturn.addField("name", new SimpleTypeImpl(null, SIMPLE_TYPE_NAME, null));
+        toReturn.addField("parent", toReturn);
+        toReturn.addField("ancestors", tPersonList);
+
+        tPersonList.addField("name", new SimpleTypeImpl(null, SIMPLE_TYPE_NAME, null));
+        tPersonList.addField("parent", toReturn);
+        tPersonList.addField("ancestors", tPersonList);
+
         return toReturn;
     }
 }

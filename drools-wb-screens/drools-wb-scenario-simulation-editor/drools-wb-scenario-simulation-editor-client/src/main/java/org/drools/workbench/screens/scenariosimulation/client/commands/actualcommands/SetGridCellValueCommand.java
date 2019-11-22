@@ -17,32 +17,44 @@ package org.drools.workbench.screens.scenariosimulation.client.commands.actualco
 
 import javax.enterprise.context.Dependent;
 
-import org.drools.scenariosimulation.api.model.SimulationDescriptor;
+import org.drools.scenariosimulation.api.model.AbstractScesimData;
+import org.drools.scenariosimulation.api.model.AbstractScesimModel;
+import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils;
 import org.drools.workbench.screens.scenariosimulation.client.values.ScenarioGridCellValue;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 
 /**
  * <code>Command</code> to set the <i>value</i> of a grid' cell
  */
 @Dependent
-public class SetGridCellValueCommand extends AbstractScenarioSimulationCommand {
+public class SetGridCellValueCommand extends AbstractScenarioGridCommand {
 
-    public SetGridCellValueCommand() {
-        super(true);
+    public SetGridCellValueCommand(GridWidget gridWidget) {
+        super(gridWidget);
+    }
+
+    private SetGridCellValueCommand() {
+        // CDI
     }
 
     @Override
     protected void internalExecute(ScenarioSimulationContext context) {
         final ScenarioSimulationContext.Status status = context.getStatus();
-        SimulationDescriptor simulationDescriptor = status.getSimulation().getSimulationDescriptor();
+        AbstractScesimModel<AbstractScesimData> abstractScesimModel = context.getAbstractScesimModelByGridWidget(gridWidget);
         int columnIndex = status.getColumnIndex();
-        String className = simulationDescriptor.getFactMappingByIndex(columnIndex).getClassName();
-        String editableCellPlaceholder = ScenarioSimulationUtils.getPlaceholder(className);
-        context.getModel().setCellValue(status.getRowIndex(),
-                                        columnIndex,
-                                        new ScenarioGridCellValue(status.getGridCellValue(),
-                                                                  editableCellPlaceholder));
-        context.getModel().resetError(status.getRowIndex(), columnIndex);
+        FactMapping factMapping = abstractScesimModel.getScesimModelDescriptor().getFactMappingByIndex(columnIndex);
+        ScenarioGridColumn selectedColumn = (ScenarioGridColumn) context.getAbstractScesimGridModelByGridWidget(gridWidget).getColumns().get(columnIndex);
+        String placeholder = ScenarioSimulationUtils.getPlaceHolder(selectedColumn.isInstanceAssigned(),
+                                                                    selectedColumn.isPropertyAssigned(),
+                                                                    factMapping.getFactMappingValueType(),
+                                                                    factMapping.getClassName());
+        context.getAbstractScesimGridModelByGridWidget(gridWidget).setCellValue(status.getRowIndex(),
+                                                                                columnIndex,
+                                                                                new ScenarioGridCellValue(status.getGridCellValue(),
+                                                                                                          placeholder));
+        context.getAbstractScesimGridModelByGridWidget(gridWidget).resetError(status.getRowIndex(), columnIndex);
     }
 }

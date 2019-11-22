@@ -192,10 +192,10 @@ public class ScenarioContextMenuRegistry {
         switch (group) {
             case "GIVEN":
             case "EXPECT":
-                gridContextMenu.show(left, top, uiRowIndex);
+                gridContextMenu.show(scenarioGrid.getGridWidget(), left, top, uiRowIndex);
                 break;
             default:
-                unmodifiableColumnGridContextMenu.show(left, top, uiRowIndex);
+                unmodifiableColumnGridContextMenu.show(scenarioGrid.getGridWidget(), left, top, uiRowIndex);
         }
         scenarioGrid.setSelectedCell(uiRowIndex, uiColumnIndex);
         return true;
@@ -227,7 +227,7 @@ public class ScenarioContextMenuRegistry {
         if (uiHeaderRowIndex == null) {
             return false;
         }
-        boolean showDuplicateInstance = scenarioGrid.getModel().getSimulation().get().getSimulationDescriptor().getType().equals(ScenarioSimulationModel.Type.RULE);
+        boolean showDuplicateInstance = scenarioGrid.getType().equals(ScenarioSimulationModel.Type.RULE);
             String group = ScenarioSimulationUtils.getOriginalColumnGroup(columnMetadata.getColumnGroup());
         /* The first case managed, empty string, is related to clicking on the first header row, the one containing
            GIVEN or EXPECT labels. In this case, the menu to show depends on columnMetadata.getTitle() value.
@@ -237,20 +237,20 @@ public class ScenarioContextMenuRegistry {
                 case "":
                     switch (columnMetadata.getTitle()) {
                     case "GIVEN":
-                            headerGivenContextMenu.show(left, top);
+                            headerGivenContextMenu.show(scenarioGrid.getGridWidget(), left, top);
                             break;
                     case "EXPECT":
-                            headerExpectedContextMenu.show(left, top);
+                            headerExpectedContextMenu.show(scenarioGrid.getGridWidget(), left, top);
                             break;
                         default:
                             otherContextMenu.show(left, top);
                     }
                     break;
             case "GIVEN":
-                    givenContextMenu.show(left, top, uiColumnIndex, group, Objects.equals(columnMetadata.getMetadataType(), ScenarioHeaderMetaData.MetadataType.PROPERTY), showDuplicateInstance);
+                    givenContextMenu.show(scenarioGrid.getGridWidget(), left, top, uiColumnIndex, group, Objects.equals(columnMetadata.getMetadataType(), ScenarioHeaderMetaData.MetadataType.PROPERTY), showDuplicateInstance);
                     break;
             case "EXPECT":
-                    expectedContextMenu.show(left, top, uiColumnIndex, group, Objects.equals(columnMetadata.getMetadataType(), ScenarioHeaderMetaData.MetadataType.PROPERTY), showDuplicateInstance);
+                    expectedContextMenu.show(scenarioGrid.getGridWidget(),left, top, uiColumnIndex, group, Objects.equals(columnMetadata.getMetadataType(), ScenarioHeaderMetaData.MetadataType.PROPERTY), showDuplicateInstance);
                     break;
                 default:
                     otherContextMenu.show(left, top);

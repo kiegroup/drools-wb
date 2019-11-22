@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.kie</groupId>
     <artifactId>kie-parent</artifactId>
-    <version>7.29.0-SNAPSHOT</version>
+    <version>7.31.0-SNAPSHOT</version>
   </parent>
 
   <groupId>org.drools</groupId>
@@ -43,6 +43,8 @@
        possible to measure cross-module test coverage -->
     <!--suppress UnresolvedMavenProperty -->
     <code.coverage.disabled>false</code.coverage.disabled>
+    <!-- The version greater than 1.0.0.GA is not compatible with GWT 2.8.x -->
+    <version.javax.validation>1.0.0.GA</version.javax.validation>
   </properties>
 
   <repositories>

@@ -16,8 +16,6 @@
 package org.drools.workbench.screens.scenariosimulation.client.widgets;
 
 import com.ait.lienzo.client.core.shape.Layer;
-import org.uberfire.ext.wires.core.grids.client.model.Bounds;
-import org.uberfire.ext.wires.core.grids.client.model.impl.BaseBounds;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.impl.DefaultGridLayer;
 
 /**
@@ -31,14 +29,6 @@ public class ScenarioGridLayer extends DefaultGridLayer {
 
     private ScenarioGridPanel scenarioGridPanel;
     private ScenarioGrid scenarioGrid;
-    private Bounds bounds;
-
-    public ScenarioGridLayer() {
-        this.bounds = new BaseBounds(0,
-                                     0,
-                                     0,
-                                     0);
-    }
 
     public ScenarioGridPanel getScenarioGridPanel() {
         return scenarioGridPanel;
@@ -53,10 +43,10 @@ public class ScenarioGridLayer extends DefaultGridLayer {
     }
 
     /**
-     * Add a scenarioGrid to this Layer. If the child is a GridWidget then also add
+     * Add a <code>ScenarioGrid</code> to this Layer. If the child is a GridWidget then also add
      * a Connector between the Grid Widget and any "linked" GridWidgets.
-     * @param scenarioGrid ScenarioGrid to add to the Layer
-     * @return The Layer
+     * @param scenarioGrid <code>ScenarioGrid</code> to add to the Layer
+     * @return The <code>Layer</code>
      */
     public Layer addScenarioGrid(final ScenarioGrid scenarioGrid) {
         this.scenarioGrid = scenarioGrid;

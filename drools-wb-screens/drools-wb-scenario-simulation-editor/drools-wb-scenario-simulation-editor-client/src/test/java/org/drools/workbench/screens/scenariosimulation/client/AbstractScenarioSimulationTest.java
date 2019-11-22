@@ -27,6 +27,7 @@ import javax.enterprise.event.Event;
 
 import com.ait.lienzo.client.core.types.Point2D;
 import com.google.gwt.event.shared.EventBus;
+import org.drools.scenariosimulation.api.model.Background;
 import org.drools.scenariosimulation.api.model.ExpressionElement;
 import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
@@ -36,8 +37,9 @@ import org.drools.scenariosimulation.api.model.FactMappingValue;
 import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.ScesimModelDescriptor;
+import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
-import org.drools.scenariosimulation.api.model.SimulationDescriptor;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioCommandManager;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioCommandRegistry;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
@@ -46,16 +48,20 @@ import org.drools.workbench.screens.scenariosimulation.client.commands.actualcom
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationView;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.factories.CollectionEditorSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
+import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioExpressionCellTextAreaSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
+import org.drools.workbench.screens.scenariosimulation.client.models.BackgroundGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.models.ScenarioGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGrid;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridColumn;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridLayer;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridWidget;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.junit.Before;
@@ -92,25 +98,31 @@ import static org.mockito.Mockito.when;
 
 public abstract class AbstractScenarioSimulationTest {
 
+    // Simulation tab
     protected ScenarioGridModel scenarioGridModelMock;
+
     @Mock
     protected Simulation simulationMock;
     @Mock
     protected Simulation clonedSimulationMock;
+
     @Mock
-    protected SimulationDescriptor simulationDescriptorMock;
+    protected ScesimModelDescriptor simulationDescriptorMock;
     @Mock
     protected ScenarioGridColumn gridColumnMock;
     @Mock
     protected List<GridRow> rowsMock;
     @Mock
     protected ScenarioGridPanel scenarioGridPanelMock;
+
     @Mock
-    protected EventBus eventBusMock;
+    protected ScenarioGridLayer scenarioGridLayerMock;
+
+    protected ScenarioGridWidget scenarioGridWidgetSpy;
+
     @Mock
-    protected ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenterMock;
-    @Mock
-    protected ScenarioSimulationView scenarioSimulationViewMock;
+    protected ScenarioGrid scenarioGridMock;
+
     @Mock
     protected List<GridColumn.HeaderMetaData> headerMetaDatasMock;
 
@@ -119,18 +131,40 @@ public abstract class AbstractScenarioSimulationTest {
     @Mock
     protected ScenarioHeaderMetaData propertyHeaderMetaDataMock;
 
+    // Background tab
+    @Mock
+    protected BackgroundGridModel backgroundGridModelMock;
+
+    @Mock
+    protected Background backgroundMock;
+    @Mock
+    protected Background clonedBackgroundMock;
+
+    @Mock
+    protected ScenarioGridPanel backgroundGridPanelMock;
+
+    @Mock
+    protected ScenarioGridLayer backgroundGridLayerMock;
+
+    protected ScenarioGridWidget backgroundGridWidgetSpy;
+
+    @Mock
+    protected ScenarioGrid backgroundGridMock;
+
+    // Common
+    @Mock
+    protected EventBus eventBusMock;
+    @Mock
+    protected ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenterMock;
+    @Mock
+    protected ScenarioSimulationView scenarioSimulationViewMock;
+
     protected Event<NotificationEvent> notificationEvent = new EventSourceMock<NotificationEvent>() {
         @Override
         public void fire(final NotificationEvent event) {
             //Do nothing. Default implementation throws a RuntimeException
         }
     };
-
-    @Mock
-    protected ScenarioGridLayer scenarioGridLayerMock;
-
-    @Mock
-    protected ScenarioGrid scenarioGridMock;
 
     @Mock
     protected ScenarioCommandRegistry scenarioCommandRegistryMock;
@@ -166,17 +200,36 @@ public abstract class AbstractScenarioSimulationTest {
     protected CollectionEditorSingletonDOMElementFactory collectionEditorSingletonDOMElementFactoryTest;
     protected ScenarioCellTextAreaSingletonDOMElementFactory scenarioCellTextAreaSingletonDOMElementFactoryTest;
     protected ScenarioHeaderTextBoxSingletonDOMElementFactory scenarioHeaderTextBoxSingletonDOMElementFactoryTest;
+    protected ScenarioExpressionCellTextAreaSingletonDOMElementFactory scenarioExpressionCellTextAreaSingletonDOMElementFactoryMock;
 
     protected final Set<FactIdentifier> factIdentifierSet = new HashSet<>();
     protected final List<FactMapping> factMappingLocal = new ArrayList<>();
     protected final FactMappingType factMappingType = FactMappingType.valueOf(COLUMN_GROUP);
     protected List<GridColumn<?>> gridColumns = new ArrayList<>();
+    protected Settings settingsLocal;
+    protected Background backgroundLocal;
 
     @Before
     public void setup() {
+        settingsLocal = new Settings();
+        backgroundLocal = new Background();
         scenarioWithIndexLocal = new ArrayList<>();
-        when(simulationMock.getSimulationDescriptor()).thenReturn(simulationDescriptorMock);
+
+        scenarioGridWidgetSpy = spy(new ScenarioGridWidget() {
+            {
+                this.scenarioGridPanel = scenarioGridPanelMock;
+            }
+        });
+
+        backgroundGridWidgetSpy = spy(new ScenarioGridWidget() {
+            {
+                this.scenarioGridPanel = backgroundGridPanelMock;
+            }
+        });
+
+        when(simulationMock.getScesimModelDescriptor()).thenReturn(simulationDescriptorMock);
         when(simulationMock.getScenarioWithIndex()).thenReturn(scenarioWithIndexLocal);
+        when(backgroundMock.getScesimModelDescriptor()).thenReturn(simulationDescriptorMock);
         when(simulationRunResultMock.getScenarioWithIndex()).thenReturn(scenarioWithIndexLocal);
         GridData.Range range = new GridData.Range(FIRST_INDEX_LEFT, FIRST_INDEX_RIGHT - 1);
         collectionEditorSingletonDOMElementFactoryTest = new CollectionEditorSingletonDOMElementFactory(scenarioGridPanelMock,
@@ -189,15 +242,19 @@ public abstract class AbstractScenarioSimulationTest {
         scenarioHeaderTextBoxSingletonDOMElementFactoryTest = new ScenarioHeaderTextBoxSingletonDOMElementFactory(scenarioGridPanelMock,
                                                                                                                   scenarioGridLayerMock,
                                                                                                                   scenarioGridMock);
+        scenarioExpressionCellTextAreaSingletonDOMElementFactoryMock = new ScenarioExpressionCellTextAreaSingletonDOMElementFactory(scenarioGridPanelMock,
+                                                                                                                                    scenarioGridLayerMock,
+                                                                                                                                    scenarioGridMock);
 
         scenarioGridModelMock = spy(new ScenarioGridModel(false) {
             {
-                this.simulation = simulationMock;
+                this.abstractScesimModel = simulationMock;
                 this.columns = gridColumns;
                 this.rows = rowsMock;
                 this.collectionEditorSingletonDOMElementFactory = collectionEditorSingletonDOMElementFactoryTest;
                 this.scenarioCellTextAreaSingletonDOMElementFactory = scenarioCellTextAreaSingletonDOMElementFactoryTest;
                 this.scenarioHeaderTextBoxSingletonDOMElementFactory = scenarioHeaderTextBoxSingletonDOMElementFactoryTest;
+                this.scenarioExpressionCellTextAreaSingletonDOMElementFactory = scenarioExpressionCellTextAreaSingletonDOMElementFactoryMock;
                 this.eventBus = eventBusMock;
             }
 
@@ -286,36 +343,56 @@ public abstract class AbstractScenarioSimulationTest {
         when(scenarioGridMock.getEventBus()).thenReturn(eventBusMock);
         when(scenarioGridMock.getModel()).thenReturn(scenarioGridModelMock);
         when(scenarioGridMock.getLayer()).thenReturn(scenarioGridLayerMock);
+        when(scenarioGridMock.getType()).thenReturn(ScenarioSimulationModel.Type.RULE);
+        when(scenarioGridMock.getGridWidget()).thenReturn(GridWidget.SIMULATION);
+
         when(scenarioGridLayerMock.getScenarioGrid()).thenReturn(scenarioGridMock);
+        when(scenarioGridPanelMock.getScenarioGridLayer()).thenReturn(scenarioGridLayerMock);
+        when(scenarioGridPanelMock.getScenarioGrid()).thenReturn(scenarioGridMock);
+
+        when(backgroundGridMock.getEventBus()).thenReturn(eventBusMock);
+        when(backgroundGridMock.getModel()).thenReturn(backgroundGridModelMock);
+        when(backgroundGridMock.getLayer()).thenReturn(backgroundGridLayerMock);
+        when(backgroundGridMock.getType()).thenReturn(ScenarioSimulationModel.Type.RULE);
+        when(backgroundGridMock.getGridWidget()).thenReturn(GridWidget.BACKGROUND);
+        when(backgroundGridModelMock.getGridWidget()).thenReturn(GridWidget.BACKGROUND);
+        when(backgroundGridLayerMock.getScenarioGrid()).thenReturn(backgroundGridMock);
+        when(backgroundGridPanelMock.getScenarioGridLayer()).thenReturn(backgroundGridLayerMock);
+        when(backgroundGridPanelMock.getScenarioGrid()).thenReturn(backgroundGridMock);
+
         final Point2D computedLocation = mock(Point2D.class);
         when(computedLocation.getX()).thenReturn(0.0);
         when(computedLocation.getY()).thenReturn(0.0);
         when(scenarioGridMock.getComputedLocation()).thenReturn(computedLocation);
 
-        when(scenarioGridLayerMock.getScenarioGrid()).thenReturn(scenarioGridMock);
-
-        when(scenarioGridPanelMock.getScenarioGridLayer()).thenReturn(scenarioGridLayerMock);
-        when(scenarioGridPanelMock.getScenarioGrid()).thenReturn(scenarioGridMock);
-
-        scenarioSimulationContextLocal = new ScenarioSimulationContext(scenarioGridPanelMock);
+        scenarioSimulationContextLocal = new ScenarioSimulationContext(scenarioGridWidgetSpy, backgroundGridWidgetSpy);
         scenarioSimulationContextLocal.setScenarioSimulationEditorPresenter(scenarioSimulationEditorPresenterMock);
         scenarioSimulationContextLocal.getStatus().setSimulation(simulationMock);
+        scenarioSimulationContextLocal.getStatus().setBackground(backgroundMock);
+        scenarioSimulationContextLocal.getStatus().setFullPackage(FULL_PACKAGE);
         scenarioSimulationContextLocal.setScenarioSimulationEditorPresenter(scenarioSimulationEditorPresenterMock);
         scenarioSimulationContextLocal.setDataObjectFieldsMap(dataObjectFieldsMapMock);
+        scenarioSimulationContextLocal.setSettings(settingsLocal);
+        when(backgroundGridWidgetSpy.getScenarioSimulationContext()).thenReturn(scenarioSimulationContextLocal);
+        when(scenarioGridWidgetSpy.getScenarioSimulationContext()).thenReturn(scenarioSimulationContextLocal);
+
         when(scenarioSimulationEditorPresenterMock.getView()).thenReturn(scenarioSimulationViewMock);
         when(scenarioSimulationEditorPresenterMock.getModel()).thenReturn(scenarioSimulationModelMock);
         scenarioSimulationContextLocal.setScenarioSimulationEditorPresenter(scenarioSimulationEditorPresenterMock);
         when(scenarioSimulationEditorPresenterMock.getDataManagementStrategy()).thenReturn(dataManagementStrategyMock);
+        when(scenarioSimulationEditorPresenterMock.getContext()).thenReturn(scenarioSimulationContextLocal);
 
-        when(simulationMock.cloneSimulation()).thenReturn(clonedSimulationMock);
+        when(simulationMock.cloneModel()).thenReturn(clonedSimulationMock);
+        when(backgroundMock.cloneModel()).thenReturn(clonedBackgroundMock);
         scenarioSimulationContextLocal.getStatus().setSimulation(simulationMock);
 
         when(scenarioSimulationModelMock.getSimulation()).thenReturn(simulationMock);
+        when(scenarioSimulationModelMock.getBackground()).thenReturn(backgroundMock);
 
         when(scenarioCommandRegistryMock.undo(scenarioSimulationContextLocal)).thenReturn(CommandResultBuilder.SUCCESS);
         when(scenarioCommandRegistryMock.redo(scenarioSimulationContextLocal)).thenReturn(CommandResultBuilder.SUCCESS);
 
-        appendRowCommandMock = spy(new AppendRowCommand() {
+        appendRowCommandMock = spy(new AppendRowCommand(GridWidget.SIMULATION) {
 
             {
                 this.restorableStatus = scenarioSimulationContextLocal.getStatus();
@@ -342,7 +419,7 @@ public abstract class AbstractScenarioSimulationTest {
         when(gridColumnMock.getInformationHeaderMetaData()).thenReturn(informationHeaderMetaDataMock);
         when(gridColumnMock.getPropertyHeaderMetaData()).thenReturn(propertyHeaderMetaDataMock);
         when(gridColumnMock.getFactIdentifier()).thenReturn(factIdentifierMock);
-        when(simulationDescriptorMock.getType()).thenReturn(ScenarioSimulationModel.Type.RULE);
+        settingsLocal.setType(ScenarioSimulationModel.Type.RULE);
         IntStream.range(0, COLUMN_NUMBER).forEach(columnIndex -> {
             gridColumns.add(gridColumnMock);
             factMappingValuesLocal.add(factMappingValueMock);
@@ -361,6 +438,7 @@ public abstract class AbstractScenarioSimulationTest {
         when(factMappingMock.getFactAlias()).thenReturn(FACT_ALIAS);
         when(factMappingMock.getGenericTypes()).thenReturn(new ArrayList<>());
         doReturn(factMappingMock).when(simulationDescriptorMock).addFactMapping(anyInt(), anyString(), anyObject(), anyObject());
+        when(scenarioSimulationViewMock.getScenarioGridWidget()).thenReturn(scenarioGridWidgetSpy);
     }
 
     /**

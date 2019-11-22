@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.drools</groupId>
     <artifactId>drools-wb-scenario-simulation-editor</artifactId>
-    <version>7.29.0-SNAPSHOT</version>
+    <version>7.31.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>drools-wb-scenario-simulation-editor-client</artifactId>
@@ -200,5 +200,14 @@
     </dependency>
 
   </dependencies>
+
+  <profiles>
+    <profile>
+      <id>sonarcloud-analysis</id>
+      <properties>
+        <sonar.coverage.exclusions>**/editor/ScenarioSimulationEditorWrapper.java,**/events/**.java</sonar.coverage.exclusions>
+      </properties>
+    </profile>
+  </profiles>
 
 </project>

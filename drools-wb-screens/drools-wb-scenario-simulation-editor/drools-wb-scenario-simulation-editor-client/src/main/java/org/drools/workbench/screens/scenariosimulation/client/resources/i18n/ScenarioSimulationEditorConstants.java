@@ -52,6 +52,10 @@ public interface ScenarioSimulationEditorConstants
 
     String testEditor();
 
+    String testToolsAddButton();
+
+    String testToolsAddButtonLabel();
+
     String scenarioCheatSheet();
 
     String ruleCheatSheet1();
@@ -156,6 +160,8 @@ public interface ScenarioSimulationEditorConstants
 
     String scenario();
 
+    String background();
+
     String given();
 
     String insertRowAbove();
@@ -182,6 +188,8 @@ public interface ScenarioSimulationEditorConstants
 
     String dateFormatPlaceholder();
 
+    String dmnDateFormatPlaceholder();
+
     String deleteScenarioMainTitle();
 
     String deleteScenarioMainQuestion();
@@ -207,6 +215,8 @@ public interface ScenarioSimulationEditorConstants
     String preserveValues();
 
     String defineValidType();
+
+    String insertExpression();
 
     String changeType();
 
@@ -331,4 +341,10 @@ public interface ScenarioSimulationEditorConstants
     String validationFailedNotification();
 
     String validationSucceed();
+
+    String backgroundTabTitle();
+
+    String export();
+
+    String backgroundErrorNotification();
 }

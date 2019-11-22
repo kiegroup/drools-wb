@@ -21,12 +21,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import org.drools.scenariosimulation.api.model.AbstractScesimModel;
 import org.drools.scenariosimulation.api.model.AuditLog;
 import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
-import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.client.TestProperties;
 import org.drools.workbench.screens.scenariosimulation.client.editor.AbstractScenarioSimulationEditorTest;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
@@ -42,6 +43,8 @@ import org.guvnor.common.services.project.client.security.ProjectController;
 import org.guvnor.common.services.project.model.WorkspaceProject;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
 import org.guvnor.messageconsole.client.console.widget.button.AlertsButtonMenuItemBuilder;
+import org.gwtbootstrap3.client.ui.NavTabs;
+import org.gwtbootstrap3.client.ui.TabListItem;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.junit.Before;
@@ -58,6 +61,9 @@ import org.uberfire.client.mvp.PerspectiveManager;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.mvp.PlaceStatus;
 import org.uberfire.client.promise.Promises;
+import org.uberfire.client.views.pfly.multipage.MultiPageEditorViewImpl;
+import org.uberfire.client.views.pfly.multipage.PageImpl;
+import org.uberfire.client.workbench.widgets.multipage.MultiPageEditor;
 import org.uberfire.ext.editor.commons.client.menu.common.SaveAndRenameCommandBuilder;
 import org.uberfire.ext.editor.commons.client.validation.DefaultFileNameValidator;
 import org.uberfire.ext.widgets.common.client.callbacks.HasBusyIndicatorDefaultErrorCallback;
@@ -70,6 +76,10 @@ import org.uberfire.promise.SyncPromises;
 import org.uberfire.workbench.events.NotificationEvent;
 import org.uberfire.workbench.model.menu.MenuItem;
 
+import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type.DMN;
+import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type.RULE;
+import static org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorWrapper.BACKGROUND_TAB_INDEX;
+import static org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorWrapper.SIMULATION_TAB_INDEX;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -126,7 +136,16 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     private Supplier<ScenarioSimulationModel> contentSupplierMock;
     @Mock
     private ProjectController projectControllerMock;
-
+    @Mock
+    private MultiPageEditor multiPageEditorMock;
+    @Mock
+    private MultiPageEditorViewImpl multiPageEditorViewMock;
+    @Mock
+    private NavTabs navTabsMock;
+    @Mock
+    private TabListItem simulationTabListItemMock;
+    @Mock
+    private TabListItem backgroundTabListItemMock;
 
     private CallerMock<ScenarioSimulationService> scenarioSimulationCaller;
     private CallerMock<ImportExportService> importExportCaller;
@@ -177,9 +196,15 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         when(scenarioSimulationEditorPresenterMock.getView()).thenReturn(scenarioSimulationViewMock);
         when(scenarioSimulationEditorPresenterMock.getModel()).thenReturn(scenarioSimulationModelMock);
         when(scenarioSimulationEditorPresenterMock.getContentSupplier()).thenReturn(contentSupplierMock);
-        when(scenarioSimulationViewMock.getScenarioGridLayer()).thenReturn(scenarioGridLayerMock);
+        when(scenarioSimulationEditorPresenterMock.getContext()).thenReturn(scenarioSimulationContextLocal);
         when(alertsButtonMenuItemBuilderMock.build()).thenReturn(alertsButtonMenuItemMock);
         when(versionRecordManagerMock.buildMenu()).thenReturn(versionRecordMenuItemMock);
+        when(scenarioGridWidgetSpy.getScenarioSimulationContext()).thenReturn(scenarioSimulationContextLocal);
+        when(kieViewMock.getMultiPage()).thenReturn(multiPageEditorMock);
+        when(multiPageEditorMock.getView()).thenReturn(multiPageEditorViewMock);
+        when(multiPageEditorViewMock.getTabBar()).thenReturn(navTabsMock);
+        when(navTabsMock.getWidget(SIMULATION_TAB_INDEX)).thenReturn(simulationTabListItemMock);
+        when(navTabsMock.getWidget(BACKGROUND_TAB_INDEX)).thenReturn(backgroundTabListItemMock);
     }
 
     @Test
@@ -213,11 +238,11 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     @Test
     public void onImport() {
         String FILE_CONTENT = "FILE_CONTENT";
-        RemoteCallback<Simulation> remoteCallback = mock(RemoteCallback.class);
+        RemoteCallback<AbstractScesimModel> remoteCallback = mock(RemoteCallback.class);
         ErrorCallback<Object> errorCallBack = mock(ErrorCallback.class);
         scenarioSimulationEditorBusinessClientWrapper.onImport(FILE_CONTENT, remoteCallback, errorCallBack, simulationMock);
         verify(importExportCaller, times(1)).call(eq(remoteCallback), eq(errorCallBack));
-        verify(importExportServiceMock, times(1)).importSimulation(eq(ImportExportType.CSV), eq(FILE_CONTENT), eq(simulationMock));
+        verify(importExportServiceMock, times(1)).importScesimModel(eq(ImportExportType.CSV), eq(FILE_CONTENT), eq(simulationMock));
     }
 
     @Test
@@ -226,7 +251,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         ScenarioSimulationHasBusyIndicatorDefaultErrorCallback errorCallback = mock(ScenarioSimulationHasBusyIndicatorDefaultErrorCallback.class);
         scenarioSimulationEditorBusinessClientWrapper.onExportToCsv(remoteCallback, errorCallback, simulationMock);
         verify(importExportCaller, times(1)).call(eq(remoteCallback), eq(errorCallback));
-        verify(importExportServiceMock, times(1)).exportSimulation(eq(ImportExportType.CSV), eq(simulationMock));
+        verify(importExportServiceMock, times(1)).exportScesimModel(eq(ImportExportType.CSV), eq(simulationMock));
     }
 
     @Test
@@ -252,9 +277,9 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         scenarioWithIndexLocal.add(new ScenarioWithIndex(3, new Scenario()));
         RemoteCallback<SimulationRunResult> remoteCallback = mock(RemoteCallback.class);
         ScenarioSimulationHasBusyIndicatorDefaultErrorCallback errorCallback = mock(ScenarioSimulationHasBusyIndicatorDefaultErrorCallback.class);
-        scenarioSimulationEditorBusinessClientWrapper.onRunScenario(remoteCallback, errorCallback, simulationDescriptorMock, scenarioWithIndexLocal);
+        scenarioSimulationEditorBusinessClientWrapper.onRunScenario(remoteCallback, errorCallback, simulationDescriptorMock, settingsLocal, scenarioWithIndexLocal, backgroundLocal);
         verify(scenarioSimulationCaller, times(1)).call(eq(remoteCallback), eq(errorCallback));
-        verify(scenarioSimulationServiceMock, times(1)).runScenario(eq(observablePathMock), eq(simulationDescriptorMock), eq(scenarioWithIndexLocal));
+        verify(scenarioSimulationServiceMock, times(1)).runScenario(eq(observablePathMock), eq(simulationDescriptorMock), eq(scenarioWithIndexLocal), eq(settingsLocal), eq(backgroundLocal));
     }
 
     @Test
@@ -294,7 +319,6 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         verify(scenarioSimulationEditorPresenterMock, times(1)).setSaveEnabled(eq(false));
     }
 
-
     @Test
     public void makeMenuBarCanUpdateProjectTrue() {
         doReturn(Optional.of(mock(WorkspaceProject.class))).when(workbenchContextMock).getActiveWorkspaceProject();
@@ -332,7 +356,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     @Test
     public void synchronizeColumnsDimension() {
         scenarioSimulationEditorBusinessClientWrapper.synchronizeColumnsDimension();
-        verify(scenarioGridModelMock, times(1)).synchronizeFactMappingsWidths();
+        verify(scenarioGridPanelMock, times(1)).synchronizeFactMappingsWidths();
     }
 
     @Test
@@ -349,8 +373,72 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     }
 
     @Test
+    public void onEditTabSelected() {
+        scenarioSimulationEditorBusinessClientWrapper.onEditTabSelected();
+        verify(scenarioSimulationEditorPresenterMock, times(1)).onEditTabSelected();
+    }
+
+    @Test
+    public void onOverviewSelected() {
+        scenarioSimulationEditorBusinessClientWrapper.onOverviewSelected();
+        verify(scenarioSimulationEditorPresenterMock, times(1)).onOverviewSelected();
+    }
+
+    @Test
+    public void onBackGroundTabSelected() {
+        scenarioSimulationEditorBusinessClientWrapper.onBackgroundTabSelected();
+        verify(scenarioSimulationEditorPresenterMock, times(1)).onBackgroundTabSelected();
+    }
+
+    @Test
+    public void onImportsTabSelected() {
+        scenarioSimulationEditorBusinessClientWrapper.onImportsTabSelected();
+        verify(scenarioSimulationEditorPresenterMock, times(1)).onImportsTabSelected();
+    }
+
+    @Test
+    public void addBackgroundPage() {
+        scenarioSimulationEditorBusinessClientWrapper.addBackgroundPage(scenarioGridWidgetSpy);
+        verify(multiPageEditorMock, times(1)).addPage(eq(BACKGROUND_TAB_INDEX), isA(PageImpl.class));
+    }
+
+    @Test
+    public void addImportsTab() {
+        scenarioSimulationEditorBusinessClientWrapper.addImportsTab(mock(IsWidget.class));
+        verify(multiPageEditorMock, times(1)).addPage(isA(PageImpl.class));
+    }
+
+    @Test
+    public void selectSimulationTabWithoutItem() {
+        when(navTabsMock.getWidget(SIMULATION_TAB_INDEX)).thenReturn(null);
+        scenarioSimulationEditorBusinessClientWrapper.selectSimulationTab();
+        verify(simulationTabListItemMock, never()).showTab(eq(false));
+    }
+
+    @Test
+    public void selectSimulationTabWithItem() {
+        scenarioSimulationEditorBusinessClientWrapper.selectSimulationTab();
+        verify(simulationTabListItemMock, times(1)).showTab(eq(false));
+    }
+
+    @Test
+    public void selectBackgroundTabWithoutItem() {
+        when(navTabsMock.getWidget(BACKGROUND_TAB_INDEX)).thenReturn(null);
+        scenarioSimulationEditorBusinessClientWrapper.selectBackgroundTab();
+        verify(backgroundTabListItemMock, never()).showTab(eq(false));
+    }
+
+    @Test
+    public void selectBackgroundTabWithItem() {
+        scenarioSimulationEditorBusinessClientWrapper.selectBackgroundTab();
+        verify(backgroundTabListItemMock, times(1)).showTab(eq(false));
+    }
+
+    @Test
     public void getModelSuccessCallBackMethod_Rule() {
-        modelLocal.setSimulation(getSimulation(ScenarioSimulationModel.Type.RULE, null));
+        modelLocal.setSimulation(getSimulation());
+        modelLocal.getSettings().setType(RULE);
+        modelLocal.getSettings().setDmoSession(null);
         scenarioSimulationEditorBusinessClientWrapper.getModelSuccessCallbackMethod(content);
         verify(scenarioSimulationEditorPresenterMock, times(1)).setPackageName(eq(TestProperties.FACT_PACKAGE));
         /* EventBus is used ONLY with DMN */
@@ -364,7 +452,9 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
 
     @Test
     public void getModelSuccessCallBackMethod_DMN() {
-        modelLocal.setSimulation(getSimulation(ScenarioSimulationModel.Type.DMN, null));
+        modelLocal.setSimulation(getSimulation());
+        modelLocal.getSettings().setType(DMN);
+        modelLocal.getSettings().setDmnFilePath(null);
         scenarioSimulationEditorBusinessClientWrapper.getModelSuccessCallbackMethod(content);
         verify(scenarioSimulationEditorPresenterMock, times(1)).setPackageName(eq(TestProperties.FACT_PACKAGE));
         /* EventBus is used ONLY with DMN */
@@ -375,5 +465,4 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         verify(scenarioSimulationEditorPresenterMock, times(1)).getJsonModel(eq(modelLocal));
         verify(scenarioSimulationEditorPresenterMock, times(1)).getModelSuccessCallbackMethod(isA(DataManagementStrategy.class), eq(modelLocal));
     }
-
 }

@@ -17,12 +17,14 @@ package org.drools.workbench.screens.scenariosimulation.client.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.ait.lienzo.client.core.types.Point2D;
 import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMappingType;
+import org.drools.scenariosimulation.api.model.FactMappingValueType;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.SimpleClassEntry;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioCellTextAreaSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.factories.ScenarioHeaderTextBoxSingletonDOMElementFactory;
@@ -36,11 +38,16 @@ import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.impl
 import org.uberfire.ext.wires.core.grids.client.widget.layer.GridLayer;
 
 import static org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy.SIMPLE_CLASSES_MAP;
+import static org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder.DMN_DATE;
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder.LOCALDATE_CANONICAL_NAME;
 
 public class ScenarioSimulationUtils {
 
     protected static AtomicInteger subGroupCounter = new AtomicInteger(0);
+
+    private ScenarioSimulationUtils() {
+        // Not instantiable
+    }
 
     /**
      * Given a columnGroup, it creates a new subGroup with the following format: 'columnGroupName-x'.
@@ -71,6 +78,37 @@ public class ScenarioSimulationUtils {
                 .stream()
                 .map(SimpleClassEntry::getCanonicalName)
                 .anyMatch(className::equals);
+    }
+
+    /**
+     * It provides the correct <b>PlaceHolder</b> value to be assigned to an empty cell given its parameters
+     * status.
+     * @param isInstanceAssigned
+     * @param isPropertyAssigned
+     * @param valueType
+     * @param className
+     * @return
+     */
+    public static String getPlaceHolder(final boolean isInstanceAssigned,
+                                        final boolean isPropertyAssigned,
+                                        final FactMappingValueType valueType,
+                                        final String className) {
+        if (!isInstanceAssigned) {
+            return ScenarioSimulationEditorConstants.INSTANCE.defineValidType();
+        }
+        if (isPropertyAssigned) {
+            if (Objects.equals(FactMappingValueType.EXPRESSION, valueType)) {
+                return ScenarioSimulationEditorConstants.INSTANCE.insertExpression();
+            }
+            if (Objects.equals(LOCALDATE_CANONICAL_NAME, className)) {
+                return ScenarioSimulationEditorConstants.INSTANCE.dateFormatPlaceholder();
+            }
+            if (Objects.equals(DMN_DATE, className)) {
+                return ScenarioSimulationEditorConstants.INSTANCE.dmnDateFormatPlaceholder();
+            }
+            return ScenarioSimulationEditorConstants.INSTANCE.insertValue();
+        }
+        return ScenarioSimulationEditorConstants.INSTANCE.defineValidType();
     }
 
     /**
@@ -270,16 +308,6 @@ public class ScenarioSimulationUtils {
                 context.getCellHeight() / 2 +
                 gridLayer.getDomElementContainer().getAbsoluteTop());
         return new Point2D(cellXMiddle, cellYMiddle);
-    }
-
-    public static String getPlaceholder(String canonicalClassName) {
-        return isLocalDate(canonicalClassName) ?
-                ScenarioSimulationEditorConstants.INSTANCE.dateFormatPlaceholder() :
-                ScenarioSimulationEditorConstants.INSTANCE.insertValue();
-    }
-
-    public static boolean isLocalDate(String canonicalClassName) {
-        return LOCALDATE_CANONICAL_NAME.equals(canonicalClassName);
     }
 
     protected static double getColumnWidth(String columnId) {
