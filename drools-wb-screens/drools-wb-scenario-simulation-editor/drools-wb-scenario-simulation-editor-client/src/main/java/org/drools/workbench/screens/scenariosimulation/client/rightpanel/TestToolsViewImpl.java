@@ -110,7 +110,6 @@ public class TestToolsViewImpl
     public void init(Presenter presenter) {
         this.presenter = presenter;
         disableEditorTab();
-        addButton.setDisabled(true);
         testToolsDescriptionElement.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.testToolsDescription());
         testToolObjectSelectionTitleElement.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.testToolObjectSelectionTitle());
         clearSelectionElement.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.testToolClearSelection());
