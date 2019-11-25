@@ -83,14 +83,8 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     }
 
     @Override
-    public void onClearNameField() {
-        view.clearNameField();
-    }
-
-    @Override
     public void onClearStatus() {
         onClearSearch();
-        onClearNameField();
     }
 
     @Override

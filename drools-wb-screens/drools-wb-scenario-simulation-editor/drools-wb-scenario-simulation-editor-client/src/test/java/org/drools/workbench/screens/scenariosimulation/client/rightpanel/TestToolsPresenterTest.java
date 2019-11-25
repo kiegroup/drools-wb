@@ -138,16 +138,9 @@ public class TestToolsPresenterTest extends AbstractTestToolsTest {
     }
 
     @Test
-    public void onClearNameField() {
-        testToolsPresenterSpy.onClearNameField();
-        verify(testToolsViewMock, times(1)).clearNameField();
-    }
-
-    @Test
     public void onClearStatus() {
         testToolsPresenterSpy.onClearStatus();
         verify(testToolsPresenterSpy, times(1)).onClearSearch();
-        verify(testToolsPresenterSpy, times(1)).onClearNameField();
         verify(testToolsPresenterSpy, times(1)).clearDataObjectList();
     }
 

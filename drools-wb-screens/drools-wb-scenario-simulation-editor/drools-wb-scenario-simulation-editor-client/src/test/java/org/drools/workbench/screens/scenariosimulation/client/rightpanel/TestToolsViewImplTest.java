@@ -66,9 +66,6 @@ public class TestToolsViewImplTest {
     private InputElement inputSearchMock;
 
     @Mock
-    private InputElement nameFieldMock;
-
-    @Mock
     private ButtonElement clearSearchButtonMock;
 
     @Mock
@@ -94,9 +91,6 @@ public class TestToolsViewImplTest {
 
     @Mock
     private DivElement kieTestToolsContentMock;
-
-    @Mock
-    private ButtonElement conditionsButtonMock;
 
     @Mock
     private ButtonElement addButtonMock;
@@ -129,10 +123,8 @@ public class TestToolsViewImplTest {
                 this.inputSearch = inputSearchMock;
                 this.clearSearchButton = clearSearchButtonMock;
                 this.searchButton = searchButtonMock;
-                this.conditionsButton = conditionsButtonMock;
                 this.addButton = addButtonMock;
                 this.addButtonLabel = addButtonLabelMock;
-                this.nameField = nameFieldMock;
                 this.testToolsDescriptionElement = testToolsDescriptionElementMock;
                 this.testToolObjectSelectionTitleElement = testToolObjectSelectionTitleElementMock;
                 this.clearSelectionElement = clearSelectionElementMock;
@@ -185,12 +177,6 @@ public class TestToolsViewImplTest {
     public void clearInputSearch() {
         testToolsViewSpy.clearInputSearch();
         verify(inputSearchMock, times(1)).setValue(eq(""));
-    }
-
-    @Test
-    public void clearNameField() {
-        testToolsViewSpy.clearNameField();
-        verify(nameFieldMock, times(1)).setValue(eq(""));
     }
 
     @Test
@@ -368,8 +354,6 @@ public class TestToolsViewImplTest {
     @Test
     public void setDisabledStatusTrue() {
         testToolsViewSpy.setDisabledStatus(true);
-        verify(nameFieldMock, times(1)).setDisabled(eq(true));
-        verify(conditionsButtonMock, times(1)).setDisabled(eq(true));
         verify(testToolsViewSpy, times(1)).setClearSelectionAnchorDisabledStatus(eq(true));
         verify(testToolsViewSpy, times(1)).setInfoSelectDataObjectElementDisabledStatus(eq(true));
         verify(testToolsViewSpy, times(1)).setContainersDisabledStatus(eq(true));
@@ -382,8 +366,6 @@ public class TestToolsViewImplTest {
     @Test
     public void setDisabledStatusFalse() {
         testToolsViewSpy.setDisabledStatus(false);
-        verify(nameFieldMock, times(1)).setDisabled(eq(false));
-        verify(conditionsButtonMock, times(1)).setDisabled(eq(false));
         verify(testToolsViewSpy, times(1)).setClearSelectionAnchorDisabledStatus(eq(false));
         verify(testToolsViewSpy, times(1)).setInfoSelectDataObjectElementDisabledStatus(eq(false));
         verify(testToolsViewSpy, times(1)).setContainersDisabledStatus(eq(false));

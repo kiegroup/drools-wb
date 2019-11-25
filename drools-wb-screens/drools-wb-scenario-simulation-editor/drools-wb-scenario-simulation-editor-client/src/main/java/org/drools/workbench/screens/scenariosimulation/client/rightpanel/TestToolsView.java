@@ -92,8 +92,6 @@ public interface TestToolsView extends SubDockView<TestToolsView.Presenter> {
 
         void onUndoSearch();
 
-        void onClearNameField();
-
         void onClearStatus();
 
         void onShowClearButton();
