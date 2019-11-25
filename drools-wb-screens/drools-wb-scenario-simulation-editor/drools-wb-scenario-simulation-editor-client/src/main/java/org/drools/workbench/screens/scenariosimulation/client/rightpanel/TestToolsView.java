@@ -30,8 +30,6 @@ public interface TestToolsView extends SubDockView<TestToolsView.Presenter> {
 
     void clearInputSearch();
 
-    void clearNameField();
-
     void hideClearButton();
 
     void showClearButton();

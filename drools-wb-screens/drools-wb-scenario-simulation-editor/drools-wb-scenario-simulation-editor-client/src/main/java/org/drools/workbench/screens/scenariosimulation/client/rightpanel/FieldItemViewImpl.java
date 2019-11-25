@@ -134,7 +134,7 @@ public class FieldItemViewImpl implements FieldItemView {
     @Override
     public void unselect() {
         fieldElement.removeClassName(ConstantHolder.SELECTED);
-        checkElement.getStyle().setDisplay(Style.Display.NONE);
+        showCheck(false);
     }
 
     @Override

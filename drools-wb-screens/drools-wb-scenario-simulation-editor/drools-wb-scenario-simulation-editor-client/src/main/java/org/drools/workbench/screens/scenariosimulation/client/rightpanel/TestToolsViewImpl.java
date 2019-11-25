@@ -70,9 +70,6 @@ public class TestToolsViewImpl
     @DataField("inputSearch")
     protected InputElement inputSearch = Document.get().createTextInputElement();
 
-    @DataField("nameField")
-    protected InputElement nameField = Document.get().createTextInputElement();
-
     @DataField("dataObjectListContainer")
     protected DivElement dataObjectListContainer = Document.get().createDivElement();
 
@@ -87,9 +84,6 @@ public class TestToolsViewImpl
 
     @DataField("simpleJavaInstanceListContainer")
     protected DivElement simpleJavaInstanceListContainer = Document.get().createDivElement();
-
-    @DataField("conditionsButton")
-    protected ButtonElement conditionsButton = Document.get().createPushButtonElement();
 
     @DataField("addButtonLabel")
     protected DivElement addButtonLabel = Document.get().createDivElement();
@@ -170,11 +164,6 @@ public class TestToolsViewImpl
     @Override
     public void clearInputSearch() {
         inputSearch.setValue("");
-    }
-
-    @Override
-    public void clearNameField() {
-        nameField.setValue("");
     }
 
     @Override
@@ -292,8 +281,6 @@ public class TestToolsViewImpl
     }
 
     protected void setDisabledStatus(boolean disabled) {
-        nameField.setDisabled(disabled);
-        conditionsButton.setDisabled(disabled);
         setClearSelectionAnchorDisabledStatus(disabled);
         setInfoSelectDataObjectElementDisabledStatus(disabled);
         setContainersDisabledStatus(disabled);
