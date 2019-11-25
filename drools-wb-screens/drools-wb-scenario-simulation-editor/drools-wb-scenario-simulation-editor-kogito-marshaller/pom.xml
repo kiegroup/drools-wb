@@ -185,7 +185,7 @@
           </execution>
         </executions>
         <configuration>
-          <module>org.drools.workbench.scenariosimulation.kogito.ScesimMarshaller</module>
+          <module>org.drools.workbench.scenariosimulation.kogito.marshaller.ScesimMarshaller</module>
           <style>PRETTY</style>
           <compileReport>true</compileReport>
           <soycDetailed>true</soycDetailed>

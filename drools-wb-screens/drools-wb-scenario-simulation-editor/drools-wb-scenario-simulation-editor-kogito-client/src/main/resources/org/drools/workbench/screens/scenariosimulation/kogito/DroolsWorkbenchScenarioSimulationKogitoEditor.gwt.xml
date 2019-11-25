@@ -24,6 +24,6 @@
   <inherits name="org.drools.workbench.screens.scenariosimulation.DroolsWorkbenchScenarioSimulationEditorAPI"/>
   <inherits name='org.drools.workbench.screens.scenariosimulation.DroolsWorkbenchScenarioSimulationEditorClient'/>
   <!-- MARSHALLING -->
-  <inherits name="org.drools.workbench.scenariosimulation.kogito.ScesimMarshaller" />
+  <inherits name="org.drools.workbench.scenariosimulation.kogito.marshaller.ScesimMarshaller" />
 
 </module>

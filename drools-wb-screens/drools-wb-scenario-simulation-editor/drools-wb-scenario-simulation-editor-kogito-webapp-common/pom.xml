@@ -360,6 +360,12 @@
     <dependency>
       <groupId>org.kie.workbench</groupId>
       <artifactId>kie-wb-common-kogito-client</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.kie.workbench</groupId>
+      <artifactId>kie-wb-common-kogito-webapp-base</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <!-- Test dependencies -->
