@@ -90,7 +90,4 @@ public interface ScenarioSimulationEditorStylesCss extends CssResource {
 
     @ClassName("kie-list-view-pf-main-info__text")
     String kieListViewPfMainInfoText();
-
-    @ClassName("search-pf")
-    String searchPfHasButton();
 }
