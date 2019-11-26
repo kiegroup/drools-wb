@@ -847,6 +847,31 @@
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-marshaller-js</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${basedir}/src/main/webapp/model</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${project.build.directory}/Marshaller/org/drools/workbench/scenariosimulation/kogito/marshaller/js</directory>
+                  <includes>
+                    <include>**/*.js</include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <executions>
           <execution>
@@ -864,6 +889,26 @@
                   <type>zip</type>
                   <overWrite>false</overWrite>
                   <outputDirectory>${project.build.directory}</outputDirectory>
+                </artifactItem>
+              </artifactItems>
+            </configuration>
+          </execution>
+          <execution>
+            <id>Unpack Marshaller JS from dependency</id>
+            <phase>process-sources</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>org.drools</groupId>
+                  <artifactId>drools-wb-scenario-simulation-editor-kogito-marshaller</artifactId>
+                  <version>${version.org.kie}</version>
+                  <type>jar</type>
+                  <overWrite>true</overWrite>
+                  <outputDirectory>${project.build.directory}/Marshaller</outputDirectory>
+                  <includes>**/*.js</includes>
                 </artifactItem>
               </artifactItems>
             </configuration>
