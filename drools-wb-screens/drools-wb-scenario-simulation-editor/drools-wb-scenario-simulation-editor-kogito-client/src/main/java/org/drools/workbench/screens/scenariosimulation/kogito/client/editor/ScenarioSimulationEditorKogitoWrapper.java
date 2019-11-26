@@ -26,6 +26,7 @@ import javax.inject.Inject;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
 import elemental2.promise.Promise;
+import jsinterop.base.Js;
 import org.drools.scenariosimulation.api.model.AbstractScesimData;
 import org.drools.scenariosimulation.api.model.AbstractScesimModel;
 import org.drools.scenariosimulation.api.model.AuditLog;
@@ -40,6 +41,7 @@ import org.drools.workbench.scenariosimulation.kogito.marshaller.js.callbacks.SC
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.callbacks.SCESIMUnmarshallCallback;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIScenarioSimulationModelType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.SCESIM;
+import org.drools.workbench.scenariosimulation.kogito.marshaller.mapper.JsUtils;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorWrapper;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
@@ -62,8 +64,11 @@ import org.uberfire.backend.vfs.PathFactory;
 import org.uberfire.backend.vfs.impl.ObservablePathImpl;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.mvp.PlaceStatus;
+import org.uberfire.client.promise.Promises;
 import org.uberfire.client.views.pfly.multipage.MultiPageEditorViewImpl;
 import org.uberfire.client.views.pfly.multipage.PageImpl;
+import org.uberfire.lifecycle.GetContent;
+import org.uberfire.lifecycle.SetContent;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 
@@ -80,6 +85,7 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     private FileMenuBuilder fileMenuBuilder;
     private AuthoringEditorDock authoringWorkbenchDocks;
     private SCESIM scesimContainer;
+    private Promises promises;
 
     public ScenarioSimulationEditorKogitoWrapper() {
         //Zero-parameter constructor for CDI proxies
@@ -91,11 +97,13 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
             final FileMenuBuilder fileMenuBuilder,
             final PlaceManager placeManager,
             final MultiPageEditorContainerView multiPageEditorContainerView,
-            final AuthoringEditorDock authoringWorkbenchDocks) {
+            final AuthoringEditorDock authoringWorkbenchDocks,
+            final Promises promises) {
         super(scenarioSimulationEditorPresenter.getView(), /*fileMenuBuilder, */placeManager, multiPageEditorContainerView);
         this.scenarioSimulationEditorPresenter = scenarioSimulationEditorPresenter;
         this.fileMenuBuilder = fileMenuBuilder;
         this.authoringWorkbenchDocks = authoringWorkbenchDocks;
+        this.promises = promises;
     }
 
     @Override
@@ -105,14 +113,14 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     }
 
     @Override
-    public Promise getContent() {
-        marshallContent(scenarioSimulationEditorPresenter.getContentSupplier().get());
-        return null;
+    @GetContent
+    public Promise<String> getContent() {
+        return transform(scenarioSimulationEditorPresenter.getContentSupplier().get());
     }
 
     @Override
+    @SetContent
     public void setContent(String value) {
-        getWidget().init(this);
         Path path = new PathFactory.PathImpl("new.scesimr", "file:///new.scesimr");
         scenarioSimulationEditorPresenter.init(this, new ObservablePathImpl().wrap(path));
         scenarioSimulationEditorPresenter.showDocks(PlaceStatus.CLOSE);
@@ -150,7 +158,7 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
      */
     @Override
     public void addBackgroundPage(final ScenarioGridWidget scenarioGridWidget) {
-        getWidget().getMultiPage().addPage(BACKGROUND_TAB_INDEX, new PageImpl(scenarioGridWidget, ScenarioSimulationEditorConstants.INSTANCE.backgroundTabTitle()) {
+        addPage(/*BACKGROUND_TAB_INDEX, */new PageImpl(scenarioGridWidget, ScenarioSimulationEditorConstants.INSTANCE.backgroundTabTitle()) {
             @Override
             public void onFocus() {
                 super.onFocus();
@@ -192,7 +200,9 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
 
     public void onStartup(final PlaceRequest place) {
         super.init(place);
+        resetEditorPages();
         authoringWorkbenchDocks.setup("AuthoringPerspective", place);
+        MainJs.initializeJsInteropConstructors(MainJs.getConstructorsMap());
     }
 
     public boolean mayClose() {
@@ -230,6 +240,12 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
         return super.getOriginalContentHash();
     }
 
+    protected Promise<String> transform(final ScenarioSimulationModel resource) {
+        return promises.create((resolveCallbackFn, rejectCallbackFn) -> {
+            marshallContent(resource);
+        });
+    }
+
     /**
      * If you want to customize the menu override this method.
      */
@@ -263,9 +279,13 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     protected SCESIMUnmarshallCallback getJSInteropUnmarshallConvert() {
         return scesim -> {
             this.scesimContainer = scesim;
-            final JSIScenarioSimulationModelType scenarioSimulationModelType = scesim.getScenarioSimulationModel();
-            final ScenarioSimulationModel scenarioSimulationModel = getScenarioSimulationModel(scenarioSimulationModelType);
-            getModelSuccessCallbackMethod(scenarioSimulationModel);
+            final JSIScenarioSimulationModelType scenarioSimulationModelType = Js.uncheckedCast(JsUtils.getUnwrappedElement(scesim));
+            try {
+                final ScenarioSimulationModel scenarioSimulationModel = getScenarioSimulationModel(scenarioSimulationModelType);
+                getModelSuccessCallbackMethod(scenarioSimulationModel);
+            } catch (Throwable t) {
+                GWT.log("Failed to transform scesim", t);
+            }
         };
     }
 
@@ -289,5 +309,4 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     protected void onImportsTabSelected() {
         scenarioSimulationEditorPresenter.onImportsTabSelected();
     }
-
 }

@@ -25,12 +25,11 @@ import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioMenuItem;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.ScenarioSimulationEditorKogitoWrapper;
-import org.drools.workbench.screens.scenariosimulation.kogito.client.popup.FileChooserPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.webapp.client.popup.LoadScesimPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.webapp.client.popup.NewScesimPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds.ScesimFilesProvider;
-import org.kie.workbench.common.kogito.webapp.base.client.editor.KogitoScreen;
 import org.kie.workbench.common.kogito.client.editor.MultiPageEditorContainerView;
+import org.kie.workbench.common.kogito.webapp.base.client.editor.KogitoScreen;
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
 import org.uberfire.client.annotations.WorkbenchMenu;
 import org.uberfire.client.annotations.WorkbenchPartTitle;
@@ -66,9 +65,6 @@ public class ScenarioSimulationEditorKogitoTestingScreen implements KogitoScreen
     @Inject
     private LoadScesimPopupPresenter loadScesimPopupPresenter;
 
-    @Inject
-    private FileChooserPopupPresenter fileChooserPopupPresenter;
-
     private PlaceManager placeManager;
 
     public ScenarioSimulationEditorKogitoTestingScreen() {
@@ -89,6 +85,7 @@ public class ScenarioSimulationEditorKogitoTestingScreen implements KogitoScreen
     public void onStartup(final PlaceRequest place) {
         addTestingMenus(scenarioSimulationEditorKogitoWrapper.getFileMenuBuilder());
         scenarioSimulationEditorKogitoWrapper.onStartup(place);
+        scenarioSimulationEditorKogitoWrapper.setContent(scesimFilesProvider.getScesimFile("newScesimRule"));
     }
 
     @OnMayClose
@@ -98,7 +95,7 @@ public class ScenarioSimulationEditorKogitoTestingScreen implements KogitoScreen
 
     @WorkbenchPartTitle
     public String getTitleText() {
-        return "Scenario Simulation Submarine Screen";
+        return "Scenario Simulation Kogito Screen";
     }
 
     @WorkbenchPartTitleDecoration

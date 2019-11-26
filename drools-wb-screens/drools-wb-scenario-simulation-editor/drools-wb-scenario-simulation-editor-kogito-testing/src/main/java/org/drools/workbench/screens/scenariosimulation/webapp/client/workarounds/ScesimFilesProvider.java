@@ -383,119 +383,119 @@ public class ScesimFilesProvider {
                     "  </imports>" +
                     "</ScenarioSimulationModel>";
     private static final String newScesimRule =
-            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-                    "<ScenarioSimulationModel version=\"1.6\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:scesim=\"http://www.kie.org/scesim.xsd\">" +
-                    "  <simulation>" +
-                    "    <simulationDescriptor>" +
-                    "      <factMappings>" +
-                    "        <FactMapping>" +
-                    "          <expressionElements class=\"linked-list\"/>" +
-                    "          <expressionIdentifier>" +
-                    "            <name>Index</name>" +
-                    "            <type>OTHER</type>" +
-                    "          </expressionIdentifier>" +
-                    "          <factIdentifier>" +
-                    "            <name>#</name>" +
-                    "            <className>java.lang.Integer</className>" +
-                    "          </factIdentifier>" +
-                    "          <className>java.lang.Integer</className>" +
-                    "          <factAlias>#</factAlias>" +
-                    "        </FactMapping>" +
-                    "        <FactMapping>" +
-                    "          <expressionElements class=\"linked-list\"/>" +
-                    "          <expressionIdentifier>" +
-                    "            <name>Description</name>" +
-                    "            <type>OTHER</type>" +
-                    "          </expressionIdentifier>" +
-                    "          <factIdentifier>" +
-                    "            <name>Scenario description</name>" +
-                    "            <className>java.lang.String</className>" +
-                    "          </factIdentifier>" +
-                    "          <className>java.lang.String</className>" +
-                    "          <factAlias>Scenario description</factAlias>" +
-                    "        </FactMapping>" +
-                    "        <FactMapping>" +
-                    "          <expressionElements class=\"linked-list\"/>" +
-                    "          <expressionIdentifier>" +
-                    "            <name>0|1</name>" +
-                    "            <type>GIVEN</type>" +
-                    "          </expressionIdentifier>" +
-                    "          <factIdentifier>" +
-                    "            <name>Empty</name>" +
-                    "            <className>java.lang.Void</className>" +
-                    "          </factIdentifier>" +
-                    "          <className>java.lang.Void</className>" +
-                    "          <factAlias>INSTANCE 1</factAlias>" +
-                    "          <expressionAlias>PROPERTY 1</expressionAlias>" +
-                    "        </FactMapping>" +
-                    "        <FactMapping>" +
-                    "          <expressionElements class=\"linked-list\"/>" +
-                    "          <expressionIdentifier>" +
-                    "            <name>0|2</name>" +
-                    "            <type>EXPECT</type>" +
-                    "          </expressionIdentifier>" +
-                    "          <factIdentifier>" +
-                    "            <name>Empty</name>" +
-                    "            <className>java.lang.Void</className>" +
-                    "          </factIdentifier>" +
-                    "          <className>java.lang.Void</className>" +
-                    "          <factAlias>INSTANCE 2</factAlias>" +
-                    "          <expressionAlias>PROPERTY 2</expressionAlias>" +
-                    "        </FactMapping>" +
-                    "      </factMappings>" +
-                    "      <type>RULE</type>" +
-                    "      <skipFromBuild>false</skipFromBuild>" +
-                    "    </simulationDescriptor>" +
-                    "    <scenarios class=\"linked-list\">" +
-                    "      <Scenario>" +
-                    "        <factMappingValues>" +
-                    "          <FactMappingValue>" +
-                    "          <factIdentifier>" +
-                    "            <name>#</name>" +
-                    "            <className>java.lang.Integer</className>" +
-                    "          </factIdentifier>" +
-                    "          <expressionIdentifier>" +
-                    "            <name>Index</name>" +
-                    "            <type>OTHER</type>" +
-                    "          </expressionIdentifier>" +
-                    "          <FactMappingValue>" +
-                    "          <factIdentifier>" +
-                    "            <name>Scenario description</name>" +
-                    "            <className>java.lang.String</className>" +
-                    "          </factIdentifier>" +
-                    "          <expressionIdentifier>" +
-                    "            <name>Description</name>" +
-                    "            <type>OTHER</type>" +
-                    "          </expressionIdentifier>" +
-                    "          </FactMappingValue>" +
-                    "          <FactMappingValue>" +
-                    "          <factIdentifier>" +
-                    "            <name>Empty</name>" +
-                    "            <className>java.lang.Void</className>" +
-                    "          </factIdentifier>" +
-                    "          <expressionIdentifier>" +
-                    "            <name>0|1</name>" +
-                    "            <type>GIVEN</type>" +
-                    "          </expressionIdentifier>" +
-                    "          </FactMappingValue>" +
-                    "          <FactMappingValue>" +
-                    "          <factIdentifier>" +
-                    "            <name>Empty</name>" +
-                    "            <className>java.lang.Void</className>" +
-                    "          </factIdentifier>" +
-                    "          <expressionIdentifier>" +
-                    "            <name>0|2</name>" +
-                    "            <type>EXPECT</type>" +
-                    "          </expressionIdentifier>" +
-                    "          </FactMappingValue>" +
-                    "        </factMappingValues>" +
-                    "      </Scenario>" +
-                    "    </scenarios>" +
-                    "  </simulation>" +
-                    "  <imports>" +
-                    "    <imports/>" +
-                    "  </imports>" +
+            "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
+                    "<ScenarioSimulationModel version=\"1.8\">\n" +
+                    "  <Simulation>\n" +
+                    "    <scesimModelDescriptor>\n" +
+                    "      <factMappings>\n" +
+                    "        <FactMapping>\n" +
+                    "          <expressionElements>\n" +
+                    "            <ExpressionElement>\n" +
+                    "              <step>str1234</step>\n" +
+                    "            </ExpressionElement>\n" +
+                    "          </expressionElements>\n" +
+                    "          <ExpressionIdentifier>\n" +
+                    "            <name>str1234</name>\n" +
+                    "            <type>GIVEN</type>\n" +
+                    "          </ExpressionIdentifier>\n" +
+                    "          <FactIdentifier>\n" +
+                    "            <name>str1234</name>\n" +
+                    "            <className>str1234</className>\n" +
+                    "          </FactIdentifier>\n" +
+                    "          <className>str1234</className>\n" +
+                    "          <factAlias>str1234</factAlias>\n" +
+                    "          <expressionAlias>str1234</expressionAlias>\n" +
+                    "          <genericTypes>\n" +
+                    "            <string>str1234</string>\n" +
+                    "          </genericTypes>\n" +
+                    "          <columnWidth>3.1415926535</columnWidth>\n" +
+                    "          <factMappingValueType>str1234</factMappingValueType>\n" +
+                    "        </FactMapping>\n" +
+                    "      </factMappings>\n" +
+                    "    </scesimModelDescriptor>\n" +
+                    "    <scesimData>\n" +
+                    "      <Scenario>\n" +
+                    "        <factMappingValues>\n" +
+                    "          <FactMappingValue>\n" +
+                    "            <factIdentifier>\n" +
+                    "              <name>str1234</name>\n" +
+                    "              <className>str1234</className>\n" +
+                    "            </factIdentifier>\n" +
+                    "            <expressionIdentifier>\n" +
+                    "              <name>str1234</name>\n" +
+                    "              <type>GIVEN</type>\n" +
+                    "            </expressionIdentifier>\n" +
+                    "            <rawValue class=\"str1234\">str1234</rawValue>\n" +
+                    "          </FactMappingValue>\n" +
+                    "        </factMappingValues>\n" +
+                    "      </Scenario>\n" +
+                    "    </scesimData>\n" +
+                    "  </Simulation>\n" +
+                    "  <Background>\n" +
+                    "    <scesimModelDescriptor>\n" +
+                    "      <factMappings>\n" +
+                    "        <FactMapping>\n" +
+                    "          <expressionElements>\n" +
+                    "            <ExpressionElement>\n" +
+                    "              <step>str1234</step>\n" +
+                    "            </ExpressionElement>\n" +
+                    "          </expressionElements>\n" +
+                    "          <ExpressionIdentifier>\n" +
+                    "            <name>str1234</name>\n" +
+                    "            <type>GIVEN</type>\n" +
+                    "          </ExpressionIdentifier>\n" +
+                    "          <FactIdentifier>\n" +
+                    "            <name>str1234</name>\n" +
+                    "            <className>str1234</className>\n" +
+                    "          </FactIdentifier>\n" +
+                    "          <className>str1234</className>\n" +
+                    "          <factAlias>str1234</factAlias>\n" +
+                    "          <expressionAlias>str1234</expressionAlias>\n" +
+                    "          <genericTypes>\n" +
+                    "            <string>str1234</string>\n" +
+                    "          </genericTypes>\n" +
+                    "          <columnWidth>3.1415926535</columnWidth>\n" +
+                    "          <factMappingValueType>str1234</factMappingValueType>\n" +
+                    "        </FactMapping>\n" +
+                    "      </factMappings>\n" +
+                    "    </scesimModelDescriptor>\n" +
+                    "    <scesimData>\n" +
+                    "      <BackgroundData>\n" +
+                    "        <factMappingValues>\n" +
+                    "          <FactMappingValue>\n" +
+                    "            <factIdentifier>\n" +
+                    "              <name>str1234</name>\n" +
+                    "              <className>str1234</className>\n" +
+                    "            </factIdentifier>\n" +
+                    "            <expressionIdentifier>\n" +
+                    "              <name>str1234</name>\n" +
+                    "              <type>GIVEN</type>\n" +
+                    "            </expressionIdentifier>\n" +
+                    "            <rawValue class=\"str1234\">str1234</rawValue>\n" +
+                    "          </FactMappingValue>\n" +
+                    "        </factMappingValues>\n" +
+                    "      </BackgroundData>\n" +
+                    "    </scesimData>\n" +
+                    "  </Background>\n" +
+                    "  <Settings>\n" +
+                    "    <dmoSession>str1234</dmoSession>\n" +
+                    "    <type>RULE</type>\n" +
+                    "    <fileName>str1234</fileName>\n" +
+                    "    <kieSession>str1234</kieSession>\n" +
+                    "    <kieBase>str1234</kieBase>\n" +
+                    "    <ruleFlowGroup>str1234</ruleFlowGroup>\n" +
+                    "    <skipFromBuild>true</skipFromBuild>\n" +
+                    "    <stateless>true</stateless>\n" +
+                    "  </Settings>\n" +
+                    "  <imports>\n" +
+                    "    <imports>\n" +
+                    "      <Import>\n" +
+                    "        <type>str1234</type>\n" +
+                    "      </Import>\n" +
+                    "    </imports>\n" +
+                    "  </imports>\n" +
                     "</ScenarioSimulationModel>";
+
     public static final Map<String, String> fileMap = new HashMap<String, String>() {
         {
             put("populatedScesimADmn", populatedScesimDmn);
@@ -509,7 +509,7 @@ public class ScesimFilesProvider {
     };
 
     public String getScesimFile(String fileName) {
-        if (fileName.contains(fileName)) {
+        if (fileMap.get(fileName) != null) {
             return fileMap.get(fileName);
         } else {
             return newScesimRule;

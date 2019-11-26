@@ -114,6 +114,7 @@
               <verbose>false</verbose>
               <args>
                 <arg>-Xgwtjsonix</arg>
+                <arg>-Xinheritance</arg>
                 <arg>-jsid=${project.build.sourceDirectory}</arg>
                 <arg>-jsmpkg=org.drools.workbench.scenariosimulation.kogito.marshaller.mapper</arg>
               </args>
