@@ -30,8 +30,8 @@
   <xs:complexType name="FactMappingType">
     <xs:sequence>
       <xs:element type="expressionElementsType" name="expressionElements"/>
-      <xs:element type="expressionIdentifierType" name="ExpressionIdentifier"/>
-      <xs:element type="factIdentifierType" name="FactIdentifier"/>
+      <xs:element type="expressionIdentifierType" name="expressionIdentifier"/>
+      <xs:element type="factIdentifierType" name="factIdentifier"/>
       <xs:element type="xs:string" name="className"/>
       <xs:element type="xs:string" name="factAlias"/>
       <xs:element type="xs:string" name="expressionAlias" minOccurs="0"/>
