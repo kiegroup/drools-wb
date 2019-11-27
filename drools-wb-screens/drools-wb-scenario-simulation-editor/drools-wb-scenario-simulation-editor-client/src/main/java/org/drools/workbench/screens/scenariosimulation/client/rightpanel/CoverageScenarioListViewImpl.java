@@ -16,6 +16,8 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
+import javax.enterprise.context.Dependent;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import elemental2.dom.DomGlobal;
 import elemental2.dom.HTMLElement;
@@ -32,6 +34,7 @@ import static org.drools.workbench.screens.scenariosimulation.client.utils.Const
 /**
  * This class is used to represent a single scenario with all its own decisions/rules
  */
+@Dependent
 @Templated
 public class CoverageScenarioListViewImpl implements CoverageScenarioListView {
 
@@ -43,6 +46,9 @@ public class CoverageScenarioListViewImpl implements CoverageScenarioListView {
 
     @DataField
     protected HTMLElement faAngleRight = (HTMLElement) DomGlobal.document.createElement("span");
+
+    @DataField
+    protected HTMLElement itemLabelElement = (HTMLElement) DomGlobal.document.createElement("span");
 
     private Presenter presenter;
 
@@ -67,13 +73,13 @@ public class CoverageScenarioListViewImpl implements CoverageScenarioListView {
     }
 
     @Override
-    public HTMLElement getFaAngleRight() {
-        return faAngleRight;
+    public boolean isVisible() {
+        return !scenarioContentList.classList.contains(HIDDEN);
     }
 
     @Override
-    public boolean isVisible() {
-        return !scenarioContentList.classList.contains(HIDDEN);
+    public void setItemLabel(String itemLabel) {
+        itemLabelElement.textContent = itemLabel;
     }
 
     @Override
