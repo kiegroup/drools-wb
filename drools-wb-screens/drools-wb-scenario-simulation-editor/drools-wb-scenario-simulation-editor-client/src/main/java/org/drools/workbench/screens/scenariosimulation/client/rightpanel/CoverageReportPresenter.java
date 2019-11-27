@@ -34,18 +34,18 @@ import org.uberfire.client.annotations.WorkbenchScreen;
 import org.uberfire.mvp.Command;
 
 import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type.DMN;
-import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.CoverageReportPresenter.DEFAULT_PREFERRED_WIDHT;
+import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.CoverageReportPresenter.DEFAULT_PREFERRED_WIDTH;
 import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.CoverageReportPresenter.IDENTIFIER;
 
 @ApplicationScoped
-@WorkbenchScreen(identifier = IDENTIFIER, preferredWidth = DEFAULT_PREFERRED_WIDHT)
+@WorkbenchScreen(identifier = IDENTIFIER, preferredWidth = DEFAULT_PREFERRED_WIDTH)
 public class CoverageReportPresenter extends AbstractSubDockPresenter<CoverageReportView> implements CoverageReportView.Presenter {
 
-    public static final int DEFAULT_PREFERRED_WIDHT = 300;
+    public static final int DEFAULT_PREFERRED_WIDTH = 300;
+    public static final String IDENTIFIER = "org.drools.scenariosimulation.CoverageReport";
 
     private static final NumberFormat numberFormat = NumberFormat.getFormat("00.00");
-
-    public static final String IDENTIFIER = "org.drools.scenariosimulation.CoverageReport";
+    private static final NumberFormat numberFormatNoDecimal = NumberFormat.getFormat("##0");
 
     protected CoverageReportDonutPresenter coverageReportDonutPresenter;
 
@@ -146,13 +146,13 @@ public class CoverageReportPresenter extends AbstractSubDockPresenter<CoverageRe
     protected void populateSummary(int available, int executed, double coveragePercentage) {
         view.setReportAvailable(available + "");
         view.setReportExecuted(executed + "");
-        String coveragePercentageFormatted = numberFormat.format(coveragePercentage);
-        view.setReportCoverage(coveragePercentageFormatted + "%");
+        String coveragePercentageFormatted = numberFormat.format(coveragePercentage) ;
+        view.setReportCoverage(coveragePercentageFormatted+ "%");
 
         // donut chart
-        coverageReportDonutPresenter
-                .showCoverageReport(executed,
-                                    available - executed);
+        coverageReportDonutPresenter.showCoverageReport(executed,
+                                                        available - executed);
+        coverageReportDonutPresenter.manageChartLabels(numberFormatNoDecimal.format(coveragePercentage) + "%");
     }
 
     protected void populateList(Map<String, Integer> outputCounter) {

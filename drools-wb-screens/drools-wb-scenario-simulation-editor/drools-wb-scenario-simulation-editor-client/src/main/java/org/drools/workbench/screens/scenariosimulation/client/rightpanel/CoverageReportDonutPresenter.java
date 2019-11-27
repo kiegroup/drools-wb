@@ -16,10 +16,14 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
+import java.util.Objects;
+
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
+import elemental2.dom.Element;
 import elemental2.dom.HTMLDivElement;
+import elemental2.dom.NodeList;
 import org.dashbuilder.dataset.DataSetFactory;
 import org.dashbuilder.displayer.DisplayerSettingsFactory;
 import org.dashbuilder.displayer.client.Displayer;
@@ -72,16 +76,39 @@ public class CoverageReportDonutPresenter {
                                                 displayer.asWidget());
     }
 
+    /**
+     * Scope of this method is to manage the labels inside the Donut chart. The requirements are:
+     * - Add a label in the center of the chart, i.e. the hole of the Donut;
+     * - Remove all labels inside any arc of the chart. This is required because the chat current dimension is very
+     *   tiny, drawing these labels in wrongly way.
+     * To achieve these requirements without a native support of the component, it navigates the <code>container</code>
+     * DOM to retrieve manually the text tags elements which handle the labels and modifying it
+     * *
+     * @param holeLabel The label to assign in the Donut's hole
+     */
+    public void manageChartLabels(String holeLabel) {
+        NodeList<Element> listE = container.getElementsByTagName("text");
+        for (int i=0; i < listE.getLength(); i++){
+            Element element = listE.getAt(i);
+            String className = element.getAttribute("class");
+            if (Objects.equals("c3-chart-arcs-title", className)) {
+                element.innerHTML = holeLabel;
+            } else if (element.innerHTML != null && element.innerHTML.endsWith("%") && className.isEmpty()) {
+                String style = element.getAttribute("style");
+                element.setAttribute("style", style.concat("display:none;"));
+            }
+        }
+    }
+
     protected Displayer makeDisplayer(final int executed,
                                       final int notCovered) {
         return displayerLocator.lookupDisplayer(DisplayerSettingsFactory.newPieChartSettings()
-                                                        .height(100)
-                                                        .width(80)
-                                                        .titleVisible(true)
+                                                        .height(120)
+                                                        .width(120)
                                                         .subType_Donut()
                                                         .margins(1, 1, 1, 1)
                                                         .legendOff()
-                                                        .column("coverage").format("coverage", "#")
+
                                                         .dataset(DataSetFactory.newDataSetBuilder()
                                                                          .label("STATUS")
                                                                          .number("coverage")
