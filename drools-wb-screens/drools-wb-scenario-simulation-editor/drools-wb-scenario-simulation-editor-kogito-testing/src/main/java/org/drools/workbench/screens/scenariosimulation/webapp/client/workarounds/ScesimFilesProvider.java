@@ -27,9 +27,9 @@ import javax.enterprise.context.ApplicationScoped;
 public class ScesimFilesProvider {
 
     private static final String populatedScesimDmn = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-            "<ScenarioSimulationModel version=\"1.6\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:scesim=\"http://www.kie.org/scesim.xsd\">" +
+            "<ScenarioSimulationModel version=\"1.8\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:scesim=\"http://www.kie.org/scesim.xsd\">" +
             " <simulation>\n" +
-            "    <simulationDescriptor>\n" +
+            "    <scesimModelDescriptor>\n" +
             "      <factMappings>\n" +
             "        <FactMapping>\n" +
             "          <expressionElements class=\"linked-list\"/>\n" +
@@ -139,13 +139,8 @@ public class ScesimFilesProvider {
             "          <expressionAlias>value</expressionAlias>\n" +
             "        </FactMapping>\n" +
             "      </factMappings>\n" +
-            "      <dmnFilePath>src/main/resources/com/list.dmn</dmnFilePath>\n" +
-            "      <type>DMN</type>\n" +
-            "      <dmnNamespace>https://github.com/kiegroup/drools/kie-dmn/_CC8924B0-D729-4D70-9588-039B5824FFE9</dmnNamespace>\n" +
-            "      <dmnName>a1Collection</dmnName>\n" +
-            "      <skipFromBuild>false</skipFromBuild>\n" +
-            "    </simulationDescriptor>\n" +
-            "    <scenarios class=\"linked-list\">\n" +
+            "    </scesimModelDescriptor>\n" +
+            "    <scesimData class=\"linked-list\">\n" +
             "      <Scenario>\n" +
             "        <factMappingValues>\n" +
             "          <FactMappingValue>\n" +
@@ -200,16 +195,55 @@ public class ScesimFilesProvider {
             "          </FactMappingValue>\n" +
             "        </factMappingValues>\n" +
             "      </Scenario>\n" +
-            "    </scenarios>\n" +
+            "    </scesimData>\n" +
             "  </simulation>\n" +
+            "  <background>\n" +
+            "    <scesimModelDescriptor>\n" +
+            "      <factMappings>\n" +
+            "        <FactMapping>\n" +
+            "          <expressionElements class=\"linked-list\">\n" +
+            "            <ExpressionElement>\n" +
+            "              <step>person</step>\n" +
+            "            </ExpressionElement>\n" +
+            "            <ExpressionElement>\n" +
+            "              <step>address</step>\n" +
+            "            </ExpressionElement>\n" +
+            "          </expressionElements>\n" +
+            "          <expressionIdentifier>\n" +
+            "            <name>0|1</name>\n" +
+            "            <type>GIVEN</type>\n" +
+            "          </expressionIdentifier>\n" +
+            "          <factIdentifier>\n" +
+            "            <name>person</name>\n" +
+            "            <className>person</className>\n" +
+            "          </factIdentifier>\n" +
+            "          <className>java.util.List</className>\n" +
+            "          <factAlias>person</factAlias>\n" +
+            "          <expressionAlias>address</expressionAlias>\n" +
+            "          <genericTypes class=\"singleton-list\">\n" +
+            "            <string>address</string>\n" +
+            "          </genericTypes>\n" +
+            "        </FactMapping>\n" +
+            "      </factMappings>\n" +
+            "    </scesimModelDescriptor>\n" +
+            "    <scesimData class=\"linked-list\">\n" +
+            "    </scesimData>\n" +
+            "  </background>\n" +
+            "  <settings>\n" +
+            "      <dmnFilePath>src/main/resources/com/list.dmn</dmnFilePath>\n" +
+            "      <type>DMN</type>\n" +
+            "      <dmnNamespace>https://github.com/kiegroup/drools/kie-dmn/_CC8924B0-D729-4D70-9588-039B5824FFE9</dmnNamespace>\n" +
+            "      <dmnName>a1Collection</dmnName>\n" +
+            "      <skipFromBuild>false</skipFromBuild>\n" +
+            "  </settings>" +
             "  <imports>\n" +
             "    <imports/>\n" +
             "  </imports>" +
             "</ScenarioSimulationModel>";
     private final static String populatedScesimRule =
-            "<ScenarioSimulationModel version=\"1.6\">" +
-                    "  <simulation>" +
-                    "    <simulationDescriptor>" +
+            "<ScenarioSimulationModel version=\"1.8\">\n" +
+                    "  <simulation>\n" +
+                    "    <scesimModelDescriptor>" +
                     "      <factMappings>" +
                     "        <FactMapping>" +
                     "          <expressionElements/>" +
@@ -273,10 +307,8 @@ public class ScesimFilesProvider {
                     "          <expressionAlias>PROPERTY 2</expressionAlias>" +
                     "        </FactMapping>" +
                     "      </factMappings>" +
-                    "      <type>RULE</type>" +
-                    "      <skipFromBuild>false</skipFromBuild>" +
-                    "    </simulationDescriptor>" +
-                    "    <scenarios>" +
+                    "    </scesimModelDescriptor>" +
+                    "    <scesimData class=\"linked-list\">" +
                     "      <Scenario>" +
                     "        <factMappingValues>" +
                     "          <FactMappingValue>" +
@@ -369,8 +401,57 @@ public class ScesimFilesProvider {
                     "          </FactMappingValue>" +
                     "        </factMappingValues>" +
                     "      </Scenario>" +
-                    "    </scenarios>" +
+                    "    </scesimData>" +
                     "  </simulation>" +
+                    "  <background>\n" +
+                    "    <scesimModelDescriptor>\n" +
+                    "      <factMappings>\n" +
+                    "        <FactMapping>" +
+                    "          <expressionElements>" +
+                    "            <ExpressionElement>" +
+                    "              <step>Author</step>" +
+                    "            </ExpressionElement>" +
+                    "            <ExpressionElement>" +
+                    "              <step>name</step>" +
+                    "            </ExpressionElement>" +
+                    "          </expressionElements>" +
+                    "          <expressionIdentifier>" +
+                    "            <name>0|1</name>" +
+                    "            <type>GIVEN</type>" +
+                    "          </expressionIdentifier>" +
+                    "          <factIdentifier>" +
+                    "            <name>0|1</name>" +
+                    "            <className>com.Author</className>" +
+                    "          </factIdentifier>" +
+                    "          <className>java.lang.String</className>" +
+                    "          <factAlias>Author</factAlias>" +
+                    "          <expressionAlias>name</expressionAlias>" +
+                    "        </FactMapping>" +
+                    "      </factMappings>\n" +
+                    "    </scesimModelDescriptor>\n" +
+                    "    <scesimData class=\"linked-list\">\n" +
+                    "      <BackgroundData>\n" +
+                    "        <factMappingValues>\n" +
+                    "          <FactMappingValue>" +
+                    "          <factIdentifier>" +
+                    "            <name>0|1</name>" +
+                    "            <className>com.Author</className>" +
+                    "          </factIdentifier>" +
+                    "          <expressionIdentifier>" +
+                    "            <name>0|1</name>" +
+                    "            <type>GIVEN</type>" +
+                    "          </expressionIdentifier>" +
+                    "            <rawValue class=\"string\">Arthur C. Doyle</rawValue>" +
+                    "          </FactMappingValue>" +
+                    "        </factMappingValues>\n" +
+                    "      </BackgroundData>\n" +
+                    "    </scesimData>\n" +
+                    "  </background>" +
+                    "  <settings>\n" +
+                    "    <type>RULE</type>\n" +
+                    "    <skipFromBuild>false</skipFromBuild>\n" +
+                    "    <stateless>false</stateless>\n" +
+                    "  </settings>" +
                     "  <imports>" +
                     "    <imports>" +
                     "      <Import>" +

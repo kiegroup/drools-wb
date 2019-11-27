@@ -85,7 +85,6 @@ public class ScenarioSimulationEditorKogitoTestingScreen implements KogitoScreen
     public void onStartup(final PlaceRequest place) {
         addTestingMenus(scenarioSimulationEditorKogitoWrapper.getFileMenuBuilder());
         scenarioSimulationEditorKogitoWrapper.onStartup(place);
-        scenarioSimulationEditorKogitoWrapper.setContent(scesimFilesProvider.getScesimFile("newScesimRule"));
     }
 
     @OnMayClose
