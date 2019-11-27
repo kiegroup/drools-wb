@@ -146,8 +146,8 @@ public class CoverageReportPresenter extends AbstractSubDockPresenter<CoverageRe
     protected void populateSummary(int available, int executed, double coveragePercentage) {
         view.setReportAvailable(available + "");
         view.setReportExecuted(executed + "");
-        String coveragePercentageFormatted = numberFormat.format(coveragePercentage) ;
-        view.setReportCoverage(coveragePercentageFormatted+ "%");
+        String coveragePercentageFormatted = numberFormat.format(coveragePercentage);
+        view.setReportCoverage(coveragePercentageFormatted + "%");
 
         // donut chart
         coverageReportDonutPresenter.showCoverageReport(executed,

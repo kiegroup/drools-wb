@@ -73,13 +73,13 @@ public class CoverageScenarioListViewImpl implements CoverageScenarioListView {
     }
 
     @Override
-    public boolean isVisible() {
-        return !scenarioContentList.classList.contains(HIDDEN);
+    public void setItemLabel(String itemLabel) {
+        itemLabelElement.textContent = itemLabel;
     }
 
     @Override
-    public void setItemLabel(String itemLabel) {
-        itemLabelElement.textContent = itemLabel;
+    public boolean isVisible() {
+        return !scenarioContentList.classList.contains(HIDDEN);
     }
 
     @Override

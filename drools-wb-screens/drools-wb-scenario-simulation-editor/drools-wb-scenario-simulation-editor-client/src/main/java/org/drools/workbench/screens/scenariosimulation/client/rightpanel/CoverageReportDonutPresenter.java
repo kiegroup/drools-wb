@@ -108,7 +108,7 @@ public class CoverageReportDonutPresenter {
                                                         .subType_Donut()
                                                         .margins(1, 1, 1, 1)
                                                         .legendOff()
-
+                                                        .column("coverage").format("coverage", "#")
                                                         .dataset(DataSetFactory.newDataSetBuilder()
                                                                          .label("STATUS")
                                                                          .number("coverage")
