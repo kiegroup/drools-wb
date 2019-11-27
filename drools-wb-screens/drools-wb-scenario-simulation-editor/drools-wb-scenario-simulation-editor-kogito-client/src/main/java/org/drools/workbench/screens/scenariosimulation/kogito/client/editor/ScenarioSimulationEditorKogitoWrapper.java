@@ -153,12 +153,21 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     }
 
     /**
+     * This method is called when the main grid tab (Model) is focused
+     */
+    @Override
+    public void onEditTabSelected() {
+        super.onEditTabSelected();
+        scenarioSimulationEditorPresenter.onEditTabSelected();
+    }
+
+    /**
      * This method adds specifically the Background grid and its related onFocus behavior
      * @param scenarioGridWidget
      */
     @Override
     public void addBackgroundPage(final ScenarioGridWidget scenarioGridWidget) {
-        addPage(/*BACKGROUND_TAB_INDEX, */new PageImpl(scenarioGridWidget, ScenarioSimulationEditorConstants.INSTANCE.backgroundTabTitle()) {
+        addPage(new PageImpl(scenarioGridWidget, ScenarioSimulationEditorConstants.INSTANCE.backgroundTabTitle()) {
             @Override
             public void onFocus() {
                 super.onFocus();
@@ -167,15 +176,15 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
         });
     }
 
-    protected void addImportsTab(IsWidget importsWidget) {
-        addPage(new PageImpl(importsWidget, CommonConstants.INSTANCE.DataObjectsTabTitle()) {
-            @Override
-            public void onFocus() {
-                super.onFocus();
-                onImportsTabSelected();
-            }
-        });
-    }
+//    protected void addImportsTab(IsWidget importsWidget) {
+//        addPage(new PageImpl(importsWidget, CommonConstants.INSTANCE.DataObjectsTabTitle()) {
+//            @Override
+//            public void onFocus() {
+//                super.onFocus();
+//                onImportsTabSelected();
+//            }
+//        });
+//    }
 
     @Override
     public void selectSimulationTab() {
@@ -251,7 +260,6 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
      */
     @Override
     protected void makeMenuBar() {
-        // TODO {gcardosi* verify/align with BusinessCentralWrapper for new "background" tab
         scenarioSimulationEditorPresenter.makeMenuBar(fileMenuBuilder);
     }
 
