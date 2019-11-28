@@ -81,10 +81,10 @@ public class CoverageReportDonutPresenter {
     /**
      * Scope of this method is to manage the labels inside the Donut chart. The requirements are:
      * - Add a label in the center of the chart, i.e. the hole of the Donut;
-     * - Remove all labels inside any arc of the chart. This is required because the chat current dimension is very
-     *   tiny, drawing these labels in wrongly way.
+     * - Remove all labels inside any arc of the chart. This is required because the chart current dimension is very
+     *   small and leading to draw these labels in wrongly way.
      * To achieve these requirements without a native support of the component, it navigates the <code>container</code>
-     * DOM to retrieve manually the text tags elements which handle the labels. Then, it add the holeLabel to its proper
+     * DOM to retrieve manually the text tags elements which handle the labels. Then, it adds the holeLabel to its proper
      * text tag, and remove all not required labels.
      * *
      * @param holeLabel The label to assign in the Donut's hole
