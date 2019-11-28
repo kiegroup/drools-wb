@@ -35,6 +35,8 @@ import org.jboss.errai.common.client.dom.elemental2.Elemental2DomUtil;
 @Dependent
 public class CoverageReportDonutPresenter {
 
+    private static final String COVERAGE = "coverage";
+
     protected Elemental2DomUtil elemental2DomUtil;
     protected DisplayerLocator displayerLocator;
     protected DisplayerCoordinator displayerCoordinator;
@@ -82,13 +84,14 @@ public class CoverageReportDonutPresenter {
      * - Remove all labels inside any arc of the chart. This is required because the chat current dimension is very
      *   tiny, drawing these labels in wrongly way.
      * To achieve these requirements without a native support of the component, it navigates the <code>container</code>
-     * DOM to retrieve manually the text tags elements which handle the labels and modifying it
+     * DOM to retrieve manually the text tags elements which handle the labels. Then, it add the holeLabel to its proper
+     * text tag, and remove all not required labels.
      * *
      * @param holeLabel The label to assign in the Donut's hole
      */
     public void manageChartLabels(String holeLabel) {
         NodeList<Element> listE = container.getElementsByTagName("text");
-        for (int i=0; i < listE.getLength(); i++){
+        for (int i = 0; i < listE.getLength(); i++) {
             Element element = listE.getAt(i);
             String className = element.getAttribute("class");
             if (Objects.equals("c3-chart-arcs-title", className)) {
@@ -108,10 +111,10 @@ public class CoverageReportDonutPresenter {
                                                         .subType_Donut()
                                                         .margins(1, 1, 1, 1)
                                                         .legendOff()
-                                                        .column("coverage").format("coverage", "#")
+                                                        .column(COVERAGE).format(COVERAGE, "#")
                                                         .dataset(DataSetFactory.newDataSetBuilder()
                                                                          .label("STATUS")
-                                                                         .number("coverage")
+                                                                         .number(COVERAGE)
                                                                          .row(ScenarioSimulationEditorConstants.INSTANCE.executed(),
                                                                               executed)
                                                                          .row(ScenarioSimulationEditorConstants.INSTANCE.notCovered(),
