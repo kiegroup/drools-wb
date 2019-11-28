@@ -176,8 +176,9 @@ public class CoverageReportPresenterTest {
         verify(coverageReportViewMock, times(1)).setReportCoverage(endsWith("%"));
         int delta = availableLocal - executedLocal;
         verify(coverageReportDonutPresenterMock, times(1)).showCoverageReport(eq(executedLocal),
-                                                                              eq(delta));
-        verify(coverageReportDonutPresenterMock, times(1)).manageChartLabels(endsWith("%"));
+                                                                              eq(delta),
+                                                                              endsWith("%"));
+        verify(coverageReportDonutPresenterMock, times(1)).manageChartLabels();
     }
 
     @Test

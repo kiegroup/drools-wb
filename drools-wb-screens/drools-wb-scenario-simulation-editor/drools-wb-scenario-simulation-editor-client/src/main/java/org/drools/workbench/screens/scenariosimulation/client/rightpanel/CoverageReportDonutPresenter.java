@@ -16,8 +16,6 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
-import java.util.Objects;
-
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
@@ -61,7 +59,8 @@ public class CoverageReportDonutPresenter {
     }
 
     public void showCoverageReport(final int executed,
-                                   final int notCovered) {
+                                   final int notCovered,
+                                   final String coveragePercentage) {
 
         if (displayer != null) {
             elemental2DomUtil.removeAllElementChildren(container);
@@ -69,7 +68,8 @@ public class CoverageReportDonutPresenter {
         }
 
         displayer = makeDisplayer(executed,
-                                  notCovered);
+                                  notCovered,
+                                  coveragePercentage);
 
         displayerCoordinator.addDisplayer(displayer);
         displayerCoordinator.drawAll();
@@ -79,24 +79,18 @@ public class CoverageReportDonutPresenter {
     }
 
     /**
-     * Scope of this method is to manage the labels inside the Donut chart. The requirements are:
-     * - Add a label in the center of the chart, i.e. the hole of the Donut;
+     * Scope of this method is to manage the labels inside the Donut chart. The requirements is to:
      * - Remove all labels inside any arc of the chart. This is required because the chart current dimension is very
      *   small and leading to draw these labels in wrongly way.
      * To achieve these requirements without a native support of the component, it navigates the <code>container</code>
-     * DOM to retrieve manually the text tags elements which handle the labels. Then, it adds the holeLabel to its proper
-     * text tag, and remove all not required labels.
-     * *
-     * @param holeLabel The label to assign in the Donut's hole
+     * DOM to retrieve manually the text tags elements which handle the labels.
      */
-    public void manageChartLabels(String holeLabel) {
+    public void manageChartLabels() {
         NodeList<Element> listE = container.getElementsByTagName("text");
         for (int i = 0; i < listE.getLength(); i++) {
             Element element = listE.getAt(i);
             String className = element.getAttribute("class");
-            if (Objects.equals("c3-chart-arcs-title", className)) {
-                element.innerHTML = holeLabel;
-            } else if (element.innerHTML != null && element.innerHTML.endsWith("%") && className.isEmpty()) {
+             if (element.innerHTML != null && element.innerHTML.endsWith("%") && className.isEmpty()) {
                 String style = element.getAttribute("style");
                 element.setAttribute("style", style.concat("display:none;"));
             }
@@ -104,11 +98,12 @@ public class CoverageReportDonutPresenter {
     }
 
     protected Displayer makeDisplayer(final int executed,
-                                      final int notCovered) {
+                                      final int notCovered,
+                                      final String coveragePercentage) {
         return displayerLocator.lookupDisplayer(DisplayerSettingsFactory.newPieChartSettings()
                                                         .height(120)
                                                         .width(120)
-                                                        .subType_Donut()
+                                                        .subType_Donut(coveragePercentage)
                                                         .margins(1, 1, 1, 1)
                                                         .legendOff()
                                                         .column(COVERAGE).format(COVERAGE, "#")
