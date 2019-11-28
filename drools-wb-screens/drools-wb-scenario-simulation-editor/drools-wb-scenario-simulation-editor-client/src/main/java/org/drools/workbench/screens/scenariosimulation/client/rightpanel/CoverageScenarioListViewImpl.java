@@ -16,8 +16,6 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
-import javax.enterprise.context.Dependent;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import elemental2.dom.DomGlobal;
 import elemental2.dom.HTMLElement;
@@ -34,7 +32,6 @@ import static org.drools.workbench.screens.scenariosimulation.client.utils.Const
 /**
  * This class is used to represent a single scenario with all its own decisions/rules
  */
-@Dependent
 @Templated
 public class CoverageScenarioListViewImpl implements CoverageScenarioListView {
 
