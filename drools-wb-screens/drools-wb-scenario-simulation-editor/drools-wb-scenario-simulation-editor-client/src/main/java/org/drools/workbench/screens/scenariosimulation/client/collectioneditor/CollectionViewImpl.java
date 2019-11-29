@@ -75,7 +75,7 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     @DataField("closeCollectionEditorButton")
     protected ButtonElement closeCollectionEditorButton = Document.get().createPushButtonElement();
 
-    @DataField("addButtonContainer")
+    @DataField("addItemButtonContainer")
     protected DivElement addItemButtonContainer = Document.get().createDivElement();
 
     @DataField("cancelButton")
