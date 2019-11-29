@@ -22,7 +22,7 @@ import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.uberfire.mvp.Command;
 
 @Dependent
-public class LoadScesimPopupPresenter implements NewScesimPopup.Presenter {
+public class LoadScesimPopupPresenter implements TestingScesimPopup.Presenter {
 
     @Inject
     protected LoadScesimPopupView loadScesimPopupView;
@@ -46,4 +46,6 @@ public class LoadScesimPopupPresenter implements NewScesimPopup.Presenter {
     public String getSelectedPath() {
         return loadScesimPopupView.getSelectedPath();
     }
+
+
 }

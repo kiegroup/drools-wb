@@ -20,10 +20,10 @@ import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.jboss.errai.bus.server.annotations.Remote;
 
 /**
- * Submarine specific service
+ * Kogito specific service
  */
 @Remote
-public interface ScenarioSimulationSubmarineService extends AssetsService {
+public interface ScenarioSimulationKogitoService extends AssetsService {
 
     String marshal(final ScenarioSimulationModel sc);
 

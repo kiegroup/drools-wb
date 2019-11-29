@@ -38,6 +38,11 @@ public class NewScesimPopupPresenter implements NewScesimPopup.Presenter {
     }
 
     @Override
+    public String getFileName() {
+        return newScesimPopup.getFileName();
+    }
+
+    @Override
     public ScenarioSimulationModel.Type getSelectedType() {
         return newScesimPopup.getSelectedType();
     }

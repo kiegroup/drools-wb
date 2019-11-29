@@ -15,49 +15,13 @@
  */
 package org.drools.workbench.screens.scenariosimulation.webapp.client.popup;
 
-import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
-import org.jboss.errai.common.client.dom.HTMLElement;
-import org.uberfire.mvp.Command;
+public interface NewScesimPopup extends TestingScesimPopup {
 
-public interface NewScesimPopup {
+    String getFileName();
 
-    /**
-     * Makes the <code>NewScesimPopup</code> visible with OK/CANCEL.
-     * @param mainTitleText
-     * @param okCommand
-     */
-    void show(final String mainTitleText, Command okCommand);
+    interface Presenter extends TestingScesimPopup.Presenter {
 
-    HTMLElement getElement();
+        String getFileName();
 
-    /**
-     * Makes this popup container(and the main content along with it) invisible. Has no effect if the popup is not
-     * already showing.
-     */
-    void hide();
-
-    ScenarioSimulationModel.Type getSelectedType();
-
-    String getSelectedPath();
-
-    interface Presenter {
-
-        /**
-         * Makes the <code>NewScesimPopup</code> visible with OK/CANCEL.
-         * @param mainTitleText
-         * @param okCommand
-         */
-        void show(final String mainTitleText, Command okCommand);
-
-
-        ScenarioSimulationModel.Type getSelectedType();
-
-        /**
-         * Makes this popup container(and the main content along with it) invisible. Has no effect if the popup is not
-         * already showing.
-         */
-        void hide();
-
-        String getSelectedPath();
     }
 }

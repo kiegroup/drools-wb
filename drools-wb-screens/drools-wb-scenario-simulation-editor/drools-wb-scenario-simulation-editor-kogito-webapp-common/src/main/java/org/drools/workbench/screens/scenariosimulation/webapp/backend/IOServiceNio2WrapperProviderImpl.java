@@ -18,11 +18,9 @@ package org.drools.workbench.screens.scenariosimulation.webapp.backend;
 import javax.enterprise.context.ApplicationScoped;
 
 import org.kie.workbench.common.kogito.webapp.base.backend.IOServiceNio2WrapperProvider;
-import org.uberfire.commons.services.cdi.Startup;
-import org.uberfire.commons.services.cdi.StartupType;
 import org.uberfire.io.impl.IOServiceNio2WrapperImpl;
 
-@Startup(value = StartupType.BOOTSTRAP)
+//@Startup(value = StartupType.BOOTSTRAP)
 @ApplicationScoped
 public class IOServiceNio2WrapperProviderImpl implements IOServiceNio2WrapperProvider {
 

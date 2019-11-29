@@ -25,7 +25,7 @@ import javax.enterprise.context.ApplicationScoped;
 
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.backend.util.ScenarioSimulationXMLPersistence;
-import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationSubmarineService;
+import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationKogitoService;
 import org.jboss.errai.bus.server.annotations.Service;
 
 /**
@@ -33,7 +33,7 @@ import org.jboss.errai.bus.server.annotations.Service;
  */
 @Service
 @ApplicationScoped
-public class ScenarioSimulationKogitoServiceServerImpl implements ScenarioSimulationSubmarineService {
+public class ScenarioSimulationKogitoServiceServerImpl implements ScenarioSimulationKogitoService {
 
     @Override
     public String marshal(ScenarioSimulationModel sc) {

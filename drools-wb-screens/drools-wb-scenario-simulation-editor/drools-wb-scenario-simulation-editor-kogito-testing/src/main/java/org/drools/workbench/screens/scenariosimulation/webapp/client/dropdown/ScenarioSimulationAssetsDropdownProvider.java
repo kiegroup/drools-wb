@@ -15,11 +15,41 @@
  */
 package org.drools.workbench.screens.scenariosimulation.webapp.client.dropdown;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+
+import com.google.gwt.core.client.GWT;
+import org.jboss.errai.common.client.api.ErrorCallback;
+import org.jboss.errai.common.client.api.RemoteCallback;
+import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
 import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItemsProvider;
+import org.uberfire.backend.vfs.Path;
 
 /**
  * Using this to specialize injected instance
  */
 public interface ScenarioSimulationAssetsDropdownProvider extends KieAssetsDropdownItemsProvider {
+
+
+    void getItems(final RemoteCallback<List<Path>> callback, final ErrorCallback<String> errorCallback);
+
+    @Override
+    default void getItems(Consumer<List<KieAssetsDropdownItem>> assetListConsumer) {
+        getItems(response -> {
+            List<KieAssetsDropdownItem> toAccept = response.stream()
+                    .map(this::getKieAssetsDropdownItem)
+                    .collect(Collectors.toList());
+            assetListConsumer.accept(toAccept);
+        }, (message, throwable) -> {
+            GWT.log(message, throwable);
+            return false;
+        });
+    }
+
+    default KieAssetsDropdownItem getKieAssetsDropdownItem(final Path asset) {
+        return new KieAssetsDropdownItem(asset.getFileName(), "", asset.toURI(), new HashMap<>());
+    }
 
 }

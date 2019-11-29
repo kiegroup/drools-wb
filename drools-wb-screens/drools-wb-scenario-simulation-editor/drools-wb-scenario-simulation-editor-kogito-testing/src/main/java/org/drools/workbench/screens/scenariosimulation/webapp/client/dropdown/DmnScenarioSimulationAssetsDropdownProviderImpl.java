@@ -15,18 +15,8 @@
  */
 package org.drools.workbench.screens.scenariosimulation.webapp.client.dropdown;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
-
-import javax.enterprise.context.Dependent;
-
-import org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds.ScesimFilesProvider;
-import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
-
-@Dependent
-public class DmnScenarioSimulationAssetsDropdownProviderImpl implements ScenarioSimulationAssetsDropdownProvider {
+//@Dependent
+public class DmnScenarioSimulationAssetsDropdownProviderImpl {}/* implements ScenarioSimulationAssetsDropdownProvider {
 
     @Override
     public void getItems(Consumer<List<KieAssetsDropdownItem>> assetListConsumer) {
@@ -40,4 +30,4 @@ public class DmnScenarioSimulationAssetsDropdownProviderImpl implements Scenario
     protected KieAssetsDropdownItem getKieAssetsDropdownItem(final String asset) {
         return new KieAssetsDropdownItem(asset, "", asset, new HashMap<>());
     }
-}
+}*/

@@ -20,6 +20,8 @@ import java.util.Optional;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.InputElement;
 import elemental2.dom.HTMLDivElement;
 import elemental2.dom.HTMLInputElement;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
@@ -36,6 +38,9 @@ import org.uberfire.mvp.Command;
 @Dependent
 @Templated
 public class NewScesimPopupView extends AbstractScenarioPopupView implements NewScesimPopup {
+
+    @DataField("fileName")
+    protected InputElement fileName = Document.get().createTextInputElement();
 
     @Inject
     @DataField("rule-button")
@@ -78,6 +83,11 @@ public class NewScesimPopupView extends AbstractScenarioPopupView implements New
     @Override
     public String getSelectedPath() {
         return selectedPath;
+    }
+
+    @Override
+    public String getFileName() {
+        return fileName.getValue();
     }
 
     @EventHandler("dmn-button")

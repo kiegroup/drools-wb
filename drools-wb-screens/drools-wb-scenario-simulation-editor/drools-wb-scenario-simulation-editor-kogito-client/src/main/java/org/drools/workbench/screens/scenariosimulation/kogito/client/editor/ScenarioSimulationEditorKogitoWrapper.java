@@ -58,7 +58,6 @@ import org.kie.workbench.common.kogito.client.editor.MultiPageEditorContainerPre
 import org.kie.workbench.common.kogito.client.editor.MultiPageEditorContainerView;
 import org.kie.workbench.common.widgets.client.docks.AuthoringEditorDock;
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
-import org.kie.workbench.common.widgets.client.resources.i18n.CommonConstants;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.backend.vfs.PathFactory;
 import org.uberfire.backend.vfs.impl.ObservablePathImpl;
