@@ -23,7 +23,6 @@ import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.HeadingElement;
-import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.UListElement;
@@ -74,22 +73,22 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     protected UListElement elementsContainer = Document.get().createULElement();
 
     @DataField("closeCollectionEditorButton")
-    protected ButtonElement closeCollectionEditorButton = Document.get().createButtonElement();
+    protected ButtonElement closeCollectionEditorButton = Document.get().createPushButtonElement();
 
-    @DataField("objectSeparator")
-    protected LIElement objectSeparator = Document.get().createLIElement();
+    @DataField("addButtonContainer")
+    protected DivElement addItemButtonContainer = Document.get().createDivElement();
 
     @DataField("cancelButton")
-    protected ButtonElement cancelButton = Document.get().createButtonElement();
+    protected ButtonElement cancelButton = Document.get().createPushButtonElement();
 
     @DataField("removeButton")
-    protected ButtonElement removeButton = Document.get().createButtonElement();
+    protected ButtonElement removeButton = Document.get().createPushButtonElement();
 
     @DataField("saveButton")
-    protected ButtonElement saveButton = Document.get().createButtonElement();
+    protected ButtonElement saveButton = Document.get().createPushButtonElement();
 
     @DataField("addItemButton")
-    protected ButtonElement addItemButton = Document.get().createButtonElement();
+    protected ButtonElement addItemButton = Document.get().createPushButtonElement();
 
     @DataField("editorTitle")
     protected HeadingElement editorTitle = Document.get().createHElement(4);
@@ -99,6 +98,13 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
 
     @DataField("propertyTitle")
     protected SpanElement propertyTitle = Document.get().createSpanElement();
+
+    @DataField("defineContainer")
+    protected DivElement defineContainer = Document.get().createDivElement();
+
+    @DataField("createContainer")
+    protected DivElement createContainer = Document.get().createDivElement();
+
 
     /**
      * Flag to indicate if this <code>CollectionEditorViewImpl</code> will manage a <code>List</code> or a <code>Map</code>.
@@ -111,10 +117,6 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     protected String value;
 
     protected double left;
-
-    protected Style.Unit leftUnit;
-
-
 
     public CollectionViewImpl() {
         setElement(collectionEditor);
@@ -170,6 +172,11 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     }
 
     @Override
+    public void init() {
+        defineContainer.getStyle().setDisplay(Style.Display.NONE);
+    }
+
+    @Override
     public void setValue(String jsonString) {
         presenter.setValue(jsonString);
     }
@@ -182,11 +189,6 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     @Override
     public UListElement getElementsContainer() {
         return elementsContainer;
-    }
-
-    @Override
-    public LIElement getObjectSeparator() {
-        return objectSeparator;
     }
 
     @Override
@@ -280,8 +282,8 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
         clickEvent.stopPropagation();
     }
 
-    @EventHandler("objectSeparator")
-    public void onObjectSeparatorClick(ClickEvent clickEvent) {
+    @EventHandler("addButtonContainer")
+    public void onAddButtonContainerClick(ClickEvent clickEvent) {
         clickEvent.stopPropagation();
     }
 

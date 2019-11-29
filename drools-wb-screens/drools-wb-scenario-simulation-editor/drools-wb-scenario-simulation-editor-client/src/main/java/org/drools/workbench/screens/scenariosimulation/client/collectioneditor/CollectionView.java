@@ -19,7 +19,6 @@ import java.util.Map;
 
 import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.HeadingElement;
-import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.UListElement;
@@ -117,6 +116,11 @@ public interface CollectionView {
     }
 
     /**
+     * It defines the initial status of the view
+     */
+    void init();
+
+    /**
      * Actual implementations are meant to call the <code>Presenter</code> to be populated by this json representation
      *
      * @param jsonString
@@ -143,8 +147,6 @@ public interface CollectionView {
     boolean isListWidget();
 
     UListElement getElementsContainer();
-
-    LIElement getObjectSeparator();
 
     HeadingElement getEditorTitle();
 

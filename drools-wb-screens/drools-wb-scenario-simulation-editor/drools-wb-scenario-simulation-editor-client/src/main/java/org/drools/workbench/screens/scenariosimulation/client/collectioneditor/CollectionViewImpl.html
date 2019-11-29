@@ -10,28 +10,51 @@
             <div class="modal-body" style="overflow-y: auto" data-field="collectionEditorModalBody">
                 <div class="container-fluid">
                     <div class="row">
+                        <div class="form-group col-xs-12">
+                            <label>Define the list values for this data object</label>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" data-field="guidedRadio" name="optionsRadios" id="kie-radio-option-1" value="option1" checked="">
+                                    <strong>Create list</strong> - create a list using a guided form
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" data-field="expressionRadio" name="optionsRadios" id="kie-radio-option-2" value="option2">
+                                    <strong>Define List</strong> - define a list using an expression
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
                         <!-- Data objects -->
                         <div class="col-xs-12 tab-content">
+                            <label>Create List</label>
+                            <!-- Data objects -->
+                            <div class="tab-content">
                             <!-- first right side panel -->
-                            <div class="tab-pane active" id="kie-ObjectListItem1" aria-labelledby="#kie-ObjectListTab1">
-                                <ul class="list-group list-group kie-object-lis" data-field="elementsContainer">
-                                    <li class="list-group-item" style="list-style-type: none;">
-                                        <span class="fa fa-angle-down kie-object-list__expander" data-field="faAngleRight"></span>
-                                        <span class="kie-object-list__field-value" data-field="propertyTitle">visitedcities</span>
-                                    </li>
-                                </ul>
+                                <div class="tab-pane active" data-field="createContainer" id="kie-ObjectListItem1" aria-labelledby="#kie-ObjectListTab1">
+                                    <ul class="list-group list-group kie-object-lis" data-field="elementsContainer">
+                                        <li class="list-group-item" style="list-style-type: none;">
+                                            <span class="fa fa-angle-down kie-object-list__expander" data-field="faAngleRight"></span>
+                                            <span class="kie-object-list__field-value" data-field="propertyTitle"></span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div data-field="defineContainer">
+                                    <textarea></textarea>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="kie-object-list__separator" data-field="objectSeparator">
+            <div class="modal-body" data-field="addItemButtonContainer">
                 <button class="btn btn-link" data-field="addItemButton">
                     <span class="fa fa-plus"></span> Add new item
                 </button>
             </div>
             <div class="modal-footer">
-
                 <button type="button" class="btn btn-default" data-dismiss="modal" data-field="cancelButton">Cancel</button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal" data-field="removeButton">Remove</button>
                 <button type="button" class="btn btn-primary" data-dismiss="modal" data-field="saveButton">Save</button>

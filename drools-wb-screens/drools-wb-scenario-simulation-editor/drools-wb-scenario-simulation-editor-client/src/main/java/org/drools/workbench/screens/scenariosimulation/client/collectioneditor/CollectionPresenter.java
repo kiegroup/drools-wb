@@ -22,7 +22,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.inject.Inject;
 
 import com.google.gwt.dom.client.LIElement;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
@@ -204,12 +203,11 @@ public class CollectionPresenter implements CollectionView.Presenter {
 
     protected void commonInit(String key, CollectionView collectionView) {
         this.collectionView = collectionView;
-        String propertyName = key.substring(key.lastIndexOf("#") + 1);
+        this.collectionView.init();
+        String propertyName = key.substring(key.lastIndexOf('#') + 1);
         this.collectionView.getEditorTitle().setInnerText(key);
         this.collectionView.getPropertyTitle().setInnerText(propertyName);
-        objectSeparatorLI = collectionView.getObjectSeparator();
-        objectSeparatorLI.addClassName("kie-object-list");
-        objectSeparatorLI.getStyle().setPadding(5, Style.Unit.PX);
+
     }
 
     protected void populateList(JSONValue jsonValue) {
@@ -315,19 +313,18 @@ public class CollectionPresenter implements CollectionView.Presenter {
     protected Map<String, Map<String, String>> getExpandablePropertiesValues(JSONObject jsonObject) {
         Map<String, Map<String, String>> toReturn = new HashMap<>();
         jsonObject.keySet().forEach(propertyName -> {
-                                        final JSONValue jsonValue = jsonObject.get(propertyName);
-                                        if (jsonValue.isObject() != null) {
-                                            final Map<String, String> simplePropertiesMap = getSimplePropertiesMap(jsonValue.isObject());
-                                            toReturn.put(propertyName, simplePropertiesMap);
-                                        }
-                                    });
+            final JSONValue jsonValue = jsonObject.get(propertyName);
+            if (jsonValue.isObject() != null) {
+                toReturn.put(propertyName, getSimplePropertiesMap(jsonValue.isObject()));
+            }
+        });
         return toReturn;
     }
 
     /**
      * @return
      */
-    protected String getMapValue() throws IllegalStateException {
+    protected String getMapValue() {
         Map<Map<String, String>, Map<String, String>> itemsProperties = mapElementPresenter.getItemsProperties();
         JSONObject toReturnModel = new JSONObject();
         itemsProperties.forEach((keyPropertiesValues, valuePropertiesMap) -> {
