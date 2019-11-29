@@ -42,6 +42,8 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
 
+import static org.drools.scenariosimulation.api.utils.ConstantsHolder.VALUE;
+
 /**
  * Abstract class to provide common methods to be used by actual implementations.
  */
@@ -59,7 +61,7 @@ public abstract class AbstractDataManagementStrategy implements DataManagementSt
         String key = simpleClass;
         Map<String, String> simpleProperties = new HashMap<>();
         String fullName = canonicalName;
-        simpleProperties.put("value", fullName);
+        simpleProperties.put(VALUE, fullName);
         String packageName = fullName.substring(0, fullName.lastIndexOf('.'));
         FactModelTree toReturn = new FactModelTree(key, packageName, simpleProperties, new HashMap<>());
         toReturn.setSimple(true);
@@ -115,7 +117,7 @@ public abstract class AbstractDataManagementStrategy implements DataManagementSt
                                                     .map(ExpressionElement::getStep)
                                                     .collect(Collectors.toList());
                                             if (propertyNameElements.isEmpty()) {
-                                                propertyNameElements.add("value");
+                                                propertyNameElements.add(VALUE);
                                             }
                                             return Collections.unmodifiableList(propertyNameElements);
                                         })
