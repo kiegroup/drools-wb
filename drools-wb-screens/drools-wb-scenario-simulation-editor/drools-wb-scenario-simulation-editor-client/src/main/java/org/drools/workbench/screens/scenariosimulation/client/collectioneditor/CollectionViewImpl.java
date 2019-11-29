@@ -282,8 +282,8 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
         clickEvent.stopPropagation();
     }
 
-    @EventHandler("addButtonContainer")
-    public void onAddButtonContainerClick(ClickEvent clickEvent) {
+    @EventHandler("addItemButtonContainer")
+    public void onAddItemButtonContainerClick(ClickEvent clickEvent) {
         clickEvent.stopPropagation();
     }
 
