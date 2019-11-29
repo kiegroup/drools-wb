@@ -21,6 +21,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import com.google.gwt.core.client.GWT;
+import org.jboss.errai.bus.client.api.messaging.Message;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
@@ -33,7 +34,7 @@ import org.uberfire.backend.vfs.Path;
 public interface ScenarioSimulationAssetsDropdownProvider extends KieAssetsDropdownItemsProvider {
 
 
-    void getItems(final RemoteCallback<List<Path>> callback, final ErrorCallback<String> errorCallback);
+    void getItems(final RemoteCallback<List<Path>> callback, final ErrorCallback<Message> errorCallback);
 
     @Override
     default void getItems(Consumer<List<KieAssetsDropdownItem>> assetListConsumer) {
@@ -43,7 +44,7 @@ public interface ScenarioSimulationAssetsDropdownProvider extends KieAssetsDropd
                     .collect(Collectors.toList());
             assetListConsumer.accept(toAccept);
         }, (message, throwable) -> {
-            GWT.log(message, throwable);
+            GWT.log(message.getCommandType() + " " + message.toString(), throwable);
             return false;
         });
     }

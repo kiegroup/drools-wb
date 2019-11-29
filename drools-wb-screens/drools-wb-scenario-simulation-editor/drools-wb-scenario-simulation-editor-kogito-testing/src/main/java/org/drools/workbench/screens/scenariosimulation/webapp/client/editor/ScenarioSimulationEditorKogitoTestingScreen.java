@@ -32,6 +32,7 @@ import org.drools.workbench.screens.scenariosimulation.webapp.client.popup.LoadS
 import org.drools.workbench.screens.scenariosimulation.webapp.client.popup.NewScesimPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds.ScesimFilesProvider;
 import org.gwtbootstrap3.client.ui.Popover;
+import org.jboss.errai.common.client.api.ErrorCallback;
 import org.kie.workbench.common.kogito.client.editor.MultiPageEditorContainerView;
 import org.kie.workbench.common.kogito.webapp.base.client.editor.KogitoScreen;
 import org.kie.workbench.common.kogito.webapp.base.client.workarounds.TestingVFSService;
@@ -44,13 +45,13 @@ import org.uberfire.client.annotations.WorkbenchPartTitleDecoration;
 import org.uberfire.client.annotations.WorkbenchPartView;
 import org.uberfire.client.annotations.WorkbenchScreen;
 import org.uberfire.client.mvp.PlaceManager;
+import org.uberfire.client.promise.Promises;
 import org.uberfire.commons.uuid.UUID;
 import org.uberfire.lifecycle.OnMayClose;
 import org.uberfire.lifecycle.OnStartup;
 import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.mvp.impl.DefaultPlaceRequest;
-import org.uberfire.util.URIUtil;
 import org.uberfire.workbench.model.menu.Menus;
 
 import static org.drools.workbench.screens.scenariosimulation.webapp.client.editor.ScenarioSimulationEditorKogitoTestingScreen.IDENTIFIER;
@@ -87,6 +88,9 @@ public class ScenarioSimulationEditorKogitoTestingScreen implements KogitoScreen
 
     @Inject
     private TestingVFSService testingVFSService;
+
+    @Inject
+    private Promises promises;
 
     @Override
     public PlaceRequest getPlaceRequest() {
@@ -140,15 +144,10 @@ public class ScenarioSimulationEditorKogitoTestingScreen implements KogitoScreen
             }
             String savedFileName = fileName.trim() + ".scesim";
             String content = scesimFilesProvider.getScesimFile("newScesimRule");
-            final Path path = PathFactory.newPath(savedFileName, BASE_SCESIM_URI + URIUtil.encode(savedFileName));
-            testingVFSService.saveFile(path, content,
-                                       item ->  new Popover("SUCCESS", "Saved " + item).show(),
-                                       (message, throwable) -> {
-                                           GWT.log("Error " + message.toString(), throwable);
-                                           new Popover("ERROR", message.toString()).show();
-                                           return false;
-                                       });
+            final Path path = PathFactory.newPath(fileName, BASE_SCESIM_URI + savedFileName);
+            saveFile(path, content);
             scenarioSimulationEditorKogitoWrapper.setContent(content);
+            scenarioSimulationEditorKogitoWrapper.gotoPath(path);
             newScesimPopupPresenter.hide();
         };
         newScesimPopupPresenter.show("Choose SCESIM type", createCommand);
@@ -156,8 +155,13 @@ public class ScenarioSimulationEditorKogitoTestingScreen implements KogitoScreen
 
     protected void loadFile() {
         Command loadCommand = () -> {
-            String fileName = loadScesimPopupPresenter.getSelectedPath();
-            scenarioSimulationEditorKogitoWrapper.setContent(scesimFilesProvider.getScesimFile(fileName));
+            String fullUri = loadScesimPopupPresenter.getSelectedPath();
+            String fileName = fullUri.substring(fullUri.lastIndexOf('/') + 1);
+            final Path path = PathFactory.newPath(fileName, fullUri);
+            testingVFSService.loadFile(path, content -> {
+                scenarioSimulationEditorKogitoWrapper.setContent(content);
+                scenarioSimulationEditorKogitoWrapper.gotoPath(path);
+            }, getErrorCallback("Failed to load"));
             loadScesimPopupPresenter.hide();
         };
         loadScesimPopupPresenter.show("Choose SCESIM", loadCommand);
@@ -167,13 +171,8 @@ public class ScenarioSimulationEditorKogitoTestingScreen implements KogitoScreen
         Command okImportCommand = () -> {
             String fileName = UUID.uuid() + ".dmn";
             String content = fileUploadPopupPresenter.getFileContents();
-            final Path path = PathFactory.newPath(fileName, BASE_DMN_URI + URIUtil.encode(fileName));
-            testingVFSService.saveFile(path, content,
-                                       item -> GWT.log("Saved " + item),
-                                       (message, throwable) -> {
-                                           GWT.log("Error " + message.toString(), throwable);
-                                           return false;
-                                       });
+            final Path path = PathFactory.newPath(fileName, BASE_DMN_URI + fileName);
+            saveFile(path, content);
         };
         fileUploadPopupPresenter.show(Collections.singletonList("dmn"),
                                       "Choose a DMN file",
@@ -181,10 +180,26 @@ public class ScenarioSimulationEditorKogitoTestingScreen implements KogitoScreen
                                       okImportCommand);
     }
 
+    protected void saveFile(final Path path, final String content) {
+        testingVFSService.saveFile(path, content,
+                                   item -> GWT.log("Saved " + item),
+                                   getErrorCallback("Failed to save"));
+    }
+
     protected void addTestingMenus(FileMenuBuilder fileMenuBuilder) {
         fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("New", this::newFile));
         fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("Load", this::loadFile));
-        fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("Save", () -> scenarioSimulationEditorKogitoWrapper.getContent()));
+        fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("Save", () -> scenarioSimulationEditorKogitoWrapper.getContent().then(xml -> {
+            saveFile(scenarioSimulationEditorKogitoWrapper.getCurrentPath(), xml);
+            return promises.resolve();
+        })));
         fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("Import DMN", this::importDMN));
+    }
+
+    protected ErrorCallback<String> getErrorCallback(String prependMessage) {
+        return (message, throwable) -> {
+            GWT.log("Error " + message, throwable);
+            return false;
+        };
     }
 }

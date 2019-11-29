@@ -425,9 +425,9 @@ public class ScenarioSimulationEditorPresenter {
         redoMenuItem.setEnabled(false);
     }
 
-    public Supplier<ScenarioSimulationModel> getContentSupplier() {
-        return () -> model;
-    }
+//    public Supplier<ScenarioSimulationModel> getContentSupplier() {
+//        return () -> model;
+//    }
 
     public void addCommonActions(final FileMenuBuilder fileMenuBuilder, MenuItem versionMenuItem, MenuItem alertsButtonMenuItem) {
         fileMenuBuilder

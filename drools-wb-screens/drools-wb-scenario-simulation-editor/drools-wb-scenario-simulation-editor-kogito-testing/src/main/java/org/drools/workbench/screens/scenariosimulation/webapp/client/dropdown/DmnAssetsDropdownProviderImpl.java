@@ -20,10 +20,10 @@ import java.util.List;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
+import org.jboss.errai.bus.client.api.messaging.Message;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.kie.workbench.common.kogito.webapp.base.client.workarounds.TestingVFSService;
-import org.uberfire.backend.vfs.DirectoryStream;
 import org.uberfire.backend.vfs.Path;
 
 import static org.drools.workbench.screens.scenariosimulation.webapp.client.editor.ScenarioSimulationEditorKogitoTestingScreen.DMN_PATH;
@@ -31,13 +31,13 @@ import static org.drools.workbench.screens.scenariosimulation.webapp.client.edit
 @Dependent
 public class DmnAssetsDropdownProviderImpl implements ScenarioSimulationAssetsDropdownProvider {
 
-    private static final DirectoryStream.Filter<Path> FILTER = entry -> entry.getFileName().endsWith(".dmn");
+    private static final String FILE_SUFFIX = "dmn";
 
     @Inject
     private TestingVFSService testingVFSService;
 
     @Override
-    public void getItems(final RemoteCallback<List<Path>> callback, final ErrorCallback<String> errorCallback) {
-        testingVFSService.getItemsByPath(DMN_PATH, FILTER, callback, errorCallback);
+    public void getItems(final RemoteCallback<List<Path>> callback, final ErrorCallback<Message> errorCallback) {
+        testingVFSService.getItemsByPath(DMN_PATH, FILE_SUFFIX, callback, errorCallback);
     }
 }

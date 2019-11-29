@@ -163,7 +163,6 @@
             <configuration>
               <target>
                 <copy file="${project.build.directory}/generated-sources/xjc/SCESIM.js" tofile="${js.destination}/SCESIM.js"/>
-                <!--                <delete dir="${project.build.directory}/generated-sources"/>-->
               </target>
             </configuration>
             <goals>

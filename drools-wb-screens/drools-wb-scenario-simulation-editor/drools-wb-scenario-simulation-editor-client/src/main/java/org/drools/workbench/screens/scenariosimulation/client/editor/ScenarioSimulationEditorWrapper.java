@@ -26,7 +26,9 @@ import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
 import org.drools.scenariosimulation.api.model.ScesimModelDescriptor;
 import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationHasBusyIndicatorDefaultErrorCallback;
+import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridWidget;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
 import org.jboss.errai.common.client.api.ErrorCallback;
@@ -58,4 +60,9 @@ public interface ScenarioSimulationEditorWrapper {
     void selectSimulationTab();
 
     void selectBackgroundTab();
+
+    default void synchronizeColumnsDimension(ScenarioGridPanel simulationPanel, ScenarioGridPanel backgroundPanel) {
+        simulationPanel.synchronizeFactMappingsWidths();
+        backgroundPanel.synchronizeFactMappingsWidths();
+    }
 }

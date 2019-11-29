@@ -577,10 +577,6 @@
       </exclusions>
     </dependency>
     <!-- END MARSHALLING -->
-    <dependency>
-      <groupId>org.kie.workbench</groupId>
-      <artifactId>kie-wb-common-kogito-webapp-base</artifactId>
-    </dependency>
 
   </dependencies>
 

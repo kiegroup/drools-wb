@@ -89,7 +89,6 @@ MainJs = {
     marshall: function (value, defaultNamespace, callback) {
         // Create Jsonix context
         var namespaces = {};
-        namespaces[defaultNamespace] = "";
         var context = new Jsonix.Context(this.mappings, {
             namespacePrefixes: namespaces
         });
