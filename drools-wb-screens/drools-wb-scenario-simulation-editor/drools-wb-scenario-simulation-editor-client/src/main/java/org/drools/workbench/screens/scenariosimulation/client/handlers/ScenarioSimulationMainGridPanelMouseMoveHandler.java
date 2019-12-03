@@ -21,7 +21,6 @@ import javax.enterprise.context.Dependent;
 
 import com.ait.lienzo.client.core.event.NodeMouseMoveEvent;
 import com.ait.lienzo.client.core.types.Point2D;
-import com.google.gwt.core.client.GWT;
 import org.drools.scenariosimulation.api.model.AbstractScesimData;
 import org.drools.scenariosimulation.api.model.AbstractScesimModel;
 import org.drools.scenariosimulation.api.model.FactMapping;
@@ -120,35 +119,21 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandler extends AbstractSce
             xPosition = (int) cellXYMiddleCoordinates.getX() - xMiddleWidth;
             position = PopoverView.Position.LEFT;
         }
-        /* Popover can't be to the right nor to the left (single column); determines if the popover should be drawn BELOW or ABOVE the cell */
+        /* Popover can't be to the right nor to the left (single column); put it ABOVE the cell */
         if (xPosition <= scenarioGrid.getLayer().getElement().getAbsoluteLeft()) {
             xPosition = (int) cellXYMiddleCoordinates.getX();
-            yPosition = (int) cellXYMiddleCoordinates.getY() + cellHeight/2;
-            position = PopoverView.Position.BOTTOM;
-            setupPopupPresenter(toManage, uiRowIndex, uiColumnIndex, xPosition, yPosition, position);
-        }
-        /* Popover can't be BELOW, put it ABOVE the cell */
-        final int actualHeight = errorReportPopupPresenter.getActualHeight();
-        final int absoluteBottom = scenarioGrid.getLayer().getElement().getAbsoluteBottom();
-        GWT.log("yPosition " + yPosition + " actualHeight " + actualHeight + " absoluteBottom " + absoluteBottom);
-        if ((yPosition + actualHeight) >= absoluteBottom) {
-            xPosition = (int) cellXYMiddleCoordinates.getX();
-            yPosition = (int) cellXYMiddleCoordinates.getY() - cellHeight/2 - actualHeight;
+            yPosition = (int) cellXYMiddleCoordinates.getY() - cellHeight/2;
             position = PopoverView.Position.TOP;
-            GWT.log(" yPosition " + yPosition + " position " + position);
         }
         setupPopupPresenter(toManage, uiRowIndex, uiColumnIndex, xPosition, yPosition, position);
         errorReportPopupPresenter.show();
     }
 
     protected void setupPopupPresenter(FactMappingValue toManage, Integer uiRowIndex, Integer uiColumnIndex, int xPosition, int yPosition, PopoverView.Position position) {
-        GWT.log("setupPopupPresenter xPosition " + xPosition + " yPosition " + yPosition + " position " + position);
         int scrollX = scenarioGridPanel.getScrollPanel().getElement().getScrollLeft();
         xPosition = xPosition - scrollX;
-        GWT.log("xPosition " + xPosition + " scrollX " + scrollX);
         int scrollY = scenarioGridPanel.getScrollPanel().getElement().getScrollTop();
-        //yPosition = yPosition - scrollY;
-        GWT.log("yPosition " + yPosition + " scrollY " + scrollY);
+        yPosition = yPosition - scrollY;
         /* Parameters for the error message */
         final Object expectedValue = toManage.getRawValue();
         final Object errorValue = toManage.getErrorValue();

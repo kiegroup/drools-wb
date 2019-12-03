@@ -55,7 +55,15 @@ public class ErrorReportPopoverPresenterTest {
     }
 
     @Test
-    public void setup() {
+    public void init() {
+        errorReportPopupPresenter.init();
+        verify(errorReportPopoverViewMock, times(1)).init();
+    }
+
+
+
+    @Test
+    public void setupWithCommand() {
         errorReportPopupPresenter.setup(ERROR_TITLE_TEXT, ERROR_CONTENT_TEXT, KEEP_TEXT, APPLY_TEXT, applyCommandMock, MX, MY, PopoverView.Position.RIGHT);
         verify(errorReportPopoverViewMock, times(1)).setup(eq(ERROR_TITLE_TEXT),
                                                            eq(ERROR_CONTENT_TEXT),
@@ -68,8 +76,37 @@ public class ErrorReportPopoverPresenterTest {
     }
 
     @Test
+    public void setupWithoutCommand() {
+        errorReportPopupPresenter.setup(ERROR_TITLE_TEXT, ERROR_CONTENT_TEXT, KEEP_TEXT, MX, MY, PopoverView.Position.RIGHT);
+        verify(errorReportPopoverViewMock, times(1)).setup(eq(ERROR_TITLE_TEXT),
+                                                           eq(ERROR_CONTENT_TEXT),
+                                                           eq(KEEP_TEXT),
+                                                           eq(MX),
+                                                           eq(MY),
+                                                           eq(PopoverView.Position.RIGHT));
+    }
+
+    @Test
+    public void show() {
+        errorReportPopupPresenter.show();
+        verify(errorReportPopoverViewMock, times(1)).show();
+    }
+
+    @Test
     public void hide() {
         errorReportPopupPresenter.hide();
         verify(errorReportPopoverViewMock, times(1)).hide();
+    }
+
+    @Test
+    public void isShown() {
+        errorReportPopupPresenter.isShown();
+        verify(errorReportPopoverViewMock, times(1)).isShown();
+    }
+
+    @Test
+    public void getActualHeight() {
+        errorReportPopupPresenter.getActualHeight();
+        verify(errorReportPopoverViewMock, times(1)).getActualHeight();
     }
 }
