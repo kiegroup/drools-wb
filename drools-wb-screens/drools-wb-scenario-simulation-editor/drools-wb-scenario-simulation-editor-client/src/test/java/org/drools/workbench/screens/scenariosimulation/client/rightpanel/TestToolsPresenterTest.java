@@ -234,7 +234,6 @@ public class TestToolsPresenterTest extends AbstractTestToolsTest {
         testToolsPresenterSpy.setGridWidget(GridWidget.BACKGROUND);
         verify(testToolsPresenterSpy, times(1)).onDisableEditorTab();
         verify(testToolsPresenterSpy, times(1)).hideInstances();
-        verify(testToolsPresenterSpy, never()).showInstanceListContainerSeparator(eq(true));
     }
 
     @Test

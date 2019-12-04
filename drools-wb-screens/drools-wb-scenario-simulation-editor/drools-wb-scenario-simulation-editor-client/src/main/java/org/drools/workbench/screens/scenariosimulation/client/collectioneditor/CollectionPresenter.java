@@ -35,6 +35,8 @@ import org.drools.workbench.screens.scenariosimulation.client.popup.ScenarioConf
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 
+import static org.drools.scenariosimulation.api.utils.ConstantsHolder.VALUE;
+
 public class CollectionPresenter implements CollectionView.Presenter {
 
     @Inject
@@ -227,7 +229,7 @@ public class CollectionPresenter implements CollectionView.Presenter {
             Map<String, String> valuePropertiesValues = new HashMap<>();
             final JSONObject jsonObjectKey = getJSONObject(key);
             if (jsonObjectKey == null) {
-                keyPropertiesValues.put("value", key);
+                keyPropertiesValues.put(VALUE, key);
             } else {
                 jsonObjectKey.keySet().forEach(propertyName ->
                                                        keyPropertiesValues.put(propertyName, jsonObjectKey.get(propertyName).isString().stringValue()));
@@ -236,7 +238,7 @@ public class CollectionPresenter implements CollectionView.Presenter {
             if (jsonObjectValue != null) {
                 jsonObjectValue.keySet().forEach(propertyName -> valuePropertiesValues.put(propertyName, jsonObjectValue.get(propertyName).isString().stringValue()));
             } else {
-                valuePropertiesValues.put("value", jsValueObject.get(key).toString());
+                valuePropertiesValues.put(VALUE, jsValueObject.get(key).toString());
             }
             addMapItem(keyPropertiesValues, valuePropertiesValues);
         });
@@ -289,23 +291,21 @@ public class CollectionPresenter implements CollectionView.Presenter {
     }
 
     /**
-     *
      * @param jsonObject
      * @return a <code>Map</code> with <b>propertyName/propertyValue</b>
      */
     protected Map<String, String> getSimplePropertiesMap(JSONObject jsonObject) {
         Map<String, String> toReturn = new HashMap<>();
         jsonObject.keySet().forEach(propertyName -> {
-                                        final JSONValue jsonValue = jsonObject.get(propertyName);
-                                        if (jsonValue.isString() != null) {
-                                            toReturn.put(propertyName, jsonValue.isString().stringValue());
-                                        }
-                                    });
+            final JSONValue jsonValue = jsonObject.get(propertyName);
+            if (jsonValue.isString() != null) {
+                toReturn.put(propertyName, jsonValue.isString().stringValue());
+            }
+        });
         return toReturn;
     }
 
     /**
-     *
      * @param jsonObject
      * @return a <code>Map</code> where the <b>key</b> is the name of the complex property, and the value is a a <code>Map</code> with
      * the nested <b>propertyName/propertyValue</b>
