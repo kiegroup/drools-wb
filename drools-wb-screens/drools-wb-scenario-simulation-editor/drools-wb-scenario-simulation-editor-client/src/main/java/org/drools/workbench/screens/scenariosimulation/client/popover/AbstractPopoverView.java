@@ -71,10 +71,6 @@ public abstract class AbstractPopoverView implements PopoverView {
         options.setHtml(true);
     }
 
-    public void init() {
-        // no op
-    }
-
     @Override
     public void setup(final Optional<String> editorTitle, final int mx, final int my, final Position position) {
         if (isShown()) {

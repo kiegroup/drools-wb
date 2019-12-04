@@ -55,14 +55,6 @@ public class ErrorReportPopoverPresenterTest {
     }
 
     @Test
-    public void init() {
-        errorReportPopupPresenter.init();
-        verify(errorReportPopoverViewMock, times(1)).init();
-    }
-
-
-
-    @Test
     public void setupWithCommand() {
         errorReportPopupPresenter.setup(ERROR_TITLE_TEXT, ERROR_CONTENT_TEXT, KEEP_TEXT, APPLY_TEXT, applyCommandMock, MX, MY, PopoverView.Position.RIGHT);
         verify(errorReportPopoverViewMock, times(1)).setup(eq(ERROR_TITLE_TEXT),

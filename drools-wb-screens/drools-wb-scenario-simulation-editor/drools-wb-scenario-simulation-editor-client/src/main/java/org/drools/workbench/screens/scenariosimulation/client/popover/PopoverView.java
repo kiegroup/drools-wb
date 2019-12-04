@@ -28,11 +28,6 @@ public interface PopoverView extends org.jboss.errai.ui.client.local.api.IsEleme
     }
 
     /**
-     * Method to invoke to correctly initialize elements inside the view
-     */
-    void init();
-
-    /**
      * Method to set/update status of the elements <b>before</b> actually showing the view.
      * Implemented to decouple this setup from the actual <b>show</b>, to be able to eventually add other modifications
      * (e.g. change vertical position based on the actual height, that is available only <b>after</b> this method has been invoked)

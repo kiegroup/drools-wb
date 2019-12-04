@@ -16,7 +16,6 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.popover;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -27,11 +26,6 @@ public class ErrorReportPopoverPresenter implements ErrorReportPopover.Presenter
 
     @Inject
     protected ErrorReportPopoverView errorReportPopupView;
-
-    @PostConstruct
-    public void init() {
-        errorReportPopupView.init();
-    }
 
     @Override
     public void setup(final String errorTitleText,
