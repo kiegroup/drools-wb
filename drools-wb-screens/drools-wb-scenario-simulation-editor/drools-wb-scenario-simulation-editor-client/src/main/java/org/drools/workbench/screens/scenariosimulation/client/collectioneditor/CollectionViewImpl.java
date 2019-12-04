@@ -23,6 +23,7 @@ import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.HeadingElement;
+import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.UListElement;
@@ -78,6 +79,12 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     @DataField("addItemButtonContainer")
     protected DivElement addItemButtonContainer = Document.get().createDivElement();
 
+    @DataField("createCollectionRadio")
+    protected InputElement createCollectionRadio = Document.get().createRadioInputElement("collectionRadio");
+
+    @DataField("defineCollectionRadio")
+    protected InputElement defineCollectionRadio = Document.get().createRadioInputElement("collectionRadio");
+
     @DataField("cancelButton")
     protected ButtonElement cancelButton = Document.get().createPushButtonElement();
 
@@ -99,12 +106,11 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     @DataField("propertyTitle")
     protected SpanElement propertyTitle = Document.get().createSpanElement();
 
-    @DataField("defineContainer")
-    protected DivElement defineContainer = Document.get().createDivElement();
+    @DataField("defineCollectionContainer")
+    protected DivElement defineCollectionContainer = Document.get().createDivElement();
 
-    @DataField("createContainer")
-    protected DivElement createContainer = Document.get().createDivElement();
-
+    @DataField("createCollectionContainer")
+    protected DivElement createCollectionContainer = Document.get().createDivElement();
 
     /**
      * Flag to indicate if this <code>CollectionEditorViewImpl</code> will manage a <code>List</code> or a <code>Map</code>.
@@ -173,7 +179,7 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
 
     @Override
     public void init() {
-        defineContainer.getStyle().setDisplay(Style.Display.NONE);
+        defineCollectionContainer.getStyle().setDisplay(Style.Display.NONE);
     }
 
     @Override
@@ -219,6 +225,20 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     @Override
     public ButtonElement getSaveButton() {
         return saveButton;
+    }
+
+    @EventHandler("createCollectionRadio")
+    public void onCreateCollectionClick(ClickEvent clickEvent) {
+        showCreateCollectionContainer(true);
+        showDefineCollectionContainer(false);
+        clickEvent.stopPropagation();
+    }
+
+    @EventHandler("defineCollectionRadio")
+    public void onDefineCollectionClick(ClickEvent clickEvent) {
+        showCreateCollectionContainer(false);
+        showDefineCollectionContainer(true);
+        clickEvent.stopPropagation();
     }
 
     @EventHandler("collectionEditor")
@@ -320,4 +340,21 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     protected void toggleRowExpansion(boolean toExpand) {
         CollectionEditorUtils.toggleRowExpansion(faAngleRight, toExpand);
     }
+
+    public void showCreateCollectionContainer(boolean show) {
+        if (show) {
+            createCollectionContainer.getStyle().setDisplay(Style.Display.BLOCK);
+        } else {
+            createCollectionContainer.getStyle().setDisplay(Style.Display.NONE);
+        }
+    }
+
+    public void showDefineCollectionContainer(boolean show) {
+        if (show) {
+            defineCollectionContainer.getStyle().setDisplay(Style.Display.BLOCK);
+        } else {
+            defineCollectionContainer.getStyle().setDisplay(Style.Display.NONE);
+        }
+    }
+
 }

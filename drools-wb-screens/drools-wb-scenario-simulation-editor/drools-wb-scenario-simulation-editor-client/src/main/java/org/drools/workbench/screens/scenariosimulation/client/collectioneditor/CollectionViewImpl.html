@@ -14,13 +14,13 @@
                             <label>Define the list values for this data object</label>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" data-field="guidedRadio" name="optionsRadios" id="kie-radio-option-1" value="option1" checked="">
+                                    <input type="radio" data-field="createCollectionRadio" name="collectionRadio" id="kie-radio-option-1" value="option1" checked="">
                                     <strong>Create list</strong> - create a list using a guided form
                                 </label>
                             </div>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" data-field="expressionRadio" name="optionsRadios" id="kie-radio-option-2" value="option2">
+                                    <input type="radio" data-field="defineCollectionRadio" name="collectionRadio" id="kie-radio-option-2" value="option2">
                                     <strong>Define List</strong> - define a list using an expression
                                 </label>
                             </div>
@@ -33,7 +33,7 @@
                             <!-- Data objects -->
                             <div class="tab-content">
                             <!-- first right side panel -->
-                                <div class="tab-pane active" data-field="createContainer" id="kie-ObjectListItem1" aria-labelledby="#kie-ObjectListTab1">
+                                <div class="tab-pane active" data-field="createCollectionContainer" id="kie-ObjectListItem1" aria-labelledby="#kie-ObjectListTab1">
                                     <ul class="list-group list-group kie-object-lis" data-field="elementsContainer">
                                         <li class="list-group-item" style="list-style-type: none;">
                                             <span class="fa fa-angle-down kie-object-list__expander" data-field="faAngleRight"></span>
@@ -41,7 +41,7 @@
                                         </li>
                                     </ul>
                                 </div>
-                                <div data-field="defineContainer">
+                                <div data-field="defineCollectionContainer">
                                     <textarea></textarea>
                                 </div>
                             </div>
