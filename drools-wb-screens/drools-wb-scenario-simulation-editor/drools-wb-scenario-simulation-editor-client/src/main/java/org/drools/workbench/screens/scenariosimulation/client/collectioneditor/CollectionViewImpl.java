@@ -24,6 +24,7 @@ import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.InputElement;
+import com.google.gwt.dom.client.LabelElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.UListElement;
@@ -37,6 +38,7 @@ import org.drools.workbench.screens.scenariosimulation.client.handlers.CloseComp
 import org.drools.workbench.screens.scenariosimulation.client.handlers.HasCloseCompositeHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.HasSaveEditorHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.SaveEditorEventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
@@ -112,6 +114,26 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     @DataField("createCollectionContainer")
     protected DivElement createCollectionContainer = Document.get().createDivElement();
 
+    @DataField("addItemButtonLabel")
+    protected SpanElement addItemButtonLabel = Document.get().createSpanElement();
+
+    @DataField("createLabel")
+    protected LabelElement createLabel = Document.get().createLabelElement();
+
+    @DataField("collectionCreationModeLabel")
+    protected LabelElement collectionCreationModeLabel = Document.get().createLabelElement();
+
+    @DataField("collectionCreationCreateLabel")
+    protected LabelElement collectionCreationCreateLabel = Document.get().createLabelElement();
+
+    @DataField("collectionCreationCreateSpan")
+    protected SpanElement collectionCreationCreateSpan = Document.get().createSpanElement();
+
+    @DataField("collectionCreationDefineLabel")
+    protected LabelElement collectionCreationDefineLabel = Document.get().createLabelElement();
+
+    @DataField("collectionCreationDefineSpan")
+    protected SpanElement collectionCreationDefineSpan = Document.get().createSpanElement();
     /**
      * Flag to indicate if this <code>CollectionEditorViewImpl</code> will manage a <code>List</code> or a <code>Map</code>.
      */
@@ -130,15 +152,6 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     }
 
     /**
-     * @param listWidget set to <code>true</code> if the current instance will manage a <code>List</code>,
-     * <code>false</code> for a <code>Map</code>.
-     */
-    @Override
-    public void setListWidget(boolean listWidget) {
-        this.listWidget = listWidget;
-    }
-
-    /**
      * Set the <b>name</b> of the property and the <code>Map</code> to be used to create the skeleton of the current <code>CollectionViewImpl</code> editor
      * showing a <b>List</b> of elements
      * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
@@ -147,6 +160,14 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
      */
     @Override
     public void initListStructure(String key, Map<String, String> simplePropertiesMap, Map<String, Map<String, String>> expandablePropertiesMap) {
+        commonInit();
+        listWidget = true;
+        createLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.createLabelList());
+        collectionCreationModeLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.collectionListCreation());
+        collectionCreationCreateLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.createLabelList());
+        collectionCreationCreateSpan.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.createLabelListDescription());
+        collectionCreationDefineLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.defineLabelList());
+        collectionCreationDefineSpan.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.defineLabelListDescription());
         presenter.initListStructure(key, simplePropertiesMap, expandablePropertiesMap, this);
     }
 
@@ -159,7 +180,22 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
      */
     @Override
     public void initMapStructure(String key, Map<String, String> keyPropertyMap, Map<String, String> valuePropertyMap) {
+        commonInit();
+        listWidget = false;
+        createLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.createLabelMap());
+        collectionCreationModeLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.collectionMapCreation());
+        collectionCreationCreateLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.createLabelMap());
+        collectionCreationCreateSpan.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.createLabelMapDescription());
+        collectionCreationDefineLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.defineLabelMap());
+        collectionCreationDefineSpan.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.defineLabelMapDescription());
         presenter.initMapStructure(key, keyPropertyMap, valuePropertyMap, this);
+    }
+
+    protected void commonInit() {
+        saveButton.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.saveButton());
+        cancelButton.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.cancelButton());
+        removeButton.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.removeButton());
+        addItemButtonLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.collectionEditorAddNewItem());
     }
 
     @Override
@@ -231,6 +267,7 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     public void onCreateCollectionClick(ClickEvent clickEvent) {
         showCreateCollectionContainer(true);
         showDefineCollectionContainer(false);
+        addItemButtonContainer.getStyle().setDisplay(Style.Display.BLOCK);
         clickEvent.stopPropagation();
     }
 
@@ -238,6 +275,7 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     public void onDefineCollectionClick(ClickEvent clickEvent) {
         showCreateCollectionContainer(false);
         showDefineCollectionContainer(true);
+        addItemButtonContainer.getStyle().setDisplay(Style.Display.NONE);
         clickEvent.stopPropagation();
     }
 

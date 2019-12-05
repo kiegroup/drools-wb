@@ -118,7 +118,6 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
     }
 
     protected void manageList(CollectionViewImpl collectionEditorView, String key, String genericTypeName0) {
-        collectionEditorView.setListWidget(true);
         collectionEditorView.initListStructure(key, getSimplePropertiesMap(genericTypeName0), getExpandablePropertiesMap(genericTypeName0));
     }
 
@@ -126,7 +125,6 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
         if (isRule && !isSimpleJavaType(genericTypeName1)) {
             genericTypeName1 = getRuleComplexType(genericTypeName1);
         }
-        collectionEditorView.setListWidget(false);
         collectionEditorView.initMapStructure(key, getSimplePropertiesMap(genericTypeName0), getSimplePropertiesMap(genericTypeName1));
     }
 

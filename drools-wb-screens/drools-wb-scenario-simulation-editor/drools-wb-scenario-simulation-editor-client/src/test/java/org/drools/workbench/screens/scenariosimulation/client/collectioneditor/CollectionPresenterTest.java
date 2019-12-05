@@ -169,7 +169,6 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
         when(collectionViewMock.getElementsContainer()).thenReturn(elementsContainerMock);
         when(collectionViewMock.getEditorTitle()).thenReturn(editorTitleMock);
         when(collectionViewMock.getPropertyTitle()).thenReturn(propertyTitleMock);
-        when(collectionViewMock.getObjectSeparator()).thenReturn(objectSeparatorLIMock);
         when(collectionViewMock.getAddItemButton()).thenReturn(addItemButtonMock);
         when(collectionViewMock.getCancelButton()).thenReturn(cancelButtonMock);
         when(collectionViewMock.getRemoveButton()).thenReturn(removeButtonMock);

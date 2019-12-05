@@ -11,17 +11,19 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="form-group col-xs-12">
-                            <label>Define the list values for this data object</label>
+                            <label data-field="collectionCreationModeLabel"></label>
                             <div class="radio">
                                 <label>
                                     <input type="radio" data-field="createCollectionRadio" name="collectionRadio" id="kie-radio-option-1" value="option1" checked="">
-                                    <strong>Create list</strong> - create a list using a guided form
+                                    <label data-field="collectionCreationCreateLabel"></label>
+                                    <span data-field="collectionCreationCreateSpan"></span>
                                 </label>
                             </div>
                             <div class="radio">
                                 <label>
                                     <input type="radio" data-field="defineCollectionRadio" name="collectionRadio" id="kie-radio-option-2" value="option2">
-                                    <strong>Define List</strong> - define a list using an expression
+                                    <label data-field="collectionCreationDefineLabel"></label>
+                                    <span data-field="collectionCreationDefineSpan"></span>
                                 </label>
                             </div>
                         </div>
@@ -29,7 +31,7 @@
                     <div class="row">
                         <!-- Data objects -->
                         <div class="col-xs-12 tab-content">
-                            <label>Create List</label>
+                            <label data-field="createLabel"></label>
                             <!-- Data objects -->
                             <div class="tab-content">
                             <!-- first right side panel -->
@@ -42,7 +44,7 @@
                                     </ul>
                                 </div>
                                 <div data-field="defineCollectionContainer">
-                                    <textarea></textarea>
+                                    <textarea rows="19" style="width: 100%;" ></textarea>
                                 </div>
                             </div>
                         </div>
@@ -51,13 +53,14 @@
             </div>
             <div class="modal-body" data-field="addItemButtonContainer">
                 <button class="btn btn-link" data-field="addItemButton">
-                    <span class="fa fa-plus"></span> Add new item
+                    <span class="fa fa-plus"></span>
+                    <span data-field="addItemButtonLabel"></span>
                 </button>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal" data-field="cancelButton">Cancel</button>
-                <button type="button" class="btn btn-danger" data-dismiss="modal" data-field="removeButton">Remove</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" data-field="saveButton">Save</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-field="cancelButton"></button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal" data-field="removeButton"></button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-field="saveButton"></button>
             </div>
         </div>
     </div>

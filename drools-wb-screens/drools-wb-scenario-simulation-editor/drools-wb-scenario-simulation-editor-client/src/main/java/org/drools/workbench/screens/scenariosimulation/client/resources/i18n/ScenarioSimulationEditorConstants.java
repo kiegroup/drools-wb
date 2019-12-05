@@ -357,4 +357,32 @@ public interface ScenarioSimulationEditorConstants
     String testToolObjectSelectionTooltip();
 
     String testToolClearSelection();
+
+    String saveButton();
+
+    String removeButton();
+
+    String cancelButton();
+
+    String collectionEditorAddNewItem();
+
+    String createLabelList();
+
+    String createLabelMap();
+
+    String collectionListCreation();
+
+    String collectionMapCreation();
+
+    String createLabelListDescription();
+
+    String defineLabelList();
+
+    String defineLabelMap();
+
+    String defineLabelListDescription();
+
+    String createLabelMapDescription();
+
+    String defineLabelMapDescription();
 }

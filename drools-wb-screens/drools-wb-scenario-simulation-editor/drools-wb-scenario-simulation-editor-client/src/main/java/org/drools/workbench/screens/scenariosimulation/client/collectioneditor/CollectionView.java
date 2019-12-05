@@ -134,12 +134,6 @@ public interface CollectionView {
     String getValue();
 
     /**
-     * @param listWidget set to <code>true</code> if the current instance will manage a <code>List</code>,
-     * <code>false</code> for a <code>Map</code>.
-     */
-    void setListWidget(boolean listWidget);
-
-    /**
      * Returns <code>true</code> if the current instance will manage a <code>List</code>,
      * <code>false</code> for a <code>Map</code>.
      * @return
