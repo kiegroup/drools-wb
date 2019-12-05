@@ -15,8 +15,11 @@
  */
 package org.drools.workbench.screens.scenariosimulation.kogito.client.fakes;
 
+import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
 import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
 import org.jboss.errai.bus.server.annotations.Remote;
+import org.jboss.errai.common.client.api.RemoteCallback;
+import org.uberfire.backend.vfs.Path;
 
 /**
  * Interface required because <b>runtime</b> and <b>testing</b> environments would
@@ -25,44 +28,14 @@ import org.jboss.errai.bus.server.annotations.Remote;
 @Remote
 public interface KogitoDMNTypeService extends DMNTypeService {
 
-//    private static final SortedMap<String, FactModelTree> VISIBLE_FACTS = new TreeMap<>();
-//    private static final SortedMap<String, FactModelTree> HIDDEN_FACTS = new TreeMap<>();
-//
-//    private static final Map<String, String> addressMap = new HashMap<String, String>() {
-//        {
-//            put("city", "java.lang.String");
-//            put("country", "java.lang.String");
-//        }
-//    };
-//
-//    private static final Map<String, String> personMap = new HashMap<String, String>() {
-//        {
-//            put("age", "java.lang.Integer");
-//            put("address", "java.util.List");
-//        }
-//    };
-//    private static final Map<String, List<String>> personGenericMap = new HashMap<String, List<String>>() {
-//        {
-//            put("address", Collections.singletonList("tPlace"));
-//        }
-//    };
-//
-//    static {
-//        VISIBLE_FACTS.put("person", getFactModelTree("tPerson", personMap, personGenericMap));
-//        HIDDEN_FACTS.put("address", getFactModelTree("tPlace", addressMap, new HashMap<>()));
-//    }
-//
-//    @Override
-//    public FactModelTuple retrieveFactModelTuple(Path path, String dmnPath) {
-//        return new FactModelTuple(VISIBLE_FACTS, HIDDEN_FACTS);
-//    }
-//
-//    @Override
-//    public void initializeNameAndNamespace(Settings settings, Path path, String dmnPath) {
-//
-//    }
-//
-//    private static FactModelTree getFactModelTree(String factName,  Map<String, String> simpleProperties, Map<String, List<String>> genericTypesMap) {
-//        return new FactModelTree(factName, "", simpleProperties, genericTypesMap);
-//    }
+
+    /**
+     * Retrieves a <code>FactModelTuple</code> representing the given <b>dmn</b> file
+     * @param path
+     * @param dmnPath
+     * @return
+     * @throws Exception
+     */
+    void retrieveFactModelTuple(Path path, String dmnPath, RemoteCallback<FactModelTuple> callback);
+
 }

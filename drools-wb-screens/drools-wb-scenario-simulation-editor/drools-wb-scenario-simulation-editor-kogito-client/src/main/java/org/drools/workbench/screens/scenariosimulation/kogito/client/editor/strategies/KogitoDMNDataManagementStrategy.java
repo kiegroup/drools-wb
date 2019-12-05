@@ -22,6 +22,7 @@ import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.fakes.KogitoDMNTypeService;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
+import org.jboss.errai.common.client.api.RemoteCallback;
 
 public class KogitoDMNDataManagementStrategy extends AbstractDMNDataManagementStrategy {
 
@@ -35,7 +36,25 @@ public class KogitoDMNDataManagementStrategy extends AbstractDMNDataManagementSt
     @Override
     protected void retrieveFactModelTuple(TestToolsView.Presenter testToolsPresenter, ScenarioSimulationContext context, GridWidget gridWidget, String dmnFilePath) {
         final FactModelTuple factMappingTuple = kogitoDmnTypeService.retrieveFactModelTuple(currentPath, dmnFilePath);
+        getSuccessCallback()
         getSuccessCallbackMethod(factMappingTuple, testToolsPresenter, context, gridWidget);
+    }
+
+
+    @Override
+    protected void retrieveFactModelTuple(final TestToolsView.Presenter testToolsPresenter,
+                                          final ScenarioSimulationContext context,
+                                          final GridWidget gridWidget,
+                                          String dmnFilePath) {
+        kogitoDmnTypeService.retrieveFactModelTuple(currentPath, dmnFilePath, new RemoteCallback<FactModelTuple>() {
+            @Override
+            public void callback(FactModelTuple response) {
+                kogitoDmnTypeService.call(getSuccessCallback(testToolsPresenter, context, gridWidget),
+                                          getErrorCallback())
+                        .retrieveFactModelTuple(currentPath, dmnFilePath);
+            }
+        });
+
     }
 
 }
