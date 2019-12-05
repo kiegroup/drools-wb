@@ -86,7 +86,7 @@ public class CoverageScenarioListPresenterTest {
     }
 
     private void commonAddScesimDataGroup(ScenarioSimulationModel.Type type, int scenarioIndex, String scenarioDescription, String expectedLabel) {
-;        Scenario scenario = new Scenario();
+        Scenario scenario = new Scenario();
         scenario.setDescription(scenarioDescription);
         ScenarioWithIndex scenarioWithIndex = new ScenarioWithIndex(scenarioIndex, scenario);
         Map<String, Integer> resultCounter = new HashMap<>();
