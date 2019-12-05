@@ -51,6 +51,7 @@ import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.Sce
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridWidget;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.strategies.KogitoDMNDataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.strategies.KogitoDMODataManagementStrategy;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.fakes.KogitoDMNTypeService;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
 import org.gwtbootstrap3.client.ui.TabListItem;
 import org.jboss.errai.common.client.api.ErrorCallback;
@@ -71,8 +72,8 @@ import org.uberfire.lifecycle.SetContent;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 
-import static org.drools.workbench.screens.scenariosimulation.kogito.client.converters.ApiJSInteropConverter.getJSIScenarioSimulationModelType;
-import static org.drools.workbench.screens.scenariosimulation.kogito.client.converters.JSInteropApiConverter.getScenarioSimulationModel;
+import static org.drools.workbench.screens.scenariosimulation.kogito.client.converters.scesim.ApiJSInteropConverter.getJSIScenarioSimulationModelType;
+import static org.drools.workbench.screens.scenariosimulation.kogito.client.converters.scesim.JSInteropApiConverter.getScenarioSimulationModel;
 
 @Dependent
 /**
@@ -86,7 +87,7 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     private SCESIM scesimContainer;
     private Promises promises;
     private Path currentPath;
-
+    private KogitoDMNTypeService kogitoDMNTypeService;
 
     public ScenarioSimulationEditorKogitoWrapper() {
         //Zero-parameter constructor for CDI proxies
@@ -99,12 +100,14 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
             final PlaceManager placeManager,
             final MultiPageEditorContainerView multiPageEditorContainerView,
             final AuthoringEditorDock authoringWorkbenchDocks,
-            final Promises promises) {
+            final Promises promises,
+            final KogitoDMNTypeService kogitoDMNTypeService) {
         super(scenarioSimulationEditorPresenter.getView(), /*fileMenuBuilder, */placeManager, multiPageEditorContainerView);
         this.scenarioSimulationEditorPresenter = scenarioSimulationEditorPresenter;
         this.fileMenuBuilder = fileMenuBuilder;
         this.authoringWorkbenchDocks = authoringWorkbenchDocks;
         this.promises = promises;
+        this.kogitoDMNTypeService = kogitoDMNTypeService;
     }
 
     @Override
@@ -242,7 +245,6 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
         synchronizeColumnsDimension(scenarioSimulationEditorPresenter.getContext().getScenarioGridPanelByGridWidget(GridWidget.SIMULATION),
                                     scenarioSimulationEditorPresenter.getContext().getScenarioGridPanelByGridWidget(GridWidget.BACKGROUND));
         final ScenarioSimulationModel model = scenarioSimulationEditorPresenter.getModel();
-
     }
 
     @Override
@@ -306,7 +308,7 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
         if (ScenarioSimulationModel.Type.RULE.equals(model.getSettings().getType())) {
             dataManagementStrategy = new KogitoDMODataManagementStrategy();
         } else {
-            dataManagementStrategy = new KogitoDMNDataManagementStrategy(scenarioSimulationEditorPresenter.getEventBus());
+            dataManagementStrategy = new KogitoDMNDataManagementStrategy(scenarioSimulationEditorPresenter.getEventBus(), kogitoDMNTypeService);
         }
         dataManagementStrategy.setModel(model);
         scenarioSimulationEditorPresenter.getModelSuccessCallbackMethod(dataManagementStrategy, model);

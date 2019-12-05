@@ -25,16 +25,17 @@ import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.Fact
 
 public class KogitoDMNDataManagementStrategy extends AbstractDMNDataManagementStrategy {
 
-    private final KogitoDMNTypeService kogitoDmnTypeService = new KogitoDMNTypeService();
+    private final KogitoDMNTypeService kogitoDmnTypeService;
 
-    public KogitoDMNDataManagementStrategy(EventBus eventBus) {
+    public KogitoDMNDataManagementStrategy(EventBus eventBus, KogitoDMNTypeService kogitoDmnTypeService) {
         super(eventBus);
+        this.kogitoDmnTypeService = kogitoDmnTypeService;
     }
 
     @Override
     protected void retrieveFactModelTuple(TestToolsView.Presenter testToolsPresenter, ScenarioSimulationContext context, GridWidget gridWidget, String dmnFilePath) {
         final FactModelTuple factMappingTuple = kogitoDmnTypeService.retrieveFactModelTuple(currentPath, dmnFilePath);
-        getSuccessCallback(testToolsPresenter, context, gridWidget);
+        getSuccessCallbackMethod(factMappingTuple, testToolsPresenter, context, gridWidget);
     }
 
 }
