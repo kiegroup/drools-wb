@@ -18,10 +18,12 @@ package org.drools.workbench.screens.scenariosimulation.webapp.client.workaround
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import com.google.gwt.core.client.GWT;
 import elemental2.promise.Promise;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.MainJs;
+import org.drools.workbench.scenariosimulation.kogito.marshaller.js.callbacks.SCESIMMarshallCallback;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIScenarioSimulationModelType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.mapper.JsUtils;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.fakes.KogitoDMNTypeService;
@@ -73,6 +75,13 @@ public class KogitoDMNTypeServiceTestingImpl implements KogitoDMNTypeService {
         final JSIScenarioSimulationModelType jsiScenarioSimulationModelType = getJSIScenarioSimulationModelType(scenarioSimulationModel);
         JsUtils.setValueOnWrapped(scesimContainer, jsiScenarioSimulationModelType);
         MainJs.marshall(scesimContainer, "scesim", getJSInteropMarshallCallback(resolveCallbackFn));
+    }
+
+    protected SCESIMMarshallCallback getJSInteropMarshallCallback(Promise.PromiseExecutorCallbackFn.ResolveCallbackFn<FactModelTuple> resolveCallbackFn) {
+        return xml -> {
+            GWT.log("xml " + xml);
+            resolveCallbackFn.onInvoke(xml);
+        };
     }
 
 
