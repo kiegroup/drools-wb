@@ -23,7 +23,6 @@ public interface PopoverView extends org.jboss.errai.ui.client.local.api.IsEleme
     enum Position {
         LEFT,
         RIGHT,
-        BOTTOM,
         TOP
     }
 

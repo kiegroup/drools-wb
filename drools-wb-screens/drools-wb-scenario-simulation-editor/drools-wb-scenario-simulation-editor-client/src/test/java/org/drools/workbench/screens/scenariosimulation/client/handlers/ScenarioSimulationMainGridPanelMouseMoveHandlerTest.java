@@ -321,8 +321,8 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandlerTest extends Abstrac
                 eq(ScenarioSimulationEditorConstants.INSTANCE.keep()),
                 eq(ScenarioSimulationEditorConstants.INSTANCE.apply()),
                 isA(Command.class),
-                eq((int) DX - SCROLL_LEFT),
-                eq(DY - SCROLL_TOP),
+                eq(DX),
+                eq(DY),
                 eq(PopoverView.Position.RIGHT));
     }
 
@@ -337,8 +337,8 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandlerTest extends Abstrac
                 eq(ScenarioSimulationEditorConstants.INSTANCE.errorReason()),
                 eq(ScenarioSimulationEditorConstants.INSTANCE.errorPopoverMessageFailedWithException(EXCEPTION)),
                 eq(ScenarioSimulationEditorConstants.INSTANCE.close()),
-                eq((int) DX - SCROLL_LEFT),
-                eq(DY - SCROLL_TOP),
+                eq(DX),
+                eq(DY),
                 eq(PopoverView.Position.RIGHT));
     }
 }

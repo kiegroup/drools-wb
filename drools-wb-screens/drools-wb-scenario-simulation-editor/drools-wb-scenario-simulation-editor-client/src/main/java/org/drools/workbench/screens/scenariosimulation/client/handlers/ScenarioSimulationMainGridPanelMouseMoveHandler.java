@@ -125,15 +125,15 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandler extends AbstractSce
             yPosition = (int) cellXYMiddleCoordinates.getY() - cellHeight/2;
             position = PopoverView.Position.TOP;
         }
+        int scrollX = scenarioGridPanel.getScrollPanel().getElement().getScrollLeft();
+        xPosition -= scrollX;
+        int scrollY = scenarioGridPanel.getScrollPanel().getElement().getScrollTop();
+        yPosition -= scrollY;
         setupPopupPresenter(toManage, uiRowIndex, uiColumnIndex, xPosition, yPosition, position);
         errorReportPopupPresenter.show();
     }
 
-    protected void setupPopupPresenter(FactMappingValue toManage, Integer uiRowIndex, Integer uiColumnIndex, int xPosition, int yPosition, PopoverView.Position position) {
-        int scrollX = scenarioGridPanel.getScrollPanel().getElement().getScrollLeft();
-        xPosition = xPosition - scrollX;
-        int scrollY = scenarioGridPanel.getScrollPanel().getElement().getScrollTop();
-        yPosition = yPosition - scrollY;
+    protected void setupPopupPresenter(final FactMappingValue toManage, final  int uiRowIndex, final int uiColumnIndex, final int xPosition,final  int yPosition,final  PopoverView.Position position) {
         /* Parameters for the error message */
         final Object expectedValue = toManage.getRawValue();
         final Object errorValue = toManage.getErrorValue();
