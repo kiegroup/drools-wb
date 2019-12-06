@@ -123,7 +123,6 @@ public class CollectionEditorSingletonDOMElementFactoryTest extends AbstractFact
     public void manageList() {
         String key = FULL_CLASS_NAME + "#" + LIST_CLASS_NAME;
         collectionEditorSingletonDOMElementFactoryMock.manageList(collectionEditorViewImpl, key, STRING_CLASS_NAME);
-        verify(collectionEditorViewImpl, times(1)).setListWidget(true);
         Map<String, String> expectedMap1 = new HashMap<>();
         expectedMap1.put(LOWER_CASE_VALUE, STRING_CLASS_NAME);
         verify(collectionEditorViewImpl, times(1)).initListStructure(eq(key), eq(expectedMap1), isA(Map.class));
@@ -173,7 +172,6 @@ public class CollectionEditorSingletonDOMElementFactoryTest extends AbstractFact
         verify(collectionEditorSingletonDOMElementFactoryMock, times(1)).getSimplePropertiesMap(STRING_CLASS_NAME);
         verify(collectionEditorSingletonDOMElementFactoryMock, times(1)).getSimplePropertiesMap(genericType1);
 
-        verify(collectionEditorViewImpl, times(1)).setListWidget(false);
         verify(collectionEditorViewImpl, times(1)).initMapStructure(eq(key), eq(expectedMap0), eq(expectedMap1));
     }
 

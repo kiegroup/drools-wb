@@ -267,7 +267,12 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     public void onCreateCollectionClick(ClickEvent clickEvent) {
         showCreateCollectionContainer(true);
         showDefineCollectionContainer(false);
-        addItemButtonContainer.getStyle().setDisplay(Style.Display.BLOCK);
+        showAddItemButtonContainer(true);
+        if (listWidget) {
+            createLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.createLabelList());
+        } else {
+            createLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.createLabelMap());
+        }
         clickEvent.stopPropagation();
     }
 
@@ -275,7 +280,12 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     public void onDefineCollectionClick(ClickEvent clickEvent) {
         showCreateCollectionContainer(false);
         showDefineCollectionContainer(true);
-        addItemButtonContainer.getStyle().setDisplay(Style.Display.NONE);
+        showAddItemButtonContainer(false);
+        if (listWidget) {
+            createLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.defineLabelList());
+        } else {
+            createLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.defineLabelMap());
+        }
         clickEvent.stopPropagation();
     }
 
@@ -395,4 +405,11 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
         }
     }
 
+    public void showAddItemButtonContainer(boolean show) {
+        if (show) {
+            addItemButtonContainer.getStyle().setDisplay(Style.Display.BLOCK);
+        } else {
+            addItemButtonContainer.getStyle().setDisplay(Style.Display.NONE);
+        }
+    }
 }
