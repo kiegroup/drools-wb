@@ -89,7 +89,7 @@ public class ScenarioGridColumnRendererTest {
         when(themeMock.getBodyErrorBackground(any())).thenReturn(rectangle);
         scenarioGridColumnRenderer = spy(new ScenarioGridColumnRenderer() {
             @Override
-            protected String getCollectionString(String jsonString, boolean isList) {
+            protected String getCollectionString(String jsonString, boolean isList, boolean isExpression) {
                 return jsonString;
             }
         });
@@ -101,33 +101,33 @@ public class ScenarioGridColumnRendererTest {
         Group retrieved = scenarioGridColumnRenderer.renderCell(cell, contextMock);
         assertNull(retrieved);
         verify(scenarioGridColumnRenderer, never()).internalRenderCell(any(), eq(contextMock), any(), anyString());
-        verify(scenarioGridColumnRenderer, never()).getCollectionString(anyString(), anyBoolean());
+        verify(scenarioGridColumnRenderer, never()).getCollectionString(anyString(), anyBoolean(), anyBoolean());
 
         cell = new ScenarioGridCell(null);
         retrieved = scenarioGridColumnRenderer.renderCell(cell, contextMock);
         assertNull(retrieved);
-        verify(scenarioGridColumnRenderer, never()).getCollectionString(anyString(), anyBoolean());
+        verify(scenarioGridColumnRenderer, never()).getCollectionString(anyString(), anyBoolean(), anyBoolean());
         verify(scenarioGridColumnRenderer, never()).internalRenderCell(any(), eq(contextMock), eq(textMock), eq(null));
         reset(scenarioGridColumnRenderer);
 
         cell = new ScenarioGridCell(new ScenarioGridCellValue(null));
         retrieved = scenarioGridColumnRenderer.renderCell(cell, contextMock);
         assertNull(retrieved);
-        verify(scenarioGridColumnRenderer, never()).getCollectionString(anyString(), anyBoolean());
+        verify(scenarioGridColumnRenderer, never()).getCollectionString(anyString(), anyBoolean(), anyBoolean());
         verify(scenarioGridColumnRenderer, never()).internalRenderCell(any(), eq(contextMock), eq(textMock), eq(null));
         reset(scenarioGridColumnRenderer);
 
         cell = new ScenarioGridCell(new ScenarioGridCellValue(MULTIPART_VALUE));
         retrieved = scenarioGridColumnRenderer.renderCell(cell, contextMock);
         assertNotNull(retrieved);
-        verify(scenarioGridColumnRenderer, never()).getCollectionString(anyString(), anyBoolean());
+        verify(scenarioGridColumnRenderer, never()).getCollectionString(anyString(), anyBoolean(), anyBoolean());
         verify(scenarioGridColumnRenderer, times(1)).internalRenderCell(any(), eq(contextMock), eq(textMock), eq(MULTIPART_VALUE));
         reset(scenarioGridColumnRenderer);
 
         ScenarioGridCell scenarioGridCell = new ScenarioGridCell(new ScenarioGridCellValue(MULTIPART_VALUE, PLACEHOLDER));
         retrieved = scenarioGridColumnRenderer.renderCell(scenarioGridCell, contextMock);
         assertNotNull(retrieved);
-        verify(scenarioGridColumnRenderer, never()).getCollectionString(anyString(), anyBoolean());
+        verify(scenarioGridColumnRenderer, never()).getCollectionString(anyString(), anyBoolean(), anyBoolean());
         verify(scenarioGridColumnRenderer, times(1)).internalRenderCell(any(), eq(contextMock), eq(textMock), eq(MULTIPART_VALUE));
         reset(scenarioGridColumnRenderer);
 
@@ -135,7 +135,7 @@ public class ScenarioGridColumnRendererTest {
         retrieved = scenarioGridColumnRenderer.renderCell(scenarioGridCell, contextMock);
         assertNotNull(retrieved);
         verify(scenarioGridColumnRenderer, times(1)).internalRenderCell(any(), eq(contextMock), eq(placeholderMock), eq(PLACEHOLDER));
-        verify(scenarioGridColumnRenderer, never()).getCollectionString(anyString(), anyBoolean());
+        verify(scenarioGridColumnRenderer, never()).getCollectionString(anyString(), anyBoolean(), anyBoolean());
         reset(scenarioGridColumnRenderer);
 
         cell = new ScenarioGridCell(new ScenarioGridCellValue(LIST_VALUE));
@@ -143,7 +143,7 @@ public class ScenarioGridColumnRendererTest {
         retrieved = scenarioGridColumnRenderer.renderCell(cell, contextMock);
         assertNotNull(retrieved);
         verify(scenarioGridColumnRenderer, times(1)).internalRenderCell(any(), eq(contextMock), eq(textMock), eq(LIST_VALUE));
-        verify(scenarioGridColumnRenderer, times(1)).getCollectionString(eq(LIST_VALUE), eq(true));
+        verify(scenarioGridColumnRenderer, times(1)).getCollectionString(eq(LIST_VALUE), eq(true), anyBoolean());
         reset(scenarioGridColumnRenderer);
 
         cell = new ScenarioGridCell(new ScenarioGridCellValue(MAP_VALUE));
@@ -151,14 +151,14 @@ public class ScenarioGridColumnRendererTest {
         retrieved = scenarioGridColumnRenderer.renderCell(cell, contextMock);
         assertNotNull(retrieved);
         verify(scenarioGridColumnRenderer, times(1)).internalRenderCell(any(), eq(contextMock), eq(textMock), eq(MAP_VALUE));
-        verify(scenarioGridColumnRenderer, times(1)).getCollectionString(eq(MAP_VALUE), eq(false));
+        verify(scenarioGridColumnRenderer, times(1)).getCollectionString(eq(MAP_VALUE), eq(false), anyBoolean());
         reset(scenarioGridColumnRenderer);
 
         cell = new ScenarioGridCell(new ScenarioGridCellValue(MULTIPART_VALUE));
         ((ScenarioGridCell) cell).setErrorMode(true);
         retrieved = scenarioGridColumnRenderer.renderCell(cell, contextMock);
         assertNotNull(retrieved);
-        verify(scenarioGridColumnRenderer, never()).getCollectionString(anyString(), anyBoolean());
+        verify(scenarioGridColumnRenderer, never()).getCollectionString(anyString(), anyBoolean(), anyBoolean());
         verify(scenarioGridColumnRenderer, times(1)).internalRenderCell(any(), eq(contextMock), eq(errorTextMock), eq(MULTIPART_VALUE));
         reset(scenarioGridColumnRenderer);
     }
@@ -210,7 +210,7 @@ public class ScenarioGridColumnRendererTest {
         } else {
             assertNotNull(retrieved);
             if (jsonString != null) {
-                verify(scenarioGridColumnRenderer, times(1)).getCollectionString(eq(jsonString), eq(isList));
+                verify(scenarioGridColumnRenderer, times(1)).getCollectionString(eq(jsonString), eq(isList), anyBoolean());
             }
     }
         reset(scenarioGridColumnRenderer);

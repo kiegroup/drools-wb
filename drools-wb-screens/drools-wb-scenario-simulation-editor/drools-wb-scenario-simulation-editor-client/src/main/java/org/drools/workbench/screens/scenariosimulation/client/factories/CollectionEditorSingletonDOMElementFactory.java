@@ -24,6 +24,7 @@ import java.util.Optional;
 import org.drools.scenariosimulation.api.model.AbstractScesimData;
 import org.drools.scenariosimulation.api.model.AbstractScesimModel;
 import org.drools.scenariosimulation.api.model.FactMapping;
+import org.drools.scenariosimulation.api.model.FactMappingValueType;
 import org.drools.scenariosimulation.api.utils.ScenarioSimulationSharedUtils;
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionViewImpl;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
@@ -96,6 +97,7 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
         String propertyClass = factMapping.getClassName();
         String className = factMapping.getFactAlias();
         String propertyName = factMapping.getExpressionAlias();
+        boolean isExpression = FactMappingValueType.EXPRESSION.equals(factMapping.getFactMappingValueType());
         List<String> genericTypes = factMapping.getGenericTypes();
         if (propertyClass == null || className == null || propertyName == null || genericTypes == null || genericTypes.isEmpty()) {
             throw new IllegalStateException("Missing required properties inside FactMapping");
@@ -107,9 +109,9 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
             genericTypeName0 = getRuleComplexType(genericTypeName0);
         }
         if (ScenarioSimulationSharedUtils.isList(propertyClass)) {
-            manageList(collectionEditorView, key, genericTypeName0);
+            manageList(collectionEditorView, key, genericTypeName0, isExpression);
         } else {
-            manageMap(collectionEditorView, key, genericTypeName0, genericTypes.get(1), isRule);
+            manageMap(collectionEditorView, key, genericTypeName0, genericTypes.get(1), isRule, isExpression);
         }
     }
 
@@ -117,15 +119,15 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
         return genericTypeName0.substring(genericTypeName0.lastIndexOf('.') + 1);
     }
 
-    protected void manageList(CollectionViewImpl collectionEditorView, String key, String genericTypeName0) {
-        collectionEditorView.initListStructure(key, getSimplePropertiesMap(genericTypeName0), getExpandablePropertiesMap(genericTypeName0));
+    protected void manageList(CollectionViewImpl collectionEditorView, String key, String genericTypeName0, boolean isExpression) {
+        collectionEditorView.initListStructure(key, getSimplePropertiesMap(genericTypeName0), getExpandablePropertiesMap(genericTypeName0), isExpression);
     }
 
-    protected void manageMap(CollectionViewImpl collectionEditorView, String key, String genericTypeName0, String genericTypeName1, boolean isRule) {
+    protected void manageMap(CollectionViewImpl collectionEditorView, String key, String genericTypeName0, String genericTypeName1, boolean isRule, boolean isExpression) {
         if (isRule && !isSimpleJavaType(genericTypeName1)) {
             genericTypeName1 = getRuleComplexType(genericTypeName1);
         }
-        collectionEditorView.initMapStructure(key, getSimplePropertiesMap(genericTypeName0), getSimplePropertiesMap(genericTypeName1));
+        collectionEditorView.initMapStructure(key, getSimplePropertiesMap(genericTypeName0), getSimplePropertiesMap(genericTypeName1), isExpression);
     }
 
     @Override
@@ -180,6 +182,28 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
     public void registerHandlers(final CollectionViewImpl widget, final CollectionEditorDOMElement widgetDomElement) {
         widget.addCloseCompositeEventHandler(event -> commonCloseHandling(widgetDomElement));
         widget.addSaveEditorEventHandler(event -> flush());
+    }
+
+    @Override
+    public void flush() {
+        final AbstractScesimGridModel<? extends AbstractScesimModel, ? extends AbstractScesimData> model =
+                ((ScenarioGrid) gridWidget).getModel();
+        final GridData.SelectedCell selectedCellsOrigin = model.getSelectedCellsOrigin();
+        final Optional<GridColumn<?>> selectedColumn = model.getColumns().stream()
+                .filter(col -> col.getIndex() == selectedCellsOrigin.getColumnIndex())
+                .findFirst();
+        FactMappingValueType type;
+        if (widget.isExpression()) {
+            type = FactMappingValueType.EXPRESSION;
+        } else {
+            type = FactMappingValueType.NOT_EXPRESSION;
+        }
+         selectedColumn.ifPresent(col -> {
+             final int actualIndex = model.getColumns().indexOf(col);
+             final FactMapping factMapping = model.getAbstractScesimModel().get().getScesimModelDescriptor().getFactMappingByIndex(actualIndex);
+             factMapping.setFactMappingValueType(type);
+         });
+        super.flush();
     }
 }
 

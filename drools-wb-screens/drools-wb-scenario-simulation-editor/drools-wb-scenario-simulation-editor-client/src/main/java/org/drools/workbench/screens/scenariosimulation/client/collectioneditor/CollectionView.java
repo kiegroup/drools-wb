@@ -133,6 +133,8 @@ public interface CollectionView {
      */
     String getValue();
 
+    boolean isExpression();
+
     /**
      * Returns <code>true</code> if the current instance will manage a <code>List</code>,
      * <code>false</code> for a <code>Map</code>.
@@ -153,6 +155,8 @@ public interface CollectionView {
     ButtonElement getRemoveButton();
 
     ButtonElement getSaveButton();
+
+    String getExpression();
 
     void toggleRowExpansion();
 
@@ -179,10 +183,11 @@ public interface CollectionView {
      * Set the <b>name</b> of the property and the <code>Map</code> to be used to create the skeleton of the current <code>CollectionViewImpl</code> editor
      * showing a <b>List</b> of elements
      * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
-     * @param instancePropertyMap
+     * @param simplePropertiesMap
      * @param expandablePropertiesMap
+     * @param isExpression
      */
-    void initListStructure(String key, Map<String, String> instancePropertyMap, Map<String, Map<String, String>> expandablePropertiesMap);
+    void initListStructure(String key, Map<String, String> simplePropertiesMap, Map<String, Map<String, String>> expandablePropertiesMap, boolean isExpression);
 
     /**
      * Set the <b>name</b> of the property and the <code>Map</code>s to be used to create the skeleton of the current <code>CollectionViewImpl</code> editor
@@ -190,8 +195,9 @@ public interface CollectionView {
      * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
      * @param keyPropertyMap
      * @param valuePropertyMap
+     * @param isExpression
      */
-    void initMapStructure(String key, Map<String, String> keyPropertyMap, Map<String, String> valuePropertyMap);
+    void initMapStructure(String key, Map<String, String> keyPropertyMap, Map<String, String> valuePropertyMap, boolean isExpression);
 
     void setFixedHeight(double value, Style.Unit px);
 

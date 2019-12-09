@@ -20,6 +20,7 @@ import org.drools.scenariosimulation.api.model.BackgroundData;
 import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
+import org.drools.scenariosimulation.api.model.FactMappingValueType;
 import org.drools.scenariosimulation.api.utils.ScenarioSimulationSharedUtils;
 import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.values.ScenarioGridCellValue;
@@ -68,6 +69,7 @@ public class BackgroundGridModel extends AbstractScesimGridModel<Background, Bac
                     ScenarioGridCell newCell = new ScenarioGridCell(new ScenarioGridCellValue(stringValue, placeHolder));
                     if (ScenarioSimulationSharedUtils.isCollection((factMappingByIndex.getClassName()))) {
                         newCell.setListMap(ScenarioSimulationSharedUtils.isList((factMappingByIndex.getClassName())));
+                        newCell.setExpression(FactMappingValueType.EXPRESSION.equals(factMappingByIndex.getFactMappingValueType()));
                     }
                     return newCell;
                 });

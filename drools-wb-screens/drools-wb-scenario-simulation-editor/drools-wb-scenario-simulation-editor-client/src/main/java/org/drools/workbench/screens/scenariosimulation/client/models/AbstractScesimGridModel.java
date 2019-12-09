@@ -385,6 +385,7 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
             FactMapping factMappingByIndex = abstractScesimModel.getScesimModelDescriptor().getFactMappingByIndex(columnIndex);
             if (ScenarioSimulationSharedUtils.isCollection((factMappingByIndex.getClassName()))) {
                 newCell.setListMap(ScenarioSimulationSharedUtils.isList((factMappingByIndex.getClassName())));
+                newCell.setExpression(FactMappingValueType.EXPRESSION.equals(factMappingByIndex.getFactMappingValueType()));
             }
             return newCell;
         });
@@ -405,21 +406,7 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
      * @param columnIndex
      * @return
      */
-    public abstract Range getInstanceLimits(int columnIndex);/* {
-        final ScenarioGridColumn column = (ScenarioGridColumn) columns.get(columnIndex);
-        final String originalColumnGroup = column.getInformationHeaderMetaData().getColumnGroup();
-        final ScenarioHeaderMetaData selectedInformationHeaderMetaData = column.getInformationHeaderMetaData();
-        String originalColumnTitle = selectedInformationHeaderMetaData.getTitle();
-        int leftPosition = columnIndex;
-        while (leftPosition > 1 && ((ScenarioGridColumn) columns.get(leftPosition - 1)).getInformationHeaderMetaData().getColumnGroup().equals(originalColumnGroup) && ((ScenarioGridColumn) columns.get(leftPosition - 1)).getInformationHeaderMetaData().getTitle().equals(originalColumnTitle)) {
-            leftPosition--;
-        }
-        int rightPosition = columnIndex;
-        while (rightPosition < columns.size() - 1 && ((ScenarioGridColumn) columns.get(rightPosition + 1)).getInformationHeaderMetaData().getColumnGroup().equals(originalColumnGroup) && ((ScenarioGridColumn) columns.get(rightPosition + 1)).getInformationHeaderMetaData().getTitle().equals(originalColumnTitle)) {
-            rightPosition++;
-        }
-        return new Range(leftPosition, rightPosition);
-    }*/
+    public abstract Range getInstanceLimits(int columnIndex);
 
     /**
      * This methods returns the <code>List&lt;ScenarioGridColumn&gt;</code> of a <b>single</b> block of columns of the same instance/data object.
@@ -977,6 +964,7 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
                 ScenarioGridCell newCell = new ScenarioGridCell(new ScenarioGridCellValue(null, placeHolder));
                 if (ScenarioSimulationSharedUtils.isCollection((factMappingByIndex.getClassName()))) {
                     newCell.setListMap(ScenarioSimulationSharedUtils.isList((factMappingByIndex.getClassName())));
+                    newCell.setExpression(FactMappingValueType.EXPRESSION.equals(factMappingByIndex.getFactMappingValueType()));
                 }
                 return newCell;
             });
@@ -1105,7 +1093,7 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
                                                                ScenarioSimulationModel.Type modelType,
                                                                FactMappingValueType valueType) {
         boolean isRuleScenario = Objects.equals(ScenarioSimulationModel.Type.RULE, modelType);
-        if (ScenarioSimulationSharedUtils.isCollection(className) && Objects.equals(FactMappingValueType.NOT_EXPRESSION, valueType)) {
+        if (ScenarioSimulationSharedUtils.isCollection(className)) {
             return collectionEditorSingletonDOMElementFactory;
         }
         if (Objects.equals(FactMappingValueType.EXPRESSION, valueType) && isRuleScenario) {

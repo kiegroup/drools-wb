@@ -91,6 +91,7 @@ public class ScenarioGridColumn extends BaseGridColumn<String> {
                                              CollectionEditorDOMElement collectionEditorDOMElement = (CollectionEditorDOMElement) e;
                                              collectionEditorDOMElement.getWidget().setValue(stringGridCell.getValue().getValue());
                                              ((ScenarioGridCell) cell).setListMap(collectionEditorDOMElement.getWidget().isListWidget());
+                                             ((ScenarioGridCell) cell).setExpression(collectionEditorDOMElement.getWidget().isExpression());
                                              collectionEditorDOMElement.setScenarioGridCell((ScenarioGridCell) cell);
                                          }
                                      } catch (Exception ex) {
@@ -173,6 +174,7 @@ public class ScenarioGridColumn extends BaseGridColumn<String> {
         this.editableHeaders = editableHeaders;
     }
 
+    @Override
     public void setPlaceHolder(String placeHolder) {
         this.placeHolder = placeHolder;
     }
@@ -185,6 +187,7 @@ public class ScenarioGridColumn extends BaseGridColumn<String> {
         return propertyHeaderMetaData;
     }
 
+    @Override
     public String getPlaceHolder() {
         return placeHolder;
     }
