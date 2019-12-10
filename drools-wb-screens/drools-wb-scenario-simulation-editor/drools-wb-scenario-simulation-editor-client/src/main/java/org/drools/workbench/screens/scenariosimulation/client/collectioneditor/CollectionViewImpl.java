@@ -204,6 +204,7 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     }
 
     protected void commonInit(boolean isExpression) {
+        expression = isExpression;
         saveButton.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.saveButton());
         cancelButton.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.cancelButton());
         removeButton.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.removeButton());
@@ -240,6 +241,11 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     @Override
     public boolean isExpression() {
         return expression;
+    }
+
+    @Override
+    public boolean isDefineOptionSelected() {
+        return defineCollectionRadio.isChecked();
     }
 
     @Override
@@ -284,11 +290,12 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
 
     @Override
     public String getExpression() {
-        if (isExpression()) {
-            return expressionElement.getValue();
-        } else {
-            return "";
-        }
+        return expressionElement.getValue();
+    }
+
+    @Override
+    public void setExpression(String expressionValue) {
+        expressionElement.setValue(expressionValue);
     }
 
     @EventHandler("createCollectionRadio")
@@ -312,7 +319,6 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
         } else {
             createLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.createLabelMap());
         }
-        expression = !toEnable;
     }
 
     @EventHandler("collectionEditor")

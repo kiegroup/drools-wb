@@ -33,6 +33,7 @@ import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.e
 import org.drools.workbench.screens.scenariosimulation.client.popup.ConfirmPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.popup.ScenarioConfirmationPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
+import org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 
 import static org.drools.scenariosimulation.api.utils.ConstantsHolder.VALUE;
@@ -100,10 +101,14 @@ public class CollectionPresenter implements CollectionView.Presenter {
             return;
         }
         JSONValue jsonValue = getJSONValue(jsonString);
-        if (collectionView.isListWidget()) {
-            populateList(jsonValue);
+        if (collectionView.isExpression()) {
+            populateExpression(jsonValue);
         } else {
-            populateMap(jsonValue);
+            if (collectionView.isListWidget()) {
+                populateList(jsonValue);
+            } else {
+                populateMap(jsonValue);
+            }
         }
     }
 
@@ -159,8 +164,8 @@ public class CollectionPresenter implements CollectionView.Presenter {
     public void save() {
        try {
             String updatedValue;
-            if (collectionView.isExpression()) {
-                updatedValue = "";
+            if (collectionView.isDefineOptionSelected()) {
+                updatedValue = getExpressionValue();
             } else {
                 if (collectionView.isListWidget()) {
                     updatedValue = getListValue();
@@ -246,6 +251,12 @@ public class CollectionPresenter implements CollectionView.Presenter {
         });
     }
 
+    protected void populateExpression(JSONValue jsonValue) {
+        final JSONObject jsValueObject = jsonValue.isObject();
+        JSONValue value = jsValueObject.get(ConstantHolder.EXPRESSION);
+        collectionView.setExpression(value.isString().stringValue());
+    }
+
     protected JSONObject getJSONObject(String jsonString) {
         try {
             return getJSONValue(jsonString).isObject();
@@ -262,8 +273,13 @@ public class CollectionPresenter implements CollectionView.Presenter {
         }
     }
 
+    protected String getExpressionValue() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(ConstantHolder.EXPRESSION, new JSONString(collectionView.getExpression()));
+        return jsonObject.toString();
+    }
+
     protected String getListValue() {
-        //TODO
         Map<String, Map<String, String>> simpleItemsProperties = listElementPresenter.getSimpleItemsProperties();
         Map<String, Map<String, Map<String, String>>> nestedItemsProperties = listElementPresenter.getExpandableItemsProperties();
         JSONArray jsonArray = new JSONArray();

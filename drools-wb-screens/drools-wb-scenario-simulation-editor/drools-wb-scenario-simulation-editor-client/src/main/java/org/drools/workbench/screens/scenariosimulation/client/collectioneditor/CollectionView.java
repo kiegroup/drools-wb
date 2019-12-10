@@ -130,6 +130,8 @@ public interface CollectionView {
 
     boolean isExpression();
 
+    boolean isDefineOptionSelected();
+
     /**
      * Returns <code>true</code> if the current instance will manage a <code>List</code>,
      * <code>false</code> for a <code>Map</code>.
@@ -152,6 +154,8 @@ public interface CollectionView {
     ButtonElement getSaveButton();
 
     String getExpression();
+
+    void setExpression(String expressionValue);
 
     void toggleRowExpansion();
 
