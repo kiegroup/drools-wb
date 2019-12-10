@@ -15,11 +15,8 @@
  */
 package org.drools.workbench.screens.scenariosimulation.kogito.client.fakes;
 
-import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
 import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
 import org.jboss.errai.bus.server.annotations.Remote;
-import org.jboss.errai.common.client.api.RemoteCallback;
-import org.uberfire.backend.vfs.Path;
 
 /**
  * Interface required because <b>runtime</b> and <b>testing</b> environments would
@@ -27,15 +24,5 @@ import org.uberfire.backend.vfs.Path;
  */
 @Remote
 public interface KogitoDMNTypeService extends DMNTypeService {
-
-
-    /**
-     * Retrieves a <code>FactModelTuple</code> representing the given <b>dmn</b> file
-     * @param path
-     * @param dmnPath
-     * @return
-     * @throws Exception
-     */
-    void retrieveFactModelTuple(Path path, String dmnPath, RemoteCallback<FactModelTuple> callback);
 
 }

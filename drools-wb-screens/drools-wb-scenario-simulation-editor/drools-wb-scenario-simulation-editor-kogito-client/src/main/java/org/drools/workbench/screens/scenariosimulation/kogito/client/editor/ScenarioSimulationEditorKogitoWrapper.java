@@ -36,7 +36,7 @@ import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
 import org.drools.scenariosimulation.api.model.ScesimModelDescriptor;
 import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
-import org.drools.workbench.scenariosimulation.kogito.marshaller.js.MainJs;
+import org.drools.workbench.scenariosimulation.kogito.marshaller.js.SCESIMMainJs;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.callbacks.SCESIMMarshallCallback;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.callbacks.SCESIMUnmarshallCallback;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIScenarioSimulationModelType;
@@ -51,11 +51,11 @@ import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.Sce
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridWidget;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.strategies.KogitoDMNDataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.strategies.KogitoDMODataManagementStrategy;
-import org.drools.workbench.screens.scenariosimulation.kogito.client.fakes.KogitoDMNTypeService;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
 import org.gwtbootstrap3.client.ui.TabListItem;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
+import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.MainJs;
 import org.kie.workbench.common.kogito.client.editor.MultiPageEditorContainerPresenter;
 import org.kie.workbench.common.kogito.client.editor.MultiPageEditorContainerView;
 import org.kie.workbench.common.widgets.client.docks.AuthoringEditorDock;
@@ -87,7 +87,7 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     private SCESIM scesimContainer;
     private Promises promises;
     private Path currentPath;
-    private KogitoDMNTypeService kogitoDMNTypeService;
+//    private KogitoDMNTypeService kogitoDMNTypeService;
 
     public ScenarioSimulationEditorKogitoWrapper() {
         //Zero-parameter constructor for CDI proxies
@@ -100,14 +100,14 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
             final PlaceManager placeManager,
             final MultiPageEditorContainerView multiPageEditorContainerView,
             final AuthoringEditorDock authoringWorkbenchDocks,
-            final Promises promises,
-            final KogitoDMNTypeService kogitoDMNTypeService) {
-        super(scenarioSimulationEditorPresenter.getView(), /*fileMenuBuilder, */placeManager, multiPageEditorContainerView);
+            final Promises promises/*,
+            final KogitoDMNTypeService kogitoDMNTypeService*/) {
+        super(scenarioSimulationEditorPresenter.getView(), placeManager, multiPageEditorContainerView);
         this.scenarioSimulationEditorPresenter = scenarioSimulationEditorPresenter;
         this.fileMenuBuilder = fileMenuBuilder;
         this.authoringWorkbenchDocks = authoringWorkbenchDocks;
         this.promises = promises;
-        this.kogitoDMNTypeService = kogitoDMNTypeService;
+//        this.kogitoDMNTypeService = kogitoDMNTypeService;
     }
 
     @Override
@@ -202,6 +202,7 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
         super.init(place);
         resetEditorPages();
         authoringWorkbenchDocks.setup("AuthoringPerspective", place);
+        SCESIMMainJs.initializeJsInteropConstructors(SCESIMMainJs.getConstructorsMap());
         MainJs.initializeJsInteropConstructors(MainJs.getConstructorsMap());
     }
 
@@ -274,11 +275,11 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     protected void marshallContent(ScenarioSimulationModel scenarioSimulationModel, Promise.PromiseExecutorCallbackFn.ResolveCallbackFn<String> resolveCallbackFn) {
         final JSIScenarioSimulationModelType jsiScenarioSimulationModelType = getJSIScenarioSimulationModelType(scenarioSimulationModel);
         JsUtils.setValueOnWrapped(scesimContainer, jsiScenarioSimulationModelType);
-        MainJs.marshall(scesimContainer, "scesim", getJSInteropMarshallCallback(resolveCallbackFn));
+        SCESIMMainJs.marshall(scesimContainer, "scesim", getJSInteropMarshallCallback(resolveCallbackFn));
     }
 
     protected void unmarshallContent(String toUnmarshal) {
-        MainJs.unmarshall(toUnmarshal, "scesim", getJSInteropUnmarshallCallback());
+        SCESIMMainJs.unmarshall(toUnmarshal, "scesim", getJSInteropUnmarshallCallback());
     }
 
     protected SCESIMMarshallCallback getJSInteropMarshallCallback(Promise.PromiseExecutorCallbackFn.ResolveCallbackFn<String> resolveCallbackFn) {
@@ -308,7 +309,7 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
         if (ScenarioSimulationModel.Type.RULE.equals(model.getSettings().getType())) {
             dataManagementStrategy = new KogitoDMODataManagementStrategy();
         } else {
-            dataManagementStrategy = new KogitoDMNDataManagementStrategy(scenarioSimulationEditorPresenter.getEventBus(), kogitoDMNTypeService);
+            dataManagementStrategy = new KogitoDMNDataManagementStrategy(scenarioSimulationEditorPresenter.getEventBus()/*, kogitoDMNTypeService*/);
         }
         dataManagementStrategy.setModel(model);
         scenarioSimulationEditorPresenter.getModelSuccessCallbackMethod(dataManagementStrategy, model);

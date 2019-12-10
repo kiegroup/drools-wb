@@ -1,11 +1,11 @@
 /**
  * == READ ME ==
  *
- * This file has been manually modified to include *ALL* mappings (and not just DMN12)
+ * This file has been manually modified to include *ALL* mappings (and not just SCESIM)
  *
  * @type {{marshall: MainJs.marshall, unmarshall: MainJs.unmarshall}}
  */
-MainJs = {
+SCESIMMainJs = {
 
     mappings: [SCESIM],
 
