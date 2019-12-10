@@ -233,11 +233,6 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     }
 
     @Override
-    public void init() {
-        //defineCollectionContainer.getStyle().setDisplay(Style.Display.NONE);
-    }
-
-    @Override
     public void setValue(String jsonString) {
         presenter.setValue(jsonString);
     }

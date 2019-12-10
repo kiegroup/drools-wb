@@ -157,12 +157,16 @@ public class CollectionPresenter implements CollectionView.Presenter {
 
     @Override
     public void save() {
-        try {
+       try {
             String updatedValue;
-            if (collectionView.isListWidget()) {
-                updatedValue = getListValue();
+            if (collectionView.isExpression()) {
+                updatedValue = "";
             } else {
-                updatedValue = getMapValue();
+                if (collectionView.isListWidget()) {
+                    updatedValue = getListValue();
+                } else {
+                    updatedValue = getMapValue();
+                }
             }
             collectionView.updateValue(updatedValue);
         } catch (IllegalStateException e) {
@@ -205,11 +209,9 @@ public class CollectionPresenter implements CollectionView.Presenter {
 
     protected void commonInit(String key, CollectionView collectionView) {
         this.collectionView = collectionView;
-        this.collectionView.init();
         String propertyName = key.substring(key.lastIndexOf('#') + 1);
         this.collectionView.getEditorTitle().setInnerText(key);
         this.collectionView.getPropertyTitle().setInnerText(propertyName);
-
     }
 
     protected void populateList(JSONValue jsonValue) {
@@ -261,6 +263,7 @@ public class CollectionPresenter implements CollectionView.Presenter {
     }
 
     protected String getListValue() {
+        //TODO
         Map<String, Map<String, String>> simpleItemsProperties = listElementPresenter.getSimpleItemsProperties();
         Map<String, Map<String, Map<String, String>>> nestedItemsProperties = listElementPresenter.getExpandableItemsProperties();
         JSONArray jsonArray = new JSONArray();

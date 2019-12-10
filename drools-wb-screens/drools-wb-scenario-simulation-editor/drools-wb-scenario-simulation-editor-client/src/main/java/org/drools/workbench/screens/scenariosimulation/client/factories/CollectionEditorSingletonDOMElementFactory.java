@@ -90,6 +90,23 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
 
     @Override
     protected String getValue() {
+        final AbstractScesimGridModel<? extends AbstractScesimModel, ? extends AbstractScesimData> model =
+                ((ScenarioGrid) gridWidget).getModel();
+        final GridData.SelectedCell selectedCellsOrigin = model.getSelectedCellsOrigin();
+        final Optional<GridColumn<?>> selectedColumn = model.getColumns().stream()
+                .filter(col -> col.getIndex() == selectedCellsOrigin.getColumnIndex())
+                .findFirst();
+        FactMappingValueType type;
+        if (widget.isExpression()) {
+            type = FactMappingValueType.EXPRESSION;
+        } else {
+            type = FactMappingValueType.NOT_EXPRESSION;
+        }
+        selectedColumn.ifPresent(col -> {
+            final int actualIndex = model.getColumns().indexOf(col);
+            final FactMapping factMapping = model.getAbstractScesimModel().get().getScesimModelDescriptor().getFactMappingByIndex(actualIndex);
+            factMapping.setFactMappingValueType(type);
+        });
         return widget != null ? widget.getValue() : null;
     }
 
@@ -176,34 +193,6 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
         gridLayer.batch();
         gridPanel.setFocus(true);
         collectionEditorDOMElement.stopEditingMode();
-    }
-
-    @Override
-    public void registerHandlers(final CollectionViewImpl widget, final CollectionEditorDOMElement widgetDomElement) {
-        widget.addCloseCompositeEventHandler(event -> commonCloseHandling(widgetDomElement));
-        widget.addSaveEditorEventHandler(event -> flush());
-    }
-
-    @Override
-    public void flush() {
-        final AbstractScesimGridModel<? extends AbstractScesimModel, ? extends AbstractScesimData> model =
-                ((ScenarioGrid) gridWidget).getModel();
-        final GridData.SelectedCell selectedCellsOrigin = model.getSelectedCellsOrigin();
-        final Optional<GridColumn<?>> selectedColumn = model.getColumns().stream()
-                .filter(col -> col.getIndex() == selectedCellsOrigin.getColumnIndex())
-                .findFirst();
-        FactMappingValueType type;
-        if (widget.isExpression()) {
-            type = FactMappingValueType.EXPRESSION;
-        } else {
-            type = FactMappingValueType.NOT_EXPRESSION;
-        }
-         selectedColumn.ifPresent(col -> {
-             final int actualIndex = model.getColumns().indexOf(col);
-             final FactMapping factMapping = model.getAbstractScesimModel().get().getScesimModelDescriptor().getFactMappingByIndex(actualIndex);
-             factMapping.setFactMappingValueType(type);
-         });
-        super.flush();
     }
 }
 

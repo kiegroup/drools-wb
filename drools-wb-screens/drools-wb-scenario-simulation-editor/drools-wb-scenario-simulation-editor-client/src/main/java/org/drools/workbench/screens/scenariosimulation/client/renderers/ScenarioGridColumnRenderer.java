@@ -110,18 +110,18 @@ public class ScenarioGridColumnRenderer extends StringColumnRenderer {
         }
     }
 
-    protected String getValueToShow(ScenarioGridCell scenarioGridCell){
+    protected String getValueToShow(ScenarioGridCell scenarioGridCell) {
         String rawValue = scenarioGridCell.getValue() != null ? scenarioGridCell.getValue().getValue() : null;
         return (rawValue != null && (scenarioGridCell.isList() || scenarioGridCell.isMap())) ? getCollectionString(rawValue, scenarioGridCell.isList(), scenarioGridCell.isExpression()) : rawValue;
     }
 
     protected String getCollectionString(String jsonString, boolean isList, boolean isExpression) {
+        String toFormat = isList ? "List() %s" : "Map() %s";
         if (isExpression) {
-            return ConstantHolder.EXPRESSION;
+            return toFormat.replace("%s", ConstantHolder.EXPRESSION);
         }
         try {
             int size = -1;
-            String toFormat = isList ? "List(%s)" : "Map(%s)";
             JSONValue jsonValue = JSONParser.parseStrict(jsonString);
             if (isList) {
                 size = jsonValue.isArray().size();
