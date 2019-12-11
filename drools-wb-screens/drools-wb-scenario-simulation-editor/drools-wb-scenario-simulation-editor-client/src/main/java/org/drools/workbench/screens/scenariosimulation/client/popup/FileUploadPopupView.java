@@ -52,6 +52,8 @@ public class FileUploadPopupView extends AbstractScenarioPopupView implements Fi
 
     protected static String fileContents;
 
+    protected static  String fileName = null;
+
     public static void fileLoaded(String fileContents) {
         FileUploadPopupView.fileContents = fileContents;
     }
@@ -77,6 +79,11 @@ public class FileUploadPopupView extends AbstractScenarioPopupView implements Fi
     }
 
     @Override
+    public String getFileName() {
+        return fileName;
+    }
+
+    @Override
     public void setAcceptedExtension(List<String> acceptedExtension) {
         this.acceptedExtension.clear();
         this.acceptedExtension.addAll(acceptedExtension);
@@ -89,7 +96,7 @@ public class FileUploadPopupView extends AbstractScenarioPopupView implements Fi
 
     @EventHandler("file")
     public void onFileChangeEvent(ChangeEvent event) {
-        String fileName = file.getValue();
+        fileName = file.getValue();
         if (fileName.toLowerCase().startsWith(FAKEPATH)) {
             fileName = fileName.substring(FAKEPATH.length());
         }

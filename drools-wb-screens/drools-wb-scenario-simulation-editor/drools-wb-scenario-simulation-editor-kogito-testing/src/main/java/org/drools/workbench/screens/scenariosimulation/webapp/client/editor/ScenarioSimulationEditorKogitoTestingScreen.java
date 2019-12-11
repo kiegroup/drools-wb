@@ -28,10 +28,9 @@ import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioMenuItem;
 import org.drools.workbench.screens.scenariosimulation.client.popup.FileUploadPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.ScenarioSimulationEditorKogitoWrapper;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.util.KogitoScenarioSimulationBuilder;
 import org.drools.workbench.screens.scenariosimulation.webapp.client.popup.LoadScesimPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.webapp.client.popup.NewScesimPopupPresenter;
-import org.drools.workbench.screens.scenariosimulation.kogito.client.util.KogitoScenarioSimulationBuilder;
-import org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds.ScesimFilesProvider;
 import org.gwtbootstrap3.client.ui.Popover;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.kie.workbench.common.kogito.client.editor.MultiPageEditorContainerView;
@@ -47,7 +46,6 @@ import org.uberfire.client.annotations.WorkbenchPartView;
 import org.uberfire.client.annotations.WorkbenchScreen;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.promise.Promises;
-import org.uberfire.commons.uuid.UUID;
 import org.uberfire.lifecycle.OnMayClose;
 import org.uberfire.lifecycle.OnStartup;
 import org.uberfire.mvp.Command;
@@ -69,11 +67,9 @@ public class ScenarioSimulationEditorKogitoTestingScreen implements KogitoScreen
     public static final Path DMN_PATH = PathFactory.newPath("DMN", BASE_DMN_URI);
     private static final String BASE_SCESIM_URI = BASE_URI + "scesim/";
     public static final Path SCESIM_PATH = PathFactory.newPath("SCESIM", BASE_SCESIM_URI);
-    @Inject
-    private ScenarioSimulationEditorKogitoWrapper scenarioSimulationEditorKogitoWrapper;
 
     @Inject
-    private ScesimFilesProvider scesimFilesProvider;
+    private ScenarioSimulationEditorKogitoWrapper scenarioSimulationEditorKogitoWrapper;
 
     @Inject
     private NewScesimPopupPresenter newScesimPopupPresenter;
@@ -103,8 +99,28 @@ public class ScenarioSimulationEditorKogitoTestingScreen implements KogitoScreen
 
     @OnStartup
     public void onStartup(final PlaceRequest place) {
-        testingVFSService.createDirectory(SCESIM_PATH);
-        testingVFSService.createDirectory(DMN_PATH);
+        testingVFSService.getItemsByPath(SCESIM_PATH, response -> {
+            // do nothing
+        }, (message, throwable) -> {
+            if (throwable instanceof org.uberfire.java.nio.file.NotDirectoryException) {
+                testingVFSService.createDirectory(SCESIM_PATH);
+                return true;
+            } else {
+                GWT.log(message.toString(), throwable);
+                return false;
+            }
+        });
+        testingVFSService.getItemsByPath(DMN_PATH, response -> {
+            // do nothing
+        }, (message, throwable) -> {
+            if (throwable instanceof org.uberfire.java.nio.file.NotDirectoryException) {
+                testingVFSService.createDirectory(DMN_PATH);
+                return true;
+            } else {
+                GWT.log(message.toString(), throwable);
+                return false;
+            }
+        });
         addTestingMenus(scenarioSimulationEditorKogitoWrapper.getFileMenuBuilder());
         scenarioSimulationEditorKogitoWrapper.onStartup(place);
     }
@@ -183,7 +199,12 @@ public class ScenarioSimulationEditorKogitoTestingScreen implements KogitoScreen
 
     protected void importDMN() {
         Command okImportCommand = () -> {
-            String fileName = UUID.uuid() + ".dmn";
+            String fileName = fileUploadPopupPresenter.getFileName();
+            if (fileName == null || fileName.isEmpty()) {
+                showPopover("ERROR", "Missing file name");
+                return;
+            }
+            fileName = fileName.replaceAll("\\s+", "_");
             String content = fileUploadPopupPresenter.getFileContents();
             final Path path = PathFactory.newPath(fileName, BASE_DMN_URI + fileName);
             saveFile(path, content);
