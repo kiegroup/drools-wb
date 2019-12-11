@@ -30,7 +30,7 @@ import org.drools.workbench.screens.scenariosimulation.client.popup.FileUploadPo
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.ScenarioSimulationEditorKogitoWrapper;
 import org.drools.workbench.screens.scenariosimulation.webapp.client.popup.LoadScesimPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.webapp.client.popup.NewScesimPopupPresenter;
-import org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds.KogitoTestingScenarioSimulationBuilder;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.util.KogitoScenarioSimulationBuilder;
 import org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds.ScesimFilesProvider;
 import org.gwtbootstrap3.client.ui.Popover;
 import org.jboss.errai.common.client.api.ErrorCallback;
@@ -94,7 +94,7 @@ public class ScenarioSimulationEditorKogitoTestingScreen implements KogitoScreen
     private Promises promises;
 
     @Inject
-    private KogitoTestingScenarioSimulationBuilder scenarioSimulationBuilder;
+    private KogitoScenarioSimulationBuilder scenarioSimulationBuilder;
 
     @Override
     public PlaceRequest getPlaceRequest() {

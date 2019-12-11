@@ -18,35 +18,20 @@ package org.drools.workbench.screens.scenariosimulation.webapp.client.workaround
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import org.drools.scenariosimulation.api.model.Settings;
-import org.drools.workbench.screens.scenariosimulation.kogito.client.fakes.AbstractKogitoDMNTypeService;
-import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.util.AbstractKogitoDMNService;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.kie.workbench.common.kogito.webapp.base.client.workarounds.TestingVFSService;
 import org.uberfire.backend.vfs.Path;
 
 @ApplicationScoped
-public class KogitoDMNTypeServiceTestingImpl extends AbstractKogitoDMNTypeService {
+public class KogitoDMNServiceTestingImpl extends AbstractKogitoDMNService {
 
     @Inject
     private TestingVFSService testingVFSService;
 
-    @Override
-    public FactModelTuple retrieveFactModelTuple(Path path, String dmnPath) {
-        String dmnContent = getDMNContent(path);
-        return getFactModelTuple(dmnContent);
-    }
 
     @Override
-    public void initializeNameAndNamespace(Settings settings, Path path, String dmnPath) {
-
-    }
-
-    public String getDMNContent(final Path path) {
-        return testingVFSService.loadFile(path);
-    }
-
     public void getDMNContent(final Path path, final RemoteCallback<String> remoteCallback, final ErrorCallback<Object> errorCallback) {
         testingVFSService.loadFile(path, remoteCallback, errorCallback);
     }

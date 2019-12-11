@@ -785,7 +785,6 @@
             <compileSourcesArtifact>org.dashbuilder:dashbuilder-displayer-client</compileSourcesArtifact>
             <!-- DMN Marshaller -->
             <compileSourcesArtifact>org.kie.workbench:kie-wb-common-dmn-webapp-kogito-marshaller</compileSourcesArtifact>
-
           </compileSourcesArtifacts>
         </configuration>
         <executions>

@@ -13,19 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds;
+package org.drools.workbench.screens.scenariosimulation.kogito.client.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
-import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;
 
@@ -53,22 +48,16 @@ import org.drools.workbench.scenariosimulation.kogito.marshaller.js.SCESIMMainJs
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.callbacks.SCESIMMarshallCallback;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIScenarioSimulationModelType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.SCESIM;
+import org.drools.workbench.scenariosimulation.kogito.marshaller.mapper.JSIName;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.mapper.JsUtils;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.converters.scesim.ApiJSInteropConverter;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
-import org.guvnor.common.services.backend.exceptions.ExceptionUtilities;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
-import org.kie.dmn.feel.lang.Type;
-import org.kie.dmn.feel.lang.types.BuiltInType;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.MainJs;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.callbacks.DMN12UnmarshallCallback;
-import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.DMN12;
-import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITDRGElement;
-import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITDecision;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITDefinitions;
-import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITInputData;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.backend.vfs.PathFactory;
 
@@ -83,10 +72,10 @@ import static org.drools.scenariosimulation.api.utils.ConstantsHolder.VALUE;
  * <p>
  * Implemented to manage the nested callbacks for <b>DMN</b>
  */
-public class KogitoTestingScenarioSimulationBuilder {
+public class KogitoScenarioSimulationBuilder {
 
     @Inject
-    private KogitoDMNTypeServiceTestingImpl dmnTypeService;
+    private KogitoDMNService dmnTypeService;
 
     private static FactMappingType convert(final FactModelTree.Type modelTreeType) {
         switch (modelTreeType) {
@@ -129,15 +118,27 @@ public class KogitoTestingScenarioSimulationBuilder {
 
     private void populateDMN(final ScenarioSimulationModel toPopulate, final Path context, final String dmnFilePath, final RemoteCallback<String> callback) {
         toPopulate.setBackground(createBackground());
-        toPopulate.setSettings(createDMNSettings(context, dmnFilePath));
-        populateDMNSimulation(toPopulate, dmnFilePath, callback);
+        populateDMNSimulationAnsSettings(toPopulate, dmnFilePath, callback);
     }
 
     private void convertScenarioSimulationModel(final ScenarioSimulationModel toConvert, final RemoteCallback<String> callback) {
-        JSIScenarioSimulationModelType converted = ApiJSInteropConverter.getJSIScenarioSimulationModelType(toConvert);
-        SCESIM scesim = Js.uncheckedCast(JsUtils.getWrappedElement(converted));
+        JSIScenarioSimulationModelType jsiScenarioSimulationModelType = ApiJSInteropConverter.getJSIScenarioSimulationModelType(toConvert);
+        final SCESIM scesim = Js.uncheckedCast(JsUtils.newWrappedInstance());
+        JsUtils.setNameOnWrapped(scesim, makeJSINameForSCESIM());
+        JsUtils.setValueOnWrapped(scesim, jsiScenarioSimulationModelType);
         SCESIMMarshallCallback scesimMarshallCallback = getSCESIMMarshallCallback(callback);
         SCESIMMainJs.marshall(scesim, "", scesimMarshallCallback);
+    }
+
+    private JSIName makeJSINameForSCESIM() {
+        final JSIName jsiName = JSIScenarioSimulationModelType.getJSIName();
+        jsiName.setPrefix("");
+        jsiName.setLocalPart("ScenarioSimulationModel");
+        final String key = "{" + jsiName.getNamespaceURI() + "}" + jsiName.getLocalPart();
+        final String keyString = "{" + jsiName.getNamespaceURI() + "}" + jsiName.getPrefix() + ":" + jsiName.getLocalPart();
+        jsiName.setKey(key);
+        jsiName.setString(keyString);
+        return jsiName;
     }
 
     private Simulation createRULESimulation() {
@@ -163,13 +164,13 @@ public class KogitoTestingScenarioSimulationBuilder {
         return toReturn;
     }
 
-    private void populateDMNSimulation(final ScenarioSimulationModel toPopulate, final String dmnFilePath, final RemoteCallback<String> callback) {
+    private void populateDMNSimulationAnsSettings(final ScenarioSimulationModel toPopulate, final String dmnFilePath, final RemoteCallback<String> callback) {
         String dmnFileName = dmnFilePath.substring(dmnFilePath.lastIndexOf('/') + 1);
         final Path dmnPath = PathFactory.newPath(dmnFileName, dmnFilePath);
         dmnTypeService.getDMNContent(dmnPath, new RemoteCallback<String>() {
                                          @Override
                                          public void callback(String dmnContent) {
-                                             DMN12UnmarshallCallback dmn12UnmarshallCallback = getDMN12UnmarshallCallback(toPopulate, callback);
+                                             DMN12UnmarshallCallback dmn12UnmarshallCallback = getDMN12UnmarshallCallback(toPopulate, dmnFilePath, callback);
                                              MainJs.unmarshall(dmnContent, "", dmn12UnmarshallCallback);
                                          }
                                      },
@@ -205,11 +206,12 @@ public class KogitoTestingScenarioSimulationBuilder {
         return toReturn;
     }
 
-    private Settings createDMNSettings(final Path context, final String dmnFilePath) {
+    private Settings createDMNSettings(final String name, final String nameSpace, final String dmnFilePath) {
         Settings toReturn = new Settings();
         toReturn.setType(ScenarioSimulationModel.Type.DMN);
         toReturn.setDmnFilePath(dmnFilePath);
-        dmnTypeService.initializeNameAndNamespace(toReturn, context, dmnFilePath);
+        toReturn.setDmnName(name);
+        toReturn.setDmnNamespace(nameSpace);
         return toReturn;
     }
 
@@ -301,42 +303,14 @@ public class KogitoTestingScenarioSimulationBuilder {
         return xmlString -> callback.callback(xmlString);
     }
 
-    private DMN12UnmarshallCallback getDMN12UnmarshallCallback(final ScenarioSimulationModel toPopulate, final RemoteCallback<String> callback) {
+    private DMN12UnmarshallCallback getDMN12UnmarshallCallback(final ScenarioSimulationModel toPopulate, final String dmnFilePath, final RemoteCallback<String> callback) {
         return dmn12 -> {
-            final FactModelTuple factModelTuple = getFactModelTuple(dmn12);
+            final JSITDefinitions jsitDefinitions = Js.uncheckedCast(JsUtils.getUnwrappedElement(dmn12));
+            final FactModelTuple factModelTuple = dmnTypeService.getFactModelTuple(jsitDefinitions);
             toPopulate.setSimulation(getDMNSimulation(factModelTuple));
+            toPopulate.setSettings(createDMNSettings(jsitDefinitions.getName(), jsitDefinitions.getNamespace(), dmnFilePath));
             convertScenarioSimulationModel(toPopulate, callback);
         };
-    }
-
-    private FactModelTuple getFactModelTuple(final DMN12 dmn12) {
-        SortedMap<String, FactModelTree> visibleFacts = new TreeMap<>();
-        SortedMap<String, FactModelTree> hiddenFacts = new TreeMap<>();
-        ErrorHolder errorHolder = new ErrorHolder();
-        final JSITDefinitions definitions = dmn12.getDefinitions();
-        for (JSITDRGElement jsitdrgElement : definitions.getDrgElement()) {
-            if (jsitdrgElement instanceof JSITInputData) {
-                try {
-                    DMNType type = new DMNType(jsitdrgElement);
-                    checkTypeSupport(type, errorHolder, jsitdrgElement.getName());
-                    visibleFacts.put(jsitdrgElement.getName(), createTopLevelFactModelTree(jsitdrgElement.getName(), type, hiddenFacts, FactModelTree.Type.INPUT));
-                } catch (Exception e) {
-                    throw ExceptionUtilities.handleException(e);
-                }
-            } else if (jsitdrgElement instanceof JSITDecision) {
-                DMNType type = new DMNType(jsitdrgElement);
-                checkTypeSupport(type, errorHolder, jsitdrgElement.getName());
-                try {
-                    visibleFacts.put(jsitdrgElement.getName(), createTopLevelFactModelTree(jsitdrgElement.getName(), type, hiddenFacts, FactModelTree.Type.DECISION));
-                } catch (Exception e) {
-                    throw ExceptionUtilities.handleException(e);
-                }
-            }
-        }
-        FactModelTuple toReturn = new FactModelTuple(visibleFacts, hiddenFacts);
-        errorHolder.getMultipleNestedCollection().forEach(toReturn::addMultipleNestedCollectionError);
-        errorHolder.getMultipleNestedObject().forEach(toReturn::addMultipleNestedObjectError);
-        return toReturn;
     }
 
     private Simulation getDMNSimulation(final FactModelTuple factModelTuple) {
@@ -420,227 +394,6 @@ public class KogitoTestingScenarioSimulationBuilder {
         }
     }
 
-    /**
-     * This method is the <b>entry point</b> for <code>FactModelTree</code>. It is the one to be called from the very top level <code>DMNType</code>
-     * @param factName
-     * @param type
-     * @param hiddenFacts
-     * @param fmType
-     * @return
-     * @throws Exception
-     */
-    private FactModelTree createTopLevelFactModelTree(String factName, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.Type fmType) throws Exception {
-        return isToBeManagedAsCollection(type) ? createFactModelTreeForCollection(new HashMap<>(), factName, type, hiddenFacts, fmType, new ArrayList<>()) : createFactModelTreeForNoCollection(new HashMap<>(), factName, factName, type.getName(), type, hiddenFacts, fmType, new ArrayList<>());
-    }
-
-    /**
-     * Creates a <code>FactModelTree</code> for <code>DMNType</code> where <code>DMNType.isCollection()</code> == <code>true</code>
-     * @param factName
-     * @param type
-     * @param hiddenFacts
-     * @param fmType
-     * @return
-     * @throws Exception if <code>DMNType.isCollection()</code> != <code>true</code>
-     */
-    protected FactModelTree createFactModelTreeForCollection(Map<String, List<String>> genericTypeInfoMap, String factName, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.Type fmType, List<String> alreadyVisited) throws Exception {
-        if (!type.isCollection() && !isToBeManagedAsCollection(type)) {
-            throw new Exception();
-        }
-        String typeName = type.getName();
-        populateGeneric(genericTypeInfoMap, VALUE, typeName);
-        FactModelTree toReturn = createFactModelTreeForSimple(genericTypeInfoMap, factName, List.class.getCanonicalName(), fmType);
-        if (!hiddenFacts.containsKey(typeName) && !alreadyVisited.contains(typeName)) {
-            alreadyVisited.add(typeName);
-            FactModelTree genericFactModelTree = createFactModelTreeForGenericType(new HashMap<>(), typeName, typeName, typeName, type, hiddenFacts, fmType, alreadyVisited);
-            hiddenFacts.put(typeName, genericFactModelTree);
-        }
-        return toReturn;
-    }
-
-    /**
-     * Creates a <code>FactModelTree</code> for <code>DMNType</code> where <code>DMNType.isCollection()</code> != <code>true</code>
-     * @param propertyName
-     * @param fullPropertyPath
-     * @param type
-     * @param hiddenFacts
-     * @param fmType
-     * @return
-     * @throws Exception if <code>DMNType.isCollection()</code> == <code>true</code>
-     */
-    protected FactModelTree createFactModelTreeForNoCollection(Map<String, List<String>> genericTypeInfoMap, String factName, String propertyName, String fullPropertyPath, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.Type fmType, List<String> alreadyVisited) throws Exception {
-        if (type.isCollection() && isToBeManagedAsCollection(type)) {
-            throw new Exception();
-        }
-        return isToBeManagedAsComposite(type) ? createFactModelTreeForComposite(genericTypeInfoMap, propertyName, fullPropertyPath, type, hiddenFacts, fmType, alreadyVisited) : createFactModelTreeForSimple(genericTypeInfoMap, factName, type.getName(), fmType);
-    }
-
-    /**
-     * Creates a <code>FactModelTree</code> for <code>DMNType</code>
-     * @param propertyName
-     * @param fullPropertyPath
-     * @param type
-     * @param hiddenFacts
-     * @param fmType
-     * @return
-     */
-    protected FactModelTree createFactModelTreeForGenericType(Map<String, List<String>> genericTypeInfoMap, String factName, String propertyName, String fullPropertyPath, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.Type fmType, List<String> alreadyVisited) throws Exception {
-        return type.isComposite() ? createFactModelTreeForComposite(genericTypeInfoMap, propertyName, fullPropertyPath, type, hiddenFacts, fmType, alreadyVisited) : createFactModelTreeForSimple(genericTypeInfoMap, factName, type.getName(), fmType);
-    }
-
-    /**
-     * Creates a <code>FactModelTree</code> for <code>DMNType</code> where <code>DMNType.isComposite()</code> != <code>true</code>.
-     * Returned <code>FactModelTree</code> will have only one single property, whose name is <b>VALUE</b> and whose value is the given <b>propertyClass</b>
-     * @param genericTypeInfoMap
-     * @param factName
-     * @param propertyClass
-     * @param fmType
-     * @return
-     */
-    private FactModelTree createFactModelTreeForSimple(Map<String, List<String>> genericTypeInfoMap, String factName, String propertyClass, FactModelTree.Type fmType) {
-        Map<String, String> simpleProperties = new HashMap<>();
-        FactModelTree simpleFactModelTree = new FactModelTree(factName, "", simpleProperties, genericTypeInfoMap, fmType);
-        simpleFactModelTree.addSimpleProperty(VALUE, propertyClass);
-        simpleFactModelTree.setSimple(true);
-        return simpleFactModelTree;
-    }
-
-    /**
-     * Creates a <code>FactModelTree</code> for <code>DMNType</code> where <code>DMNType.isComposite()</code> == <code>true</code>
-     * @param name
-     * @param fullPropertyPath
-     * @param type
-     * @param hiddenFacts
-     * @param fmType
-     * @throws Exception if <code>DMNType.isComposite()</code> != <code>true</code>
-     */
-    private FactModelTree createFactModelTreeForComposite(Map<String, List<String>> genericTypeInfoMap, String name, String fullPropertyPath, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.Type fmType, List<String> alreadyVisited) throws Exception {
-        if (!type.isComposite() && !isToBeManagedAsComposite(type)) {
-            throw new Exception();
-        }
-        Map<String, String> simpleFields = new HashMap<>();
-        FactModelTree toReturn = new FactModelTree(name, "", simpleFields, genericTypeInfoMap, fmType);
-        for (Map.Entry<String, DMNType> entry : type.getFields().entrySet()) {
-            String expandablePropertyName = fullPropertyPath + "." + entry.getKey();
-            if (isToBeManagedAsCollection(entry.getValue())) {  // if it is a collection, generate the generic and add as hidden fact a simple or composite fact model tree
-                FactModelTree fact = createFactModelTreeForCollection(new HashMap<>(), entry.getKey(), entry.getValue(), hiddenFacts, FactModelTree.Type.UNDEFINED, alreadyVisited);
-                simpleFields.put(entry.getKey(), List.class.getCanonicalName());
-                genericTypeInfoMap.put(entry.getKey(), fact.getGenericTypeInfo(VALUE));
-            } else {
-                String typeName = entry.getValue().getName();
-                if (entry.getValue().isComposite()) { // a complex type needs the expandable property and then in the hidden map, its fact model tree
-                    if (!hiddenFacts.containsKey(typeName) && !alreadyVisited.contains(typeName)) {
-                        alreadyVisited.add(typeName);
-                        FactModelTree fact = createFactModelTreeForNoCollection(genericTypeInfoMap, entry.getKey(), VALUE, expandablePropertyName, entry.getValue(), hiddenFacts, FactModelTree.Type.UNDEFINED, alreadyVisited);
-                        hiddenFacts.put(typeName, fact);
-                    }
-                    toReturn.addExpandableProperty(entry.getKey(), typeName);
-                } else {  // a simple type is just name -> type
-                    simpleFields.put(entry.getKey(), typeName);
-                }
-            }
-        }
-        return toReturn;
-    }
-
-    /**
-     * Return <code>true</code> if the given <code>DMNType</code> has to be managed as <b>collection</b>
-     * @param type
-     * @return <code>true</code> if <code>DMNType.isCollection() == true</code> <b>and</b> <code>BaseDMNTypeImpl.getFeelType() != BuiltInType.UNKNOWN</code>
-     */
-    private boolean isToBeManagedAsCollection(DMNType type) {
-        boolean toReturn = type.isCollection();
-        if (toReturn) {
-            Type feelType = getRootType(type);
-            // BuiltInType.UNKNOWN is a special case: it is instantiated as collection but it should be considered as single for editing
-            if (feelType instanceof BuiltInType && feelType.equals(BuiltInType.UNKNOWN)) {
-                toReturn = false;
-            }
-        }
-        return toReturn;
-    }
-
-    /**
-     * Return <code>true</code> if the given <code>DMNType</code> has to be managed as <b>composite</b>
-     * @param type
-     * @return <code>true</code> if <code>DMNType.isCollection() == true</code> <b>and</b> <code>BaseDMNTypeImpl.getFeelType() != BuiltInType.UNKNOWN</code>
-     */
-    private boolean isToBeManagedAsComposite(DMNType type) {
-        boolean toReturn = type.isComposite();
-        if (toReturn) {
-            Type feelType = getRootType(type);
-            // BuiltInType.CONTEXT is a special case: it is instantiated as composite but has no nested fields so it should be considered as simple for editing
-            if (feelType instanceof BuiltInType && feelType.equals(BuiltInType.CONTEXT)) {
-                toReturn = false;
-            }
-        }
-        return toReturn;
-    }
-
-    private Type getRootType(DMNType dmnType) {
-        if (dmnType.getFeelType() instanceof BuiltInType) {
-            return dmnType.getFeelType();
-        } else if (dmnType.getBaseType() != null) {
-            return getRootType(dmnType.getBaseType());
-        }
-        return dmnType.getFeelType();
-    }
-
-    /**
-     * This method map the given <b>name</b> to <b>List.class.getCanonicalName()</b> inside <b>simpleFields</b>,
-     * and map <b>name</b>  to a singleton list containing a newly generated <b>key</b> (path + "." + type) inside <b>genericTypeInfoMap</b>
-     * @param genericTypeInfoMap
-     * @param fullPropertyPath
-     * @param type
-     * @return
-     */
-    private String populateGeneric(Map<String, List<String>> genericTypeInfoMap,
-                                   String fullPropertyPath,
-                                   String type) {
-        String genericKey = fullPropertyPath;
-        genericTypeInfoMap.put(fullPropertyPath, Collections.singletonList(type));
-        return genericKey;
-    }
-
-    /**
-     * Recursively visit a <i>composite</i> <code>DMNType</code> to eventually detect and add errors to given <code>ErrorHolder</code>
-     * @param type
-     * @param errorHolder
-     * @param fullPropertyPath
-     */
-    private void checkTypeSupport(DMNType type,
-                                  ErrorHolder errorHolder,
-                                  String fullPropertyPath) {
-        internalCheckTypeSupport(type, false, errorHolder, fullPropertyPath, new HashSet<>());
-    }
-
-    private void internalCheckTypeSupport(DMNType type,
-                                          boolean alreadyInCollection,
-                                          ErrorHolder errorHolder,
-                                          String fullPropertyPath,
-                                          Set<String> alreadyVisited) {
-        alreadyVisited.add(type.getName());
-        if (type.isComposite()) {
-            for (Map.Entry<String, DMNType> entry : type.getFields().entrySet()) {
-                String name = entry.getKey();
-                DMNType nestedType = entry.getValue();
-                String nestedPath = fullPropertyPath + "." + name;
-                if (alreadyInCollection && nestedType.isCollection()) {
-                    errorHolder.getMultipleNestedCollection().add(nestedPath);
-                }
-                if (alreadyInCollection && nestedType.isComposite()) {
-                    errorHolder.getMultipleNestedObject().add(nestedPath);
-                }
-                if (!alreadyVisited.contains(nestedType.getName())) {
-                    internalCheckTypeSupport(nestedType,
-                                             alreadyInCollection || nestedType.isCollection(),
-                                             errorHolder,
-                                             nestedPath,
-                                             alreadyVisited);
-                }
-            }
-        }
-    }
-
     private static class FactMappingExtractor {
 
         private final FactIdentifier factIdentifier;
@@ -691,67 +444,6 @@ public class KogitoTestingScenarioSimulationBuilder {
             abstractScesimData.addMappingValue(factIdentifier, expressionIdentifier, null);
 
             return factMapping;
-        }
-    }
-
-    private static class ErrorHolder {
-
-        Set<String> multipleNestedObject = new TreeSet<>();
-        Set<String> multipleNestedCollection = new TreeSet<>();
-
-        public Set<String> getMultipleNestedObject() {
-            return multipleNestedObject;
-        }
-
-        public Set<String> getMultipleNestedCollection() {
-            return multipleNestedCollection;
-        }
-    }
-
-    private static class DMNType {
-
-        private String namespace;
-        private String name;
-        private String id;
-        private boolean collection;
-        private boolean composite;
-        private Map<String, DMNType> fields;
-        private Type feelType;
-        private DMNType baseType;
-
-        public DMNType(JSITDRGElement jsitdrgElement) {
-        }
-
-        public String getNamespace() {
-            return namespace;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public boolean isCollection() {
-            return collection;
-        }
-
-        public boolean isComposite() {
-            return composite;
-        }
-
-        public Map<String, DMNType> getFields() {
-            return fields;
-        }
-
-        public Type getFeelType() {
-            return feelType;
-        }
-
-        public DMNType getBaseType() {
-            return baseType;
         }
     }
 }
