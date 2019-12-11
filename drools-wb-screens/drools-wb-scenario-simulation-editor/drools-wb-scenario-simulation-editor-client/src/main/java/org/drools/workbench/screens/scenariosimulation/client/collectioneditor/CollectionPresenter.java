@@ -33,7 +33,6 @@ import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.e
 import org.drools.workbench.screens.scenariosimulation.client.popup.ConfirmPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.popup.ScenarioConfirmationPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
-import org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 
 import static org.drools.scenariosimulation.api.utils.ConstantsHolder.VALUE;
@@ -252,9 +251,8 @@ public class CollectionPresenter implements CollectionView.Presenter {
     }
 
     protected void populateExpression(JSONValue jsonValue) {
-        final JSONObject jsValueObject = jsonValue.isObject();
-        JSONValue value = jsValueObject.get(ConstantHolder.EXPRESSION);
-        collectionView.setExpression(value.isString().stringValue());
+        final JSONString jsonString = jsonValue.isString();
+        collectionView.setExpression(jsonString.stringValue());
     }
 
     protected JSONObject getJSONObject(String jsonString) {
@@ -274,9 +272,8 @@ public class CollectionPresenter implements CollectionView.Presenter {
     }
 
     protected String getExpressionValue() {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put(ConstantHolder.EXPRESSION, new JSONString(collectionView.getExpression()));
-        return jsonObject.toString();
+        final JSONString jsonString = new JSONString(collectionView.getExpression());
+        return jsonString.toString();
     }
 
     protected String getListValue() {
