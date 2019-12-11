@@ -27,8 +27,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.workbench.common.services.verifier.reporting.client.panel.AnalysisReportScreen;
-import org.kie.workbench.common.widgets.client.docks.PlaceHolderBase;
-import org.kie.workbench.common.widgets.client.docks.PlaceHolderBaseView;
+import org.kie.workbench.common.widgets.client.docks.DockPlaceHolderBase;
+import org.kie.workbench.common.widgets.client.docks.DockPlaceHolderBaseView;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -72,7 +72,7 @@ public class BaseGuidedDecisionTableEditorPresenterVerifierDockTest extends Base
     private Widget analysisReportScreenWidget;
 
     @Mock
-    private PlaceHolderBase placeHolderBase;
+    private DockPlaceHolderBase placeHolderBase;
 
     @Before
     public void setUp() throws Exception {
@@ -171,7 +171,7 @@ public class BaseGuidedDecisionTableEditorPresenterVerifierDockTest extends Base
     private void setUpPlaceManager() {
         doReturn(PlaceStatus.OPEN).when(placeManager).getStatus(any(PlaceRequest.class));
         final AbstractWorkbenchActivity activity = mock(AbstractWorkbenchActivity.class);
-        final PlaceHolderBaseView placeHolderBaseView = mock(PlaceHolderBaseView.class);
+        final DockPlaceHolderBaseView placeHolderBaseView = mock(DockPlaceHolderBaseView.class);
         doReturn(placeHolderBaseView).when(activity).getWidget();
         doReturn(placeHolderBase).when(placeHolderBaseView).getPresenter();
         doReturn(activity).when(placeManager).getActivity(any());
