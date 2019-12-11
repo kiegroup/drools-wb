@@ -15,15 +15,21 @@
  */
 package org.drools.workbench.screens.scenariosimulation.webapp.client.dropdown;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
+import com.google.gwt.core.client.GWT;
+import org.drools.workbench.screens.scenariosimulation.client.dropdown.ScenarioSimulationAssetsDropdownProvider;
 import org.jboss.errai.bus.client.api.messaging.Message;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.kie.workbench.common.kogito.webapp.base.client.workarounds.TestingVFSService;
+import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
 import org.uberfire.backend.vfs.Path;
 
 import static org.drools.workbench.screens.scenariosimulation.webapp.client.editor.ScenarioSimulationEditorKogitoTestingScreen.DMN_PATH;
@@ -37,7 +43,23 @@ public class DmnAssetsDropdownProviderImpl implements ScenarioSimulationAssetsDr
     private TestingVFSService testingVFSService;
 
     @Override
-    public void getItems(final RemoteCallback<List<Path>> callback, final ErrorCallback<Message> errorCallback) {
+    public  void getItems(Consumer<List<KieAssetsDropdownItem>> assetListConsumer) {
+        getItems(response -> {
+            List<KieAssetsDropdownItem> toAccept = response.stream()
+                    .map(this::getKieAssetsDropdownItem)
+                    .collect(Collectors.toList());
+            assetListConsumer.accept(toAccept);
+        }, (message, throwable) -> {
+            GWT.log(message.getCommandType() + " " + message.toString(), throwable);
+            return false;
+        });
+    }
+
+    protected void getItems(final RemoteCallback<List<Path>> callback, final ErrorCallback<Message> errorCallback) {
         testingVFSService.getItemsByPath(DMN_PATH, FILE_SUFFIX, callback, errorCallback);
+    }
+
+    protected KieAssetsDropdownItem getKieAssetsDropdownItem(final Path asset) {
+        return new KieAssetsDropdownItem(asset.getFileName(), "", asset.toURI(), new HashMap<>());
     }
 }

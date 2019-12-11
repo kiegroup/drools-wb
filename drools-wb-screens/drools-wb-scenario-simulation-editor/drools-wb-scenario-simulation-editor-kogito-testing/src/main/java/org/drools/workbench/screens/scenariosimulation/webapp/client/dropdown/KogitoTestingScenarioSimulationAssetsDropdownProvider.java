@@ -31,7 +31,7 @@ import org.uberfire.backend.vfs.Path;
 /**
  * Using this to specialize injected instance
  */
-public interface ScenarioSimulationAssetsDropdownProvider extends KieAssetsDropdownItemsProvider {
+public interface KogitoTestingScenarioSimulationAssetsDropdownProvider extends KieAssetsDropdownItemsProvider {
 
 
     void getItems(final RemoteCallback<List<Path>> callback, final ErrorCallback<Message> errorCallback);

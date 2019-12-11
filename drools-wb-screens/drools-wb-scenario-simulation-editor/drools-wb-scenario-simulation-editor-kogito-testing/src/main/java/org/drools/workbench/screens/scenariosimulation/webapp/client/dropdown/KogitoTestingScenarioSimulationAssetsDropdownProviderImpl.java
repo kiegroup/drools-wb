@@ -29,7 +29,7 @@ import org.uberfire.backend.vfs.Path;
 import static org.drools.workbench.screens.scenariosimulation.webapp.client.editor.ScenarioSimulationEditorKogitoTestingScreen.SCESIM_PATH;
 
 @Dependent
-public class ScenarioSimulationAssetsDropdownProviderImpl implements ScenarioSimulationAssetsDropdownProvider {
+public class KogitoTestingScenarioSimulationAssetsDropdownProviderImpl implements KogitoTestingScenarioSimulationAssetsDropdownProvider {
 
     private static final String FILE_SUFFIX = "scesim";
 
