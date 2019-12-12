@@ -146,7 +146,7 @@ public class KogitoScenarioSimulationBuilder {
         ScesimModelDescriptor simulationDescriptor = toReturn.getScesimModelDescriptor();
         simulationDescriptor.addFactMapping(FactIdentifier.INDEX.getName(), FactIdentifier.INDEX, ExpressionIdentifier.INDEX);
         simulationDescriptor.addFactMapping(FactIdentifier.DESCRIPTION.getName(), FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION);
-        ScenarioWithIndex scenarioWithIndex = createScesimDataWithIndex(toReturn, (integer, scenario) -> new ScenarioWithIndex());
+        ScenarioWithIndex scenarioWithIndex = createScesimDataWithIndex(toReturn, (integer, scenario) -> new ScenarioWithIndex(integer, scenario));
 
         // Add GIVEN Fact
         createEmptyColumn(simulationDescriptor,

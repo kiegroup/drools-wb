@@ -99,14 +99,12 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
             final PlaceManager placeManager,
             final MultiPageEditorContainerView multiPageEditorContainerView,
             final AuthoringEditorDock authoringWorkbenchDocks,
-            final Promises promises/*,
-            final KogitoDMNTypeService kogitoDMNTypeService*/) {
+            final Promises promises) {
         super(scenarioSimulationEditorPresenter.getView(), placeManager, multiPageEditorContainerView);
         this.scenarioSimulationEditorPresenter = scenarioSimulationEditorPresenter;
         this.fileMenuBuilder = fileMenuBuilder;
         this.authoringWorkbenchDocks = authoringWorkbenchDocks;
         this.promises = promises;
-//        this.kogitoDMNTypeService = kogitoDMNTypeService;
     }
 
     @Override
