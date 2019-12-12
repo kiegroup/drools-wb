@@ -75,12 +75,12 @@ public class ApiJSInteropConverter {
     protected static JSISettingsType getSettings(Settings source) {
         JSISettingsType toReturn = new JSISettingsType();
         toReturn.setDmoSession(source.getDmoSession());
-        toReturn.setDmnFilePath(source.getDmnFilePath());
         toReturn.setType(source.getType().name());
-        toReturn.setDmnFilePath(source.getFileName());
+        toReturn.setFileName(source.getFileName());
         toReturn.setKieSession(source.getKieSession());
         toReturn.setKieBase(source.getKieBase());
         toReturn.setRuleFlowGroup(source.getRuleFlowGroup());
+        toReturn.setDmnFilePath(source.getDmnFilePath());
         toReturn.setDmnNamespace(source.getDmnNamespace());
         toReturn.setDmnName(source.getDmnName());
         toReturn.setSkipFromBuild(source.isSkipFromBuild());

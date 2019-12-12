@@ -48,9 +48,11 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.
 import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationHasBusyIndicatorDefaultErrorCallback;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridWidget;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.strategies.KogitoDMNDataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.strategies.KogitoDMODataManagementStrategy;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.util.KogitoDMNService;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
 import org.gwtbootstrap3.client.ui.TabListItem;
 import org.jboss.errai.common.client.api.ErrorCallback;
@@ -70,6 +72,7 @@ import org.uberfire.client.views.pfly.multipage.PageImpl;
 import org.uberfire.lifecycle.GetContent;
 import org.uberfire.lifecycle.SetContent;
 import org.uberfire.mvp.PlaceRequest;
+import org.uberfire.mvp.impl.DefaultPlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 
 import static org.drools.workbench.screens.scenariosimulation.kogito.client.converters.scesim.ApiJSInteropConverter.getJSIScenarioSimulationModelType;
@@ -92,6 +95,8 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
         //Zero-parameter constructor for CDI proxies
     }
 
+    private KogitoDMNService dmnTypeService;
+
     @Inject
     public ScenarioSimulationEditorKogitoWrapper(
             final ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter,
@@ -99,12 +104,14 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
             final PlaceManager placeManager,
             final MultiPageEditorContainerView multiPageEditorContainerView,
             final AuthoringEditorDock authoringWorkbenchDocks,
-            final Promises promises) {
+            final Promises promises,
+            final KogitoDMNService dmnTypeService) {
         super(scenarioSimulationEditorPresenter.getView(), placeManager, multiPageEditorContainerView);
         this.scenarioSimulationEditorPresenter = scenarioSimulationEditorPresenter;
         this.fileMenuBuilder = fileMenuBuilder;
         this.authoringWorkbenchDocks = authoringWorkbenchDocks;
         this.promises = promises;
+        this.dmnTypeService = dmnTypeService;
     }
 
     @Override
@@ -204,9 +211,10 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     }
 
     public void gotoPath(Path path) {
+        resetEditorPages();
         currentPath = path;
         scenarioSimulationEditorPresenter.init(this, new ObservablePathImpl().wrap(path));
-        scenarioSimulationEditorPresenter.showDocks(PlaceStatus.CLOSE);
+//        scenarioSimulationEditorPresenter.showDocks(PlaceStatus.CLOSE);
     }
 
     public Path getCurrentPath() {
@@ -293,6 +301,7 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
             try {
                 final ScenarioSimulationModel scenarioSimulationModel = getScenarioSimulationModel(scenarioSimulationModelType);
                 getModelSuccessCallbackMethod(scenarioSimulationModel);
+//                scenarioSimulationEditorPresenter.showDocks(PlaceStatus.CLOSE);
             } catch (Throwable t) {
                 GWT.log("Failed to transform scesim", t);
             }
@@ -301,15 +310,16 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
 
     protected void getModelSuccessCallbackMethod(ScenarioSimulationModel model) {
         scenarioSimulationEditorPresenter.setPackageName("com");
-        resetEditorPages();
         DataManagementStrategy dataManagementStrategy;
         if (ScenarioSimulationModel.Type.RULE.equals(model.getSettings().getType())) {
             dataManagementStrategy = new KogitoDMODataManagementStrategy();
         } else {
-            dataManagementStrategy = new KogitoDMNDataManagementStrategy(scenarioSimulationEditorPresenter.getEventBus()/*, kogitoDMNTypeService*/);
+            dataManagementStrategy = new KogitoDMNDataManagementStrategy(scenarioSimulationEditorPresenter.getEventBus(), dmnTypeService);
         }
         dataManagementStrategy.setModel(model);
+        setOriginalContentHash(scenarioSimulationEditorPresenter.getJsonModel(model).hashCode());
         scenarioSimulationEditorPresenter.getModelSuccessCallbackMethod(dataManagementStrategy, model);
+        showDocks();
     }
 
     protected void onBackgroundTabSelected() {
@@ -318,5 +328,11 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
 
     protected void onImportsTabSelected() {
         scenarioSimulationEditorPresenter.onImportsTabSelected();
+    }
+
+    protected void showDocks() {
+//        final DefaultPlaceRequest placeRequest = new DefaultPlaceRequest(TestToolsPresenter.IDENTIFIER);
+        scenarioSimulationEditorPresenter.showDocks(PlaceStatus.CLOSE);
+//        registerTestToolsCallback();
     }
 }

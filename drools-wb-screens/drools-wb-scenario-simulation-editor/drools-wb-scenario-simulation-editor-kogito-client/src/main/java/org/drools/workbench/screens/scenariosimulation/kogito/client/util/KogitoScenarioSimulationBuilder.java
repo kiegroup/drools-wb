@@ -53,7 +53,6 @@ import org.drools.workbench.scenariosimulation.kogito.marshaller.mapper.JsUtils;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.converters.scesim.ApiJSInteropConverter;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
-import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.MainJs;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.callbacks.DMN12UnmarshallCallback;
@@ -118,7 +117,7 @@ public class KogitoScenarioSimulationBuilder {
 
     private void populateDMN(final ScenarioSimulationModel toPopulate, final Path context, final String dmnFilePath, final RemoteCallback<String> callback) {
         toPopulate.setBackground(createBackground());
-        populateDMNSimulationAnsSettings(toPopulate, dmnFilePath, callback);
+        populateDMNSimulationAndSettings(toPopulate, dmnFilePath, callback);
     }
 
     private void convertScenarioSimulationModel(final ScenarioSimulationModel toConvert, final RemoteCallback<String> callback) {
@@ -164,22 +163,16 @@ public class KogitoScenarioSimulationBuilder {
         return toReturn;
     }
 
-    private void populateDMNSimulationAnsSettings(final ScenarioSimulationModel toPopulate, final String dmnFilePath, final RemoteCallback<String> callback) {
+    private void populateDMNSimulationAndSettings(final ScenarioSimulationModel toPopulate, final String dmnFilePath, final RemoteCallback<String> callback) {
         String dmnFileName = dmnFilePath.substring(dmnFilePath.lastIndexOf('/') + 1);
         final Path dmnPath = PathFactory.newPath(dmnFileName, dmnFilePath);
-        dmnTypeService.getDMNContent(dmnPath, new RemoteCallback<String>() {
-                                         @Override
-                                         public void callback(String dmnContent) {
-                                             DMN12UnmarshallCallback dmn12UnmarshallCallback = getDMN12UnmarshallCallback(toPopulate, dmnFilePath, callback);
-                                             MainJs.unmarshall(dmnContent, "", dmn12UnmarshallCallback);
-                                         }
-                                     },
-                                     new ErrorCallback<Object>() {
-                                         @Override
-                                         public boolean error(Object message, Throwable throwable) {
-                                             GWT.log("Error " + message.toString(), throwable);
-                                             return false;
-                                         }
+        dmnTypeService.getDMNContent(dmnPath, dmnContent -> {
+            DMN12UnmarshallCallback dmn12UnmarshallCallback = getDMN12UnmarshallCallback(toPopulate, dmnFilePath, callback);
+            MainJs.unmarshall(dmnContent, "", dmn12UnmarshallCallback);
+        },
+                                     (message, throwable) -> {
+                                         GWT.log("Error " + message.toString(), throwable);
+                                         return false;
                                      });
     }
 

@@ -63,12 +63,12 @@ public class JSInteropApiConverter {
         Settings toReturn = new Settings();
         if (source != null) {
             toReturn.setDmoSession(source.getDmoSession());
-            toReturn.setDmnFilePath(source.getDmnFilePath());
             toReturn.setType(ScenarioSimulationModel.Type.valueOf(source.getType()));
-            toReturn.setDmnFilePath(source.getFileName());
+            toReturn.setFileName(source.getFileName());
             toReturn.setKieSession(source.getKieSession());
             toReturn.setKieBase(source.getKieBase());
             toReturn.setRuleFlowGroup(source.getRuleFlowGroup());
+            toReturn.setDmnFilePath(source.getDmnFilePath());
             toReturn.setDmnNamespace(source.getDmnNamespace());
             toReturn.setDmnName(source.getDmnName());
             toReturn.setSkipFromBuild(source.getSkipFromBuild());
