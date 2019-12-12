@@ -173,7 +173,6 @@ public class ScenarioSimulationEditorKogitoTestingScreen implements KogitoScreen
                 scenarioSimulationEditorKogitoWrapper.gotoPath(path);
                 scenarioSimulationEditorKogitoWrapper.setContent(content);
             });
-
             newScesimPopupPresenter.hide();
         };
         newScesimPopupPresenter.show("Choose SCESIM type", createCommand);
@@ -185,7 +184,9 @@ public class ScenarioSimulationEditorKogitoTestingScreen implements KogitoScreen
             String fileName = fullUri.substring(fullUri.lastIndexOf('/') + 1);
             final Path path = PathFactory.newPath(fileName, fullUri);
             testingVFSService.loadFile(path, content -> {
+                GWT.log(this.toString() + " gotoPath " + path);
                 scenarioSimulationEditorKogitoWrapper.gotoPath(path);
+                GWT.log(this.toString() + " setContent");
                 scenarioSimulationEditorKogitoWrapper.setContent(content);
             }, getErrorCallback("Failed to load"));
             loadScesimPopupPresenter.hide();

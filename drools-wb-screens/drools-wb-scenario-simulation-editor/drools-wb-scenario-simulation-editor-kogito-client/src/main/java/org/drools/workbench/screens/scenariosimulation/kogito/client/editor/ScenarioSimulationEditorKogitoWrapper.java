@@ -48,7 +48,6 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.
 import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationHasBusyIndicatorDefaultErrorCallback;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
-import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridWidget;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.strategies.KogitoDMNDataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.strategies.KogitoDMODataManagementStrategy;
@@ -72,7 +71,6 @@ import org.uberfire.client.views.pfly.multipage.PageImpl;
 import org.uberfire.lifecycle.GetContent;
 import org.uberfire.lifecycle.SetContent;
 import org.uberfire.mvp.PlaceRequest;
-import org.uberfire.mvp.impl.DefaultPlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 
 import static org.drools.workbench.screens.scenariosimulation.kogito.client.converters.scesim.ApiJSInteropConverter.getJSIScenarioSimulationModelType;
@@ -90,12 +88,11 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     private SCESIM scesimContainer;
     private Promises promises;
     private Path currentPath;
+    private KogitoDMNService dmnTypeService;
 
     private ScenarioSimulationEditorKogitoWrapper() {
         //Zero-parameter constructor for CDI proxies
     }
-
-    private KogitoDMNService dmnTypeService;
 
     @Inject
     public ScenarioSimulationEditorKogitoWrapper(
@@ -301,7 +298,6 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
             try {
                 final ScenarioSimulationModel scenarioSimulationModel = getScenarioSimulationModel(scenarioSimulationModelType);
                 getModelSuccessCallbackMethod(scenarioSimulationModel);
-//                scenarioSimulationEditorPresenter.showDocks(PlaceStatus.CLOSE);
             } catch (Throwable t) {
                 GWT.log("Failed to transform scesim", t);
             }
