@@ -75,10 +75,10 @@ import org.uberfire.workbench.model.menu.Menus;
 import static org.drools.workbench.screens.scenariosimulation.kogito.client.converters.scesim.ApiJSInteropConverter.getJSIScenarioSimulationModelType;
 import static org.drools.workbench.screens.scenariosimulation.kogito.client.converters.scesim.JSInteropApiConverter.getScenarioSimulationModel;
 
-@Dependent
 /**
  * Wrapper to be used inside Kogito
  */
+@Dependent
 public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContainerPresenter<ScenarioSimulationModel> implements ScenarioSimulationEditorWrapper {
 
     protected ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter;
@@ -87,9 +87,8 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     private SCESIM scesimContainer;
     private Promises promises;
     private Path currentPath;
-//    private KogitoDMNTypeService kogitoDMNTypeService;
 
-    public ScenarioSimulationEditorKogitoWrapper() {
+    private ScenarioSimulationEditorKogitoWrapper() {
         //Zero-parameter constructor for CDI proxies
     }
 

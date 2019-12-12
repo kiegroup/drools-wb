@@ -18,11 +18,12 @@ package org.drools.workbench.screens.scenariosimulation.webapp.client.workaround
 
 import javax.enterprise.inject.Alternative;
 
+import org.kie.workbench.common.kogito.webapp.base.client.perspectives.PerspectiveConfiguration;
 import org.uberfire.client.workbench.panels.impl.AbstractWorkbenchPanelPresenter;
 import org.uberfire.client.workbench.panels.impl.MultiListWorkbenchPanelPresenter;
 
 @Alternative
-public class TestingPerspectiveConfiguration extends org.kie.workbench.common.kogito.webapp.base.client.perspectives.PerspectiveConfiguration {
+public class TestingPerspectiveConfiguration extends PerspectiveConfiguration {
 
     @Override
     public Class<? extends AbstractWorkbenchPanelPresenter> getPerspectivePanelType() {
