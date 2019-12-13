@@ -929,6 +929,7 @@
                   <overWrite>true</overWrite>
                   <outputDirectory>${project.build.directory}/Marshaller</outputDirectory>
                   <includes>**/*.js</includes>
+                  <excludes>**/Jsonix-all.js</excludes>
                 </artifactItem>
               </artifactItems>
             </configuration>
