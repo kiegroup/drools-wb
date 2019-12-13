@@ -25,6 +25,7 @@ import javax.inject.Inject;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.PopupPanel;
 import elemental2.promise.Promise;
 import jsinterop.base.Js;
 import org.drools.scenariosimulation.api.model.AbstractScesimData;
@@ -211,7 +212,6 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
         resetEditorPages();
         currentPath = path;
         scenarioSimulationEditorPresenter.init(this, new ObservablePathImpl().wrap(path));
-//        scenarioSimulationEditorPresenter.showDocks(PlaceStatus.CLOSE);
     }
 
     public Path getCurrentPath() {
@@ -240,7 +240,8 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
 
     @Override
     public void onRunScenario(RemoteCallback<SimulationRunResult> refreshModelCallback, ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback, ScesimModelDescriptor simulationDescriptor, Settings settings, List<ScenarioWithIndex> toRun, Background background) {
-        throw new UnsupportedOperationException("Not available in Submarine");
+        scenarioSimulationEditorPresenter.getView().hideBusyIndicator();
+        new PopupPanel().show();
     }
 
     @Override
@@ -315,7 +316,7 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
         dataManagementStrategy.setModel(model);
         setOriginalContentHash(scenarioSimulationEditorPresenter.getJsonModel(model).hashCode());
         scenarioSimulationEditorPresenter.getModelSuccessCallbackMethod(dataManagementStrategy, model);
-        showDocks();
+        scenarioSimulationEditorPresenter.showDocks(PlaceStatus.CLOSE);
     }
 
     protected void onBackgroundTabSelected() {
@@ -326,9 +327,4 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
         scenarioSimulationEditorPresenter.onImportsTabSelected();
     }
 
-    protected void showDocks() {
-//        final DefaultPlaceRequest placeRequest = new DefaultPlaceRequest(TestToolsPresenter.IDENTIFIER);
-        scenarioSimulationEditorPresenter.showDocks(PlaceStatus.CLOSE);
-//        registerTestToolsCallback();
-    }
 }
