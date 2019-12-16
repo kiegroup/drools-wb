@@ -125,13 +125,13 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     protected LabelElement collectionCreationModeLabel = Document.get().createLabelElement();
 
     @DataField("collectionCreationCreateLabel")
-    protected LabelElement collectionCreationCreateLabel = Document.get().createLabelElement();
+    protected SpanElement collectionCreationCreateLabel = Document.get().createSpanElement();
 
     @DataField("collectionCreationCreateSpan")
     protected SpanElement collectionCreationCreateSpan = Document.get().createSpanElement();
 
     @DataField("collectionCreationDefineLabel")
-    protected LabelElement collectionCreationDefineLabel = Document.get().createLabelElement();
+    protected SpanElement collectionCreationDefineLabel = Document.get().createSpanElement();
 
     @DataField("collectionCreationDefineSpan")
     protected SpanElement collectionCreationDefineSpan = Document.get().createSpanElement();
