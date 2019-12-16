@@ -713,7 +713,7 @@
           <deploy>${project.build.directory}/gwt-symbols-deploy</deploy>
           <localWorkers>1</localWorkers>
           <extraJvmArgs>-Xmx6g -Xms1g -Xss1M -XX:CompileThreshold=7000 -Derrai.jboss.home=${errai.jboss.home} -Derrai.marshalling.server.classOutput=${project.build.outputDirectory} -Derrai.dynamic_validation.enabled=true -Dorg.kie.demo=true -Dorg.kie.clean.onstartup=true -Dorg.uberfire.nio.git.ssh.enabled=true -Djava.util.prefs.syncInterval=2000000 -Dorg.uberfire.async.executor.safemode=true -Derrai.marshalling.very_short_names=false -Dappformer.experimental.features=true -Djava.io.tmpdir=${project.build.directory}</extraJvmArgs>
-          <draftCompile>true</draftCompile>
+<!--          <draftCompile>false</draftCompile>-->
           <module>org.drools.workbench.screens.scenariosimulation.webapp.DroolsWorkbenchScenarioSimulationKogitoRuntime</module>
           <logLevel>INFO</logLevel>
           <noServer>false</noServer>
@@ -721,7 +721,9 @@
           <disableCastChecking>true</disableCastChecking>
           <runTarget>index.html</runTarget>
           <strict>true</strict>
+          <style>OBFUSCATED</style>
           <printJavaCommandOnError>false</printJavaCommandOnError>
+          <productionMode>true</productionMode>
 
           <compileSourcesArtifacts>
             <compileSourcesArtifact>org.kie.soup:kie-soup-commons</compileSourcesArtifact>
@@ -745,7 +747,6 @@
             <compileSourcesArtifact>org.uberfire:uberfire-project-client</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-services-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-structure-api</compileSourcesArtifact>
-            <compileSourcesArtifact>org.uberfire:uberfire-social-activities-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-message-console-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-message-console-client</compileSourcesArtifact>
 
