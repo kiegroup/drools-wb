@@ -15,3 +15,4 @@
 *.log
 /src/main/java/org/
 /src/main/resources/org/drools/workbench/scenariosimulation/kogito/marshaller/js/SCESIM.js
+/src/main/resources/org/drools/workbench/scenariosimulation/kogito/marshaller/js/Jsonix-all.js
