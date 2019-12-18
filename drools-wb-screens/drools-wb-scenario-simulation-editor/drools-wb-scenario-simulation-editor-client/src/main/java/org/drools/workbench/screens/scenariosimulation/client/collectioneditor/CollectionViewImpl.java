@@ -15,7 +15,6 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
-import java.util.Arrays;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -155,6 +154,11 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     protected boolean expression = false;
 
     /**
+     * Flag to indicate if this <code>CollectionEditorViewImpl</code> is opened in DMN or RULE scenario
+     */
+    protected boolean ruleScenario;
+
+    /**
      * The <b>json</b> representation of the values of this editor
      */
     protected String value;
@@ -175,9 +179,9 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
      * @param isExpression
      */
     @Override
-    public void initListStructure(String key, Map<String, String> simplePropertiesMap, Map<String, Map<String, String>> expandablePropertiesMap, boolean isExpression) {
+    public void initListStructure(String key, Map<String, String> simplePropertiesMap, Map<String, Map<String, String>> expandablePropertiesMap, boolean isRule, boolean isExpression) {
         listWidget = true;
-        commonInit(isExpression);
+        commonInit(isRule, isExpression);
         createLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.createLabelList());
         collectionCreationModeLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.collectionListCreation());
         collectionCreationCreateLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.createLabelList());
@@ -196,9 +200,9 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
      * @param isExpression
      */
     @Override
-    public void initMapStructure(String key, Map<String, String> keyPropertyMap, Map<String, String> valuePropertyMap, boolean isExpression) {
+    public void initMapStructure(String key, Map<String, String> keyPropertyMap, Map<String, String> valuePropertyMap, boolean isRule, boolean isExpression) {
         listWidget = false;
-        commonInit(isExpression);
+        commonInit(isRule, isExpression);
         createLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.createLabelMap());
         collectionCreationModeLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.collectionMapCreation());
         collectionCreationCreateLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.createLabelMap());
@@ -208,8 +212,9 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
         presenter.initMapStructure(key, keyPropertyMap, valuePropertyMap, this);
     }
 
-    protected void commonInit(boolean isExpression) {
+    protected void commonInit(boolean isRule, boolean isExpression) {
         expression = isExpression;
+        ruleScenario = isRule;
         saveButton.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.saveButton());
         cancelButton.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.cancelButton());
         removeButton.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.removeButton());
@@ -221,13 +226,19 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
             createCollectionRadio.setChecked(true);
             enableCreateCollectionContainer(true);
         }
-        registerExpressionTextAreaHandlers();
+        if (isRule) {
+            initAndRegisterHandlerForExpressionTextArea();
+        }
     }
 
-    protected void registerExpressionTextAreaHandlers() {
+    /**
+     * It inits and registers the native "input" , which is not managed by GWT
+     */
+    protected void initAndRegisterHandlerForExpressionTextArea() {
+        checkExpressionSyntax();
         DOM.sinkBitlessEvent(expressionElement, "input");
         DOM.setEventListener(expressionElement, event -> {
-            if (Arrays.asList("focus", "input").contains(event.getType()))  {
+            if ("input".contains(event.getType()))  {
                 checkExpressionSyntax();}
         });
     }
@@ -436,6 +447,9 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     }
 
     protected void checkExpressionSyntax() {
+        if (!ruleScenario) {
+            return;
+        }
         final String expressionValue = expressionElement.getValue();
         if (!expressionValue.startsWith(EXPRESSION_VALUE_PREFIX)) {
             if (expressionValue.startsWith(MVEL_ESCAPE_SYMBOL)) {

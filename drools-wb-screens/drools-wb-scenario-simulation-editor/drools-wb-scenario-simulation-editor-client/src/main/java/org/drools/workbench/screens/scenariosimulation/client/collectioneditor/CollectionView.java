@@ -185,8 +185,9 @@ public interface CollectionView {
      * @param simplePropertiesMap
      * @param expandablePropertiesMap
      * @param isExpression
+     * @param isRule
      */
-    void initListStructure(String key, Map<String, String> simplePropertiesMap, Map<String, Map<String, String>> expandablePropertiesMap, boolean isExpression);
+    void initListStructure(String key, Map<String, String> simplePropertiesMap, Map<String, Map<String, String>> expandablePropertiesMap, boolean isRule, boolean isExpression);
 
     /**
      * Set the <b>name</b> of the property and the <code>Map</code>s to be used to create the skeleton of the current <code>CollectionViewImpl</code> editor
@@ -195,8 +196,9 @@ public interface CollectionView {
      * @param keyPropertyMap
      * @param valuePropertyMap
      * @param isExpression
+     * @param isRule
      */
-    void initMapStructure(String key, Map<String, String> keyPropertyMap, Map<String, String> valuePropertyMap, boolean isExpression);
+    void initMapStructure(String key, Map<String, String> keyPropertyMap, Map<String, String> valuePropertyMap, boolean isRule, boolean isExpression);
 
     void setFixedHeight(double value, Style.Unit px);
 

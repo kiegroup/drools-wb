@@ -122,10 +122,10 @@ public class CollectionEditorSingletonDOMElementFactoryTest extends AbstractFact
     @Test
     public void manageList() {
         String key = FULL_CLASS_NAME + "#" + LIST_CLASS_NAME;
-        collectionEditorSingletonDOMElementFactoryMock.manageList(collectionEditorViewImpl, key, STRING_CLASS_NAME, false);
+        collectionEditorSingletonDOMElementFactoryMock.manageList(collectionEditorViewImpl, key, STRING_CLASS_NAME, true,false);
         Map<String, String> expectedMap1 = new HashMap<>();
         expectedMap1.put(LOWER_CASE_VALUE, STRING_CLASS_NAME);
-        verify(collectionEditorViewImpl, times(1)).initListStructure(eq(key), eq(expectedMap1), isA(Map.class), false);
+        verify(collectionEditorViewImpl, times(1)).initListStructure(eq(key), eq(expectedMap1), isA(Map.class), true, false);
         verify(collectionEditorSingletonDOMElementFactoryMock, times(1)).getExpandablePropertiesMap(eq(STRING_CLASS_NAME));
     }
 
@@ -172,7 +172,7 @@ public class CollectionEditorSingletonDOMElementFactoryTest extends AbstractFact
         verify(collectionEditorSingletonDOMElementFactoryMock, times(1)).getSimplePropertiesMap(STRING_CLASS_NAME);
         verify(collectionEditorSingletonDOMElementFactoryMock, times(1)).getSimplePropertiesMap(genericType1);
 
-        verify(collectionEditorViewImpl, times(1)).initMapStructure(eq(key), eq(expectedMap0), eq(expectedMap1), false);
+        verify(collectionEditorViewImpl, times(1)).initMapStructure(eq(key), eq(expectedMap0), eq(expectedMap1), true,false);
     }
 
     @Test(expected = IllegalStateException.class)
@@ -240,7 +240,7 @@ public class CollectionEditorSingletonDOMElementFactoryTest extends AbstractFact
         String key = factMappingMock.getFactAlias() + "#" + factMappingMock.getExpressionAlias();
         if (ScenarioSimulationSharedUtils.isList(factMappingMock.getExpressionAlias())) {
             verify(collectionEditorSingletonDOMElementFactoryMock, times(1)).manageList(
-                    eq(collectionEditorViewImpl), eq(key), eq(genericTypeName0), false);
+                    eq(collectionEditorViewImpl), eq(key), eq(genericTypeName0), eq(isRule), false);
         } else {
             verify(collectionEditorSingletonDOMElementFactoryMock, times(1)).manageMap(
                     eq(collectionEditorViewImpl), eq(key), eq(genericTypeName0), eq(genericTypeName1), eq(isRule), false);

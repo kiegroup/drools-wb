@@ -109,7 +109,7 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
             genericTypeName0 = getRuleComplexType(genericTypeName0);
         }
         if (ScenarioSimulationSharedUtils.isList(propertyClass)) {
-            manageList(collectionEditorView, key, genericTypeName0, isExpression);
+            manageList(collectionEditorView, key, genericTypeName0, isRule, isExpression);
         } else {
             manageMap(collectionEditorView, key, genericTypeName0, genericTypes.get(1), isRule, isExpression);
         }
@@ -119,15 +119,15 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
         return genericTypeName0.substring(genericTypeName0.lastIndexOf('.') + 1);
     }
 
-    protected void manageList(CollectionViewImpl collectionEditorView, String key, String genericTypeName0, boolean isExpression) {
-        collectionEditorView.initListStructure(key, getSimplePropertiesMap(genericTypeName0), getExpandablePropertiesMap(genericTypeName0), isExpression);
+    protected void manageList(CollectionViewImpl collectionEditorView, String key, String genericTypeName0, boolean isRule, boolean isExpression) {
+        collectionEditorView.initListStructure(key, getSimplePropertiesMap(genericTypeName0), getExpandablePropertiesMap(genericTypeName0),isRule, isExpression);
     }
 
     protected void manageMap(CollectionViewImpl collectionEditorView, String key, String genericTypeName0, String genericTypeName1, boolean isRule, boolean isExpression) {
         if (isRule && !isSimpleJavaType(genericTypeName1)) {
             genericTypeName1 = getRuleComplexType(genericTypeName1);
         }
-        collectionEditorView.initMapStructure(key, getSimplePropertiesMap(genericTypeName0), getSimplePropertiesMap(genericTypeName1), isExpression);
+        collectionEditorView.initMapStructure(key, getSimplePropertiesMap(genericTypeName0), getSimplePropertiesMap(genericTypeName1), isRule, isExpression);
     }
 
     @Override
