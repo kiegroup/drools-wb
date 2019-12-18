@@ -15,6 +15,7 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -32,6 +33,7 @@ import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.FocusWidget;
 import org.drools.workbench.screens.scenariosimulation.client.events.CloseCompositeEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.SaveEditorEvent;
@@ -43,6 +45,9 @@ import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.Sce
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
+
+import static org.drools.scenariosimulation.api.utils.ConstantsHolder.MVEL_ESCAPE_SYMBOL;
+import static org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder.EXPRESSION_VALUE_PREFIX;
 
 /**
  * This class is used as <code>Collection</code> <b>editor</b>
@@ -216,6 +221,15 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
             createCollectionRadio.setChecked(true);
             enableCreateCollectionContainer(true);
         }
+        registerExpressionTextAreaHandlers();
+    }
+
+    protected void registerExpressionTextAreaHandlers() {
+        DOM.sinkBitlessEvent(expressionElement, "input");
+        DOM.setEventListener(expressionElement, event -> {
+            if (Arrays.asList("focus", "input").contains(event.getType()))  {
+                checkExpressionSyntax();}
+        });
     }
 
     @Override
@@ -421,7 +435,20 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
         CollectionEditorUtils.toggleRowExpansion(faAngleRight, toExpand);
     }
 
-    public void showCreateCollectionContainer(boolean show) {
+    protected void checkExpressionSyntax() {
+        final String expressionValue = expressionElement.getValue();
+        if (!expressionValue.startsWith(EXPRESSION_VALUE_PREFIX)) {
+            if (expressionValue.startsWith(MVEL_ESCAPE_SYMBOL)) {
+                expressionElement.setValue(expressionValue.replaceFirst(MVEL_ESCAPE_SYMBOL, EXPRESSION_VALUE_PREFIX));
+            } else if (expressionValue.startsWith(" ")) {
+                expressionElement.setValue(expressionValue.replaceFirst(" ", EXPRESSION_VALUE_PREFIX));
+            } else {
+                expressionElement.setValue(EXPRESSION_VALUE_PREFIX + expressionValue);
+            }
+        }
+    }
+
+    protected void showCreateCollectionContainer(boolean show) {
         if (show) {
             createCollectionContainer.getStyle().setDisplay(Style.Display.BLOCK);
         } else {
@@ -429,7 +456,7 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
         }
     }
 
-    public void showDefineCollectionContainer(boolean show) {
+    protected void showDefineCollectionContainer(boolean show) {
         if (show) {
             defineCollectionContainer.getStyle().setDisplay(Style.Display.BLOCK);
         } else {
@@ -437,7 +464,7 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
         }
     }
 
-    public void showAddItemButtonContainer(boolean show) {
+    protected void showAddItemButtonContainer(boolean show) {
         if (show) {
             addItemButtonContainer.getStyle().setDisplay(Style.Display.BLOCK);
         } else {
