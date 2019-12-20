@@ -33,6 +33,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.uberfire.ext.wires.core.grids.client.model.GridData;
 
 import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type.DMN;
 import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type.RULE;
@@ -99,7 +100,12 @@ public class CollectionEditorSingletonDOMElementFactoryTest extends AbstractFact
                                                                                                                 scenarioGridLayerMock,
                                                                                                                 scenarioGridMock,
                                                                                                                 scenarioSimulationContextLocal,
-                                                                                                                viewsProviderMock));
+                                                                                                                viewsProviderMock) {
+            @Override
+            public void flush() {
+                // Do nothing
+            }
+        });
         factMappingMock.getGenericTypes().add(STRING_CLASS_NAME);
         factMappingMock.getGenericTypes().add(NUMBER_CLASS_NAME);
         when(factMappingMock.getFactAlias()).thenReturn(FULL_CLASS_NAME);
@@ -302,10 +308,27 @@ public class CollectionEditorSingletonDOMElementFactoryTest extends AbstractFact
     }
 
     @Test
-    public void saveHandling() {
-        //collectionEditorSingletonDOMElementFactorySpy.saveHandling();
+    public void saveHandling_Expression() {
+        saveHandling(true);
+    }
 
-        //TODO
+    @Test
+    public void saveHandling_NotExpression() {
+        saveHandling(false);
+    }
 
+    private void saveHandling(boolean isExpression) {
+        when(collectionEditorSingletonDOMElementFactorySpy.createWidget()).thenReturn(collectionEditorViewImpl);
+        when(scenarioGridModelMock.getSelectedCellsOrigin()).thenReturn(new GridData.SelectedCell(0, 0));
+        when(collectionEditorViewImpl.isExpressionWidget()).thenReturn(isExpression);
+        when(factMappingMock.getClassName()).thenReturn("className");
+        when(factMappingMock.getExpressionAlias()).thenReturn("alias");
+        collectionEditorSingletonDOMElementFactorySpy.createDomElement(scenarioGridLayerMock, scenarioGridMock);
+        collectionEditorSingletonDOMElementFactorySpy.saveHandling();
+        if (isExpression) {
+            verify(factMappingMock, times(1)).setFactMappingValueType(FactMappingValueType.EXPRESSION);
+        } else {
+            verify(factMappingMock, times(1)).setFactMappingValueType(FactMappingValueType.NOT_EXPRESSION);
+        }
     }
 }

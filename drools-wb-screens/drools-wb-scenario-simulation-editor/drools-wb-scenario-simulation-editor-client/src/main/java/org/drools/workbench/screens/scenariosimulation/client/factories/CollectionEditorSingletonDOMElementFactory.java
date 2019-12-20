@@ -202,7 +202,7 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
              final FactMapping factMapping = model.getAbstractScesimModel().get().getScesimModelDescriptor().getFactMappingByIndex(actualIndex);
              factMapping.setFactMappingValueType(type);
          });
-        super.flush();
+        flush();
     }
 }
 
