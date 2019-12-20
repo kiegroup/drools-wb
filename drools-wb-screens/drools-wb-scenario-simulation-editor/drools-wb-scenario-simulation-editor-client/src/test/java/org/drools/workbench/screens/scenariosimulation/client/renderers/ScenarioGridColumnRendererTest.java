@@ -144,7 +144,7 @@ public class ScenarioGridColumnRendererTest {
         retrieved = scenarioGridColumnRenderer.renderCell(cell, contextMock);
         assertNotNull(retrieved);
         verify(scenarioGridColumnRenderer, times(1)).internalRenderCell(any(), eq(contextMock), eq(textMock), eq(LIST_VALUE));
-        verify(scenarioGridColumnRenderer, times(1)).getCollectionString(eq(LIST_VALUE), eq(true), anyBoolean());
+        verify(scenarioGridColumnRenderer, times(1)).getCollectionString(eq(LIST_VALUE), eq(true), eq(false));
         reset(scenarioGridColumnRenderer);
 
         cell = new ScenarioGridCell(new ScenarioGridCellValue(MAP_VALUE));
@@ -152,8 +152,27 @@ public class ScenarioGridColumnRendererTest {
         retrieved = scenarioGridColumnRenderer.renderCell(cell, contextMock);
         assertNotNull(retrieved);
         verify(scenarioGridColumnRenderer, times(1)).internalRenderCell(any(), eq(contextMock), eq(textMock), eq(MAP_VALUE));
-        verify(scenarioGridColumnRenderer, times(1)).getCollectionString(eq(MAP_VALUE), eq(false), anyBoolean());
+        verify(scenarioGridColumnRenderer, times(1)).getCollectionString(eq(MAP_VALUE), eq(false), eq(false));
         reset(scenarioGridColumnRenderer);
+
+        cell = new ScenarioGridCell(new ScenarioGridCellValue(EXPRESSION_VALUE));
+        ((ScenarioGridCell) cell).setListMap(true);
+        ((ScenarioGridCell) cell).setExpression(true);
+        retrieved = scenarioGridColumnRenderer.renderCell(cell, contextMock);
+        assertNotNull(retrieved);
+        verify(scenarioGridColumnRenderer, times(1)).internalRenderCell(any(), eq(contextMock), eq(textMock), eq(EXPRESSION_VALUE));
+        verify(scenarioGridColumnRenderer, times(1)).getCollectionString(eq(EXPRESSION_VALUE), eq(true), eq(true));
+        reset(scenarioGridColumnRenderer);
+
+        cell = new ScenarioGridCell(new ScenarioGridCellValue(EXPRESSION_VALUE));
+        ((ScenarioGridCell) cell).setListMap(false);
+        ((ScenarioGridCell) cell).setExpression(true);
+        retrieved = scenarioGridColumnRenderer.renderCell(cell, contextMock);
+        assertNotNull(retrieved);
+        verify(scenarioGridColumnRenderer, times(1)).internalRenderCell(any(), eq(contextMock), eq(textMock), eq(EXPRESSION_VALUE));
+        verify(scenarioGridColumnRenderer, times(1)).getCollectionString(eq(EXPRESSION_VALUE), eq(false), eq(true));
+        reset(scenarioGridColumnRenderer);
+
 
         cell = new ScenarioGridCell(new ScenarioGridCellValue(MULTIPART_VALUE));
         ((ScenarioGridCell) cell).setErrorMode(true);
