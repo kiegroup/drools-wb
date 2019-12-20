@@ -32,6 +32,7 @@ import org.uberfire.ext.wires.core.grids.client.model.GridCellValue;
 import org.uberfire.ext.wires.core.grids.client.widget.context.GridBodyCellRenderContext;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.GridRenderer;
 
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.EXPRESSION_VALUE;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.LIST_VALUE;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.MAP_VALUE;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.MULTIPART_VALUE;
@@ -190,27 +191,35 @@ public class ScenarioGridColumnRendererTest {
     @Test
     public void getValueToShow(){
         ScenarioGridCell cell = new ScenarioGridCell(null);
-        commonGetValueToShow(cell, true, null, false);
+        commonGetValueToShow(cell, true, null, false, false);
         cell = new ScenarioGridCell(new ScenarioGridCellValue(null));
-        commonGetValueToShow(cell, true, null, false);
+        commonGetValueToShow(cell, true, null, false, false);
         cell = new ScenarioGridCell(new ScenarioGridCellValue(MULTIPART_VALUE));
-        commonGetValueToShow(cell, false, null, false);
+        commonGetValueToShow(cell, false, null, false, false);
         cell = new ScenarioGridCell(new ScenarioGridCellValue(LIST_VALUE));
         cell.setListMap(true);
-        commonGetValueToShow(cell, false, LIST_VALUE, true);
+        commonGetValueToShow(cell, false, LIST_VALUE, true, false);
         cell = new ScenarioGridCell(new ScenarioGridCellValue(MAP_VALUE));
         cell.setListMap(false);
-        commonGetValueToShow(cell, false, MAP_VALUE, false);
+        commonGetValueToShow(cell, false, MAP_VALUE, false, false);
+        cell = new ScenarioGridCell(new ScenarioGridCellValue(EXPRESSION_VALUE));
+        cell.setListMap(true);
+        cell.setExpression(true);
+        commonGetValueToShow(cell, false, EXPRESSION_VALUE, true, true);
+        cell = new ScenarioGridCell(new ScenarioGridCellValue(EXPRESSION_VALUE));
+        cell.setListMap(false);
+        cell.setExpression(true);
+        commonGetValueToShow(cell, false, EXPRESSION_VALUE, false, true);
     }
 
-    private void commonGetValueToShow(ScenarioGridCell scenarioGridCell, boolean expectedNull, String jsonString, boolean isList) {
+    private void commonGetValueToShow(ScenarioGridCell scenarioGridCell, boolean expectedNull, String jsonString, boolean isList, boolean isExpression) {
         final String retrieved = scenarioGridColumnRenderer.getValueToShow(scenarioGridCell);
         if (expectedNull) {
             assertNull(retrieved);
         } else {
             assertNotNull(retrieved);
             if (jsonString != null) {
-                verify(scenarioGridColumnRenderer, times(1)).getCollectionString(eq(jsonString), eq(isList), anyBoolean());
+                verify(scenarioGridColumnRenderer, times(1)).getCollectionString(eq(jsonString), eq(isList), eq(isExpression));
             }
     }
         reset(scenarioGridColumnRenderer);

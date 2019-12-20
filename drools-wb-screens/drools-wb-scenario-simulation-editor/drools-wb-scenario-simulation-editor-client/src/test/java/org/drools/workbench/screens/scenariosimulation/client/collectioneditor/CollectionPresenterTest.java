@@ -161,7 +161,7 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
     @Mock
     private ConfirmPopupPresenter confirmPopupPresenterMock;
 
-    private CollectionPresenter collectionEditorPresenter;
+    private CollectionPresenter collectionEditorPresenterSpy;
 
     @Before
     public void setup() {
@@ -199,7 +199,7 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
         when(jsonValueMock.isArray()).thenReturn(jsonArrayMock);
         when(jsonValueMock.isObject()).thenReturn(jsonObjectMock);
         when(jsonValueMock.isString()).thenReturn(jsonStringMock);
-        this.collectionEditorPresenter = spy(new CollectionPresenter() {
+        this.collectionEditorPresenterSpy = spy(new CollectionPresenter() {
             {
                 this.viewsProvider = viewsProviderMock;
                 this.listElementPresenter = listElementPresenterMock;
@@ -241,24 +241,24 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
 
     @Test
     public void initListStructure() {
-        collectionEditorPresenter.initListStructure(TEST_KEY, propertyMapLocal, new HashMap<>(), collectionViewMock);
-        verify(collectionEditorPresenter, times(1)).commonInit(eq(TEST_KEY), eq(collectionViewMock));
+        collectionEditorPresenterSpy.initListStructure(TEST_KEY, propertyMapLocal, new HashMap<>(), collectionViewMock);
+        verify(collectionEditorPresenterSpy, times(1)).commonInit(eq(TEST_KEY), eq(collectionViewMock));
         assertTrue(instancePropertiesMapLocal.containsKey(TEST_KEY));
         assertEquals(instancePropertiesMapLocal.get(TEST_KEY), propertyMapLocal);
-        verify(listEditingBoxPresenterMock, times(1)).setCollectionEditorPresenter(eq(collectionEditorPresenter));
-        verify(listElementPresenterMock, times(1)).setCollectionEditorPresenter(eq(collectionEditorPresenter));
+        verify(listEditingBoxPresenterMock, times(1)).setCollectionEditorPresenter(eq(collectionEditorPresenterSpy));
+        verify(listElementPresenterMock, times(1)).setCollectionEditorPresenter(eq(collectionEditorPresenterSpy));
     }
 
     @Test
     public void initMapStructure() {
-        collectionEditorPresenter.initMapStructure(TEST_KEY, keyPropertyMapLocal, propertyMapLocal, collectionViewMock);
-        verify(collectionEditorPresenter, times(1)).commonInit(eq(TEST_KEY), eq(collectionViewMock));
+        collectionEditorPresenterSpy.initMapStructure(TEST_KEY, keyPropertyMapLocal, propertyMapLocal, collectionViewMock);
+        verify(collectionEditorPresenterSpy, times(1)).commonInit(eq(TEST_KEY), eq(collectionViewMock));
         assertTrue(instancePropertiesMapLocal.containsKey(TEST_KEY + "#key"));
         assertEquals(instancePropertiesMapLocal.get(TEST_KEY + "#key"), keyPropertyMapLocal);
         assertTrue(instancePropertiesMapLocal.containsKey(TEST_KEY + "#value"));
         assertEquals(instancePropertiesMapLocal.get(TEST_KEY + "#value"), propertyMapLocal);
-        verify(mapEditingBoxPresenterMock, times(1)).setCollectionEditorPresenter(eq(collectionEditorPresenter));
-        verify(mapElementPresenterMock, times(1)).setCollectionEditorPresenter(eq(collectionEditorPresenter));
+        verify(mapEditingBoxPresenterMock, times(1)).setCollectionEditorPresenter(eq(collectionEditorPresenterSpy));
+        verify(mapElementPresenterMock, times(1)).setCollectionEditorPresenter(eq(collectionEditorPresenterSpy));
     }
 
     @Test
@@ -284,7 +284,7 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
     @Test
     public void showEditingBoxIsListWidgetTrue() {
         when(collectionViewMock.isListWidget()).thenReturn(true);
-        collectionEditorPresenter.showEditingBox();
+        collectionEditorPresenterSpy.showEditingBox();
         verify(collectionViewMock, times(1)).getElementsContainer();
         verify(listEditingBoxPresenterMock, times(1)).getEditingBox(eq(TEST_KEY), anyMap(), anyMap());
         verify(elementsContainerMock, times(1)).appendChild(eq(listEditingBoxMock));
@@ -293,11 +293,11 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
     @Test
     public void showEditingBoxIsListWidgetFalse() {
         when(collectionViewMock.isListWidget()).thenReturn(false);
-        collectionEditorPresenter.showEditingBox();
+        collectionEditorPresenterSpy.showEditingBox();
         verify(collectionViewMock, times(1)).getElementsContainer();
         verify(mapEditingBoxPresenterMock, times(1)).getEditingBox(eq(TEST_KEY), anyMap(), anyMap());
         verify(elementsContainerMock, times(1)).appendChild(eq(mapEditingBoxMock));
-        verify(collectionEditorPresenter, times(1)).toggleEditingStatus(eq(true));
+        verify(collectionEditorPresenterSpy, times(1)).toggleEditingStatus(eq(true));
         verify(listElementPresenterMock, times(1)).toggleEditingStatus(eq(true));
         verify(mapElementPresenterMock, times(1)).toggleEditingStatus(eq(true));
     }
@@ -316,22 +316,22 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
 
     @Test
     public void addListItem() {
-        collectionEditorPresenter.addListItem(propertyMapLocal, new HashMap<>());
+        collectionEditorPresenterSpy.addListItem(propertyMapLocal, new HashMap<>());
         verify(collectionViewMock, times(1)).getElementsContainer();
         verify(elementsContainerMock, times(1)).getChildCount();
         verify(listElementPresenterMock, times(1)).getItemContainer(eq(ITEM_ID), eq(propertyMapLocal), anyMap());
         verify(elementsContainerMock, times(1)).appendChild(eq(itemElementMock));
-        verify(collectionEditorPresenter, times(1)).toggleEditingStatus(eq(false));
+        verify(collectionEditorPresenterSpy, times(1)).toggleEditingStatus(eq(false));
     }
 
     @Test
     public void addMapItem() {
-        collectionEditorPresenter.addMapItem(keyPropertyMapLocal, propertyMapLocal);
+        collectionEditorPresenterSpy.addMapItem(keyPropertyMapLocal, propertyMapLocal);
         verify(collectionViewMock, times(1)).getElementsContainer();
         verify(elementsContainerMock, times(1)).getChildCount();
         verify(mapElementPresenterMock, times(1)).getKeyValueContainer(eq(ITEM_ID), eq(keyPropertyMapLocal), eq(propertyMapLocal));
         verify(elementsContainerMock, times(1)).appendChild(eq(itemElementMock));
-        verify(collectionEditorPresenter, times(1)).toggleEditingStatus(eq(false));
+        verify(collectionEditorPresenterSpy, times(1)).toggleEditingStatus(eq(false));
     }
 
     @Test
@@ -376,33 +376,33 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
 
     @Test
     public void commonInit() {
-        collectionEditorPresenter.collectionView = null;
-        collectionEditorPresenter.commonInit(TEST_KEY, collectionViewMock);
-        assertEquals(collectionEditorPresenter.collectionView, collectionViewMock);
+        collectionEditorPresenterSpy.collectionView = null;
+        collectionEditorPresenterSpy.commonInit(TEST_KEY, collectionViewMock);
+        assertEquals(collectionEditorPresenterSpy.collectionView, collectionViewMock);
         verify(editorTitleMock, times(1)).setInnerText(TEST_KEY);
         verify(propertyTitleMock, times(1)).setInnerText(TEST_PROPERTYNAME);
     }
 
     @Test
     public void populateList() {
-        collectionEditorPresenter.populateList(jsonValueMock);
+        collectionEditorPresenterSpy.populateList(jsonValueMock);
         for (int i = 0; i < JSON_ARRAY_SIZE; i++) {
             verify(jsonArrayMock, times(1)).get(eq(i));
         }
-        verify(collectionEditorPresenter, times(JSON_ARRAY_SIZE * 3)).getSimplePropertiesMap(any()); // Multiply x 3 because getSimplePropertiesMap is called by getExpandablePropertiesValues
-        verify(collectionEditorPresenter, times(JSON_ARRAY_SIZE)).getExpandablePropertiesValues(any());
-        verify(collectionEditorPresenter, times(JSON_ARRAY_SIZE)).addListItem(anyMap(), anyMap());
+        verify(collectionEditorPresenterSpy, times(JSON_ARRAY_SIZE * 3)).getSimplePropertiesMap(any()); // Multiply x 3 because getSimplePropertiesMap is called by getExpandablePropertiesValues
+        verify(collectionEditorPresenterSpy, times(JSON_ARRAY_SIZE)).getExpandablePropertiesValues(any());
+        verify(collectionEditorPresenterSpy, times(JSON_ARRAY_SIZE)).addListItem(anyMap(), anyMap());
     }
 
     @Test
     public void populateMap() {
-        collectionEditorPresenter.populateMap(jsonValueMock);
-        verify(collectionEditorPresenter, times(JSON_ARRAY_SIZE)).addMapItem(anyMap(), anyMap());
+        collectionEditorPresenterSpy.populateMap(jsonValueMock);
+        verify(collectionEditorPresenterSpy, times(JSON_ARRAY_SIZE)).addMapItem(anyMap(), anyMap());
     }
 
     @Test
     public void toggleEditingStatusToDisableTrue() {
-        collectionEditorPresenter.toggleEditingStatus(true);
+        collectionEditorPresenterSpy.toggleEditingStatus(true);
         verify(collectionViewMock, times(1)).getAddItemButton();
         verify(addItemButtonMock, times(1)).setDisabled(eq(true));
         verify(cancelButtonMock, times(1)).setDisabled(eq(true));
@@ -414,7 +414,7 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
 
     @Test
     public void toggleEditingStatusToDisableFalse() {
-        collectionEditorPresenter.toggleEditingStatus(false);
+        collectionEditorPresenterSpy.toggleEditingStatus(false);
         verify(collectionViewMock, times(1)).getAddItemButton();
         verify(addItemButtonMock, times(1)).setDisabled(eq(false));
         verify(cancelButtonMock, times(1)).setDisabled(eq(false));
@@ -426,7 +426,7 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
 
     private void commonRemove(boolean isWidget) {
         when(collectionViewMock.isListWidget()).thenReturn(isWidget);
-        collectionEditorPresenter.remove();
+        collectionEditorPresenterSpy.remove();
         verify(scenarioConfirmationPopupPresenterMock, times(1)).show(
                 eq(ScenarioSimulationEditorConstants.INSTANCE.removeCollectionMainTitle()),
                 eq(ScenarioSimulationEditorConstants.INSTANCE.removeCollectionMainQuestion()),
@@ -441,7 +441,7 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
 
     private void commonOkRemoveCommandMethod(boolean isListWidget) {
         when(collectionViewMock.isListWidget()).thenReturn(isListWidget);
-        collectionEditorPresenter.okRemoveCommandMethod();
+        collectionEditorPresenterSpy.okRemoveCommandMethod();
         if (isListWidget) {
             verify(listElementPresenterMock, times(1)).remove();
             verify(mapElementPresenterMock, never()).remove();
@@ -454,35 +454,35 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
     }
 
     private void commonSetValue(boolean isListWidget, boolean isExpressionList) {
-        collectionEditorPresenter.setValue(null);
-        verify(collectionEditorPresenter, never()).getJSONValue(anyString());
-        reset(collectionEditorPresenter);
-        collectionEditorPresenter.setValue("");
-        verify(collectionEditorPresenter, never()).getJSONValue(anyString());
-        reset(collectionEditorPresenter);
+        collectionEditorPresenterSpy.setValue(null);
+        verify(collectionEditorPresenterSpy, never()).getJSONValue(anyString());
+        reset(collectionEditorPresenterSpy);
+        collectionEditorPresenterSpy.setValue("");
+        verify(collectionEditorPresenterSpy, never()).getJSONValue(anyString());
+        reset(collectionEditorPresenterSpy);
         when(collectionViewMock.isListWidget()).thenReturn(isListWidget);
         when(collectionViewMock.isExpressionWidget()).thenReturn(isExpressionList);
-        collectionEditorPresenter.setValue(TEST_JSON);
+        collectionEditorPresenterSpy.setValue(TEST_JSON);
         if (isExpressionList) {
-            verify(collectionEditorPresenter, times(1)).populateExpression(isA(JSONValue.class));
-            verify(collectionEditorPresenter, never()).populateMap(any());
-            verify(collectionEditorPresenter, never()).populateList(any());
+            verify(collectionEditorPresenterSpy, times(1)).populateExpression(isA(JSONValue.class));
+            verify(collectionEditorPresenterSpy, never()).populateMap(any());
+            verify(collectionEditorPresenterSpy, never()).populateList(any());
         } else {
             if (isListWidget) {
-                verify(collectionEditorPresenter, times(1)).populateList(isA(JSONValue.class));
-                verify(collectionEditorPresenter, never()).populateMap(any());
-                verify(collectionEditorPresenter, never()).populateExpression(any());
+                verify(collectionEditorPresenterSpy, times(1)).populateList(isA(JSONValue.class));
+                verify(collectionEditorPresenterSpy, never()).populateMap(any());
+                verify(collectionEditorPresenterSpy, never()).populateExpression(any());
             } else {
-                verify(collectionEditorPresenter, times(1)).populateMap(isA(JSONValue.class));
-                verify(collectionEditorPresenter, never()).populateList(any());
-                verify(collectionEditorPresenter, never()).populateExpression(any());
+                verify(collectionEditorPresenterSpy, times(1)).populateMap(isA(JSONValue.class));
+                verify(collectionEditorPresenterSpy, never()).populateList(any());
+                verify(collectionEditorPresenterSpy, never()).populateExpression(any());
             }
         }
     }
 
     private void commonOnToggleRowExpansionIsShown(boolean isShown, boolean isListWidget) {
         when(collectionViewMock.isListWidget()).thenReturn(isListWidget);
-        collectionEditorPresenter.onToggleRowExpansion(isShown);
+        collectionEditorPresenterSpy.onToggleRowExpansion(isShown);
         verify(collectionViewMock, times(1)).toggleRowExpansion();
         if (isListWidget) {
             verify(listElementPresenterMock, times(1)).onToggleRowExpansion(eq(isShown));
@@ -499,29 +499,29 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
         when(collectionViewMock.isExpressionWidget()).thenReturn(isExpressionWidget);
         if (throwException) {
             if(isExpressionWidget) {
-                when(collectionEditorPresenter.getExpressionValue()).thenThrow(IllegalStateException.class);
+                when(collectionEditorPresenterSpy.getExpressionValue()).thenThrow(IllegalStateException.class);
             } else {
                 if (isListWidget) {
-                    when(collectionEditorPresenter.getListValue()).thenThrow(IllegalStateException.class);
+                    when(collectionEditorPresenterSpy.getListValue()).thenThrow(IllegalStateException.class);
                 } else {
-                    when(collectionEditorPresenter.getMapValue()).thenThrow(IllegalStateException.class);
+                    when(collectionEditorPresenterSpy.getMapValue()).thenThrow(IllegalStateException.class);
                 }
             }
         }
-        collectionEditorPresenter.save();
+        collectionEditorPresenterSpy.save();
         if (isExpressionWidget) {
-            verify(collectionEditorPresenter, times(1)).getExpressionValue();
-            verify(collectionEditorPresenter, never()).getListValue();
-            verify(collectionEditorPresenter, never()).getMapValue();
+            verify(collectionEditorPresenterSpy, times(1)).getExpressionValue();
+            verify(collectionEditorPresenterSpy, never()).getListValue();
+            verify(collectionEditorPresenterSpy, never()).getMapValue();
         } else {
             if (isListWidget) {
-                verify(collectionEditorPresenter, times(1)).getListValue();
-                verify(collectionEditorPresenter, never()).getExpressionValue();
-                verify(collectionEditorPresenter, never()).getMapValue();
+                verify(collectionEditorPresenterSpy, times(1)).getListValue();
+                verify(collectionEditorPresenterSpy, never()).getExpressionValue();
+                verify(collectionEditorPresenterSpy, never()).getMapValue();
             } else {
-                verify(collectionEditorPresenter, times(1)).getMapValue();
-                verify(collectionEditorPresenter, never()).getListValue();
-                verify(collectionEditorPresenter, never()).getExpressionValue();
+                verify(collectionEditorPresenterSpy, times(1)).getMapValue();
+                verify(collectionEditorPresenterSpy, never()).getListValue();
+                verify(collectionEditorPresenterSpy, never()).getExpressionValue();
             }
         }
         if (throwException) {
@@ -533,6 +533,6 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
         }
         reset(confirmPopupPresenterMock);
         reset(collectionViewMock);
-        reset(collectionEditorPresenter);
+        reset(collectionEditorPresenterSpy);
     }
 }

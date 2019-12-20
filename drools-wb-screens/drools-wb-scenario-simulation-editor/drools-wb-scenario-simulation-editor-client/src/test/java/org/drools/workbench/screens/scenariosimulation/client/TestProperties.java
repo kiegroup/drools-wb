@@ -179,6 +179,7 @@ public class TestProperties {
     public static final String PLACEHOLDER = "PLACEHOLDER";
     public static final String LIST_VALUE = "[ \"Ford\", \"BMW\", \"Fiat\" ]";
     public static final String MAP_VALUE = "{\"name\":\"myname\",\"age\":29}";
+    public static final String EXPRESSION_VALUE = "\"[1, 2, 3]\"";
 
     public static final String SCENARIO_TYPE = "SCENARIO_TYPE";
     public static final String FILE_NAME = "FILE_NAME";
