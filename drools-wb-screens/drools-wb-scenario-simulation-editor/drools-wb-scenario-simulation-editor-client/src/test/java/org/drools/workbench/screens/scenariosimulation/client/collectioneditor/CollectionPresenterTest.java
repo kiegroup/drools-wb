@@ -66,8 +66,6 @@ import static org.mockito.Mockito.when;
 @RunWith(GwtMockitoTestRunner.class)
 public class CollectionPresenterTest extends AbstractCollectionEditorTest {
 
-
-
     @Mock
     private ItemElementPresenter listElementPresenterMock;
 
@@ -102,6 +100,9 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
 
     @Mock
     private Style styleMock;
+
+    @Mock
+    private JSONString jsonStringMock;
 
     @Mock
     private JSONValue jsonValueMock;
@@ -197,6 +198,7 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
         when(jsonArrayMock.get(anyInt())).thenReturn(jsonValueChildMock);
         when(jsonValueMock.isArray()).thenReturn(jsonArrayMock);
         when(jsonValueMock.isObject()).thenReturn(jsonObjectMock);
+        when(jsonValueMock.isString()).thenReturn(jsonStringMock);
         this.collectionEditorPresenter = spy(new CollectionPresenter() {
             {
                 this.viewsProvider = viewsProviderMock;
@@ -206,7 +208,6 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
                 this.mapEditingBoxPresenter = mapEditingBoxPresenterMock;
                 this.simplePropertiesMap = instancePropertiesMapLocal;
                 this.collectionView = collectionViewMock;
-                this.objectSeparatorLI = objectSeparatorLIMock;
                 this.scenarioConfirmationPopupPresenter = scenarioConfirmationPopupPresenterMock;
                 this.confirmPopupPresenter = confirmPopupPresenterMock;
             }
@@ -223,6 +224,11 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
 
             @Override
             protected String getMapValue() {
+                return UPDATED_VALUE;
+            }
+
+            @Override
+            protected String getExpressionValue() {
                 return UPDATED_VALUE;
             }
         });
@@ -257,12 +263,22 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
 
     @Test
     public void setValueIsListWidgetTrue() {
-        commonSetValue(true);
+        commonSetValue(true, false);
     }
 
     @Test
     public void setValueIsListWidgetFalse() {
-        commonSetValue(false);
+        commonSetValue(false, false);
+    }
+
+    @Test
+    public void setValueIsExpressionWidgetList() {
+        commonSetValue(true, true);
+    }
+
+    @Test
+    public void setValueIsExpressionWidgetMap() {
+        commonSetValue(false, true);
     }
 
     @Test
@@ -320,14 +336,22 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
 
     @Test
     public void saveIsListWidgetTrue() {
-        commonSave(true, false);
-        commonSave(true, true);
+        commonSave(true, false,false);
+        commonSave(true, false,true);
     }
 
     @Test
     public void saveIsListWidgetFalse() {
-        commonSave(false, false);
-        commonSave(false, true);
+        commonSave(false, false,false);
+        commonSave(false, false,true);
+    }
+
+    @Test
+    public void saveIsExpressionWidget() {
+        commonSave(false, true,false);
+        commonSave(false, true,true);
+        commonSave(true, true,false);
+        commonSave(true, true,true);
     }
 
     @Test
@@ -353,12 +377,10 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
     @Test
     public void commonInit() {
         collectionEditorPresenter.collectionView = null;
-        collectionEditorPresenter.objectSeparatorLI = null;
         collectionEditorPresenter.commonInit(TEST_KEY, collectionViewMock);
         assertEquals(collectionEditorPresenter.collectionView, collectionViewMock);
         verify(editorTitleMock, times(1)).setInnerText(TEST_KEY);
         verify(propertyTitleMock, times(1)).setInnerText(TEST_PROPERTYNAME);
-        assertEquals(collectionEditorPresenter.objectSeparatorLI, objectSeparatorLIMock);
     }
 
     @Test
@@ -431,7 +453,7 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
         verify(collectionViewMock, times(1)).close();
     }
 
-    private void commonSetValue(boolean isListWidget) {
+    private void commonSetValue(boolean isListWidget, boolean isExpressionList) {
         collectionEditorPresenter.setValue(null);
         verify(collectionEditorPresenter, never()).getJSONValue(anyString());
         reset(collectionEditorPresenter);
@@ -439,13 +461,22 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
         verify(collectionEditorPresenter, never()).getJSONValue(anyString());
         reset(collectionEditorPresenter);
         when(collectionViewMock.isListWidget()).thenReturn(isListWidget);
+        when(collectionViewMock.isExpressionWidget()).thenReturn(isExpressionList);
         collectionEditorPresenter.setValue(TEST_JSON);
-        if (isListWidget) {
-            verify(collectionEditorPresenter, times(1)).populateList(isA(JSONValue.class));
-            verify(collectionEditorPresenter, never()).populateMap(isA(JSONValue.class));
+        if (isExpressionList) {
+            verify(collectionEditorPresenter, times(1)).populateExpression(isA(JSONValue.class));
+            verify(collectionEditorPresenter, never()).populateMap(any());
+            verify(collectionEditorPresenter, never()).populateList(any());
         } else {
-            verify(collectionEditorPresenter, times(1)).populateMap(isA(JSONValue.class));
-            verify(collectionEditorPresenter, never()).populateList(isA(JSONValue.class));
+            if (isListWidget) {
+                verify(collectionEditorPresenter, times(1)).populateList(isA(JSONValue.class));
+                verify(collectionEditorPresenter, never()).populateMap(any());
+                verify(collectionEditorPresenter, never()).populateExpression(any());
+            } else {
+                verify(collectionEditorPresenter, times(1)).populateMap(isA(JSONValue.class));
+                verify(collectionEditorPresenter, never()).populateList(any());
+                verify(collectionEditorPresenter, never()).populateExpression(any());
+            }
         }
     }
 
@@ -463,20 +494,35 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
         reset(mapElementPresenterMock);
     }
 
-    private void commonSave(boolean isListWidget, boolean throwException) {
+    private void commonSave(boolean isListWidget, boolean isExpressionWidget, boolean throwException) {
         when(collectionViewMock.isListWidget()).thenReturn(isListWidget);
+        when(collectionViewMock.isExpressionWidget()).thenReturn(isExpressionWidget);
         if (throwException) {
-            if (isListWidget) {
-                when(collectionEditorPresenter.getListValue()).thenThrow(IllegalStateException.class);
+            if(isExpressionWidget) {
+                when(collectionEditorPresenter.getExpressionValue()).thenThrow(IllegalStateException.class);
             } else {
-                when(collectionEditorPresenter.getMapValue()).thenThrow(IllegalStateException.class);
+                if (isListWidget) {
+                    when(collectionEditorPresenter.getListValue()).thenThrow(IllegalStateException.class);
+                } else {
+                    when(collectionEditorPresenter.getMapValue()).thenThrow(IllegalStateException.class);
+                }
             }
         }
         collectionEditorPresenter.save();
-        if (isListWidget) {
-            verify(collectionEditorPresenter, times(1)).getListValue();
+        if (isExpressionWidget) {
+            verify(collectionEditorPresenter, times(1)).getExpressionValue();
+            verify(collectionEditorPresenter, never()).getListValue();
+            verify(collectionEditorPresenter, never()).getMapValue();
         } else {
-            verify(collectionEditorPresenter, times(1)).getMapValue();
+            if (isListWidget) {
+                verify(collectionEditorPresenter, times(1)).getListValue();
+                verify(collectionEditorPresenter, never()).getExpressionValue();
+                verify(collectionEditorPresenter, never()).getMapValue();
+            } else {
+                verify(collectionEditorPresenter, times(1)).getMapValue();
+                verify(collectionEditorPresenter, never()).getListValue();
+                verify(collectionEditorPresenter, never()).getExpressionValue();
+            }
         }
         if (throwException) {
             verify(confirmPopupPresenterMock, times(1)).show(eq(ScenarioSimulationEditorConstants.INSTANCE.collectionError()), anyString());

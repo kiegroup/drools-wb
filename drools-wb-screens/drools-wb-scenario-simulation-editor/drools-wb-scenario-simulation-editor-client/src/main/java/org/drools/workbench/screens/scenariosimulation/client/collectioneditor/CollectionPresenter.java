@@ -72,8 +72,6 @@ public class CollectionPresenter implements CollectionView.Presenter {
 
     protected CollectionView collectionView;
 
-    protected LIElement objectSeparatorLI;
-
     @Override
     public void initListStructure(String key, Map<String, String> simplePropertiesMap, Map<String, Map<String, String>> expandablePropertiesMap, CollectionView collectionView) {
         commonInit(key, collectionView);
@@ -100,7 +98,7 @@ public class CollectionPresenter implements CollectionView.Presenter {
             return;
         }
         JSONValue jsonValue = getJSONValue(jsonString);
-        if (collectionView.isExpression()) {
+        if (collectionView.isExpressionWidget()) {
             populateExpression(jsonValue);
         } else {
             if (collectionView.isListWidget()) {
@@ -161,9 +159,9 @@ public class CollectionPresenter implements CollectionView.Presenter {
 
     @Override
     public void save() {
-       try {
+        try {
             String updatedValue;
-            if (collectionView.isDefineOptionSelected()) {
+            if (collectionView.isExpressionWidget()) {
                 updatedValue = getExpressionValue();
             } else {
                 if (collectionView.isListWidget()) {

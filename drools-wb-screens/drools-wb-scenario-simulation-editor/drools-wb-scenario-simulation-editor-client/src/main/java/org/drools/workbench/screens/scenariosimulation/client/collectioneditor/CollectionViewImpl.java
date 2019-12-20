@@ -264,8 +264,8 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     }
 
     @Override
-    public boolean isExpression() {
-        return expression;
+    public boolean isExpressionWidget() {
+        return defineCollectionRadio.isChecked();
     }
 
     @Override

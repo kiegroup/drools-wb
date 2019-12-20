@@ -128,7 +128,10 @@ public interface CollectionView {
      */
     String getValue();
 
-    boolean isExpression();
+    /**
+     * Returns <code>true</code> if the current instance is managing an user defined expression.
+     */
+    boolean isExpressionWidget();
 
     boolean isDefineOptionSelected();
 
