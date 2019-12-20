@@ -133,8 +133,6 @@ public interface CollectionView {
      */
     boolean isExpressionWidget();
 
-    boolean isDefineOptionSelected();
-
     /**
      * Returns <code>true</code> if the current instance will manage a <code>List</code>,
      * <code>false</code> for a <code>Map</code>.

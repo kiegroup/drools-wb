@@ -135,9 +135,6 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
     private JSONObject nestedValue2Mock;
 
     @Mock
-    private LIElement objectSeparatorLIMock;
-
-    @Mock
     private HeadingElement editorTitleMock;
 
     @Mock
@@ -174,7 +171,6 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
         when(collectionViewMock.getCancelButton()).thenReturn(cancelButtonMock);
         when(collectionViewMock.getRemoveButton()).thenReturn(removeButtonMock);
         when(collectionViewMock.getSaveButton()).thenReturn(saveButtonMock);
-        when(objectSeparatorLIMock.getStyle()).thenReturn(styleMock);
 
         when(nestedValue1Mock.keySet()).thenReturn(KEY_SET);
         when(nestedValue1Mock.get(eq("prop1"))).thenReturn(jsonValueNeph1Mock);
@@ -534,5 +530,12 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
         reset(confirmPopupPresenterMock);
         reset(collectionViewMock);
         reset(collectionEditorPresenterSpy);
+    }
+
+    @Test
+    public void populateExpression() {
+        when(jsonStringMock.stringValue()).thenReturn("test-string");
+        collectionEditorPresenterSpy.populateExpression(jsonValueMock);
+        verify(collectionViewMock, times(1)).setExpression("test-string");
     }
 }

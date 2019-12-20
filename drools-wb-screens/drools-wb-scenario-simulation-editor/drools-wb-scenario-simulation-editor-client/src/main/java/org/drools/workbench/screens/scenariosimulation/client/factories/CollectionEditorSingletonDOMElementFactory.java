@@ -192,7 +192,7 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
                 .filter(col -> col.getIndex() == selectedCellsOrigin.getColumnIndex())
                 .findFirst();
         FactMappingValueType type;
-        if (widget.isDefineOptionSelected()) {
+        if (widget.isExpressionWidget()) {
             type = FactMappingValueType.EXPRESSION;
         } else {
             type = FactMappingValueType.NOT_EXPRESSION;

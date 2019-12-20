@@ -21,9 +21,13 @@ import java.util.Map;
 
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import com.google.gwt.dom.client.DivElement;
+import org.drools.scenariosimulation.api.model.FactMappingValueType;
 import org.drools.scenariosimulation.api.utils.ScenarioSimulationSharedUtils;
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionViewImpl;
+import org.drools.workbench.screens.scenariosimulation.client.domelements.CollectionEditorDOMElement;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.CloseCompositeEventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.SaveEditorEventHandler;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,6 +55,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -59,7 +64,7 @@ import static org.mockito.Mockito.when;
 @RunWith(LienzoMockitoTestRunner.class)
 public class CollectionEditorSingletonDOMElementFactoryTest extends AbstractFactoriesTest {
 
-    protected CollectionEditorSingletonDOMElementFactory collectionEditorSingletonDOMElementFactoryMock;
+    protected CollectionEditorSingletonDOMElementFactory collectionEditorSingletonDOMElementFactorySpy;
     protected CollectionViewImpl collectionEditorViewImpl;
 
     @Mock
@@ -90,11 +95,11 @@ public class CollectionEditorSingletonDOMElementFactoryTest extends AbstractFact
             }
         });
 
-        this.collectionEditorSingletonDOMElementFactoryMock = spy(new CollectionEditorSingletonDOMElementFactory(scenarioGridPanelMock,
-                                                                                                                 scenarioGridLayerMock,
-                                                                                                                 scenarioGridMock,
-                                                                                                                 scenarioSimulationContextLocal,
-                                                                                                                 viewsProviderMock));
+        this.collectionEditorSingletonDOMElementFactorySpy = spy(new CollectionEditorSingletonDOMElementFactory(scenarioGridPanelMock,
+                                                                                                                scenarioGridLayerMock,
+                                                                                                                scenarioGridMock,
+                                                                                                                scenarioSimulationContextLocal,
+                                                                                                                viewsProviderMock));
         factMappingMock.getGenericTypes().add(STRING_CLASS_NAME);
         factMappingMock.getGenericTypes().add(NUMBER_CLASS_NAME);
         when(factMappingMock.getFactAlias()).thenReturn(FULL_CLASS_NAME);
@@ -122,16 +127,16 @@ public class CollectionEditorSingletonDOMElementFactoryTest extends AbstractFact
     @Test
     public void manageList() {
         String key = FULL_CLASS_NAME + "#" + LIST_CLASS_NAME;
-        collectionEditorSingletonDOMElementFactoryMock.manageList(collectionEditorViewImpl, key, STRING_CLASS_NAME, true,false);
+        collectionEditorSingletonDOMElementFactorySpy.manageList(collectionEditorViewImpl, key, STRING_CLASS_NAME, true, false);
         Map<String, String> expectedMap1 = new HashMap<>();
         expectedMap1.put(LOWER_CASE_VALUE, STRING_CLASS_NAME);
-        verify(collectionEditorViewImpl, times(1)).initListStructure(eq(key), eq(expectedMap1), isA(Map.class), true, false);
-        verify(collectionEditorSingletonDOMElementFactoryMock, times(1)).getExpandablePropertiesMap(eq(STRING_CLASS_NAME));
+        verify(collectionEditorViewImpl, times(1)).initListStructure(eq(key), eq(expectedMap1), isA(Map.class), eq(true), eq(false));
+        verify(collectionEditorSingletonDOMElementFactorySpy, times(1)).getExpandablePropertiesMap(eq(STRING_CLASS_NAME));
     }
 
     @Test
     public void getExpandableProperties_SimpleType() {
-        Map<String, Map<String, String>> resultMap = collectionEditorSingletonDOMElementFactoryMock.getExpandablePropertiesMap(STRING_CLASS_NAME);
+        Map<String, Map<String, String>> resultMap = collectionEditorSingletonDOMElementFactorySpy.getExpandablePropertiesMap(STRING_CLASS_NAME);
         assertTrue(resultMap.isEmpty());
     }
 
@@ -139,7 +144,7 @@ public class CollectionEditorSingletonDOMElementFactoryTest extends AbstractFact
     public void getExpandableProperties_NotSimpleType() {
         Map<String, Map<String, String>> expectedResult = new HashMap<>();
         expectedResult.put("a", EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE_2);
-        Map<String, Map<String, String>> resultMap = collectionEditorSingletonDOMElementFactoryMock.getExpandablePropertiesMap(FULL_FACT_CLASSNAME);
+        Map<String, Map<String, String>> resultMap = collectionEditorSingletonDOMElementFactorySpy.getExpandablePropertiesMap(FULL_FACT_CLASSNAME);
         assertEquals(resultMap, expectedResult);
     }
 
@@ -166,13 +171,13 @@ public class CollectionEditorSingletonDOMElementFactoryTest extends AbstractFact
         String key = FULL_CLASS_NAME + "#" + LIST_CLASS_NAME;
         Map<String, String> expectedMap0 = new HashMap<>();
 
-        doReturn(expectedMap0).when(collectionEditorSingletonDOMElementFactoryMock).getSimplePropertiesMap(eq(STRING_CLASS_NAME));
-        doReturn(expectedMap1).when(collectionEditorSingletonDOMElementFactoryMock).getSimplePropertiesMap(eq(genericType1));
-        collectionEditorSingletonDOMElementFactoryMock.manageMap(collectionEditorViewImpl, key, STRING_CLASS_NAME, genericType1, isRule, false);
-        verify(collectionEditorSingletonDOMElementFactoryMock, times(1)).getSimplePropertiesMap(STRING_CLASS_NAME);
-        verify(collectionEditorSingletonDOMElementFactoryMock, times(1)).getSimplePropertiesMap(genericType1);
+        doReturn(expectedMap0).when(collectionEditorSingletonDOMElementFactorySpy).getSimplePropertiesMap(eq(STRING_CLASS_NAME));
+        doReturn(expectedMap1).when(collectionEditorSingletonDOMElementFactorySpy).getSimplePropertiesMap(eq(genericType1));
+        collectionEditorSingletonDOMElementFactorySpy.manageMap(collectionEditorViewImpl, key, STRING_CLASS_NAME, genericType1, isRule, false);
+        verify(collectionEditorSingletonDOMElementFactorySpy, times(1)).getSimplePropertiesMap(STRING_CLASS_NAME);
+        verify(collectionEditorSingletonDOMElementFactorySpy, times(1)).getSimplePropertiesMap(genericType1);
 
-        verify(collectionEditorViewImpl, times(1)).initMapStructure(eq(key), eq(expectedMap0), eq(expectedMap1), true,false);
+        verify(collectionEditorViewImpl, times(1)).initMapStructure(eq(key), eq(expectedMap0), eq(expectedMap1), eq(isRule), eq(false));
     }
 
     @Test(expected = IllegalStateException.class)
@@ -228,22 +233,79 @@ public class CollectionEditorSingletonDOMElementFactoryTest extends AbstractFact
         setCollectionEditorStructureData();
     }
 
+    @Test
+    public void setCollectionEditorStructureData_ManageListRuleExpression() {
+        when(factMappingMock.getExpressionAlias()).thenReturn(LIST_CLASS_NAME);
+        when(factMappingMock.getClassName()).thenReturn(LIST_CLASS_NAME);
+        when(factMappingMock.getFactMappingValueType()).thenReturn(FactMappingValueType.EXPRESSION);
+        settingsLocal.setType(RULE);
+
+        setCollectionEditorStructureData();
+    }
+
+    @Test
+    public void setCollectionEditorStructureData_ManageListDMNExpression() {
+        when(factMappingMock.getExpressionAlias()).thenReturn(LIST_CLASS_NAME);
+        when(factMappingMock.getClassName()).thenReturn(LIST_CLASS_NAME);
+        when(factMappingMock.getFactMappingValueType()).thenReturn(FactMappingValueType.EXPRESSION);
+        settingsLocal.setType(DMN);
+
+        setCollectionEditorStructureData();
+    }
+
+    @Test
+    public void setCollectionEditorStructureData_ManageMapExpression() {
+        when(factMappingMock.getExpressionAlias()).thenReturn(MAP_CLASS_NAME);
+        when(factMappingMock.getClassName()).thenReturn(MAP_CLASS_NAME);
+        when(factMappingMock.getFactMappingValueType()).thenReturn(FactMappingValueType.EXPRESSION);
+        settingsLocal.setType(RULE);
+
+        setCollectionEditorStructureData();
+    }
+
+    @Test
+    public void setCollectionEditorStructureData_ManageMapDMNExpression() {
+        when(factMappingMock.getExpressionAlias()).thenReturn(MAP_CLASS_NAME);
+        when(factMappingMock.getClassName()).thenReturn(MAP_CLASS_NAME);
+        when(factMappingMock.getFactMappingValueType()).thenReturn(FactMappingValueType.EXPRESSION);
+        settingsLocal.setType(DMN);
+
+        setCollectionEditorStructureData();
+    }
+
     private void setCollectionEditorStructureData() {
-        collectionEditorSingletonDOMElementFactoryMock.setCollectionEditorStructureData(collectionEditorViewImpl, factMappingMock);
+        collectionEditorSingletonDOMElementFactorySpy.setCollectionEditorStructureData(collectionEditorViewImpl, factMappingMock);
         boolean isRule = RULE.equals(settingsLocal.getType());
         String genericTypeName0 = factMappingMock.getGenericTypes().get(0);
         String genericTypeName1 = factMappingMock.getGenericTypes().get(1);
+        boolean isExpression = FactMappingValueType.EXPRESSION.equals(factMappingMock.getFactMappingValueType());
         if (isRule && !isSimpleJavaType(genericTypeName0)) {
-            verify(collectionEditorSingletonDOMElementFactoryMock, times(1)).getRuleComplexType(eq(genericTypeName0));
+            verify(collectionEditorSingletonDOMElementFactorySpy, times(1)).getRuleComplexType(eq(genericTypeName0));
             genericTypeName0 = genericTypeName0.substring(genericTypeName0.lastIndexOf(".") + 1);
         }
         String key = factMappingMock.getFactAlias() + "#" + factMappingMock.getExpressionAlias();
         if (ScenarioSimulationSharedUtils.isList(factMappingMock.getExpressionAlias())) {
-            verify(collectionEditorSingletonDOMElementFactoryMock, times(1)).manageList(
-                    eq(collectionEditorViewImpl), eq(key), eq(genericTypeName0), eq(isRule), false);
+            verify(collectionEditorSingletonDOMElementFactorySpy, times(1)).manageList(
+                    eq(collectionEditorViewImpl), eq(key), eq(genericTypeName0), eq(isRule), eq(isExpression));
         } else {
-            verify(collectionEditorSingletonDOMElementFactoryMock, times(1)).manageMap(
-                    eq(collectionEditorViewImpl), eq(key), eq(genericTypeName0), eq(genericTypeName1), eq(isRule), false);
+            verify(collectionEditorSingletonDOMElementFactorySpy, times(1)).manageMap(
+                    eq(collectionEditorViewImpl), eq(key), eq(genericTypeName0), eq(genericTypeName1), eq(isRule), eq(isExpression));
         }
+    }
+
+    @Test
+    public void registerHandlers() {
+        CollectionEditorDOMElement collectionEditorDOMElementMock = mock(CollectionEditorDOMElement.class);
+        collectionEditorSingletonDOMElementFactorySpy.registerHandlers(collectionEditorViewImpl, collectionEditorDOMElementMock);
+        verify(collectionEditorViewImpl, times(1)).addCloseCompositeEventHandler(isA(CloseCompositeEventHandler.class));
+        verify(collectionEditorViewImpl, times(1)).addSaveEditorEventHandler(isA(SaveEditorEventHandler.class));
+    }
+
+    @Test
+    public void saveHandling() {
+        //collectionEditorSingletonDOMElementFactorySpy.saveHandling();
+
+        //TODO
+
     }
 }

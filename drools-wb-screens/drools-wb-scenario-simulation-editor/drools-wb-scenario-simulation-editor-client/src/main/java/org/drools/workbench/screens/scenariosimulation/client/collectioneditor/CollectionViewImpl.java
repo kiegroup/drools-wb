@@ -149,11 +149,6 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     protected boolean listWidget;
 
     /**
-     * Flag to indicate if this <code>CollectionEditorViewImpl</code> will manage a <b>Expression</b> or not.
-     */
-    protected boolean expression = false;
-
-    /**
      * Flag to indicate if this <code>CollectionEditorViewImpl</code> is opened in DMN or RULE scenario
      */
     protected boolean ruleScenario;
@@ -176,6 +171,7 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
      * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
      * @param simplePropertiesMap
      * @param expandablePropertiesMap
+     * @param isRule
      * @param isExpression
      */
     @Override
@@ -197,7 +193,9 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
      * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
      * @param keyPropertyMap
      * @param valuePropertyMap
+     * @param isRule
      * @param isExpression
+     *
      */
     @Override
     public void initMapStructure(String key, Map<String, String> keyPropertyMap, Map<String, String> valuePropertyMap, boolean isRule, boolean isExpression) {
@@ -213,7 +211,6 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     }
 
     protected void commonInit(boolean isRule, boolean isExpression) {
-        expression = isExpression;
         ruleScenario = isRule;
         saveButton.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.saveButton());
         cancelButton.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.cancelButton());
@@ -265,11 +262,6 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
 
     @Override
     public boolean isExpressionWidget() {
-        return defineCollectionRadio.isChecked();
-    }
-
-    @Override
-    public boolean isDefineOptionSelected() {
         return defineCollectionRadio.isChecked();
     }
 
