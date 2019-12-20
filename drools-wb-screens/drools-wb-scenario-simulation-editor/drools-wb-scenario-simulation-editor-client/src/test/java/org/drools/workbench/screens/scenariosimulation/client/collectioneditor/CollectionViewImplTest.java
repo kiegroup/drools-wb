@@ -61,10 +61,25 @@ public class CollectionViewImplTest extends AbstractCollectionEditorTest {
     private SpanElement collectionCreationDefineLabelMock;
     @Mock
     private SpanElement collectionCreationDefineSpanMock;
+    @Mock
+    private DivElement createCollectionContainerMock;
+    @Mock
+    private Style createCollectionContainerStyleMock;
+    @Mock
+    private DivElement defineCollectionContainerMock;
+    @Mock
+    private Style defineCollectionContainerStyleMock;
+    @Mock
+    private DivElement addItemButtonContainerMock;
+    @Mock
+    private Style addItemButtonContainerStyleMock;
 
     @Before
     public void setup() {
         when(collectionEditorModalBodyMock.getStyle()).thenReturn(styleMock);
+        when(createCollectionContainerMock.getStyle()).thenReturn(createCollectionContainerStyleMock);
+        when(defineCollectionContainerMock.getStyle()).thenReturn(defineCollectionContainerStyleMock);
+        when(addItemButtonContainerMock.getStyle()).thenReturn(addItemButtonContainerStyleMock);
         this.collectionEditorViewImplSpy = spy(new CollectionViewImpl() {
             {
                 this.presenter = collectionPresenterMock;
@@ -75,6 +90,9 @@ public class CollectionViewImplTest extends AbstractCollectionEditorTest {
                 this.collectionCreationCreateSpan = collectionCreationCreateSpanMock;
                 this.collectionCreationDefineLabel = collectionCreationDefineLabelMock;
                 this.collectionCreationDefineSpan = collectionCreationDefineSpanMock;
+                this.createCollectionContainer = createCollectionContainerMock;
+                this.defineCollectionContainer = defineCollectionContainerMock;
+                this.addItemButtonContainer = addItemButtonContainerMock;
             }
         });
     }
@@ -192,5 +210,37 @@ public class CollectionViewImplTest extends AbstractCollectionEditorTest {
         Style.Unit unit = Style.Unit.PX;
         collectionEditorViewImplSpy.setFixedHeight(value, unit);
         verify(styleMock, times(1)).setHeight(eq(value), eq(unit));
+    }
+
+    @Test
+    public void showCreateCollectionContainer() {
+        collectionEditorViewImplSpy.showCreateCollectionContainer(false);
+        checkStyleDisplay(createCollectionContainerStyleMock, false);
+        collectionEditorViewImplSpy.showCreateCollectionContainer(true);
+        checkStyleDisplay(createCollectionContainerStyleMock, true);
+    }
+
+    @Test
+    public void showDefineCollectionContainer() {
+        collectionEditorViewImplSpy.showDefineCollectionContainer(false);
+        checkStyleDisplay(defineCollectionContainerStyleMock, false);
+        collectionEditorViewImplSpy.showDefineCollectionContainer(true);
+        checkStyleDisplay(defineCollectionContainerStyleMock, true);
+    }
+
+    @Test
+    public void showAddItemButtonContainer() {
+        collectionEditorViewImplSpy.showAddItemButtonContainer(false);
+        checkStyleDisplay(addItemButtonContainerStyleMock, false);
+        collectionEditorViewImplSpy.showAddItemButtonContainer(true);
+        checkStyleDisplay(addItemButtonContainerStyleMock, true);
+    }
+
+    private void checkStyleDisplay(Style styleElement, boolean show) {
+        if (show) {
+            verify(styleElement, times(1)).setDisplay(Style.Display.BLOCK);
+        } else {
+            verify(styleElement, times(1)).setDisplay(Style.Display.NONE);
+        }
     }
 }
