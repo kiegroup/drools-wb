@@ -52,6 +52,9 @@ public class CheatSheetViewImpl
     @DataField("ruleCheatSheetParagraph4")
     protected ParagraphElement ruleCheatSheetParagraph4 = Document.get().createPElement();
 
+    @DataField("ruleCheatSheetParagraphBackground")
+    protected ParagraphElement ruleCheatSheetParagraphBackground = Document.get().createPElement();
+
     @DataField("ruleCheatSheetList1")
     protected LIElement ruleCheatSheetList1 = Document.get().createLIElement();
 
@@ -69,6 +72,9 @@ public class CheatSheetViewImpl
 
     @DataField("ruleCheatSheetList6")
     protected LIElement ruleCheatSheetList6 = Document.get().createLIElement();
+
+    @DataField("ruleCheatSheetList7")
+    protected LIElement ruleCheatSheetList7 = Document.get().createLIElement();
 
     @DataField("ruleCheatSheetParagraph5")
     protected ParagraphElement ruleCheatSheetParagraph5 = Document.get().createPElement();
@@ -93,6 +99,9 @@ public class CheatSheetViewImpl
 
     @DataField("dmnCheatSheetParagraph5")
     protected ParagraphElement dmnCheatSheetParagraph5 = Document.get().createPElement();
+
+    @DataField("dmnCheatSheetParagraphBackground")
+    protected ParagraphElement dmnCheatSheetParagraphBackground = Document.get().createPElement();
 
     @DataField("dmnCheatSheetList1")
     protected LIElement dmnCheatSheetList1 = Document.get().createLIElement();
@@ -137,6 +146,7 @@ public class CheatSheetViewImpl
         ruleCheatSheetParagraph2.setInnerHTML(ScenarioSimulationEditorConstants.INSTANCE.ruleCheatSheet2() + "<b>" + " " + ScenarioSimulationEditorConstants.INSTANCE.testEditor() + " " + "</b>"
                                                       + ScenarioSimulationEditorConstants.INSTANCE.ruleCheatSheet3() + " <b>" + ScenarioSimulationEditorConstants.INSTANCE.ruleCheatSheet4() + " </b>"
                                                       + ScenarioSimulationEditorConstants.INSTANCE.ruleCheatSheet5());
+        ruleCheatSheetParagraphBackground.setInnerHTML(ScenarioSimulationEditorConstants.INSTANCE.ruleCheatSheetBackground());
         ruleCheatSheetParagraph3.setInnerHTML(ScenarioSimulationEditorConstants.INSTANCE.ruleCheatSheet6());
         ruleCheatSheetParagraph4.setInnerHTML(ScenarioSimulationEditorConstants.INSTANCE.ruleCheatSheet7());
         ruleCheatSheetList1.setInnerHTML("<tt>=</tt>" + " " + ScenarioSimulationEditorConstants.INSTANCE.ruleCheatSheet8());
@@ -148,6 +158,7 @@ public class CheatSheetViewImpl
                                                  + " " + "<b>" + ScenarioSimulationEditorConstants.INSTANCE.ruleCheatSheet17() + "</b>" + " " + ScenarioSimulationEditorConstants.INSTANCE.ruleCheatSheet18());
         ruleCheatSheetList6.setInnerHTML(ScenarioSimulationEditorConstants.INSTANCE.ruleCheatSheet19() + " " + "<tt>=</tt>, <tt>[]</tt>, " + ScenarioSimulationEditorConstants.INSTANCE.or() +
                                                  " " + "<tt>;</tt>. " + ScenarioSimulationEditorConstants.INSTANCE.ruleCheatSheet20() + " " + "<tt>null</tt>. " + ScenarioSimulationEditorConstants.INSTANCE.ruleCheatSheet21());
+        ruleCheatSheetList7.setInnerHTML(ScenarioSimulationEditorConstants.INSTANCE.ruleCheatSheet23());
         ruleCheatSheetParagraph5.setInnerHTML(ScenarioSimulationEditorConstants.INSTANCE.ruleCheatSheet22());
         ruleCheatSheetExampleExpressions.setInnerHTML("<li><tt>&lt; 1</tt></li>" +
                     "<li><tt>&lt; 1; ! [-1, 0]</tt></li>" +
@@ -165,6 +176,7 @@ public class CheatSheetViewImpl
                                                      + ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet3());
         dmnCheatSheetParagraph3.setInnerHTML(ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet4());
         dmnCheatSheetParagraph4.setInnerHTML(ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet5());
+        dmnCheatSheetParagraphBackground.setInnerHTML(ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheetBackground());
         dmnCheatSheetParagraph5.setInnerHTML(ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet6());
         dmnCheatSheetList1.setInnerHTML("<i>" + ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet7() + " " + "</i>" + ScenarioSimulationEditorConstants.INSTANCE.and()
                 + " " + "<i>" + ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet8() + "</i>" + " " + ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet9() + " "

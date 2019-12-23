@@ -104,6 +104,8 @@ public interface ScenarioSimulationEditorConstants
 
     String ruleCheatSheet22();
 
+    String ruleCheatSheet23();
+
     String dmnCheatSheet1();
 
     String dmnCheatSheet2();
@@ -357,4 +359,8 @@ public interface ScenarioSimulationEditorConstants
     String testToolObjectSelectionTooltip();
 
     String testToolClearSelection();
+
+    String ruleCheatSheetBackground();
+
+    String dmnCheatSheetBackground();
 }
