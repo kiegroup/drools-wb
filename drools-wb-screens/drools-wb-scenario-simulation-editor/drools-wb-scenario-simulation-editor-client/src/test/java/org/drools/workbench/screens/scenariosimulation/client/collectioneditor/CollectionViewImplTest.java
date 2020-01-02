@@ -21,6 +21,7 @@ import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.LabelElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.events.CloseCompositeEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.SaveEditorEvent;
@@ -32,10 +33,12 @@ import org.mockito.Mock;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -73,6 +76,8 @@ public class CollectionViewImplTest extends AbstractCollectionEditorTest {
     private DivElement addItemButtonContainerMock;
     @Mock
     private Style addItemButtonContainerStyleMock;
+    @Mock
+    private TextAreaElement expressionElementMock;
 
     @Before
     public void setup() {
@@ -93,6 +98,7 @@ public class CollectionViewImplTest extends AbstractCollectionEditorTest {
                 this.createCollectionContainer = createCollectionContainerMock;
                 this.defineCollectionContainer = defineCollectionContainerMock;
                 this.addItemButtonContainer = addItemButtonContainerMock;
+                this.expressionElement = expressionElementMock;
             }
         });
     }
@@ -210,6 +216,53 @@ public class CollectionViewImplTest extends AbstractCollectionEditorTest {
         Style.Unit unit = Style.Unit.PX;
         collectionEditorViewImplSpy.setFixedHeight(value, unit);
         verify(styleMock, times(1)).setHeight(eq(value), eq(unit));
+    }
+
+    @Test
+    public void enableCreateCollectionContainer_CreateList() {
+        enableCreateCollectionContainer(true, true);
+    }
+
+    @Test
+    public void enableCreateCollectionContainer_CreateMap() {
+        enableCreateCollectionContainer(true, false);
+    }
+
+    @Test
+    public void enableCreateCollectionContainer_DefineList() {
+        enableCreateCollectionContainer(false, true);
+    }
+
+    @Test
+    public void enableCreateCollectionContainer_DefineMap() {
+        enableCreateCollectionContainer(false, false);
+    }
+
+    private void enableCreateCollectionContainer(boolean toEnable, boolean isList) {
+        collectionEditorViewImplSpy.listWidget = isList;
+        collectionEditorViewImplSpy.enableCreateCollectionContainer(toEnable);
+        verify(collectionEditorViewImplSpy, times(1)).showCreateCollectionContainer(eq(toEnable));
+        verify(collectionEditorViewImplSpy, times(1)).showDefineCollectionContainer(eq(!toEnable));
+        verify(collectionEditorViewImplSpy, times(1)).showAddItemButtonContainer(eq(toEnable));
+        if (isList) {
+            verify(createLabelMock, times(1)).setInnerText(eq(ScenarioSimulationEditorConstants.INSTANCE.createLabelList()));
+        } else {
+            verify(createLabelMock, times(1)).setInnerText(eq(ScenarioSimulationEditorConstants.INSTANCE.createLabelMap()));
+        }
+    }
+
+    @Test
+    public void checkExpressionSyntax_Rule() {
+        collectionEditorViewImplSpy.ruleScenario = true;
+        collectionEditorViewImplSpy.checkExpressionSyntax();
+        verify(expressionElementMock, times(1)).setValue(anyString());
+    }
+
+    @Test
+    public void checkExpressionSyntax_DMN() {
+        collectionEditorViewImplSpy.ruleScenario = false;
+        collectionEditorViewImplSpy.checkExpressionSyntax();
+        verify(expressionElementMock, never()).setValue(anyString());
     }
 
     @Test

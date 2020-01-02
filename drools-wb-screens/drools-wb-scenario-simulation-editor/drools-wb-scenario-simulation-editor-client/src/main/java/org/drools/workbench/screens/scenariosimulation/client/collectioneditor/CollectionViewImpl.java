@@ -41,12 +41,11 @@ import org.drools.workbench.screens.scenariosimulation.client.handlers.HasCloseC
 import org.drools.workbench.screens.scenariosimulation.client.handlers.HasSaveEditorHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.SaveEditorEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
+import org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder;
+import org.drools.workbench.screens.scenariosimulation.client.utils.ExpressionUtils;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
-
-import static org.drools.scenariosimulation.api.utils.ConstantsHolder.MVEL_ESCAPE_SYMBOL;
-import static org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder.EXPRESSION_VALUE_PREFIX;
 
 /**
  * This class is used as <code>Collection</code> <b>editor</b>
@@ -233,9 +232,9 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
      */
     protected void initAndRegisterHandlerForExpressionTextArea() {
         checkExpressionSyntax();
-        DOM.sinkBitlessEvent(expressionElement, "input");
+        DOM.sinkBitlessEvent(expressionElement, ConstantHolder.INPUT);
         DOM.setEventListener(expressionElement, event -> {
-            if ("input".contains(event.getType()))  {
+            if (ConstantHolder.INPUT.contains(event.getType()))  {
                 checkExpressionSyntax();}
         });
     }
@@ -439,18 +438,8 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     }
 
     protected void checkExpressionSyntax() {
-        if (!ruleScenario) {
-            return;
-        }
-        final String expressionValue = expressionElement.getValue();
-        if (!expressionValue.startsWith(EXPRESSION_VALUE_PREFIX)) {
-            if (expressionValue.startsWith(MVEL_ESCAPE_SYMBOL)) {
-                expressionElement.setValue(expressionValue.replaceFirst(MVEL_ESCAPE_SYMBOL, EXPRESSION_VALUE_PREFIX));
-            } else if (expressionValue.startsWith(" ")) {
-                expressionElement.setValue(expressionValue.replaceFirst(" ", EXPRESSION_VALUE_PREFIX));
-            } else {
-                expressionElement.setValue(EXPRESSION_VALUE_PREFIX + expressionValue);
-            }
+        if (ruleScenario) {
+            expressionElement.setValue(ExpressionUtils.checkExpressionSyntax(expressionElement.getValue()));
         }
     }
 
