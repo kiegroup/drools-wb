@@ -52,12 +52,4 @@ public class ExpressionUtilsTest {
     public void checkExpressionSyntax_StringWithExpressionValuePrefix() {
         assertEquals(ConstantHolder.EXPRESSION_VALUE_PREFIX + "Test", ExpressionUtils.checkExpressionSyntax(ConstantHolder.EXPRESSION_VALUE_PREFIX + "Test"));
     }
-
-
-
-
-
-
-
-
 }
