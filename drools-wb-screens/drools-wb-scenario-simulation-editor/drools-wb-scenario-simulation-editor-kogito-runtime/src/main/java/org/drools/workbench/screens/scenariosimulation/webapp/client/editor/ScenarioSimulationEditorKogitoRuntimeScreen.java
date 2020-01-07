@@ -23,17 +23,21 @@ import javax.inject.Inject;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
+import elemental2.promise.Promise;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.ScenarioSimulationEditorKogitoWrapper;
 import org.kie.workbench.common.kogito.client.editor.MultiPageEditorContainerView;
 import org.kie.workbench.common.kogito.webapp.base.client.editor.KogitoScreen;
+import org.uberfire.client.annotations.WorkbenchClientEditor;
 import org.uberfire.client.annotations.WorkbenchMenu;
 import org.uberfire.client.annotations.WorkbenchPartTitle;
 import org.uberfire.client.annotations.WorkbenchPartTitleDecoration;
 import org.uberfire.client.annotations.WorkbenchPartView;
-import org.uberfire.client.annotations.WorkbenchScreen;
 import org.uberfire.client.mvp.PlaceManager;
+import org.uberfire.lifecycle.GetContent;
+import org.uberfire.lifecycle.IsDirty;
 import org.uberfire.lifecycle.OnMayClose;
 import org.uberfire.lifecycle.OnStartup;
+import org.uberfire.lifecycle.SetContent;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.mvp.impl.DefaultPlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
@@ -41,7 +45,7 @@ import org.uberfire.workbench.model.menu.Menus;
 import static org.drools.workbench.screens.scenariosimulation.webapp.client.editor.ScenarioSimulationEditorKogitoRuntimeScreen.IDENTIFIER;
 
 @ApplicationScoped
-@WorkbenchScreen(identifier = IDENTIFIER)
+@WorkbenchClientEditor(identifier = IDENTIFIER)
 public class ScenarioSimulationEditorKogitoRuntimeScreen implements KogitoScreen {
 
     public static final String IDENTIFIER = "ScenarioSimulationEditorKogitoRuntimeScreen";
@@ -105,64 +109,19 @@ public class ScenarioSimulationEditorKogitoRuntimeScreen implements KogitoScreen
         scenarioSimulationEditorKogitoWrapper.setMenus(menusConsumer);
     }
 
-//    @Override
-//    public Widget asWidget() {
-//        return scenarioSimulationEditorKogitoWrapper.asWidget().asWidget();
-//    }
+    @GetContent
+    public Promise getContent() {
+        return scenarioSimulationEditorKogitoWrapper.getContent();
+    }
 
-//    public void newFile() {
-//        GWT.log(this.toString() + " newFile");
-//        scenarioSimulationEditorKogitoWrapper.setContent(scesimFilesProvider.getScesimContent());
-//
-////        placeManager.registerOnOpenCallback(  new DefaultPlaceRequest(ScenarioSimulationEditorPresenter.IDENTIFIER) {
-////                                            },
-////                                            () -> {
-////                                                scenarioSimulationEditorKogitoWrapper.setContent(scesimFilesProvider.getScesimContent());
-////                                                placeManager.unregisterOnOpenCallbacks(ScenarioSimulationEditorNavigatorScreen.SCENARIO_SIMULATION_NAVIGATOR_DEFAULT_REQUEST);
-////                                            });
-//
-//    }
+    @SetContent
+    public void setContent(String value) {
+        scenarioSimulationEditorKogitoWrapper.setContent(value);
+    }
 
-//    public void goToScreen() {
-//        GWT.log(this.toString() + " goToScreen");
-//        placeManager.registerOnOpenCallback(new DefaultPlaceRequest(ScenarioSimulationEditorKogitoWrapper.IDENTIFIER) {
-//                                            },
-//                                            () -> {
-//                                                scenarioSimulationEditorKogitoWrapper.setContent(scesimFilesProvider.getPopulatedScesimRule());
-//                                                placeManager.unregisterOnOpenCallbacks(ScenarioSimulationEditorNavigatorScreen.SCENARIO_SIMULATION_NAVIGATOR_DEFAULT_REQUEST);
-//                                            });
-//        placeManager.goTo(ScenarioSimulationEditorKogitoWrapper.IDENTIFIER);
-//    }
+    @IsDirty
+    public boolean isDirty() {
+        return scenarioSimulationEditorKogitoWrapper.isDirty();
+    }
 
-//    public void openFile(final Path path) {
-//        placeManager.registerOnOpenCallback(ScenarioSimulationEditorNavigatorScreen.DIAGRAM_EDITOR,
-//                                            () -> {
-//                                                clientDiagramService.loadAsXml(path,
-//                                                                               new ServiceCallback<String>() {
-//                                                                                   @Override
-//                                                                                   public void onSuccess(final String xml) {
-//                                                                                       scenarioSimulationEditorKogitoWrapper.setContent(xml);
-//                                                                                       placeManager.unregisterOnOpenCallbacks(ScenarioSimulationEditorNavigatorScreen.DIAGRAM_EDITOR);
-//                                                                                   }
-//
-//                                                                                   @Override
-//                                                                                   public void onError(final ClientRuntimeError error) {
-//                                                                                       placeManager.unregisterOnOpenCallbacks(ScenarioSimulationEditorNavigatorScreen.DIAGRAM_EDITOR);
-//                                                                                   }
-//                                                                               });
-//                                            });
-//
-//        placeManager.goTo(ScenarioSimulationEditorNavigatorScreen.DIAGRAM_EDITOR);
-//    }
-//
-//    @SuppressWarnings("unchecked")
-//    public void saveFile(final ServiceCallback<String> callback) {
-//        final Path path = scenarioSimulationEditorKogitoWrapper.getCanvasHandler().getDiagram().getMetadata().getPath();
-//        scenarioSimulationEditorKogitoWrapper.getContent().then(xml -> {
-//            clientDiagramService.saveAsXml(path,
-//                                           (String) xml,
-//                                           callback);
-//            return null;
-//        });
-//    }
 }

@@ -147,10 +147,10 @@
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-backend-api</artifactId>
     </dependency>
-    <!-- NEEDED BY JSEntryPoint ? -->
     <dependency>
       <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-backend-server</artifactId>
+      <artifactId>uberfire-backend-api</artifactId>
+      <classifier>sources</classifier>
     </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
@@ -163,11 +163,6 @@
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-client-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-client-backend</artifactId>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
@@ -239,20 +234,6 @@
       <artifactId>uberfire-nio2-fs</artifactId>
     </dependency>
     <!-- END PROVIDERS -->
-
-    <!-- Uberfire SSH -->
-    <!-- Required by uberfire-backend-server to secure FileSystem -->
-    <dependency>
-      <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-ssh-backend</artifactId>
-    </dependency>
-
-    <!-- Provides FileSystem with qualifiers @Named("systemFS") -->
-    <dependency>
-      <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-backend-cdi</artifactId>
-    </dependency>
-
     <!-- Uberfire Experimentals -->
     <!-- Required by uberfire-workbench-client -->
     <dependency>
@@ -461,11 +442,6 @@
     </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-preferences-client-backend</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.uberfire</groupId>
       <artifactId>uberfire-project-api</artifactId>
     </dependency>
     <dependency>
@@ -480,10 +456,10 @@
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-scenario-simulation-editor-client</artifactId>
     </dependency>
-    <!-- TEMPORARY!!!! TO BE REMOVED WHEN THERE IS A WORKING MARSHALLER -->
     <dependency>
-      <groupId>org.drools</groupId>
-      <artifactId>drools-scenario-simulation-backend</artifactId>
+      <groupId>org.uberfire</groupId>
+      <artifactId>appformer-kogito-bridge</artifactId>
+      <classifier>sources</classifier>
     </dependency>
 
     <!-- NEEDED ? -->
@@ -595,14 +571,6 @@
       <artifactId>errai-jaxrs-client</artifactId>
     </dependency>
 
-    <!-- TEST -->
-    <dependency>
-      <groupId>org.drools</groupId>
-      <artifactId>drools-scenario-simulation-backend</artifactId>
-      <classifier>tests</classifier>
-      <scope>test</scope>
-    </dependency>
-
     <!-- MARSHALLING -->
     <dependency>
       <groupId>org.drools</groupId>
@@ -628,13 +596,6 @@
         <groupId>org.drools</groupId>
         <artifactId>drools-wb-scenario-simulation-editor-kogito-client</artifactId>
         <version>${version.org.kie}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.drools</groupId>
-        <artifactId>drools-scenario-simulation-backend</artifactId>
-        <version>${version.org.kie}</version>
-        <classifier>tests</classifier>
-        <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.dashbuilder</groupId>
@@ -721,7 +682,7 @@
           <disableCastChecking>true</disableCastChecking>
           <runTarget>index.html</runTarget>
           <strict>true</strict>
-          <style>OBFUSCATED</style>
+          <style>PRETTY</style>
           <printJavaCommandOnError>false</printJavaCommandOnError>
           <productionMode>true</productionMode>
 
@@ -739,10 +700,8 @@
             <compileSourcesArtifact>org.uberfire:uberfire-security-client</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-client-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-workbench-client</compileSourcesArtifact>
-            <compileSourcesArtifact>org.uberfire:uberfire-workbench-client-backend</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-workbench-client-views-patternfly</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-simple-docks-client</compileSourcesArtifact>
-            <compileSourcesArtifact>org.uberfire:uberfire-backend-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-project-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-project-client</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-services-api</compileSourcesArtifact>
@@ -756,6 +715,7 @@
             <compileSourcesArtifact>org.kie.workbench.services:kie-wb-common-datamodel-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.kie.workbench.services:kie-wb-common-services-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.kie.workbench:kie-wb-common-kogito-client</compileSourcesArtifact>
+
 
             <!-- UF-ext -->
             <compileSourcesArtifact>org.uberfire:uberfire-runtime-plugins-api</compileSourcesArtifact>
@@ -771,7 +731,6 @@
             <!-- Uberfire Preferences -->
             <compileSourcesArtifact>org.uberfire:uberfire-preferences-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-preferences-client</compileSourcesArtifact>
-            <compileSourcesArtifact>org.uberfire:uberfire-preferences-client-backend</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-preferences-ui-client</compileSourcesArtifact>
 
             <!-- Uberfire Experimentals -->

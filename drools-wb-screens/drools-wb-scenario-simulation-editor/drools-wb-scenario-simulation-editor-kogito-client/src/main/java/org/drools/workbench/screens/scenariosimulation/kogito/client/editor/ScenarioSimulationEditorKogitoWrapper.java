@@ -69,8 +69,6 @@ import org.uberfire.client.mvp.PlaceStatus;
 import org.uberfire.client.promise.Promises;
 import org.uberfire.client.views.pfly.multipage.MultiPageEditorViewImpl;
 import org.uberfire.client.views.pfly.multipage.PageImpl;
-import org.uberfire.lifecycle.GetContent;
-import org.uberfire.lifecycle.SetContent;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 
@@ -119,13 +117,11 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     }
 
     @Override
-    @GetContent
     public Promise<String> getContent() {
         return transform(scenarioSimulationEditorPresenter.getModel());
     }
 
     @Override
-    @SetContent
     public void setContent(String value) {
         unmarshallContent(value);
     }

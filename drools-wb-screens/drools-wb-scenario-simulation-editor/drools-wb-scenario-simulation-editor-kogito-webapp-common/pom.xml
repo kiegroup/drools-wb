@@ -422,11 +422,6 @@
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-scenario-simulation-editor-client</artifactId>
     </dependency>
-    <!-- TEMPORARY!!!! TO BE REMOVED WHEN THERE IS A WORKING MARSHALLER -->
-    <dependency>
-      <groupId>org.drools</groupId>
-      <artifactId>drools-scenario-simulation-backend</artifactId>
-    </dependency>
 
     <!-- NEEDED ? -->
     <dependency>
@@ -563,14 +558,6 @@
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-widgets-properties-editor-api</artifactId>
-    </dependency>
-
-    <!-- TEST -->
-    <dependency>
-      <groupId>org.drools</groupId>
-      <artifactId>drools-scenario-simulation-backend</artifactId>
-      <classifier>tests</classifier>
-      <scope>test</scope>
     </dependency>
 
     <!-- MARSHALLING -->
