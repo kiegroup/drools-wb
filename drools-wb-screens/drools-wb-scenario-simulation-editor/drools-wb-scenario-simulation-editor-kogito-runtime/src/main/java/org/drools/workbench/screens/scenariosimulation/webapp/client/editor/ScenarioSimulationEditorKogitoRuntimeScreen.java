@@ -24,9 +24,13 @@ import javax.inject.Inject;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
 import elemental2.promise.Promise;
+import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.ScenarioSimulationEditorKogitoWrapper;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.util.KogitoScenarioSimulationBuilder;
 import org.kie.workbench.common.kogito.client.editor.MultiPageEditorContainerView;
 import org.kie.workbench.common.kogito.webapp.base.client.editor.KogitoScreen;
+import org.uberfire.backend.vfs.Path;
+import org.uberfire.backend.vfs.PathFactory;
 import org.uberfire.client.annotations.WorkbenchClientEditor;
 import org.uberfire.client.annotations.WorkbenchMenu;
 import org.uberfire.client.annotations.WorkbenchPartTitle;
@@ -53,6 +57,9 @@ public class ScenarioSimulationEditorKogitoRuntimeScreen implements KogitoScreen
 
     @Inject
     private ScenarioSimulationEditorKogitoWrapper scenarioSimulationEditorKogitoWrapper;
+
+    @Inject
+    private KogitoScenarioSimulationBuilder scenarioSimulationBuilder;
 
 
 
@@ -116,7 +123,19 @@ public class ScenarioSimulationEditorKogitoRuntimeScreen implements KogitoScreen
 
     @SetContent
     public void setContent(String value) {
-        scenarioSimulationEditorKogitoWrapper.setContent(value);
+        if (value == null || value.isEmpty()) {
+            GWT.log("Create new RULE scesim ");
+            final Path path = PathFactory.newPath("fileName", "savedFileName.scesim");
+            final String dmoSession = "default";
+            scenarioSimulationBuilder.populateScenarioSimulationModel(path, new ScenarioSimulationModel(), ScenarioSimulationModel.Type.RULE, dmoSession, content -> {
+                GWT.log(this.toString() + " gotoPath " + path);
+                scenarioSimulationEditorKogitoWrapper.gotoPath(path);
+                GWT.log(this.toString() + " setContent");
+                scenarioSimulationEditorKogitoWrapper.setContent(content);
+            });
+        } else {
+            scenarioSimulationEditorKogitoWrapper.setContent(value);
+        }
     }
 
     @IsDirty
