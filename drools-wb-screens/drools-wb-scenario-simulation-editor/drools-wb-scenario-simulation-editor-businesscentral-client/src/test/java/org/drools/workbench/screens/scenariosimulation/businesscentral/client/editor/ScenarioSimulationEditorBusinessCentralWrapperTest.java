@@ -132,8 +132,6 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     private AuditLog auditLog;
     @Mock
     private AssetUpdateValidator assetUpdateValidatorMock;
-//    @Mock
-//    private Supplier<ScenarioSimulationModel> contentSupplierMock;
     @Mock
     private ProjectController projectControllerMock;
     @Mock
@@ -337,12 +335,6 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         verify(scenarioSimulationEditorBusinessClientWrapper, times(1)).setSaveEnabled(eq(false));
     }
 
-//    @Test
-//    public void getContentSupplier() {
-//        scenarioSimulationEditorBusinessClientWrapper.getContentSupplier();
-//        verify(scenarioSimulationEditorPresenterMock, times(1)).getContentSupplier();
-//    }
-
     @Test
     public void save() {
         String saveMessage = "Save";
@@ -355,8 +347,9 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
 
     @Test
     public void synchronizeColumnsDimension() {
-        scenarioSimulationEditorBusinessClientWrapper.synchronizeColumnsDimension(eq(scenarioGridPanelMock), eq(backgroundGridPanelMock));
+        scenarioSimulationEditorBusinessClientWrapper.synchronizeColumnsDimension(scenarioGridPanelMock, backgroundGridPanelMock);
         verify(scenarioGridPanelMock, times(1)).synchronizeFactMappingsWidths();
+        verify(backgroundGridPanelMock, times(1)).synchronizeFactMappingsWidths();
     }
 
     @Test

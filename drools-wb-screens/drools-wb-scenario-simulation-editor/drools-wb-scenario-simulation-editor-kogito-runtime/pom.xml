@@ -877,7 +877,7 @@
           </execution>
           <execution>
             <id>Unpack Marshaller JS from dependency</id>
-            <phase>process-sources</phase>
+            <phase>package</phase>
             <goals>
               <goal>unpack</goal>
             </goals>
