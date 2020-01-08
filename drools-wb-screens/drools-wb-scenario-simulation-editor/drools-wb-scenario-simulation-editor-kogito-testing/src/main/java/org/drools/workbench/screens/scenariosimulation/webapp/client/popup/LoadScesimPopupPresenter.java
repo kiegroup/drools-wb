@@ -22,7 +22,7 @@ import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.uberfire.mvp.Command;
 
 @Dependent
-public class LoadScesimPopupPresenter implements TestingScesimPopup.Presenter {
+public class LoadScesimPopupPresenter implements KogitoScesimPopup.Presenter {
 
     @Inject
     protected LoadScesimPopupView loadScesimPopupView;

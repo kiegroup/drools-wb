@@ -24,18 +24,12 @@ import javax.inject.Inject;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
-import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioMenuItem;
 import org.drools.workbench.screens.scenariosimulation.client.popup.FileUploadPopupPresenter;
-import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.ScenarioSimulationEditorKogitoWrapper;
-import org.drools.workbench.screens.scenariosimulation.kogito.client.util.KogitoScenarioSimulationBuilder;
 import org.drools.workbench.screens.scenariosimulation.webapp.client.popup.LoadScesimPopupPresenter;
-import org.drools.workbench.screens.scenariosimulation.webapp.client.popup.NewScesimPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds.TestingVFSService;
-import org.gwtbootstrap3.client.ui.Popover;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.kie.workbench.common.kogito.client.editor.MultiPageEditorContainerView;
-import org.kie.workbench.common.kogito.webapp.base.client.editor.KogitoScreen;
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.backend.vfs.PathFactory;
@@ -56,31 +50,29 @@ import static org.drools.workbench.screens.scenariosimulation.webapp.client.edit
 
 @ApplicationScoped
 @WorkbenchScreen(identifier = IDENTIFIER)
-public class ScenarioSimulationEditorKogitoTestingScreen implements KogitoScreen {
+public class ScenarioSimulationEditorKogitoTestingScreen extends AbstractScenarioSimulationEditorKogitoScreen {
 
     public static final String IDENTIFIER = "ScenarioSimulationEditorKogitoTestingScreen";
-    private static final PlaceRequest SCENARIO_SIMULATION_KOGITO_TESTING_SCREEN_DEFAULT_REQUEST = new DefaultPlaceRequest(IDENTIFIER);
-
     private static final String BASE_URI = "git://master@system/system/";
     public static final String BASE_DMN_URI = BASE_URI + "stunner/diagrams/";
-    public static final Path DMN_PATH = PathFactory.newPath("DMN", BASE_DMN_URI);
     public static final String BASE_SCESIM_URI = BASE_URI + "scesim/";
+    public static final Path DMN_PATH = PathFactory.newPath("DMN", BASE_DMN_URI);
     public static final Path SCESIM_PATH = PathFactory.newPath("SCESIM", BASE_SCESIM_URI);
+    private static final PlaceRequest SCENARIO_SIMULATION_KOGITO_TESTING_SCREEN_DEFAULT_REQUEST = new DefaultPlaceRequest(IDENTIFIER);
 
-    @Inject
-    private ScenarioSimulationEditorKogitoWrapper scenarioSimulationEditorKogitoWrapper;
+//    @Inject
+//    private ScenarioSimulationEditorKogitoWrapper scenarioSimulationEditorKogitoWrapper;
 
-    @Inject
-    private NewScesimPopupPresenter newScesimPopupPresenter;
-
+    //    @Inject
+//    private NewScesimPopupPresenter newScesimPopupPresenter;
     @Inject
     private LoadScesimPopupPresenter loadScesimPopupPresenter;
 
     @Inject
     private FileUploadPopupPresenter fileUploadPopupPresenter;
 
-    @Inject
-    private KogitoScenarioSimulationBuilder scenarioSimulationBuilder;
+//    @Inject
+//    private KogitoScenarioSimulationBuilder scenarioSimulationBuilder;
 
     @Inject
     private TestingVFSService testingVFSService;
@@ -146,37 +138,37 @@ public class ScenarioSimulationEditorKogitoTestingScreen implements KogitoScreen
         scenarioSimulationEditorKogitoWrapper.setMenus(menusConsumer);
     }
 
-    protected void newFile() {
-        Command createCommand = () -> {
-            final String fileName = newScesimPopupPresenter.getFileName();
-            if (fileName == null || fileName.isEmpty()) {
-                showPopover("ERROR", "Missing file name");
-                return;
-            }
-            final ScenarioSimulationModel.Type selectedType = newScesimPopupPresenter.getSelectedType();
-            String value = "";
-            if (selectedType == null) {
-                showPopover("ERROR", "Missing selected type");
-                return;
-            }
-            if (ScenarioSimulationModel.Type.DMN.equals(selectedType)) {
-                value = newScesimPopupPresenter.getSelectedPath();
-                if (value == null || value.isEmpty()) {
-                    showPopover("ERROR", "Missing dmn path");
-                    return;
-                }
-            }
-            String savedFileName = fileName.trim() + ".scesim";
-            final Path path = PathFactory.newPath(fileName, BASE_SCESIM_URI + savedFileName);
-            scenarioSimulationBuilder.populateScenarioSimulationModel(path, new ScenarioSimulationModel(), selectedType, value, content -> {
-                saveFile(path, content);
-                scenarioSimulationEditorKogitoWrapper.gotoPath(path);
-                scenarioSimulationEditorKogitoWrapper.setContent(content);
-            });
-            newScesimPopupPresenter.hide();
-        };
-        newScesimPopupPresenter.show("Choose SCESIM type", createCommand);
-    }
+//    protected void newFile() {
+//        Command createCommand = () -> {
+//            final String fileName = newScesimPopupPresenter.getFileName();
+//            if (fileName == null || fileName.isEmpty()) {
+//                showPopover("ERROR", "Missing file name");
+//                return;
+//            }
+//            final ScenarioSimulationModel.Type selectedType = newScesimPopupPresenter.getSelectedType();
+//            String value = "";
+//            if (selectedType == null) {
+//                showPopover("ERROR", "Missing selected type");
+//                return;
+//            }
+//            if (ScenarioSimulationModel.Type.DMN.equals(selectedType)) {
+//                value = newScesimPopupPresenter.getSelectedPath();
+//                if (value == null || value.isEmpty()) {
+//                    showPopover("ERROR", "Missing dmn path");
+//                    return;
+//                }
+//            }
+//            String savedFileName = fileName.trim() + ".scesim";
+//            final Path path = PathFactory.newPath(fileName, BASE_SCESIM_URI + savedFileName);
+//            scenarioSimulationBuilder.populateScenarioSimulationModel(path, new ScenarioSimulationModel(), selectedType, value, content -> {
+//                saveFile(path, content);
+//                scenarioSimulationEditorKogitoWrapper.gotoPath(path);
+//                scenarioSimulationEditorKogitoWrapper.setContent(content);
+//            });
+//            newScesimPopupPresenter.hide();
+//        };
+//        newScesimPopupPresenter.show("Choose SCESIM type", createCommand);
+//    }
 
     protected void loadFile() {
         Command loadCommand = () -> {
@@ -212,6 +204,7 @@ public class ScenarioSimulationEditorKogitoTestingScreen implements KogitoScreen
                                       okImportCommand);
     }
 
+    @Override
     protected void saveFile(final Path path, final String content) {
         testingVFSService.saveFile(path, content,
                                    item -> GWT.log("Saved " + item),
@@ -219,7 +212,7 @@ public class ScenarioSimulationEditorKogitoTestingScreen implements KogitoScreen
     }
 
     protected void addTestingMenus(FileMenuBuilder fileMenuBuilder) {
-        fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("New", this::newFile));
+        fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("New", () -> newFile(BASE_SCESIM_URI)));
         fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("Load", this::loadFile));
         fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("Save", () -> scenarioSimulationEditorKogitoWrapper.getContent().then(xml -> {
             saveFile(scenarioSimulationEditorKogitoWrapper.getCurrentPath(), xml);
@@ -228,9 +221,9 @@ public class ScenarioSimulationEditorKogitoTestingScreen implements KogitoScreen
         fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("Import DMN", this::importDMN));
     }
 
-    protected void showPopover(String title, String content) {
-        new Popover(title, content).show();
-    }
+//    protected void showPopover(String title, String content) {
+//        new Popover(title, content).show();
+//    }
 
     protected ErrorCallback<String> getErrorCallback(String prependMessage) {
         return (message, throwable) -> {

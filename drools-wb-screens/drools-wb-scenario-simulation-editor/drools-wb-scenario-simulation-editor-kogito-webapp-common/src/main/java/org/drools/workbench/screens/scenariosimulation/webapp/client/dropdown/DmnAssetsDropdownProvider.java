@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2020 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,25 +15,8 @@
  */
 package org.drools.workbench.screens.scenariosimulation.webapp.client.dropdown;
 
-import java.util.List;
-import java.util.function.Consumer;
-
-import javax.enterprise.context.Dependent;
-
 import org.drools.workbench.screens.scenariosimulation.client.dropdown.ScenarioSimulationAssetsDropdownProvider;
-import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
 
-@Dependent
-public class DmnAssetsDropdownProviderImpl implements ScenarioSimulationAssetsDropdownProvider {
+public interface DmnAssetsDropdownProvider extends ScenarioSimulationAssetsDropdownProvider {
 
-    /*
-    // TODO yesamer
-    1) implements DmnAssetsDropdownProvider
-    2) rename to KogitoRuntimeDmnAssetsDropdownProvider
-     */
-
-    @Override
-    public void getItems(Consumer<List<KieAssetsDropdownItem>> assetListConsumer) {
-        // TODO {gcardosi}
-    }
 }

@@ -24,18 +24,17 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import com.google.gwt.core.client.GWT;
-import org.drools.workbench.screens.scenariosimulation.client.dropdown.ScenarioSimulationAssetsDropdownProvider;
+import org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds.TestingVFSService;
 import org.jboss.errai.bus.client.api.messaging.Message;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
-import org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds.TestingVFSService;
 import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
 import org.uberfire.backend.vfs.Path;
 
 import static org.drools.workbench.screens.scenariosimulation.webapp.client.editor.ScenarioSimulationEditorKogitoTestingScreen.DMN_PATH;
 
 @Dependent
-public class DmnAssetsDropdownProviderImpl implements ScenarioSimulationAssetsDropdownProvider {
+public class KogitoTestingDmnAssetsDropdownProvider implements DmnAssetsDropdownProvider {
 
     private static final String FILE_SUFFIX = "dmn";
 

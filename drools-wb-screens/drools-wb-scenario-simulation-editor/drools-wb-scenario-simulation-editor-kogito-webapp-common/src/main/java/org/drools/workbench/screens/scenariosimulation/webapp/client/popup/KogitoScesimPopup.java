@@ -19,7 +19,7 @@ import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.jboss.errai.common.client.dom.HTMLElement;
 import org.uberfire.mvp.Command;
 
-public interface TestingScesimPopup {
+public interface KogitoScesimPopup {
 
     /**
      * Makes the <code>NewScesimPopup</code> visible with OK/CANCEL.

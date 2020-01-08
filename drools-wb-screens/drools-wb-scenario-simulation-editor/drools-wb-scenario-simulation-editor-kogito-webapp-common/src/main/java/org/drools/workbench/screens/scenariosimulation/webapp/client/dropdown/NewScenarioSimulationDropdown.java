@@ -11,7 +11,7 @@ import org.kie.workbench.common.widgets.client.assets.dropdown.AbstractKieAssets
 public class NewScenarioSimulationDropdown extends AbstractKieAssetsDropdown {
 
     @Inject
-    public NewScenarioSimulationDropdown(@Named(ScenarioSimulationDropdownView.BEAN_NAME) ScenarioSimulationDropdownView view, DmnAssetsDropdownProviderImpl dataProvider) {
+    public NewScenarioSimulationDropdown(@Named(ScenarioSimulationDropdownView.BEAN_NAME) ScenarioSimulationDropdownView view, DmnAssetsDropdownProvider dataProvider) {
         super(view, dataProvider);
     }
 }

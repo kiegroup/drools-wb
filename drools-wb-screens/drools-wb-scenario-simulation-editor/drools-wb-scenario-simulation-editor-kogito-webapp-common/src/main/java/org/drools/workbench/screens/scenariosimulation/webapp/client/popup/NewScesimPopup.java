@@ -15,11 +15,11 @@
  */
 package org.drools.workbench.screens.scenariosimulation.webapp.client.popup;
 
-public interface NewScesimPopup extends TestingScesimPopup {
+public interface NewScesimPopup extends KogitoScesimPopup {
 
     String getFileName();
 
-    interface Presenter extends TestingScesimPopup.Presenter {
+    interface Presenter extends KogitoScesimPopup.Presenter {
 
         String getFileName();
 

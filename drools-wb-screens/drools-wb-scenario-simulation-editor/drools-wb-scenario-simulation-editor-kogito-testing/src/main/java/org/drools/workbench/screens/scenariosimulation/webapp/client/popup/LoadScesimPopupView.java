@@ -31,7 +31,7 @@ import org.uberfire.mvp.Command;
 
 @Dependent
 @Templated
-public class LoadScesimPopupView extends AbstractScenarioPopupView implements TestingScesimPopup {
+public class LoadScesimPopupView extends AbstractScenarioPopupView implements KogitoScesimPopup {
 
     @Inject
     @DataField("assets")

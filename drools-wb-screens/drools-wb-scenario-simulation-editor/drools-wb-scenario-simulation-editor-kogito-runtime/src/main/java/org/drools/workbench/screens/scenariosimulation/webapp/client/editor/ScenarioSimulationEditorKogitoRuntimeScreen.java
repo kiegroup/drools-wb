@@ -24,11 +24,7 @@ import javax.inject.Inject;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
 import elemental2.promise.Promise;
-import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
-import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.ScenarioSimulationEditorKogitoWrapper;
-import org.drools.workbench.screens.scenariosimulation.kogito.client.util.KogitoScenarioSimulationBuilder;
 import org.kie.workbench.common.kogito.client.editor.MultiPageEditorContainerView;
-import org.kie.workbench.common.kogito.webapp.base.client.editor.KogitoScreen;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.backend.vfs.PathFactory;
 import org.uberfire.client.annotations.WorkbenchClientEditor;
@@ -50,18 +46,10 @@ import static org.drools.workbench.screens.scenariosimulation.webapp.client.edit
 
 @ApplicationScoped
 @WorkbenchClientEditor(identifier = IDENTIFIER)
-public class ScenarioSimulationEditorKogitoRuntimeScreen implements KogitoScreen {
+public class ScenarioSimulationEditorKogitoRuntimeScreen extends AbstractScenarioSimulationEditorKogitoScreen {
 
     public static final String IDENTIFIER = "ScenarioSimulationEditorKogitoRuntimeScreen";
     private static final PlaceRequest SCENARIO_SIMULATION_KOGITO_RUNTIME_SCREEN_DEFAULT_REQUEST = new DefaultPlaceRequest(IDENTIFIER);
-
-    @Inject
-    private ScenarioSimulationEditorKogitoWrapper scenarioSimulationEditorKogitoWrapper;
-
-    @Inject
-    private KogitoScenarioSimulationBuilder scenarioSimulationBuilder;
-
-
 
     private PlaceManager placeManager;
 
@@ -125,15 +113,19 @@ public class ScenarioSimulationEditorKogitoRuntimeScreen implements KogitoScreen
     public void setContent(String value) {
         if (value == null || value.isEmpty()) {
             GWT.log("Create new RULE scesim ");
-            final Path path = PathFactory.newPath("fileName", "savedFileName.scesim");
-            final String dmoSession = "default";
-            scenarioSimulationBuilder.populateScenarioSimulationModel(path, new ScenarioSimulationModel(), ScenarioSimulationModel.Type.RULE, dmoSession, content -> {
-                GWT.log(this.toString() + " gotoPath " + path);
-                scenarioSimulationEditorKogitoWrapper.gotoPath(path);
-                GWT.log(this.toString() + " setContent");
-                scenarioSimulationEditorKogitoWrapper.setContent(content);
-            });
+            newFile("");
+
+//            final Path path = PathFactory.newPath("fileName", "savedFileName.scesim");
+//            final String dmoSession = "default";
+//            scenarioSimulationBuilder.populateScenarioSimulationModel(path, new ScenarioSimulationModel(), ScenarioSimulationModel.Type.RULE, dmoSession, content -> {
+//                GWT.log(this.toString() + " gotoPath " + path);
+//                scenarioSimulationEditorKogitoWrapper.gotoPath(path);
+//                GWT.log(this.toString() + " setContent");
+//                scenarioSimulationEditorKogitoWrapper.setContent(content);
+//            });
         } else {
+            final Path path = PathFactory.newPath("fileName", "existingFileName.scesim");
+            scenarioSimulationEditorKogitoWrapper.gotoPath(path);
             scenarioSimulationEditorKogitoWrapper.setContent(value);
         }
     }
