@@ -31,11 +31,11 @@ import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.Scen
 import org.drools.workbench.screens.scenariosimulation.kogito.client.util.KogitoScenarioSimulationBuilder;
 import org.drools.workbench.screens.scenariosimulation.webapp.client.popup.LoadScesimPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.webapp.client.popup.NewScesimPopupPresenter;
+import org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds.TestingVFSService;
 import org.gwtbootstrap3.client.ui.Popover;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.kie.workbench.common.kogito.client.editor.MultiPageEditorContainerView;
 import org.kie.workbench.common.kogito.webapp.base.client.editor.KogitoScreen;
-import org.kie.workbench.common.kogito.webapp.base.client.workarounds.TestingVFSService;
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.backend.vfs.PathFactory;

@@ -31,7 +31,7 @@ import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationM
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
-import org.kie.workbench.common.kogito.webapp.base.client.workarounds.TestingVFSService;
+import org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds.TestingVFSService;
 import org.uberfire.backend.vfs.Path;
 
 @ApplicationScoped

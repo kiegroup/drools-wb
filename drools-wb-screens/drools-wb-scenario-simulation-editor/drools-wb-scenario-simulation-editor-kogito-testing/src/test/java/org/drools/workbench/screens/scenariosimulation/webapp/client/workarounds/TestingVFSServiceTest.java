@@ -26,7 +26,7 @@ import org.jboss.errai.common.client.api.RemoteCallback;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.kie.workbench.common.kogito.webapp.base.client.workarounds.TestingVFSService;
+import org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds.TestingVFSService;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -40,8 +40,8 @@ import org.uberfire.mvp.PlaceRequest;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.kie.workbench.common.kogito.webapp.base.client.workarounds.TestingVFSService.CONTENT_PARAMETER_NAME;
-import static org.kie.workbench.common.kogito.webapp.base.client.workarounds.TestingVFSService.FILE_NAME_PARAMETER_NAME;
+import static org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds.TestingVFSService.CONTENT_PARAMETER_NAME;
+import static org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds.TestingVFSService.FILE_NAME_PARAMETER_NAME;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -77,7 +77,7 @@ public class TestingVFSServiceTest {
 
     private CallerMock<VFSService> vfsServiceCallerMock;
 
-    private org.kie.workbench.common.kogito.webapp.base.client.workarounds.TestingVFSService testingVFSService;
+    private TestingVFSService testingVFSService;
 
     @Before
     public void setup() {

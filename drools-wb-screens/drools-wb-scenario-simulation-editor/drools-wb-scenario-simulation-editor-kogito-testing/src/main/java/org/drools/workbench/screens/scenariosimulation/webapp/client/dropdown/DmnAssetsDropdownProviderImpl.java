@@ -28,7 +28,7 @@ import org.drools.workbench.screens.scenariosimulation.client.dropdown.ScenarioS
 import org.jboss.errai.bus.client.api.messaging.Message;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
-import org.kie.workbench.common.kogito.webapp.base.client.workarounds.TestingVFSService;
+import org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds.TestingVFSService;
 import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
 import org.uberfire.backend.vfs.Path;
 
