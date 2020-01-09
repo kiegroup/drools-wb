@@ -385,7 +385,6 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
             FactMapping factMappingByIndex = abstractScesimModel.getScesimModelDescriptor().getFactMappingByIndex(columnIndex);
             if (ScenarioSimulationSharedUtils.isCollection((factMappingByIndex.getClassName()))) {
                 newCell.setListMap(ScenarioSimulationSharedUtils.isList((factMappingByIndex.getClassName())));
-                newCell.setExpression(FactMappingValueType.EXPRESSION.equals(factMappingByIndex.getFactMappingValueType()));
             }
             return newCell;
         });
@@ -964,7 +963,6 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
                 ScenarioGridCell newCell = new ScenarioGridCell(new ScenarioGridCellValue(null, placeHolder));
                 if (ScenarioSimulationSharedUtils.isCollection((factMappingByIndex.getClassName()))) {
                     newCell.setListMap(ScenarioSimulationSharedUtils.isList((factMappingByIndex.getClassName())));
-                    newCell.setExpression(FactMappingValueType.EXPRESSION.equals(factMappingByIndex.getFactMappingValueType()));
                 }
                 return newCell;
             });

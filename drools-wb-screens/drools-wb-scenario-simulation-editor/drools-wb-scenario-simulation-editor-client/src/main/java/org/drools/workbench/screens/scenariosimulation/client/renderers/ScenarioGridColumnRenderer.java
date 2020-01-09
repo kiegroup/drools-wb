@@ -22,6 +22,7 @@ import com.ait.lienzo.client.core.shape.Group;
 import com.ait.lienzo.client.core.shape.Rectangle;
 import com.ait.lienzo.client.core.shape.Text;
 import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridCell;
@@ -112,18 +113,18 @@ public class ScenarioGridColumnRenderer extends StringColumnRenderer {
 
     protected String getValueToShow(ScenarioGridCell scenarioGridCell) {
         String rawValue = scenarioGridCell.getValue() != null ? scenarioGridCell.getValue().getValue() : null;
-        return (rawValue != null && (scenarioGridCell.isList() || scenarioGridCell.isMap())) ? getCollectionString(rawValue, scenarioGridCell.isList(), scenarioGridCell.isExpression()) : rawValue;
+        return (rawValue != null && (scenarioGridCell.isList() || scenarioGridCell.isMap())) ? getCollectionString(rawValue, scenarioGridCell.isList()) : rawValue;
     }
 
-    protected String getCollectionString(String jsonString, boolean isList, boolean isExpression) {
-        if (isExpression) {
-            String toFormat = isList ? "List() %s" : "Map() %s";
-            return toFormat.replace("%s", ConstantHolder.EXPRESSION);
-        }
+    protected String getCollectionString(String jsonString, boolean isList) {
         try {
-            int size = -1;
-            String toFormat = isList ? "List(%s)" : "Map(%s)";
             JSONValue jsonValue = JSONParser.parseStrict(jsonString);
+            if (jsonValue instanceof JSONString) {
+                String label = isList ? "List() " : "Map() ";
+                return label + ConstantHolder.EXPRESSION;
+            }
+            String toFormat = isList ? "List(%s)" : "Map(%s)";
+            int size = -1;
             if (isList) {
                 size = jsonValue.isArray().size();
             } else {

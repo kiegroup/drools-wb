@@ -18,7 +18,6 @@ package org.drools.workbench.screens.scenariosimulation.client.models;
 import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
-import org.drools.scenariosimulation.api.model.FactMappingValueType;
 import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.utils.ScenarioSimulationSharedUtils;
@@ -67,7 +66,6 @@ public class ScenarioGridModel extends AbstractScesimGridModel<Simulation, Scena
                     ScenarioGridCell newCell = new ScenarioGridCell(new ScenarioGridCellValue(stringValue, placeHolder));
                     if (ScenarioSimulationSharedUtils.isCollection((factMappingByIndex.getClassName()))) {
                         newCell.setListMap(ScenarioSimulationSharedUtils.isList((factMappingByIndex.getClassName())));
-                        newCell.setExpression(FactMappingValueType.EXPRESSION.equals(factMappingByIndex.getFactMappingValueType()));
                     }
                     return newCell;
                 });

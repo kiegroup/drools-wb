@@ -33,7 +33,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.uberfire.ext.wires.core.grids.client.model.GridData;
 
 import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type.DMN;
 import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type.RULE;
@@ -305,30 +304,5 @@ public class CollectionEditorSingletonDOMElementFactoryTest extends AbstractFact
         collectionEditorSingletonDOMElementFactorySpy.registerHandlers(collectionEditorViewImpl, collectionEditorDOMElementMock);
         verify(collectionEditorViewImpl, times(1)).addCloseCompositeEventHandler(isA(CloseCompositeEventHandler.class));
         verify(collectionEditorViewImpl, times(1)).addSaveEditorEventHandler(isA(SaveEditorEventHandler.class));
-    }
-
-    @Test
-    public void saveHandling_Expression() {
-        saveHandling(true);
-    }
-
-    @Test
-    public void saveHandling_NotExpression() {
-        saveHandling(false);
-    }
-
-    private void saveHandling(boolean isExpression) {
-        when(collectionEditorSingletonDOMElementFactorySpy.createWidget()).thenReturn(collectionEditorViewImpl);
-        when(scenarioGridModelMock.getSelectedCellsOrigin()).thenReturn(new GridData.SelectedCell(0, 0));
-        when(collectionEditorViewImpl.isExpressionWidget()).thenReturn(isExpression);
-        when(factMappingMock.getClassName()).thenReturn("className");
-        when(factMappingMock.getExpressionAlias()).thenReturn("alias");
-        collectionEditorSingletonDOMElementFactorySpy.createDomElement(scenarioGridLayerMock, scenarioGridMock);
-        collectionEditorSingletonDOMElementFactorySpy.saveHandling();
-        if (isExpression) {
-            verify(factMappingMock, times(1)).setFactMappingValueType(FactMappingValueType.EXPRESSION);
-        } else {
-            verify(factMappingMock, times(1)).setFactMappingValueType(FactMappingValueType.NOT_EXPRESSION);
-        }
     }
 }

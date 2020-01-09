@@ -24,7 +24,6 @@ public class ScenarioGridCell extends BaseGridCell<String> {
     private boolean isErrorMode = false;
     private boolean isList = false;
     private boolean isMap = false;
-    private boolean isExpression = false;
 
     public ScenarioGridCell(ScenarioGridCellValue value) {
         super(value);
@@ -64,11 +63,4 @@ public class ScenarioGridCell extends BaseGridCell<String> {
         return isMap;
     }
 
-    public void setExpression(boolean expression) {
-        isExpression = expression;
-    }
-
-    public boolean isExpression() {
-        return isExpression;
-    }
 }

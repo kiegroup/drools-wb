@@ -90,7 +90,7 @@ public class ScenarioGridColumnRendererTest {
         when(themeMock.getBodyErrorBackground(any())).thenReturn(rectangle);
         scenarioGridColumnRenderer = spy(new ScenarioGridColumnRenderer() {
             @Override
-            protected String getCollectionString(String jsonString, boolean isList, boolean isExpression) {
+            protected String getCollectionString(String jsonString, boolean isList) {
                 return jsonString;
             }
         });
@@ -102,33 +102,33 @@ public class ScenarioGridColumnRendererTest {
         Group retrieved = scenarioGridColumnRenderer.renderCell(cell, contextMock);
         assertNull(retrieved);
         verify(scenarioGridColumnRenderer, never()).internalRenderCell(any(), eq(contextMock), any(), anyString());
-        verify(scenarioGridColumnRenderer, never()).getCollectionString(anyString(), anyBoolean(), anyBoolean());
+        verify(scenarioGridColumnRenderer, never()).getCollectionString(anyString(), anyBoolean());
 
         cell = new ScenarioGridCell(null);
         retrieved = scenarioGridColumnRenderer.renderCell(cell, contextMock);
         assertNull(retrieved);
-        verify(scenarioGridColumnRenderer, never()).getCollectionString(anyString(), anyBoolean(), anyBoolean());
+        verify(scenarioGridColumnRenderer, never()).getCollectionString(anyString(), anyBoolean());
         verify(scenarioGridColumnRenderer, never()).internalRenderCell(any(), eq(contextMock), eq(textMock), eq(null));
         reset(scenarioGridColumnRenderer);
 
         cell = new ScenarioGridCell(new ScenarioGridCellValue(null));
         retrieved = scenarioGridColumnRenderer.renderCell(cell, contextMock);
         assertNull(retrieved);
-        verify(scenarioGridColumnRenderer, never()).getCollectionString(anyString(), anyBoolean(), anyBoolean());
+        verify(scenarioGridColumnRenderer, never()).getCollectionString(anyString(), anyBoolean());
         verify(scenarioGridColumnRenderer, never()).internalRenderCell(any(), eq(contextMock), eq(textMock), eq(null));
         reset(scenarioGridColumnRenderer);
 
         cell = new ScenarioGridCell(new ScenarioGridCellValue(MULTIPART_VALUE));
         retrieved = scenarioGridColumnRenderer.renderCell(cell, contextMock);
         assertNotNull(retrieved);
-        verify(scenarioGridColumnRenderer, never()).getCollectionString(anyString(), anyBoolean(), anyBoolean());
+        verify(scenarioGridColumnRenderer, never()).getCollectionString(anyString(), anyBoolean());
         verify(scenarioGridColumnRenderer, times(1)).internalRenderCell(any(), eq(contextMock), eq(textMock), eq(MULTIPART_VALUE));
         reset(scenarioGridColumnRenderer);
 
         ScenarioGridCell scenarioGridCell = new ScenarioGridCell(new ScenarioGridCellValue(MULTIPART_VALUE, PLACEHOLDER));
         retrieved = scenarioGridColumnRenderer.renderCell(scenarioGridCell, contextMock);
         assertNotNull(retrieved);
-        verify(scenarioGridColumnRenderer, never()).getCollectionString(anyString(), anyBoolean(), anyBoolean());
+        verify(scenarioGridColumnRenderer, never()).getCollectionString(anyString(), anyBoolean());
         verify(scenarioGridColumnRenderer, times(1)).internalRenderCell(any(), eq(contextMock), eq(textMock), eq(MULTIPART_VALUE));
         reset(scenarioGridColumnRenderer);
 
@@ -136,7 +136,7 @@ public class ScenarioGridColumnRendererTest {
         retrieved = scenarioGridColumnRenderer.renderCell(scenarioGridCell, contextMock);
         assertNotNull(retrieved);
         verify(scenarioGridColumnRenderer, times(1)).internalRenderCell(any(), eq(contextMock), eq(placeholderMock), eq(PLACEHOLDER));
-        verify(scenarioGridColumnRenderer, never()).getCollectionString(anyString(), anyBoolean(), anyBoolean());
+        verify(scenarioGridColumnRenderer, never()).getCollectionString(anyString(), anyBoolean());
         reset(scenarioGridColumnRenderer);
 
         cell = new ScenarioGridCell(new ScenarioGridCellValue(LIST_VALUE));
@@ -144,7 +144,7 @@ public class ScenarioGridColumnRendererTest {
         retrieved = scenarioGridColumnRenderer.renderCell(cell, contextMock);
         assertNotNull(retrieved);
         verify(scenarioGridColumnRenderer, times(1)).internalRenderCell(any(), eq(contextMock), eq(textMock), eq(LIST_VALUE));
-        verify(scenarioGridColumnRenderer, times(1)).getCollectionString(eq(LIST_VALUE), eq(true), eq(false));
+        verify(scenarioGridColumnRenderer, times(1)).getCollectionString(eq(LIST_VALUE), eq(true));
         reset(scenarioGridColumnRenderer);
 
         cell = new ScenarioGridCell(new ScenarioGridCellValue(MAP_VALUE));
@@ -152,25 +152,23 @@ public class ScenarioGridColumnRendererTest {
         retrieved = scenarioGridColumnRenderer.renderCell(cell, contextMock);
         assertNotNull(retrieved);
         verify(scenarioGridColumnRenderer, times(1)).internalRenderCell(any(), eq(contextMock), eq(textMock), eq(MAP_VALUE));
-        verify(scenarioGridColumnRenderer, times(1)).getCollectionString(eq(MAP_VALUE), eq(false), eq(false));
+        verify(scenarioGridColumnRenderer, times(1)).getCollectionString(eq(MAP_VALUE), eq(false));
         reset(scenarioGridColumnRenderer);
 
         cell = new ScenarioGridCell(new ScenarioGridCellValue(EXPRESSION_VALUE));
         ((ScenarioGridCell) cell).setListMap(true);
-        ((ScenarioGridCell) cell).setExpression(true);
         retrieved = scenarioGridColumnRenderer.renderCell(cell, contextMock);
         assertNotNull(retrieved);
         verify(scenarioGridColumnRenderer, times(1)).internalRenderCell(any(), eq(contextMock), eq(textMock), eq(EXPRESSION_VALUE));
-        verify(scenarioGridColumnRenderer, times(1)).getCollectionString(eq(EXPRESSION_VALUE), eq(true), eq(true));
+        verify(scenarioGridColumnRenderer, times(1)).getCollectionString(eq(EXPRESSION_VALUE), eq(true));
         reset(scenarioGridColumnRenderer);
 
         cell = new ScenarioGridCell(new ScenarioGridCellValue(EXPRESSION_VALUE));
         ((ScenarioGridCell) cell).setListMap(false);
-        ((ScenarioGridCell) cell).setExpression(true);
         retrieved = scenarioGridColumnRenderer.renderCell(cell, contextMock);
         assertNotNull(retrieved);
         verify(scenarioGridColumnRenderer, times(1)).internalRenderCell(any(), eq(contextMock), eq(textMock), eq(EXPRESSION_VALUE));
-        verify(scenarioGridColumnRenderer, times(1)).getCollectionString(eq(EXPRESSION_VALUE), eq(false), eq(true));
+        verify(scenarioGridColumnRenderer, times(1)).getCollectionString(eq(EXPRESSION_VALUE), eq(false));
         reset(scenarioGridColumnRenderer);
 
 
@@ -178,7 +176,7 @@ public class ScenarioGridColumnRendererTest {
         ((ScenarioGridCell) cell).setErrorMode(true);
         retrieved = scenarioGridColumnRenderer.renderCell(cell, contextMock);
         assertNotNull(retrieved);
-        verify(scenarioGridColumnRenderer, never()).getCollectionString(anyString(), anyBoolean(), anyBoolean());
+        verify(scenarioGridColumnRenderer, never()).getCollectionString(anyString(), anyBoolean());
         verify(scenarioGridColumnRenderer, times(1)).internalRenderCell(any(), eq(contextMock), eq(errorTextMock), eq(MULTIPART_VALUE));
         reset(scenarioGridColumnRenderer);
     }
@@ -210,35 +208,33 @@ public class ScenarioGridColumnRendererTest {
     @Test
     public void getValueToShow(){
         ScenarioGridCell cell = new ScenarioGridCell(null);
-        commonGetValueToShow(cell, true, null, false, false);
+        commonGetValueToShow(cell, true, null, false);
         cell = new ScenarioGridCell(new ScenarioGridCellValue(null));
-        commonGetValueToShow(cell, true, null, false, false);
+        commonGetValueToShow(cell, true, null, false);
         cell = new ScenarioGridCell(new ScenarioGridCellValue(MULTIPART_VALUE));
-        commonGetValueToShow(cell, false, null, false, false);
+        commonGetValueToShow(cell, false, null, false);
         cell = new ScenarioGridCell(new ScenarioGridCellValue(LIST_VALUE));
         cell.setListMap(true);
-        commonGetValueToShow(cell, false, LIST_VALUE, true, false);
+        commonGetValueToShow(cell, false, LIST_VALUE, true);
         cell = new ScenarioGridCell(new ScenarioGridCellValue(MAP_VALUE));
         cell.setListMap(false);
-        commonGetValueToShow(cell, false, MAP_VALUE, false, false);
+        commonGetValueToShow(cell, false, MAP_VALUE, false);
         cell = new ScenarioGridCell(new ScenarioGridCellValue(EXPRESSION_VALUE));
         cell.setListMap(true);
-        cell.setExpression(true);
-        commonGetValueToShow(cell, false, EXPRESSION_VALUE, true, true);
+        commonGetValueToShow(cell, false, EXPRESSION_VALUE, true);
         cell = new ScenarioGridCell(new ScenarioGridCellValue(EXPRESSION_VALUE));
         cell.setListMap(false);
-        cell.setExpression(true);
-        commonGetValueToShow(cell, false, EXPRESSION_VALUE, false, true);
+        commonGetValueToShow(cell, false, EXPRESSION_VALUE, false);
     }
 
-    private void commonGetValueToShow(ScenarioGridCell scenarioGridCell, boolean expectedNull, String jsonString, boolean isList, boolean isExpression) {
+    private void commonGetValueToShow(ScenarioGridCell scenarioGridCell, boolean expectedNull, String jsonString, boolean isList) {
         final String retrieved = scenarioGridColumnRenderer.getValueToShow(scenarioGridCell);
         if (expectedNull) {
             assertNull(retrieved);
         } else {
             assertNotNull(retrieved);
             if (jsonString != null) {
-                verify(scenarioGridColumnRenderer, times(1)).getCollectionString(eq(jsonString), eq(isList), eq(isExpression));
+                verify(scenarioGridColumnRenderer, times(1)).getCollectionString(eq(jsonString), eq(isList));
             }
     }
         reset(scenarioGridColumnRenderer);

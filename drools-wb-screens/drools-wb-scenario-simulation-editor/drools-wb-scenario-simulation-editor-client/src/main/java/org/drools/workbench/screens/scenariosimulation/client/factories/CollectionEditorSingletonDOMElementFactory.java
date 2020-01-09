@@ -171,12 +171,6 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
         return toReturn;
     }
 
-    @Override
-    public void registerHandlers(final CollectionViewImpl widget, final CollectionEditorDOMElement widgetDomElement) {
-        widget.addCloseCompositeEventHandler(event -> commonCloseHandling(widgetDomElement));
-        widget.addSaveEditorEventHandler(event -> saveHandling());
-    }
-
     protected void commonCloseHandling(final CollectionEditorDOMElement collectionEditorDOMElement) {
         destroyResources();
         gridLayer.batch();
@@ -184,25 +178,10 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
         collectionEditorDOMElement.stopEditingMode();
     }
 
-    protected void saveHandling() {
-        final AbstractScesimGridModel<? extends AbstractScesimModel, ? extends AbstractScesimData> model =
-                ((ScenarioGrid) gridWidget).getModel();
-        final GridData.SelectedCell selectedCellsOrigin = model.getSelectedCellsOrigin();
-        final Optional<GridColumn<?>> selectedColumn = model.getColumns().stream()
-                .filter(col -> col.getIndex() == selectedCellsOrigin.getColumnIndex())
-                .findFirst();
-        FactMappingValueType type;
-        if (widget.isExpressionWidget()) {
-            type = FactMappingValueType.EXPRESSION;
-        } else {
-            type = FactMappingValueType.NOT_EXPRESSION;
-        }
-         selectedColumn.ifPresent(col -> {
-             final int actualIndex = model.getColumns().indexOf(col);
-             final FactMapping factMapping = model.getAbstractScesimModel().get().getScesimModelDescriptor().getFactMappingByIndex(actualIndex);
-             factMapping.setFactMappingValueType(type);
-         });
-        flush();
+    @Override
+    public void registerHandlers(final CollectionViewImpl widget, final CollectionEditorDOMElement widgetDomElement) {
+        widget.addCloseCompositeEventHandler(event -> commonCloseHandling(widgetDomElement));
+        widget.addSaveEditorEventHandler(event -> flush());
     }
 }
 
