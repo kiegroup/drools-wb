@@ -20,7 +20,7 @@ import javax.inject.Inject;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.ScenarioSimulationEditorKogitoWrapper;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.util.KogitoScenarioSimulationBuilder;
-import org.drools.workbench.screens.scenariosimulation.webapp.client.popup.NewScesimPopupPresenter;
+import org.drools.workbench.screens.scenariosimulation.webapp.client.popup.KogitoScesimPopupPresenter;
 import org.gwtbootstrap3.client.ui.Popover;
 import org.kie.workbench.common.kogito.webapp.base.client.editor.KogitoScreen;
 import org.uberfire.backend.vfs.Path;
@@ -39,7 +39,7 @@ public abstract class AbstractScenarioSimulationEditorKogitoScreen implements Ko
     private KogitoScenarioSimulationBuilder scenarioSimulationBuilder;
 
     @Inject
-    private NewScesimPopupPresenter newScesimPopupPresenter;
+    private KogitoScesimPopupPresenter kogitoScesimPopupPresenter;
 
 
     /**
@@ -48,34 +48,29 @@ public abstract class AbstractScenarioSimulationEditorKogitoScreen implements Ko
      */
     protected void newFile(String baseUri) {
         Command createCommand = () -> {
-            final String fileName = newScesimPopupPresenter.getFileName();
-            if (fileName == null || fileName.isEmpty()) {
-                showPopover("ERROR", "Missing file name");
-                return;
-            }
-            final ScenarioSimulationModel.Type selectedType = newScesimPopupPresenter.getSelectedType();
+            final ScenarioSimulationModel.Type selectedType = kogitoScesimPopupPresenter.getSelectedType();
             String value = "";
             if (selectedType == null) {
                 showPopover("ERROR", "Missing selected type");
                 return;
             }
             if (ScenarioSimulationModel.Type.DMN.equals(selectedType)) {
-                value = newScesimPopupPresenter.getSelectedPath();
+                value = kogitoScesimPopupPresenter.getSelectedPath();
                 if (value == null || value.isEmpty()) {
                     showPopover("ERROR", "Missing dmn path");
                     return;
                 }
             }
-            String savedFileName = fileName.trim() + ".scesim";
-            final Path path = PathFactory.newPath(fileName, baseUri + savedFileName);
+            String savedFileName = "created.scesim";
+            final Path path = PathFactory.newPath(savedFileName, baseUri + savedFileName);
             scenarioSimulationBuilder.populateScenarioSimulationModel(path, new ScenarioSimulationModel(), selectedType, value, content -> {
                 saveFile(path, content);
                 scenarioSimulationEditorKogitoWrapper.gotoPath(path);
                 scenarioSimulationEditorKogitoWrapper.setContent(content);
             });
-            newScesimPopupPresenter.hide();
+            kogitoScesimPopupPresenter.hide();
         };
-        newScesimPopupPresenter.show("Choose SCESIM type", createCommand);
+        kogitoScesimPopupPresenter.show("Choose SCESIM type", createCommand);
     }
 
     protected void showPopover(String title, String content) {

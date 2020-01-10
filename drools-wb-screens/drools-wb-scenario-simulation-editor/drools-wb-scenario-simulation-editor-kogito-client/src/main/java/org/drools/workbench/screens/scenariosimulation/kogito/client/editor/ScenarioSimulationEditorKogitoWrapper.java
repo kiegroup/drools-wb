@@ -210,6 +210,7 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
 
     public void gotoPath(Path path) {
         resetEditorPages();
+        kogitoOracle.init(path);
         currentPath = path;
         scenarioSimulationEditorPresenter.init(this, new ObservablePathImpl().wrap(path));
     }

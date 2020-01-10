@@ -355,6 +355,12 @@
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-scenario-simulation-editor-kogito-webapp-common</artifactId>
+      <exclusions>
+            <exclusion>
+              <groupId>org.dashbuilder</groupId>
+              <artifactId>dashbuilder-services</artifactId>
+            </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.kie.workbench</groupId>
@@ -491,10 +497,10 @@
       <artifactId>dashbuilder-widgets</artifactId>
     </dependency>
     <!-- NEEDED BY org.dashbuilder.renderer.service.RendererSettingsService:RPC -->
-    <dependency>
-      <groupId>org.dashbuilder</groupId>
-      <artifactId>dashbuilder-services</artifactId>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>org.dashbuilder</groupId>-->
+<!--      <artifactId>dashbuilder-services</artifactId>-->
+<!--    </dependency>-->
     <!-- END NEEDED -->
     <dependency>
       <groupId>org.dashbuilder</groupId>
@@ -684,6 +690,7 @@
           <style>PRETTY</style>
           <printJavaCommandOnError>false</printJavaCommandOnError>
           <productionMode>true</productionMode>
+          <hostedWebapp>src/main/webapp</hostedWebapp>
 
           <compileSourcesArtifacts>
             <compileSourcesArtifact>org.kie.soup:kie-soup-commons</compileSourcesArtifact>
@@ -805,6 +812,7 @@
                 <include>src/main/webapp/WEB-INF/deploy/</include>
                 <include>src/main/webapp/WEB-INF/classes/</include>
                 <include>src/main/webapp/WEB-INF/lib/</include>
+                <include>src/main/webapp/model/</include>
                 <include>src/main/gwt-unitCache</include>
                 <include>**/gwt-unitCache/**</include>
                 <include>.gwt/**</include>

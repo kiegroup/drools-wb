@@ -22,10 +22,10 @@ import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.uberfire.mvp.Command;
 
 @Dependent
-public class NewScesimPopupPresenter implements NewScesimPopup.Presenter {
+public class KogitoScesimPopupPresenter implements KogitoScesimPopup.Presenter {
 
     @Inject
-    protected NewScesimPopupView newScesimPopup;
+    protected KogitoScesimPopupView newScesimPopup;
 
     @Override
     public void show(String mainTitleText, Command okCommand) {
@@ -35,11 +35,6 @@ public class NewScesimPopupPresenter implements NewScesimPopup.Presenter {
     @Override
     public void hide() {
         newScesimPopup.hide();
-    }
-
-    @Override
-    public String getFileName() {
-        return newScesimPopup.getFileName();
     }
 
     @Override

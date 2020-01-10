@@ -37,10 +37,7 @@ import org.uberfire.mvp.Command;
 
 @Dependent
 @Templated
-public class NewScesimPopupView extends AbstractScenarioPopupView implements NewScesimPopup {
-
-    @DataField("fileName")
-    protected InputElement fileName = Document.get().createTextInputElement();
+public class KogitoScesimPopupView extends AbstractScenarioPopupView implements KogitoScesimPopup {
 
     @Inject
     @DataField("rule-button")
@@ -83,11 +80,6 @@ public class NewScesimPopupView extends AbstractScenarioPopupView implements New
     @Override
     public String getSelectedPath() {
         return selectedPath;
-    }
-
-    @Override
-    public String getFileName() {
-        return fileName.getValue();
     }
 
     @EventHandler("dmn-button")

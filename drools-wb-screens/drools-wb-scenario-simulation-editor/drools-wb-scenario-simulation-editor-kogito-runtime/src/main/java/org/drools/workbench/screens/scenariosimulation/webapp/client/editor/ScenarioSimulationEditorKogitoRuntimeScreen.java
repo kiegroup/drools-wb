@@ -113,15 +113,6 @@ public class ScenarioSimulationEditorKogitoRuntimeScreen extends AbstractScenari
         if (value == null || value.isEmpty()) {
             GWT.log("Create new RULE scesim ");
             newFile("");
-
-//            final Path path = PathFactory.newPath("fileName", "savedFileName.scesim");
-//            final String dmoSession = "default";
-//            scenarioSimulationBuilder.populateScenarioSimulationModel(path, new ScenarioSimulationModel(), ScenarioSimulationModel.Type.RULE, dmoSession, content -> {
-//                GWT.log(this.toString() + " gotoPath " + path);
-//                scenarioSimulationEditorKogitoWrapper.gotoPath(path);
-//                GWT.log(this.toString() + " setContent");
-//                scenarioSimulationEditorKogitoWrapper.setContent(content);
-//            });
         } else {
             final Path path = PathFactory.newPath("fileName", "existingFileName.scesim");
             scenarioSimulationEditorKogitoWrapper.gotoPath(path);

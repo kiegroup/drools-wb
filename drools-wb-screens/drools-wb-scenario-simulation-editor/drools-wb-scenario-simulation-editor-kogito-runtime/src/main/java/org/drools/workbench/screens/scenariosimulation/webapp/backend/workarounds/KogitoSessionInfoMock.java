@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2020 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,15 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.scenariosimulation.webapp.client.popup;
+package org.drools.workbench.screens.scenariosimulation.webapp.backend.workarounds;
 
-public interface NewScesimPopup extends KogitoScesimPopup {
+import javax.enterprise.context.ApplicationScoped;
 
-    String getFileName();
+import org.jboss.errai.security.shared.api.identity.User;
+import org.uberfire.rpc.SessionInfo;
 
-    interface Presenter extends KogitoScesimPopup.Presenter {
+@ApplicationScoped
+public class KogitoSessionInfoMock implements SessionInfo {
 
-        String getFileName();
+    @Override
+    public String getId() {
+        return null;
+    }
 
+    @Override
+    public User getIdentity() {
+        return null;
     }
 }
