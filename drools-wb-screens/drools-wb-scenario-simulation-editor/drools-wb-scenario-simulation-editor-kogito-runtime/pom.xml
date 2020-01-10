@@ -834,7 +834,7 @@
               <outputDirectory>${basedir}/src/main/webapp/model</outputDirectory>
               <resources>
                 <resource>
-                  <directory>${project.build.directory}/Marshaller/org/drools/workbench/scenariosimulation/kogito/marshaller/js</directory>
+                  <directory>${project.parent.basedir}/drools-wb-scenario-simulation-editor-kogito-marshaller/src/main/resources/org/drools/workbench/scenariosimulation/kogito/marshaller/js/</directory>
                   <includes>
                     <include>**/*.js</include>
                   </includes>
@@ -875,22 +875,13 @@
             </configuration>
           </execution>
           <execution>
-            <id>Unpack Marshaller JS from dependency</id>
-            <phase>package</phase>
+            <id>Unpack External Marshaller JS from dependency</id>
+            <phase>process-sources</phase>
             <goals>
               <goal>unpack</goal>
             </goals>
             <configuration>
               <artifactItems>
-                <artifactItem>
-                  <groupId>org.drools</groupId>
-                  <artifactId>drools-wb-scenario-simulation-editor-kogito-marshaller</artifactId>
-                  <version>${version.org.kie}</version>
-                  <type>jar</type>
-                  <overWrite>true</overWrite>
-                  <outputDirectory>${project.build.directory}/Marshaller</outputDirectory>
-                  <includes>**/*.js</includes>
-                </artifactItem>
                 <artifactItem>
                   <groupId>org.kie.workbench</groupId>
                   <artifactId>kie-wb-common-dmn-webapp-kogito-marshaller</artifactId>
