@@ -52,6 +52,7 @@ import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.Sce
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridWidget;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.strategies.KogitoDMNDataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.strategies.KogitoDMODataManagementStrategy;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.fakes.KogitoAsyncPackageDataModelOracle;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.util.KogitoDMNService;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
 import org.gwtbootstrap3.client.ui.TabListItem;
@@ -88,6 +89,7 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     private Promises promises;
     private Path currentPath;
     private KogitoDMNService dmnTypeService;
+    private KogitoAsyncPackageDataModelOracle kogitoOracle;
 
     private ScenarioSimulationEditorKogitoWrapper() {
         //Zero-parameter constructor for CDI proxies
@@ -101,13 +103,15 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
             final MultiPageEditorContainerView multiPageEditorContainerView,
             final AuthoringEditorDock authoringWorkbenchDocks,
             final Promises promises,
-            final KogitoDMNService dmnTypeService) {
+            final KogitoDMNService dmnTypeService,
+            final KogitoAsyncPackageDataModelOracle kogitoOracle) {
         super(scenarioSimulationEditorPresenter.getView(), placeManager, multiPageEditorContainerView);
         this.scenarioSimulationEditorPresenter = scenarioSimulationEditorPresenter;
         this.fileMenuBuilder = fileMenuBuilder;
         this.authoringWorkbenchDocks = authoringWorkbenchDocks;
         this.promises = promises;
         this.dmnTypeService = dmnTypeService;
+        this.kogitoOracle = kogitoOracle;
     }
 
     @Override
@@ -305,7 +309,7 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
         scenarioSimulationEditorPresenter.setPackageName("com");
         DataManagementStrategy dataManagementStrategy;
         if (ScenarioSimulationModel.Type.RULE.equals(model.getSettings().getType())) {
-            dataManagementStrategy = new KogitoDMODataManagementStrategy();
+            dataManagementStrategy = new KogitoDMODataManagementStrategy(kogitoOracle);
         } else {
             dataManagementStrategy = new KogitoDMNDataManagementStrategy(scenarioSimulationEditorPresenter.getEventBus(), dmnTypeService);
         }

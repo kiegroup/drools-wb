@@ -31,25 +31,28 @@ import org.uberfire.backend.vfs.ObservablePath;
 
 public class KogitoDMODataManagementStrategy extends AbstractDMODataManagementStrategy {
 
-    protected KogitoAsyncPackageDataModelOracle submarineOracle = new KogitoAsyncPackageDataModelOracle();
+    protected KogitoAsyncPackageDataModelOracle kogitoOracle;
 
+    public KogitoDMODataManagementStrategy(KogitoAsyncPackageDataModelOracle kogitoOracle) {
+        this.kogitoOracle = kogitoOracle;
+    }
 
     @Override
     public void manageScenarioSimulationModelContent(ObservablePath currentPath, ScenarioSimulationModelContent toManage) {
         model = toManage.getModel();
-        submarineOracle.init(currentPath);
+        kogitoOracle.init(currentPath);
     }
 
     @Override
     public boolean isADataType(String value) {
-        return submarineOracle != null && Arrays.asList(submarineOracle.getFactTypes()).contains(value);
+        return kogitoOracle != null && Arrays.asList(kogitoOracle.getFactTypes()).contains(value);
     }
 
     @Override
     protected void manageDataObjects(List<String> dataObjectsTypes, TestToolsView.Presenter testToolsPresenter, int expectedElements, SortedMap<String, FactModelTree> dataObjectsFieldsMap, ScenarioSimulationContext context, List<String> simpleJavaTypes, GridWidget gridWidget) {
         //                 Iterate over all dataObjects to retrieve their modelfields
         dataObjectsTypes.forEach(factType -> {
-            ModelField[] retrieved = submarineOracle.getFieldCompletions(factType);
+            ModelField[] retrieved = kogitoOracle.getFieldCompletions(factType);
             FactModelTree toSend = getFactModelTree(factType, retrieved);
             aggregatorCallbackMethod(testToolsPresenter, expectedElements, dataObjectsFieldsMap, context, toSend, simpleJavaTypes, gridWidget);
         });
@@ -57,21 +60,21 @@ public class KogitoDMODataManagementStrategy extends AbstractDMODataManagementSt
 
     @Override
     protected List<String> getFactTypes() {
-        return Arrays.asList(submarineOracle.getFactTypes());
+        return Arrays.asList(kogitoOracle.getFactTypes());
     }
 
     @Override
     protected boolean skipPopulateTestTools() {
-        return submarineOracle == null || submarineOracle.getFactTypes().length == 0;
+        return kogitoOracle == null || kogitoOracle.getFactTypes().length == 0;
     }
 
     @Override
     protected String getFQCNByFactName(String factName) {
-        return submarineOracle.getFQCNByFactName(factName);
+        return kogitoOracle.getFQCNByFactName(factName);
     }
 
     @Override
     protected String getParametricFieldType(String factName, String propertyName) {
-        return submarineOracle.getParametricFieldType(factName, propertyName);
+        return kogitoOracle.getParametricFieldType(factName, propertyName);
     }
 }

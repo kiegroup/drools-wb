@@ -469,11 +469,6 @@
       <artifactId>appformer-kogito-bridge</artifactId>
       <classifier>sources</classifier>
     </dependency>
-<!--    &lt;!&ndash; TEMPORARY!!!! TO BE REMOVED WHEN THERE IS A WORKING MARSHALLER &ndash;&gt;-->
-<!--    <dependency>-->
-<!--      <groupId>org.drools</groupId>-->
-<!--      <artifactId>drools-scenario-simulation-backend</artifactId>-->
-<!--    </dependency>-->
 
     <!-- NEEDED ? -->
     <dependency>
