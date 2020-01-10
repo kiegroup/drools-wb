@@ -62,7 +62,6 @@ public class ScenarioSimulationEditorKogitoRuntimeScreen extends AbstractScenari
         this.placeManager = placeManager;
     }
 
-
     @Override
     public PlaceRequest getPlaceRequest() {
         return SCENARIO_SIMULATION_KOGITO_RUNTIME_SCREEN_DEFAULT_REQUEST;

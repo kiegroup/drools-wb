@@ -24,22 +24,18 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import com.google.gwt.core.client.GWT;
-import org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds.TestingVFSService;
-import org.jboss.errai.bus.client.api.messaging.Message;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
+import org.kie.workbench.common.kogito.webapp.base.client.workarounds.KogitoResourceContentService;
 import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
-import org.uberfire.backend.vfs.Path;
-
-import static org.drools.workbench.screens.scenariosimulation.webapp.client.editor.ScenarioSimulationEditorKogitoTestingScreen.DMN_PATH;
 
 @Dependent
-public class KogitoTestingDmnAssetsDropdownProvider implements DmnAssetsDropdownProvider {
-
-    private static final String FILE_SUFFIX = "dmn";
+public class KogitoRuntimeDmnAssetsDropdownProviderImpl implements DmnAssetsDropdownProvider {
 
     @Inject
-    private TestingVFSService testingVFSService;
+    private KogitoResourceContentService resourceContentService;
+
+    private static final String FILE_SUFFIX = "dmn";
 
     @Override
     public void getItems(Consumer<List<KieAssetsDropdownItem>> assetListConsumer) {
@@ -49,16 +45,16 @@ public class KogitoTestingDmnAssetsDropdownProvider implements DmnAssetsDropdown
                     .collect(Collectors.toList());
             assetListConsumer.accept(toAccept);
         }, (message, throwable) -> {
-            GWT.log(message.getCommandType() + " " + message.toString(), throwable);
+            GWT.log(message.toString(), throwable);
             return false;
         });
     }
 
-    protected void getItems(final RemoteCallback<List<Path>> callback, final ErrorCallback<Message> errorCallback) {
-        testingVFSService.getItemsByPath(DMN_PATH, FILE_SUFFIX, callback, errorCallback);
+    protected void getItems(final RemoteCallback<List<String>> callback, final ErrorCallback<Object> errorCallback) {
+        resourceContentService.getItemsByPath("", FILE_SUFFIX, callback, errorCallback);
     }
 
-    protected KieAssetsDropdownItem getKieAssetsDropdownItem(final Path asset) {
-        return new KieAssetsDropdownItem(asset.getFileName(), "", asset.toURI(), new HashMap<>());
+    protected KieAssetsDropdownItem getKieAssetsDropdownItem(final String asset) {
+        return new KieAssetsDropdownItem(asset, "", asset, new HashMap<>());
     }
 }
