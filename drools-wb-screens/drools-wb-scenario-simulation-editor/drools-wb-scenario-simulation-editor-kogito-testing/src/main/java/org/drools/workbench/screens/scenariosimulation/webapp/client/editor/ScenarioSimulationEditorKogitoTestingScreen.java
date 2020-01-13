@@ -60,19 +60,11 @@ public class ScenarioSimulationEditorKogitoTestingScreen extends AbstractScenari
     public static final Path SCESIM_PATH = PathFactory.newPath("SCESIM", BASE_SCESIM_URI);
     private static final PlaceRequest SCENARIO_SIMULATION_KOGITO_TESTING_SCREEN_DEFAULT_REQUEST = new DefaultPlaceRequest(IDENTIFIER);
 
-//    @Inject
-//    private ScenarioSimulationEditorKogitoWrapper scenarioSimulationEditorKogitoWrapper;
-
-    //    @Inject
-//    private NewScesimPopupPresenter newScesimPopupPresenter;
     @Inject
     private LoadScesimPopupPresenter loadScesimPopupPresenter;
 
     @Inject
     private FileUploadPopupPresenter fileUploadPopupPresenter;
-
-//    @Inject
-//    private KogitoScenarioSimulationBuilder scenarioSimulationBuilder;
 
     @Inject
     private TestingVFSService testingVFSService;
@@ -138,47 +130,13 @@ public class ScenarioSimulationEditorKogitoTestingScreen extends AbstractScenari
         scenarioSimulationEditorKogitoWrapper.setMenus(menusConsumer);
     }
 
-//    protected void newFile() {
-//        Command createCommand = () -> {
-//            final String fileName = newScesimPopupPresenter.getFileName();
-//            if (fileName == null || fileName.isEmpty()) {
-//                showPopover("ERROR", "Missing file name");
-//                return;
-//            }
-//            final ScenarioSimulationModel.Type selectedType = newScesimPopupPresenter.getSelectedType();
-//            String value = "";
-//            if (selectedType == null) {
-//                showPopover("ERROR", "Missing selected type");
-//                return;
-//            }
-//            if (ScenarioSimulationModel.Type.DMN.equals(selectedType)) {
-//                value = newScesimPopupPresenter.getSelectedPath();
-//                if (value == null || value.isEmpty()) {
-//                    showPopover("ERROR", "Missing dmn path");
-//                    return;
-//                }
-//            }
-//            String savedFileName = fileName.trim() + ".scesim";
-//            final Path path = PathFactory.newPath(fileName, BASE_SCESIM_URI + savedFileName);
-//            scenarioSimulationBuilder.populateScenarioSimulationModel(path, new ScenarioSimulationModel(), selectedType, value, content -> {
-//                saveFile(path, content);
-//                scenarioSimulationEditorKogitoWrapper.gotoPath(path);
-//                scenarioSimulationEditorKogitoWrapper.setContent(content);
-//            });
-//            newScesimPopupPresenter.hide();
-//        };
-//        newScesimPopupPresenter.show("Choose SCESIM type", createCommand);
-//    }
-
     protected void loadFile() {
         Command loadCommand = () -> {
             String fullUri = loadScesimPopupPresenter.getSelectedPath();
             String fileName = fullUri.substring(fullUri.lastIndexOf('/') + 1);
             final Path path = PathFactory.newPath(fileName, fullUri);
             testingVFSService.loadFile(path, content -> {
-                GWT.log(this.toString() + " gotoPath " + path);
                 scenarioSimulationEditorKogitoWrapper.gotoPath(path);
-                GWT.log(this.toString() + " setContent");
                 scenarioSimulationEditorKogitoWrapper.setContent(content);
             }, getErrorCallback("Failed to load"));
             loadScesimPopupPresenter.hide();
@@ -220,10 +178,6 @@ public class ScenarioSimulationEditorKogitoTestingScreen extends AbstractScenari
         })));
         fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("Import DMN", this::importDMN));
     }
-
-//    protected void showPopover(String title, String content) {
-//        new Popover(title, content).show();
-//    }
 
     protected ErrorCallback<String> getErrorCallback(String prependMessage) {
         return (message, throwable) -> {

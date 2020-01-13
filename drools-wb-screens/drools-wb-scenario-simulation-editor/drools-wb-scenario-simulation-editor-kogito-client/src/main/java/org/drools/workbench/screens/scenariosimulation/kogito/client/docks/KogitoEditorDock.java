@@ -46,34 +46,26 @@ public class KogitoEditorDock implements AuthoringEditorDock {
     @Inject
     public KogitoEditorDock(final UberfireDocks uberfireDocks,
                             final ManagedInstance<WorkbenchDocksHandler> installedHandlers) {
-        GWT.log(this + " constructor ");
         this.uberfireDocks = uberfireDocks;
         this.installedHandlers = installedHandlers;
     }
 
     @PostConstruct
     public void initialize() {
-        GWT.log(this + " initialize ");
         // Initializing the handlers
         installedHandlers.forEach(handler -> {
-            GWT.log(this + " handler " + handler.getClass().getName());
             Command initCommand = () -> setActiveHandler(handler);
             handler.init(initCommand);
         });
-
-//        installedHandlers.iterator().forEachRemaining(handler ->
-//                                                              handler.init(() -> setActiveHandler(handler)));
     }
 
     @Override
     public boolean isSetup() {
-        GWT.log(this + " isSetup");
         return authoringPerspectiveIdentifier != null;
     }
 
     @Override
     public void setup(String authoringPerspectiveIdentifier, PlaceRequest defaultPlaceRequest) {
-        GWT.log(this + " setup " + authoringPerspectiveIdentifier + " " + defaultPlaceRequest);
         this.authoringPerspectiveIdentifier = authoringPerspectiveIdentifier;
     }
 
@@ -89,7 +81,6 @@ public class KogitoEditorDock implements AuthoringEditorDock {
 
     @Override
     public void expandAuthoringDock(UberfireDock dockToOpen) {
-        GWT.log(this + " expandAuthoringDock " + dockToOpen);
         uberfireDocks.show(UberfireDockPosition.EAST, authoringPerspectiveIdentifier);
         if (dockToOpen != null) {
             uberfireDocks.open(dockToOpen);
@@ -97,7 +88,6 @@ public class KogitoEditorDock implements AuthoringEditorDock {
     }
 
     protected void setActiveHandler(WorkbenchDocksHandler handler) {
-        GWT.log(this + " setActiveHandler " + handler);
         // If there's an active handler let's check if it should refresh docks
         if (activeHandler != null) {
             if (activeHandler.equals(handler) && !activeHandler.shouldRefreshDocks()) {

@@ -21,7 +21,6 @@ import java.util.function.Consumer;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
 import elemental2.promise.Promise;
 import org.kie.workbench.common.kogito.client.editor.MultiPageEditorContainerView;
@@ -69,37 +68,31 @@ public class ScenarioSimulationEditorKogitoRuntimeScreen extends AbstractScenari
 
     @OnStartup
     public void onStartup(final PlaceRequest place) {
-        GWT.log(this.toString() + " onStartup " + place);
         scenarioSimulationEditorKogitoWrapper.onStartup(place);
     }
 
     @OnMayClose
     public boolean mayClose() {
-        GWT.log(this.toString() + " mayClose");
         return scenarioSimulationEditorKogitoWrapper.mayClose();
     }
 
     @WorkbenchPartTitle
     public String getTitleText() {
-        GWT.log(this.toString() + " getTitleText");
-        return "Scenario Simulation Submarine Screen";
+        return "Scenario Simulation Kogito Screen";
     }
 
     @WorkbenchPartTitleDecoration
     public IsWidget getTitle() {
-        GWT.log(this.toString() + " getTitle");
         return scenarioSimulationEditorKogitoWrapper.getTitle();
     }
 
     @WorkbenchPartView
     public MultiPageEditorContainerView getWidget() {
-        GWT.log(this.toString() + " getWidget");
         return scenarioSimulationEditorKogitoWrapper.getWidget();
     }
 
     @WorkbenchMenu
     public void setMenus(final Consumer<Menus> menusConsumer) {
-        GWT.log(this.toString() + " setMenus " + menusConsumer);
         scenarioSimulationEditorKogitoWrapper.setMenus(menusConsumer);
     }
 
@@ -111,7 +104,6 @@ public class ScenarioSimulationEditorKogitoRuntimeScreen extends AbstractScenari
     @SetContent
     public void setContent(String value) {
         if (value == null || value.isEmpty()) {
-            GWT.log("Create new RULE scesim ");
             newFile("");
         } else {
             final Path path = PathFactory.newPath("fileName", "existingFileName.scesim");

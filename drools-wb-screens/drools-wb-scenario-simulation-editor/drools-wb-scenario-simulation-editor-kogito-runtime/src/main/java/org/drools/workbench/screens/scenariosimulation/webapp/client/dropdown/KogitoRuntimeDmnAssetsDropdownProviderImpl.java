@@ -32,10 +32,9 @@ import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdown
 @Dependent
 public class KogitoRuntimeDmnAssetsDropdownProviderImpl implements DmnAssetsDropdownProvider {
 
+    private static final String FILE_SUFFIX = "dmn";
     @Inject
     private KogitoResourceContentService resourceContentService;
-
-    private static final String FILE_SUFFIX = "dmn";
 
     @Override
     public void getItems(Consumer<List<KieAssetsDropdownItem>> assetListConsumer) {
@@ -51,7 +50,7 @@ public class KogitoRuntimeDmnAssetsDropdownProviderImpl implements DmnAssetsDrop
     }
 
     protected void getItems(final RemoteCallback<List<String>> callback, final ErrorCallback<Object> errorCallback) {
-        resourceContentService.getItemsByPath("", FILE_SUFFIX, callback, errorCallback);
+        resourceContentService.getFilteredItems(FILE_SUFFIX, callback, errorCallback);
     }
 
     protected KieAssetsDropdownItem getKieAssetsDropdownItem(final String asset) {
