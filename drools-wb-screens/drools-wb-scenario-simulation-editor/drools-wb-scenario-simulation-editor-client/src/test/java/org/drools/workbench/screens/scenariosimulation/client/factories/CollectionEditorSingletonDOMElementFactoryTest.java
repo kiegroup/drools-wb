@@ -21,6 +21,7 @@ import java.util.Map;
 
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import com.google.gwt.dom.client.DivElement;
+import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.utils.ScenarioSimulationSharedUtils;
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.CollectionViewImpl;
@@ -126,10 +127,10 @@ public class CollectionEditorSingletonDOMElementFactoryTest extends AbstractFact
     @Test
     public void manageList() {
         String key = FULL_CLASS_NAME + "#" + LIST_CLASS_NAME;
-        collectionEditorSingletonDOMElementFactorySpy.manageList(collectionEditorViewImpl, key, STRING_CLASS_NAME, true);
+        collectionEditorSingletonDOMElementFactorySpy.manageList(collectionEditorViewImpl, key, STRING_CLASS_NAME, ScenarioSimulationModel.Type.RULE);
         Map<String, String> expectedMap1 = new HashMap<>();
         expectedMap1.put(LOWER_CASE_VALUE, STRING_CLASS_NAME);
-        verify(collectionEditorViewImpl, times(1)).initListStructure(eq(key), eq(expectedMap1), isA(Map.class), eq(true));
+        verify(collectionEditorViewImpl, times(1)).initListStructure(eq(key), eq(expectedMap1), isA(Map.class), eq(ScenarioSimulationModel.Type.RULE));
         verify(collectionEditorSingletonDOMElementFactorySpy, times(1)).getExpandablePropertiesMap(eq(STRING_CLASS_NAME));
     }
 
@@ -151,32 +152,30 @@ public class CollectionEditorSingletonDOMElementFactoryTest extends AbstractFact
     public void manageMap_RuleSimpleType() {
         Map<String, String> expectedMap1 = new HashMap<>();
         expectedMap1.put(LOWER_CASE_VALUE, NUMBER_CLASS_NAME);
-        manageMap(NUMBER_CLASS_NAME, true, expectedMap1);
+        manageMap(NUMBER_CLASS_NAME, RULE, expectedMap1);
     }
 
     @Test
     public void manageMap_NotRuleSimpleType() {
         Map<String, String> expectedMap1 = new HashMap<>();
         expectedMap1.put(LOWER_CASE_VALUE, NUMBER_CLASS_NAME);
-        manageMap(NUMBER_CLASS_NAME, false, expectedMap1);
+        manageMap(NUMBER_CLASS_NAME, DMN, expectedMap1);
     }
 
     @Test
     public void manageMap_NotRuleNotSimpleType() {
-        manageMap(FULL_CLASS_NAME, false, EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE);
+        manageMap(FULL_CLASS_NAME, DMN, EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE);
     }
 
-    private void manageMap(String genericType1, boolean isRule, Map<String, String> expectedMap1) {
+    private void manageMap(String genericType1, ScenarioSimulationModel.Type type, Map<String, String> expectedMap1) {
         String key = FULL_CLASS_NAME + "#" + LIST_CLASS_NAME;
         Map<String, String> expectedMap0 = new HashMap<>();
-
         doReturn(expectedMap0).when(collectionEditorSingletonDOMElementFactorySpy).getSimplePropertiesMap(eq(STRING_CLASS_NAME));
         doReturn(expectedMap1).when(collectionEditorSingletonDOMElementFactorySpy).getSimplePropertiesMap(eq(genericType1));
-        collectionEditorSingletonDOMElementFactorySpy.manageMap(collectionEditorViewImpl, key, STRING_CLASS_NAME, genericType1, isRule);
+        collectionEditorSingletonDOMElementFactorySpy.manageMap(collectionEditorViewImpl, key, STRING_CLASS_NAME, genericType1, type);
         verify(collectionEditorSingletonDOMElementFactorySpy, times(1)).getSimplePropertiesMap(STRING_CLASS_NAME);
         verify(collectionEditorSingletonDOMElementFactorySpy, times(1)).getSimplePropertiesMap(genericType1);
-
-        verify(collectionEditorViewImpl, times(1)).initMapStructure(eq(key), eq(expectedMap0), eq(expectedMap1), eq(isRule));
+        verify(collectionEditorViewImpl, times(1)).initMapStructure(eq(key), eq(expectedMap0), eq(expectedMap1), eq(type));
     }
 
     @Test(expected = IllegalStateException.class)
@@ -244,10 +243,10 @@ public class CollectionEditorSingletonDOMElementFactoryTest extends AbstractFact
         String key = factMappingMock.getFactAlias() + "#" + factMappingMock.getExpressionAlias();
         if (ScenarioSimulationSharedUtils.isList(factMappingMock.getExpressionAlias())) {
             verify(collectionEditorSingletonDOMElementFactorySpy, times(1)).manageList(
-                    eq(collectionEditorViewImpl), eq(key), eq(genericTypeName0), eq(isRule));
+                    eq(collectionEditorViewImpl), eq(key), eq(genericTypeName0), eq(settingsLocal.getType()));
         } else {
             verify(collectionEditorSingletonDOMElementFactorySpy, times(1)).manageMap(
-                    eq(collectionEditorViewImpl), eq(key), eq(genericTypeName0), eq(genericTypeName1), eq(isRule));
+                    eq(collectionEditorViewImpl), eq(key), eq(genericTypeName0), eq(genericTypeName1), eq(settingsLocal.getType()));
         }
     }
 

@@ -122,15 +122,16 @@ public class ScenarioGridColumnRenderer extends StringColumnRenderer {
             if (jsonValue instanceof JSONString) {
                 String label = isList ? "List() " : "Map() ";
                 return label + ConstantHolder.EXPRESSION;
-            }
-            String toFormat = isList ? "List(%s)" : "Map(%s)";
-            int size = -1;
-            if (isList) {
-                size = jsonValue.isArray().size();
             } else {
-                size = jsonValue.isObject().keySet().size();
+                String toFormat = isList ? "List(%s)" : "Map(%s)";
+                int size = -1;
+                if (isList) {
+                    size = jsonValue.isArray().size();
+                } else {
+                    size = jsonValue.isObject().keySet().size();
+                }
+                return toFormat.replace("%s", String.valueOf(size));
             }
-            return toFormat.replace("%s", String.valueOf(size));
         } catch (Exception e) {
             return jsonString;
         }

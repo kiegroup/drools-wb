@@ -24,6 +24,7 @@ import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.client.events.CloseCompositeEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.SaveEditorEvent;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
@@ -32,6 +33,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
@@ -118,8 +120,8 @@ public class CollectionViewImplTest extends AbstractCollectionEditorTest {
 
     @Test
     public void initListStructure() {
-        collectionEditorViewImplSpy.initListStructure("key", Collections.EMPTY_MAP, Collections.EMPTY_MAP, false);
-        verify(collectionEditorViewImplSpy, times(1)).commonInit(eq(false));
+        collectionEditorViewImplSpy.initListStructure("key", Collections.EMPTY_MAP, Collections.EMPTY_MAP, ScenarioSimulationModel.Type.DMN);
+        verify(collectionEditorViewImplSpy, times(1)).commonInit(eq(ScenarioSimulationModel.Type.DMN));
         verify(createLabelMock, atLeast(1)).setInnerText(ScenarioSimulationEditorConstants.INSTANCE.createLabelList());
         verify(collectionCreationModeLabelMock, times(1)).setInnerText(ScenarioSimulationEditorConstants.INSTANCE.collectionListCreation());
         verify(collectionCreationCreateLabelMock, times(1)).setInnerText(ScenarioSimulationEditorConstants.INSTANCE.createLabelList());
@@ -132,8 +134,8 @@ public class CollectionViewImplTest extends AbstractCollectionEditorTest {
 
     @Test
     public void initMapStructure() {
-        collectionEditorViewImplSpy.initMapStructure("key", Collections.EMPTY_MAP, Collections.EMPTY_MAP, false);
-        verify(collectionEditorViewImplSpy, times(1)).commonInit(eq(false));
+        collectionEditorViewImplSpy.initMapStructure("key", Collections.EMPTY_MAP, Collections.EMPTY_MAP, ScenarioSimulationModel.Type.DMN);
+        verify(collectionEditorViewImplSpy, times(1)).commonInit(eq(ScenarioSimulationModel.Type.DMN));
         verify(createLabelMock, atLeast(1)).setInnerText(ScenarioSimulationEditorConstants.INSTANCE.createLabelMap());
         verify(collectionCreationModeLabelMock, times(1)).setInnerText(ScenarioSimulationEditorConstants.INSTANCE.collectionMapCreation());
         verify(collectionCreationCreateLabelMock, times(1)).setInnerText(ScenarioSimulationEditorConstants.INSTANCE.createLabelMap());
@@ -146,8 +148,8 @@ public class CollectionViewImplTest extends AbstractCollectionEditorTest {
 
     @Test
     public void commonInit_RuleScenario() {
-        collectionEditorViewImplSpy.commonInit(true);
-        assertTrue(collectionEditorViewImplSpy.ruleScenario);
+        collectionEditorViewImplSpy.commonInit(ScenarioSimulationModel.Type.RULE);
+        assertEquals(ScenarioSimulationModel.Type.RULE, collectionEditorViewImplSpy.scenarioType);
         verify(saveButtonMock, times(1)).setInnerText(ScenarioSimulationEditorConstants.INSTANCE.saveButton());
         verify(cancelButtonMock, times(1)).setInnerText(ScenarioSimulationEditorConstants.INSTANCE.cancelButton());
         verify(removeButtonMock, times(1)).setInnerText(ScenarioSimulationEditorConstants.INSTANCE.removeButton());
@@ -158,8 +160,8 @@ public class CollectionViewImplTest extends AbstractCollectionEditorTest {
 
     @Test
     public void commonInit_DMNScenario() {
-        collectionEditorViewImplSpy.commonInit(false);
-        assertFalse(collectionEditorViewImplSpy.ruleScenario);
+        collectionEditorViewImplSpy.commonInit(ScenarioSimulationModel.Type.DMN);
+        assertEquals(ScenarioSimulationModel.Type.DMN, collectionEditorViewImplSpy.scenarioType);
         verify(saveButtonMock, times(1)).setInnerText(ScenarioSimulationEditorConstants.INSTANCE.saveButton());
         verify(cancelButtonMock, times(1)).setInnerText(ScenarioSimulationEditorConstants.INSTANCE.cancelButton());
         verify(removeButtonMock, times(1)).setInnerText(ScenarioSimulationEditorConstants.INSTANCE.removeButton());
@@ -290,14 +292,14 @@ public class CollectionViewImplTest extends AbstractCollectionEditorTest {
 
     @Test
     public void checkExpressionSyntax_Rule() {
-        collectionEditorViewImplSpy.ruleScenario = true;
+        collectionEditorViewImplSpy.scenarioType = ScenarioSimulationModel.Type.RULE;
         collectionEditorViewImplSpy.checkExpressionSyntax();
         verify(expressionElementMock, times(1)).setValue(anyString());
     }
 
     @Test
     public void checkExpressionSyntax_DMN() {
-        collectionEditorViewImplSpy.ruleScenario = false;
+        collectionEditorViewImplSpy.scenarioType = ScenarioSimulationModel.Type.DMN;
         collectionEditorViewImplSpy.checkExpressionSyntax();
         verify(expressionElementMock, never()).setValue(anyString());
     }

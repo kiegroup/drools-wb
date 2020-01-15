@@ -101,11 +101,19 @@ public class CollectionPresenter implements CollectionView.Presenter {
         if (jsonValue instanceof JSONString) {
             populateExpression(jsonValue);
         } else {
-            if (collectionView.isListWidget()) {
-                populateList(jsonValue);
-            } else {
-                populateMap(jsonValue);
-            }
+            populateCreateCollection(jsonValue);
+        }
+    }
+
+    /**
+     * It populates the guided "Create Collection" editor
+     * @param value
+     */
+    protected void populateCreateCollection(JSONValue value) {
+        if (collectionView.isListWidget()) {
+            populateList(value);
+        } else {
+            populateMap(value);
         }
     }
 
@@ -164,15 +172,22 @@ public class CollectionPresenter implements CollectionView.Presenter {
             if (collectionView.isExpressionWidget()) {
                 updatedValue = getExpressionValue();
             } else {
-                if (collectionView.isListWidget()) {
-                    updatedValue = getListValue();
-                } else {
-                    updatedValue = getMapValue();
-                }
+                updatedValue = getValueFromCreateCollection();
             }
             collectionView.updateValue(updatedValue);
         } catch (IllegalStateException e) {
             confirmPopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.collectionError(), e.getMessage());
+        }
+    }
+
+    /**
+     * It gets the guided "Create Collection" editor
+     */
+    protected String getValueFromCreateCollection() {
+        if (collectionView.isListWidget()) {
+            return getListValue();
+        } else {
+            return getMapValue();
         }
     }
 

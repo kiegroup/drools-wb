@@ -34,6 +34,7 @@ import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.FocusWidget;
+import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.client.events.CloseCompositeEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.SaveEditorEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.CloseCompositeEventHandler;
@@ -46,6 +47,8 @@ import org.drools.workbench.screens.scenariosimulation.client.utils.ExpressionUt
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
+
+import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type.RULE;
 
 /**
  * This class is used as <code>Collection</code> <b>editor</b>
@@ -150,7 +153,7 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     /**
      * Flag to indicate if this <code>CollectionEditorViewImpl</code> is opened in DMN or RULE scenario
      */
-    protected boolean ruleScenario;
+    protected ScenarioSimulationModel.Type scenarioType;
 
     /**
      * The <b>json</b> representation of the values of this editor
@@ -170,12 +173,12 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
      * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
      * @param simplePropertiesMap
      * @param expandablePropertiesMap
-     * @param isRule
+     * @param type
      */
     @Override
-    public void initListStructure(String key, Map<String, String> simplePropertiesMap, Map<String, Map<String, String>> expandablePropertiesMap, boolean isRule) {
+    public void initListStructure(String key, Map<String, String> simplePropertiesMap, Map<String, Map<String, String>> expandablePropertiesMap, ScenarioSimulationModel.Type type) {
         listWidget = true;
-        commonInit(isRule);
+        commonInit(type);
         createLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.createLabelList());
         collectionCreationModeLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.collectionListCreation());
         collectionCreationCreateLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.createLabelList());
@@ -191,13 +194,13 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
      * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
      * @param keyPropertyMap
      * @param valuePropertyMap
-     * @param isRule
+     * @param type
      *
      */
     @Override
-    public void initMapStructure(String key, Map<String, String> keyPropertyMap, Map<String, String> valuePropertyMap, boolean isRule) {
+    public void initMapStructure(String key, Map<String, String> keyPropertyMap, Map<String, String> valuePropertyMap, ScenarioSimulationModel.Type type) {
         listWidget = false;
-        commonInit(isRule);
+        commonInit(type);
         createLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.createLabelMap());
         collectionCreationModeLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.collectionMapCreation());
         collectionCreationCreateLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.createLabelMap());
@@ -207,14 +210,14 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
         presenter.initMapStructure(key, keyPropertyMap, valuePropertyMap, this);
     }
 
-    protected void commonInit(boolean isRule) {
-        ruleScenario = isRule;
+    protected void commonInit(ScenarioSimulationModel.Type type) {
+        scenarioType = type ;
         saveButton.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.saveButton());
         cancelButton.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.cancelButton());
         removeButton.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.removeButton());
         addItemButtonLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.collectionEditorAddNewItem());
         enableCreateCollectionContainer(true);
-        if (isRule) {
+        if (RULE.equals(scenarioType)) {
             initAndRegisterHandlerForExpressionTextArea();
         }
     }
@@ -433,7 +436,7 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     }
 
     protected void checkExpressionSyntax() {
-        if (ruleScenario) {
+        if (RULE.equals(scenarioType)) {
             expressionElement.setValue(ExpressionUtils.checkExpressionSyntax(expressionElement.getValue()));
         }
     }

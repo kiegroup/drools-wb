@@ -464,16 +464,13 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
         collectionEditorPresenterSpy.setValue(TEST_JSON_STRING);
         if (isExpressionList) {
             verify(collectionEditorPresenterSpy, times(1)).populateExpression(isA(JSONValue.class));
-            verify(collectionEditorPresenterSpy, never()).populateMap(any());
-            verify(collectionEditorPresenterSpy, never()).populateList(any());
+            verify(collectionEditorPresenterSpy, never()).populateCreateCollection(any());
         } else {
             if (isListWidget) {
-                verify(collectionEditorPresenterSpy, times(1)).populateList(isA(JSONValue.class));
-                verify(collectionEditorPresenterSpy, never()).populateMap(any());
+                verify(collectionEditorPresenterSpy, times(1)).populateCreateCollection(isA(JSONValue.class));
                 verify(collectionEditorPresenterSpy, never()).populateExpression(any());
             } else {
-                verify(collectionEditorPresenterSpy, times(1)).populateMap(isA(JSONValue.class));
-                verify(collectionEditorPresenterSpy, never()).populateList(any());
+                verify(collectionEditorPresenterSpy, times(1)).populateCreateCollection(isA(JSONValue.class));
                 verify(collectionEditorPresenterSpy, never()).populateExpression(any());
             }
         }
@@ -510,16 +507,13 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
         collectionEditorPresenterSpy.save();
         if (isExpressionWidget) {
             verify(collectionEditorPresenterSpy, times(1)).getExpressionValue();
-            verify(collectionEditorPresenterSpy, never()).getListValue();
-            verify(collectionEditorPresenterSpy, never()).getMapValue();
+            verify(collectionEditorPresenterSpy, never()).getValueFromCreateCollection();
         } else {
             if (isListWidget) {
-                verify(collectionEditorPresenterSpy, times(1)).getListValue();
+                verify(collectionEditorPresenterSpy, times(1)).getValueFromCreateCollection();
                 verify(collectionEditorPresenterSpy, never()).getExpressionValue();
-                verify(collectionEditorPresenterSpy, never()).getMapValue();
             } else {
-                verify(collectionEditorPresenterSpy, times(1)).getMapValue();
-                verify(collectionEditorPresenterSpy, never()).getListValue();
+                verify(collectionEditorPresenterSpy, times(1)).getValueFromCreateCollection();
                 verify(collectionEditorPresenterSpy, never()).getExpressionValue();
             }
         }

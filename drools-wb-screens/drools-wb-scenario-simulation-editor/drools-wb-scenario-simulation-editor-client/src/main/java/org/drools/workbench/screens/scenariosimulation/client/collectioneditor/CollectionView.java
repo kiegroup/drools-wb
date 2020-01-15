@@ -22,6 +22,7 @@ import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.UListElement;
+import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 
 /**
  * Interface defining the contract for actual implementations
@@ -185,9 +186,9 @@ public interface CollectionView {
      * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
      * @param simplePropertiesMap
      * @param expandablePropertiesMap
-     * @param isRule
+     * @param type
      */
-    void initListStructure(String key, Map<String, String> simplePropertiesMap, Map<String, Map<String, String>> expandablePropertiesMap, boolean isRule);
+    void initListStructure(String key, Map<String, String> simplePropertiesMap, Map<String, Map<String, String>> expandablePropertiesMap, ScenarioSimulationModel.Type type);
 
     /**
      * Set the <b>name</b> of the property and the <code>Map</code>s to be used to create the skeleton of the current <code>CollectionViewImpl</code> editor
@@ -195,9 +196,9 @@ public interface CollectionView {
      * @param key The key representing the property, i.e Classname#propertyname (e.g Author#books)
      * @param keyPropertyMap
      * @param valuePropertyMap
-     * @param isRule
+     * @param type
      */
-    void initMapStructure(String key, Map<String, String> keyPropertyMap, Map<String, String> valuePropertyMap, boolean isRule);
+    void initMapStructure(String key, Map<String, String> keyPropertyMap, Map<String, String> valuePropertyMap, ScenarioSimulationModel.Type type);
 
     void setFixedHeight(double value, Style.Unit px);
 
