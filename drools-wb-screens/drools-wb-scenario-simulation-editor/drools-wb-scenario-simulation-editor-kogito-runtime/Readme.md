@@ -15,6 +15,11 @@ Some tricks: to avoid CORS and other policy-related issues:
 
 1. set chrome://flags/#allow-insecure-localhost for invalid certificates error
 2. start chrome from cli with the command `chrome --allow-file-access-from-files` to allow loading from file.
+3. Open index.html file:///(path_to_file)/index.html and get no dev compliation error.
+4. window.gwtEditorBeans.get("ScenarioSimulationEditorKogitoRuntimeScreen").get().setContent("") inside dev console
+5. edit the asset
+6. invoke window.gwtEditorBeans.get("ScenarioSimulationEditorKogitoRuntimeScreen").get().getContent() inside dev console and store the returned xml
+7. invoke window.gwtEditorBeans.get("ScenarioSimulationEditorKogitoRuntimeScreen").get().setContent method with the stored xml
 
 VSCODE Integration
 ------------------
@@ -36,9 +41,11 @@ See also https://medium.com/kie-foundation/building-your-own-custom-editors-with
 Then, after launched VSCODE
 
 
-1-) Open index.html file:///(path_to_file)/index.html
+1. Open index.html file:///(path_to_file)/index.html
 and get no dev compliation error.
-2-) window.gwtEditorBeans.get("ScenarioSimulationEditorKogitoRuntimeScreen").get().setContent("") (inside console ?)
+2. window.gwtEditorBeans.get("ScenarioSimulationEditorKogitoRuntimeScreen").get().setContent("") (inside console ?)
+
+
 
 
 
