@@ -18,10 +18,13 @@ package org.drools.workbench.screens.dtablexls.backend.server.conversion;
 
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.drools.template.parser.DecisionTableParseException;
+import org.drools.workbench.models.guided.dtable.shared.conversion.ConversionMessage;
 import org.drools.workbench.models.guided.dtable.shared.conversion.ConversionResult;
+import org.drools.workbench.models.guided.dtable.shared.model.DTCellValue52;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
 import org.drools.workbench.screens.drltext.service.DRLTextEditorService;
 import org.drools.workbench.screens.drltext.type.DRLResourceTypeDefinition;
@@ -50,6 +53,7 @@ import org.kie.workbench.common.services.shared.project.KieModule;
 import org.kie.workbench.common.services.shared.project.KieModuleService;
 import org.kie.workbench.common.services.shared.project.ProjectImportsService;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.uberfire.backend.vfs.Path;
@@ -110,6 +114,9 @@ public class DecisionTableXLSToDecisionTableGuidedConverterTest {
 
     @Mock
     private Path expectedProjectImportsPath;
+
+    @Captor
+    private ArgumentCaptor<GuidedDecisionTable52> decisionTableArgumentCaptor;
 
     private DecisionTableXLSResourceTypeDefinition xlsDTableType = new DecisionTableXLSResourceTypeDefinition(new Decision());
     private DecisionTableXLSXResourceTypeDefinition xlsxDTableType = new DecisionTableXLSXResourceTypeDefinition(new Decision());
@@ -258,6 +265,53 @@ public class DecisionTableXLSToDecisionTableGuidedConverterTest {
                                 any(String.class),
                                 any(GuidedDecisionTable52.class),
                                 any(String.class));
+    }
+
+    @Test
+    public void checkConversionOfXLSXFilesRHDM1159() {
+        final InputStream is = this.getClass().getResourceAsStream("RHDM-1159.xls");
+        when(ioService.newInputStream(any(org.uberfire.java.nio.file.Path.class))).thenReturn(is);
+        final ConversionResult result = converter.convert(path);
+        assertNotNull(result);
+        final List<ConversionMessage> messages = result.getMessages();
+        assertEquals(6,
+                     messages.size());
+        assertTrue(messages.get(0).getMessage().startsWith("Created Import"));
+        assertTrue(messages.get(1).getMessage().startsWith("Created Import"));
+        assertTrue(messages.get(2).getMessage().startsWith("Created Import"));
+        assertTrue(messages.get(3).getMessage().startsWith("Created Import"));
+        assertTrue(messages.get(4).getMessage().startsWith("Created Import"));
+        assertTrue(messages.get(5).getMessage().startsWith("Created Guided Decision Table 'SampleAUWRule"));
+
+        verify(guidedDecisionTableService,
+               times(1)).create(any(Path.class),
+                                any(String.class),
+                                decisionTableArgumentCaptor.capture(),
+                                any(String.class));
+
+        final GuidedDecisionTable52 dtable = decisionTableArgumentCaptor.getValue();
+        assertNotNull(dtable);
+
+        final List<List<DTCellValue52>> data = dtable.getData();
+        assertEquals(5, data.size());
+        assertRHDM1159RowData(data.get(0), "abc", "AGENT", "RB", "\"FAIL\"");
+        assertRHDM1159RowData(data.get(1), "sdf", "AGENT", "RB", "\"FAIL\"");
+        assertRHDM1159RowData(data.get(2), "dsds", "AGENT", "RB", "\"FAIL\"");
+        assertRHDM1159RowData(data.get(3), "sdddv", "AGENT", "RB", "\"FAIL\"");
+        assertRHDM1159RowData(data.get(4), "", "", "", "");
+    }
+
+    private void assertRHDM1159RowData(final List<DTCellValue52> rowData,
+                                       final String cell1Value,
+                                       final String cell2Value,
+                                       final String cell4Value,
+                                       final String cell5Value) {
+        assertEquals(8, rowData.size());
+        assertEquals(cell1Value, rowData.get(3).getStringValue());
+        assertEquals(cell2Value, rowData.get(4).getStringValue());
+        assertEquals(true, rowData.get(5).getBooleanValue());
+        assertEquals(cell4Value, rowData.get(6).getStringValue());
+        assertEquals(cell5Value, rowData.get(7).getStringValue());
     }
 
     @Test(expected = DecisionTableParseException.class)

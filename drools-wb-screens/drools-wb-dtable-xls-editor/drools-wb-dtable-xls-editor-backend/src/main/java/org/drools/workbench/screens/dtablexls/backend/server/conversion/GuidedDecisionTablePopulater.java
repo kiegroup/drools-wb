@@ -479,6 +479,7 @@ public class GuidedDecisionTablePopulater {
                                          final List<ParameterizedValueBuilder> valueBuilders,
                                          final int maxRowCount) {
         if (varName.equals("")) {
+            boolean dataAdded = false;
             for (ParameterizedValueBuilder pvb : valueBuilders) {
                 if (pvb instanceof LiteralValueBuilder) {
                     for (int iRowIndex = 0; iRowIndex < maxRowCount; iRowIndex++) {
@@ -495,8 +496,22 @@ public class GuidedDecisionTablePopulater {
                                                                                                       _rowIndex,
                                                                                                       _columnIndex));
                         dtableRow.add(fragmentCell);
+                        dataAdded = true;
                     }
                     break;
+                }
+            }
+
+            // See https://issues.redhat.com/browse/RHDM-1159. If a XLS column contained two Patterns, one without
+            // a constraint there is no corresponding ParameterizedValueBuilder and hence no cell is created so default
+            // to a boolean cell. It is not possible to add an additional LiteralValueBuilder as we don't know at the
+            // stage in addIndirectSourceBuildersColumns() whether the cell needs to be before, after or in the middle
+            // of other ParameterizedValueBuilders for which there is a Template binding.
+            if (!dataAdded) {
+                for (int iRowIndex = 0; iRowIndex < maxRowCount; iRowIndex++) {
+                    final List<DTCellValue52> dtableRow = dtable.getData().get(iRowIndex);
+                    final DTCellValue52 fragmentCell = new DTCellValue52(true);
+                    dtableRow.add(fragmentCell);
                 }
             }
         } else {
