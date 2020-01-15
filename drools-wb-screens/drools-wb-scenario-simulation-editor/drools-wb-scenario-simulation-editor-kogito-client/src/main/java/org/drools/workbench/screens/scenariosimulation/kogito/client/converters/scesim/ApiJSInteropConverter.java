@@ -62,6 +62,10 @@ import org.kie.soup.project.datamodel.imports.Imports;
  */
 public class ApiJSInteropConverter {
 
+    private ApiJSInteropConverter() {
+        // Not instantiable
+    }
+
     public static JSIScenarioSimulationModelType getJSIScenarioSimulationModelType(ScenarioSimulationModel source) {
         JSIScenarioSimulationModelType toReturn = new JSIScenarioSimulationModelType();
         toReturn.setVersion(source.getVersion());
@@ -218,13 +222,6 @@ public class ApiJSInteropConverter {
         List<JSIExpressionElementType> toSet = expressionElements.stream()
                 .map(ApiJSInteropConverter::getExpressionElement).collect(Collectors.toList());
         toReturn.setExpressionElement(toSet);
-//        JsArrayLike<JSIExpressionElementType> jsiExpressionElementTypes = getNativeArray();
-//        jsiExpressionElementTypes.setLength(expressionElements.size());
-//        toReturn.setExpressionElement(jsiExpressionElementTypes);
-//        for (int i = 0; i < jsiExpressionElementTypes.getLength(); i++) {
-//            JSIExpressionElementType jsiExpressionElementType = Js.uncheckedCast(getExpressionElement(expressionElements.get(i)));
-//            jsiExpressionElementTypes.setAt(i, jsiExpressionElementType);
-//        }
         return toReturn;
     }
 

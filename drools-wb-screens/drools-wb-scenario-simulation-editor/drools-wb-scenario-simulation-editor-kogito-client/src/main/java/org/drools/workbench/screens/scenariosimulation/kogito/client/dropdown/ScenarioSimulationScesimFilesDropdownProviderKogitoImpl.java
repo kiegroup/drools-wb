@@ -27,17 +27,9 @@ import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdown
 @Dependent
 public class ScenarioSimulationScesimFilesDropdownProviderKogitoImpl implements KieAssetsDropdownItemsProvider {
 
-//    @Inject
-//    protected ScesimFilesProvider scesimFilesProvider;
-
     @Override
     public void getItems(Consumer<List<KieAssetsDropdownItem>> assetListConsumer) {
-//        List<KieAssetsDropdownItem> toAccept = scesimFilesProvider.getFiles().stream().map(this::getKieAssetsDropdownItem).collect(Collectors.toList());
         List<KieAssetsDropdownItem> toAccept = new ArrayList<>();
         assetListConsumer.accept(toAccept);
     }
-
-//    protected KieAssetsDropdownItem getKieAssetsDropdownItem(final String asset) {
-//        return new KieAssetsDropdownItem(asset, "", asset, new HashMap<>());
-//    }
 }
