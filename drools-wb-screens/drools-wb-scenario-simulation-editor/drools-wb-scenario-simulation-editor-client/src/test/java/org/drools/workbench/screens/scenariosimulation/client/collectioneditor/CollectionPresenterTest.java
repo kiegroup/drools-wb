@@ -44,7 +44,7 @@ import static org.drools.workbench.screens.scenariosimulation.client.TestPropert
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.ITEM_ID;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.JSON_ARRAY_SIZE;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.KEY_SET;
-import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.TEST_JSON;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.TEST_JSON_STRING;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.TEST_KEY;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.TEST_PROPERTYNAME;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.UPDATED_VALUE;
@@ -458,7 +458,10 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
         reset(collectionEditorPresenterSpy);
         when(collectionViewMock.isListWidget()).thenReturn(isListWidget);
         when(collectionViewMock.isExpressionWidget()).thenReturn(isExpressionList);
-        collectionEditorPresenterSpy.setValue(TEST_JSON);
+        if (isExpressionList) {
+           when(collectionEditorPresenterSpy.getJSONValue(TEST_JSON_STRING)).thenReturn(new JSONString(TEST_JSON_STRING));
+        }
+        collectionEditorPresenterSpy.setValue(TEST_JSON_STRING);
         if (isExpressionList) {
             verify(collectionEditorPresenterSpy, times(1)).populateExpression(isA(JSONValue.class));
             verify(collectionEditorPresenterSpy, never()).populateMap(any());

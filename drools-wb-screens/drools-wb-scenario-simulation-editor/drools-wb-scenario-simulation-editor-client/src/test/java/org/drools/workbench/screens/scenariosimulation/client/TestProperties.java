@@ -91,6 +91,7 @@ public class TestProperties {
     public static final Map<String, String> TEST_VALUE_PROPERTYY_MAP = Collections.singletonMap("TEST-VALUE1", "TEST-VALUE2");
 
     public static final String TEST_JSON = "TEST-JSON";
+    public static final String TEST_JSON_STRING = "\"TEST-JSON\"";
     public static final String TEST_CLASSNAME = "TEST-CLASSNAME";
     public static final String TEST_KEY = TEST_CLASSNAME + "#" + TEST_PROPERTYNAME;
     public static final int CHILD_COUNT = 3;
