@@ -98,7 +98,7 @@ public class CollectionPresenter implements CollectionView.Presenter {
             return;
         }
         JSONValue jsonValue = getJSONValue(jsonString);
-        if (collectionView.isExpressionWidget()) {
+        if (jsonValue instanceof JSONString) {
             populateExpression(jsonValue);
         } else {
             if (collectionView.isListWidget()) {

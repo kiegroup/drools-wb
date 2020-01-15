@@ -171,12 +171,11 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
      * @param simplePropertiesMap
      * @param expandablePropertiesMap
      * @param isRule
-     * @param isExpression
      */
     @Override
-    public void initListStructure(String key, Map<String, String> simplePropertiesMap, Map<String, Map<String, String>> expandablePropertiesMap, boolean isRule, boolean isExpression) {
+    public void initListStructure(String key, Map<String, String> simplePropertiesMap, Map<String, Map<String, String>> expandablePropertiesMap, boolean isRule) {
         listWidget = true;
-        commonInit(isRule, isExpression);
+        commonInit(isRule);
         createLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.createLabelList());
         collectionCreationModeLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.collectionListCreation());
         collectionCreationCreateLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.createLabelList());
@@ -193,13 +192,12 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
      * @param keyPropertyMap
      * @param valuePropertyMap
      * @param isRule
-     * @param isExpression
      *
      */
     @Override
-    public void initMapStructure(String key, Map<String, String> keyPropertyMap, Map<String, String> valuePropertyMap, boolean isRule, boolean isExpression) {
+    public void initMapStructure(String key, Map<String, String> keyPropertyMap, Map<String, String> valuePropertyMap, boolean isRule) {
         listWidget = false;
-        commonInit(isRule, isExpression);
+        commonInit(isRule);
         createLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.createLabelMap());
         collectionCreationModeLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.collectionMapCreation());
         collectionCreationCreateLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.createLabelMap());
@@ -209,19 +207,13 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
         presenter.initMapStructure(key, keyPropertyMap, valuePropertyMap, this);
     }
 
-    protected void commonInit(boolean isRule, boolean isExpression) {
+    protected void commonInit(boolean isRule) {
         ruleScenario = isRule;
         saveButton.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.saveButton());
         cancelButton.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.cancelButton());
         removeButton.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.removeButton());
         addItemButtonLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.collectionEditorAddNewItem());
-        if (isExpression) {
-            defineCollectionRadio.setChecked(true);
-            enableCreateCollectionContainer(false);
-        } else {
-            createCollectionRadio.setChecked(true);
-            enableCreateCollectionContainer(true);
-        }
+        enableCreateCollectionContainer(true);
         if (isRule) {
             initAndRegisterHandlerForExpressionTextArea();
         }
@@ -311,6 +303,7 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
 
     @Override
     public void setExpression(String expressionValue) {
+        enableCreateCollectionContainer(false);
         expressionElement.setValue(expressionValue);
     }
 
@@ -330,6 +323,8 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
         showCreateCollectionContainer(toEnable);
         showDefineCollectionContainer(!toEnable);
         showAddItemButtonContainer(toEnable);
+        createCollectionRadio.setChecked(toEnable);
+        defineCollectionRadio.setChecked(!toEnable);
         if (listWidget) {
             createLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.createLabelList());
         } else {
