@@ -54,7 +54,7 @@ public class KogitoEditorDock implements AuthoringEditorDock {
         // Initializing the handlers
         installedHandlers.forEach(handler -> {
             Command initCommand = () -> setActiveHandler(handler);
-            handler.init(() -> setActiveHandler(handler));
+            handler.init(initCommand);
         });
     }
 
