@@ -240,7 +240,7 @@ public class ScesimFilesProvider {
             "    <imports/>\n" +
             "  </imports>" +
             "</ScenarioSimulationModel>";
-    private final static String populatedScesimRule =
+    private static final String populatedScesimRule =
             "<ScenarioSimulationModel version=\"1.8\">\n" +
                     "  <simulation>\n" +
                     "    <scesimModelDescriptor>" +
@@ -612,21 +612,21 @@ public class ScesimFilesProvider {
                     "  </imports>\n" +
                     "</ScenarioSimulationModel>";
 
-    public static final Map<String, String> fileMap = new HashMap<String, String>() {
-        {
-            put("populatedScesimADmn", populatedScesimDmn);
-            put("populatedScesimBDmn", populatedScesimDmn);
-            put("populatedScesimCDmn", populatedScesimDmn);
-            put("populatedScesimARule", populatedScesimRule);
-            put("populatedScesimBRule", populatedScesimRule);
-            put("populatedScesimCRule", populatedScesimRule);
-            put("newScesimRule", newScesimRule);
-        }
-    };
+    private static final Map<String, String> FILE_MAP = new HashMap<>();
+
+    static {
+        FILE_MAP.put("populatedScesimADmn", populatedScesimDmn);
+        FILE_MAP.put("populatedScesimBDmn", populatedScesimDmn);
+        FILE_MAP.put("populatedScesimCDmn", populatedScesimDmn);
+        FILE_MAP.put("populatedScesimARule", populatedScesimRule);
+        FILE_MAP.put("populatedScesimBRule", populatedScesimRule);
+        FILE_MAP.put("populatedScesimCRule", populatedScesimRule);
+        FILE_MAP.put("newScesimRule", newScesimRule);
+    }
 
     public String getScesimFile(String fileName) {
-        if (fileMap.get(fileName) != null) {
-            return fileMap.get(fileName);
+        if (FILE_MAP.get(fileName) != null) {
+            return FILE_MAP.get(fileName);
         } else {
             return newScesimRule;
         }
