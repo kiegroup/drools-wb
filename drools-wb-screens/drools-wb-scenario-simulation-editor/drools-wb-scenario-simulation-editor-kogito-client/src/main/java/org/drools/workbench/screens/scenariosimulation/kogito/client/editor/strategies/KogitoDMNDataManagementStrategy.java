@@ -34,8 +34,6 @@ import org.uberfire.backend.vfs.PathFactory;
 
 public class KogitoDMNDataManagementStrategy extends AbstractDMNDataManagementStrategy {
 
-//    private final KogitoDMNTypeService kogitoDmnTypeService;
-
     private KogitoDMNService dmnTypeService;
 
     public KogitoDMNDataManagementStrategy(EventBus eventBus, KogitoDMNService dmnTypeService) {
@@ -65,7 +63,4 @@ public class KogitoDMNDataManagementStrategy extends AbstractDMNDataManagementSt
             callback.callback(factModelTuple);
         };
     }
-
-
-
 }

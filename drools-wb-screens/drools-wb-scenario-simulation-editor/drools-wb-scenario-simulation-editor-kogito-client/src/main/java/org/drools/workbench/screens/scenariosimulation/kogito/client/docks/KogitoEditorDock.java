@@ -39,7 +39,6 @@ public class KogitoEditorDock implements AuthoringEditorDock {
     protected ManagedInstance<WorkbenchDocksHandler> installedHandlers;
 
     protected String authoringPerspectiveIdentifier = null;
-    //    protected String currentPerspectiveIdentifier = null;
     protected WorkbenchDocksHandler activeHandler = null;
     protected UberfireDock[] activeDocks;
 
@@ -55,7 +54,7 @@ public class KogitoEditorDock implements AuthoringEditorDock {
         // Initializing the handlers
         installedHandlers.forEach(handler -> {
             Command initCommand = () -> setActiveHandler(handler);
-            handler.init(initCommand);
+            handler.init(() -> setActiveHandler(handler));
         });
     }
 
@@ -89,10 +88,8 @@ public class KogitoEditorDock implements AuthoringEditorDock {
 
     protected void setActiveHandler(WorkbenchDocksHandler handler) {
         // If there's an active handler let's check if it should refresh docks
-        if (activeHandler != null) {
-            if (activeHandler.equals(handler) && !activeHandler.shouldRefreshDocks()) {
-                return;
-            }
+        if (activeHandler != null && activeHandler.equals(handler) && !activeHandler.shouldRefreshDocks()) {
+            return;
         }
 
         // setting the new handler as active
