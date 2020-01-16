@@ -57,7 +57,7 @@ public class ScenarioExpressionCellTextAreaSingletonDOMElementFactory extends Ab
     }
 
     protected void checkExpressionSyntax() {
-        widget.setValue(ExpressionUtils.checkExpressionSyntax(getValue()));
+        widget.setValue(ExpressionUtils.ensureExpressionSyntax(getValue()));
     }
 
     protected void checkEmptyExpression(KeyDownEvent event) {

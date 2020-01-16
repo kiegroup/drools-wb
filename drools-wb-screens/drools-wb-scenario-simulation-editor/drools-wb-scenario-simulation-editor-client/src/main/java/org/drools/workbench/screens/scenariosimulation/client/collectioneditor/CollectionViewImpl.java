@@ -437,7 +437,7 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
 
     protected void checkExpressionSyntax() {
         if (RULE.equals(scenarioType)) {
-            expressionElement.setValue(ExpressionUtils.checkExpressionSyntax(expressionElement.getValue()));
+            expressionElement.setValue(ExpressionUtils.ensureExpressionSyntax(expressionElement.getValue()));
         }
     }
 

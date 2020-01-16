@@ -468,6 +468,11 @@ public class AbstractScesimGridModelTest extends AbstractScenarioSimulationTest 
     }
 
     @Test
+    public void commonAddRow() {
+        abstractScesimGridModelSpy.commonAddRow(ROW_INDEX);
+    }
+
+    @Test
     public void updateIndexColumn() {
         abstractScesimGridModelSpy.updateIndexColumn();
         verify(abstractScesimGridModelSpy, never()).setCellValue(anyInt(), anyInt(), isA(ScenarioGridCellValue.class));
@@ -707,9 +712,9 @@ public class AbstractScesimGridModelTest extends AbstractScenarioSimulationTest 
         factory = abstractScesimGridModelSpy.getDOMElementFactory("java.util.List", ScenarioSimulationModel.Type.DMN, FactMappingValueType.NOT_EXPRESSION);
         assertSame(collectionEditorSingletonDOMElementFactoryTest, factory);
         factory = abstractScesimGridModelSpy.getDOMElementFactory("java.util.List", ScenarioSimulationModel.Type.DMN, FactMappingValueType.EXPRESSION);
-        assertSame(collectionEditorSingletonDOMElementFactoryTest, factory);
+        assertSame(scenarioCellTextAreaSingletonDOMElementFactoryTest, factory);
         factory = abstractScesimGridModelSpy.getDOMElementFactory("java.util.List", ScenarioSimulationModel.Type.RULE, FactMappingValueType.EXPRESSION);
-        assertSame(collectionEditorSingletonDOMElementFactoryTest, factory);
+        assertSame(scenarioExpressionCellTextAreaSingletonDOMElementFactoryMock, factory);
     }
 
     @Test

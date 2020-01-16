@@ -29,12 +29,12 @@ public class ExpressionUtils {
     }
 
     /**
-     * It checks if the given string starts with <code>EXPRESSION_VALUE_PREFIX</code>. If TRUE, it simply returns
+     * It ensures if the given string starts with <code>EXPRESSION_VALUE_PREFIX</code>. If TRUE, it simply returns
      * the given string. Otherwise, it adds <code>EXPRESSION_VALUE_PREFIX</code> as prefix of the given string.
      * @param expressionValue
      * @return
      */
-    public static String checkExpressionSyntax(String expressionValue) {
+    public static String ensureExpressionSyntax(String expressionValue) {
         if (expressionValue != null && !expressionValue.startsWith(EXPRESSION_VALUE_PREFIX)) {
             if (expressionValue.startsWith(MVEL_ESCAPE_SYMBOL)) {
                 return expressionValue.replaceFirst(MVEL_ESCAPE_SYMBOL, EXPRESSION_VALUE_PREFIX);

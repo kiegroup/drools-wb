@@ -25,31 +25,31 @@ public class ExpressionUtilsTest {
 
     @Test
     public void checkExpressionSyntax_Null() {
-        assertNull(ExpressionUtils.checkExpressionSyntax(null));
+        assertNull(ExpressionUtils.ensureExpressionSyntax(null));
     }
 
     @Test
     public void checkExpressionSyntax_Empty() {
-        assertEquals(ConstantHolder.EXPRESSION_VALUE_PREFIX, ExpressionUtils.checkExpressionSyntax(""));
+        assertEquals(ConstantHolder.EXPRESSION_VALUE_PREFIX, ExpressionUtils.ensureExpressionSyntax(""));
     }
 
     @Test
     public void checkExpressionSyntax_StringWithNoPrefix() {
-        assertEquals(ConstantHolder.EXPRESSION_VALUE_PREFIX + "Test", ExpressionUtils.checkExpressionSyntax("Test"));
+        assertEquals(ConstantHolder.EXPRESSION_VALUE_PREFIX + "Test", ExpressionUtils.ensureExpressionSyntax("Test"));
     }
 
     @Test
     public void checkExpressionSyntax_StringWithSpacePrefix() {
-        assertEquals(ConstantHolder.EXPRESSION_VALUE_PREFIX + "Test", ExpressionUtils.checkExpressionSyntax(" Test"));
+        assertEquals(ConstantHolder.EXPRESSION_VALUE_PREFIX + "Test", ExpressionUtils.ensureExpressionSyntax(" Test"));
     }
 
     @Test
     public void checkExpressionSyntax_StringWithMVelPrefix() {
-        assertEquals(ConstantHolder.EXPRESSION_VALUE_PREFIX + "Test", ExpressionUtils.checkExpressionSyntax(ConstantsHolder.MVEL_ESCAPE_SYMBOL + "Test"));
+        assertEquals(ConstantHolder.EXPRESSION_VALUE_PREFIX + "Test", ExpressionUtils.ensureExpressionSyntax(ConstantsHolder.MVEL_ESCAPE_SYMBOL + "Test"));
     }
 
     @Test
     public void checkExpressionSyntax_StringWithExpressionValuePrefix() {
-        assertEquals(ConstantHolder.EXPRESSION_VALUE_PREFIX + "Test", ExpressionUtils.checkExpressionSyntax(ConstantHolder.EXPRESSION_VALUE_PREFIX + "Test"));
+        assertEquals(ConstantHolder.EXPRESSION_VALUE_PREFIX + "Test", ExpressionUtils.ensureExpressionSyntax(ConstantHolder.EXPRESSION_VALUE_PREFIX + "Test"));
     }
 }
