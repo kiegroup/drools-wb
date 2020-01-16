@@ -24,7 +24,6 @@ import com.ait.lienzo.client.core.shape.Text;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
-import org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridCell;
 import org.uberfire.ext.wires.core.grids.client.model.GridCell;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
@@ -120,8 +119,7 @@ public class ScenarioGridColumnRenderer extends StringColumnRenderer {
         try {
             JSONValue jsonValue = JSONParser.parseStrict(jsonString);
             if (jsonValue instanceof JSONString) {
-                String label = isList ? "List() " : "Map() ";
-                return label + ConstantHolder.EXPRESSION;
+                return isList ? "List()" : "Map()";
             } else {
                 String toFormat = isList ? "List(%s)" : "Map(%s)";
                 int size = -1;
