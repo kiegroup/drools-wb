@@ -18,7 +18,7 @@
 
   <properties>
     <jsonix-scripts.version>3.0.0</jsonix-scripts.version>
-    <gwt-jsonix-schema-compiler.version>1.1.0-SNAPSHOT</gwt-jsonix-schema-compiler.version>
+    <gwt-jsonix-schema-compiler.version>1.1.0</gwt-jsonix-schema-compiler.version>
     <gwt-interop-utils.version>0.3.0</gwt-interop-utils.version>
     <jsinterop-annotations.version>1.0.2</jsinterop-annotations.version>
     <maven-jaxb2-plugin.version>0.14.0</maven-jaxb2-plugin.version>
