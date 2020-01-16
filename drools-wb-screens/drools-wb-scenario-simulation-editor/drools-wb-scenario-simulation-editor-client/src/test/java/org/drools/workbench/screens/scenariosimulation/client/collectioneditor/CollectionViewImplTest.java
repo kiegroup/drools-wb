@@ -293,14 +293,14 @@ public class CollectionViewImplTest extends AbstractCollectionEditorTest {
     @Test
     public void checkExpressionSyntax_Rule() {
         collectionEditorViewImplSpy.scenarioType = ScenarioSimulationModel.Type.RULE;
-        collectionEditorViewImplSpy.checkExpressionSyntax();
+        collectionEditorViewImplSpy.ensureExpressionSyntax();
         verify(expressionElementMock, times(1)).setValue(anyString());
     }
 
     @Test
     public void checkExpressionSyntax_DMN() {
         collectionEditorViewImplSpy.scenarioType = ScenarioSimulationModel.Type.DMN;
-        collectionEditorViewImplSpy.checkExpressionSyntax();
+        collectionEditorViewImplSpy.ensureExpressionSyntax();
         verify(expressionElementMock, never()).setValue(anyString());
     }
 

@@ -226,11 +226,11 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
      * It inits and registers the native "input" , which is not managed by GWT
      */
     protected void initAndRegisterHandlerForExpressionTextArea() {
-        checkExpressionSyntax();
+        ensureExpressionSyntax();
         DOM.sinkBitlessEvent(expressionElement, ConstantHolder.INPUT);
         DOM.setEventListener(expressionElement, event -> {
             if (ConstantHolder.INPUT.contains(event.getType()))  {
-                checkExpressionSyntax();}
+                ensureExpressionSyntax();}
         });
     }
 
@@ -435,7 +435,7 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
         CollectionEditorUtils.toggleRowExpansion(faAngleRight, toExpand);
     }
 
-    protected void checkExpressionSyntax() {
+    protected void ensureExpressionSyntax() {
         if (RULE.equals(scenarioType)) {
             expressionElement.setValue(ExpressionUtils.ensureExpressionSyntax(expressionElement.getValue()));
         }
