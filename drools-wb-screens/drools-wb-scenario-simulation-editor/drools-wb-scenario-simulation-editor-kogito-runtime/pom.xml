@@ -1043,6 +1043,13 @@
         </plugins>
       </build>
     </profile>
+    <!-- NEEDED TO GENERATE jacoco.exec -->
+    <profile>
+      <id>sonarcloud-analysis</id>
+      <properties>
+        <!-- Excluding the entire webapp folder from coverage statistics. -->
+        <sonar.coverage.exclusions>${basedir}/src/main/webapp/*.*</sonar.coverage.exclusions>
+      </properties>
+    </profile>
   </profiles>
-
 </project>
