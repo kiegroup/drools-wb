@@ -112,11 +112,11 @@ public class CheatSheetViewImpl
     @DataField("dmnCheatSheetList6")
     protected LIElement dmnCheatSheetList6 = Document.get().createLIElement();
 
+    @DataField("dmnCheatSheetList7")
+    protected LIElement dmnCheatSheetList7 = Document.get().createLIElement();
+
     @DataField("dmnCheatSheetParagraph6")
     protected ParagraphElement dmnCheatSheetParagraph6 = Document.get().createPElement();
-
-    public CheatSheetViewImpl() {
-    }
 
     @Override
     public void init(Presenter presenter) {
@@ -181,6 +181,7 @@ public class CheatSheetViewImpl
         dmnCheatSheetList6.setInnerHTML("<i>" + ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet15() + "</i>"
                                                 + " " + ScenarioSimulationEditorConstants.INSTANCE.and() + " " + "<i>" + ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet16() + "</i>"
                                                 + ScenarioSimulationEditorConstants.INSTANCE.forExample() + " " + "<tt>[1 .. 10]</tt> or <tt>[2, 3, 4, 5]</tt>");
+        dmnCheatSheetList7.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet18());
         dmnCheatSheetParagraph6.setInnerHTML(ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet17());
     }
 
