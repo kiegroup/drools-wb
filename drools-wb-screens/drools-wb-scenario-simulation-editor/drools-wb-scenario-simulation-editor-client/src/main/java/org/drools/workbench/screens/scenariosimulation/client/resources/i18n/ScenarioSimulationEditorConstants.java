@@ -142,6 +142,8 @@ public interface ScenarioSimulationEditorConstants
 
     String dmnCheatSheet17();
 
+    String dmnCheatSheet18();
+
     String forExample();
 
     String runScenarioSimulation();
