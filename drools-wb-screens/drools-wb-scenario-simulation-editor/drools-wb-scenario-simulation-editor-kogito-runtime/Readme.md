@@ -40,13 +40,6 @@ See also https://medium.com/kie-foundation/building-your-own-custom-editors-with
 
 Then, after launched VSCODE
 
-
 1. Open index.html file:///(path_to_file)/index.html
 and get no dev compliation error.
 2. window.gwtEditorBeans.get("ScenarioSimulationEditorKogitoRuntimeScreen").get().setContent("") (inside console ?)
-
-
-
-
-
-    
