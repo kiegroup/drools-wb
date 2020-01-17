@@ -15,15 +15,21 @@
  */
 package org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds;
 
+import javax.inject.Inject;
+
 import org.drools.workbench.screens.scenariosimulation.kogito.client.util.AbstractKogitoDMNService;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
+import org.kie.workbench.common.kogito.webapp.base.client.workarounds.KogitoResourceContentService;
 import org.uberfire.backend.vfs.Path;
 
 public class KogitoDMNServiceRuntimeImpl extends AbstractKogitoDMNService {
 
+    @Inject
+    private KogitoResourceContentService resourceContentService;
+
     @Override
     public void getDMNContent(Path path, RemoteCallback<String> remoteCallback, ErrorCallback<Object> errorCallback) {
-        // TODO {gcardosi}
+        resourceContentService.loadFile(path.toURI(), remoteCallback, errorCallback);
     }
 }
