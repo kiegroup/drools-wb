@@ -679,7 +679,6 @@
           <deploy>${project.build.directory}/gwt-symbols-deploy</deploy>
           <localWorkers>1</localWorkers>
           <extraJvmArgs>-Xmx6g -Xms1g -Xss1M -XX:CompileThreshold=7000 -Derrai.jboss.home=${errai.jboss.home} -Derrai.marshalling.server.classOutput=${project.build.outputDirectory} -Derrai.dynamic_validation.enabled=true -Dorg.kie.demo=true -Dorg.kie.clean.onstartup=true -Dorg.uberfire.nio.git.ssh.enabled=true -Djava.util.prefs.syncInterval=2000000 -Dorg.uberfire.async.executor.safemode=true -Derrai.marshalling.very_short_names=false -Dappformer.experimental.features=true -Djava.io.tmpdir=${project.build.directory}</extraJvmArgs>
-<!--          <draftCompile>false</draftCompile>-->
           <module>org.drools.workbench.screens.scenariosimulation.webapp.DroolsWorkbenchScenarioSimulationKogitoRuntime</module>
           <logLevel>INFO</logLevel>
           <noServer>false</noServer>
@@ -1048,7 +1047,7 @@
       <id>sonarcloud-analysis</id>
       <properties>
         <!-- Excluding the entire webapp folder from coverage statistics. -->
-        <sonar.coverage.exclusions>${basedir}/src/main/webapp/*.*</sonar.coverage.exclusions>
+        <sonar.coverage.exclusions>webapp/**/*</sonar.coverage.exclusions>
       </properties>
     </profile>
   </profiles>
