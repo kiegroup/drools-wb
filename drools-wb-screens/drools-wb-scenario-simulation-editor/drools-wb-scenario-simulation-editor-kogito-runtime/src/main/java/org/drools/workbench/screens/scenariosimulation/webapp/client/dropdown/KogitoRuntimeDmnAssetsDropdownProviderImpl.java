@@ -33,6 +33,7 @@ import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdown
 public class KogitoRuntimeDmnAssetsDropdownProviderImpl implements DmnAssetsDropdownProvider {
 
     private static final String FILE_SUFFIX = "dmn";
+
     @Inject
     private KogitoResourceContentService resourceContentService;
 

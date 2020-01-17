@@ -21,7 +21,6 @@ import javax.inject.Inject;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.util.AbstractKogitoDMNService;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
-import org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds.TestingVFSService;
 import org.uberfire.backend.vfs.Path;
 
 @ApplicationScoped
@@ -29,7 +28,6 @@ public class KogitoDMNServiceTestingImpl extends AbstractKogitoDMNService {
 
     @Inject
     private TestingVFSService testingVFSService;
-
 
     @Override
     public void getDMNContent(final Path path, final RemoteCallback<String> remoteCallback, final ErrorCallback<Object> errorCallback) {
