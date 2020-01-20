@@ -362,7 +362,5 @@ public interface ScenarioSimulationEditorConstants
 
     String testToolClearSelection();
 
-    String ruleCheatSheetBackground();
-
-    String dmnCheatSheetBackground();
+    String commonCheatSheetBackground();
 }
