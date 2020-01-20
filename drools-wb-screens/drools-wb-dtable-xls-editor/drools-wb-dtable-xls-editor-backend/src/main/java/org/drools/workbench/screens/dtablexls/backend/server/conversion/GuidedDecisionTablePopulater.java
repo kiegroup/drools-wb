@@ -21,12 +21,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
 import org.drools.workbench.models.commons.backend.rule.RuleModelDRLPersistenceImpl;
 import org.drools.workbench.models.datamodel.rule.ActionRetractFact;
+import org.drools.workbench.models.datamodel.rule.FreeFormLine;
 import org.drools.workbench.models.datamodel.rule.IAction;
 import org.drools.workbench.models.datamodel.rule.IPattern;
 import org.drools.workbench.models.datamodel.rule.InterpolationVariable;
@@ -116,61 +118,102 @@ public class GuidedDecisionTablePopulater {
     }
 
     private void addIndirectSourceBuildersColumns() {
-        final List<BRLVariableColumn> variableColumns = new ArrayList<BRLVariableColumn>();
+        //Extract BRLVariableColumn and SourceBuilders for respective potions of the rule
+        final List<BRLVariableColumn> variableColumns = new ArrayList<>();
+        final List<GuidedDecisionTableLHSBuilder> lhsBuilders = new ArrayList<>();
+        final List<GuidedDecisionTableRHSBuilder> rhsBuilders = new ArrayList<>();
         for (GuidedDecisionTableSourceBuilder sb : sourceBuilders) {
             if (sb instanceof GuidedDecisionTableSourceBuilderIndirect) {
                 for (BRLVariableColumn variableColumn : ((GuidedDecisionTableSourceBuilderIndirect) sb).getVariableColumns()) {
                     variableColumns.add(variableColumn);
                 }
             }
+            if (sb instanceof GuidedDecisionTableLHSBuilder) {
+                lhsBuilders.add((GuidedDecisionTableLHSBuilder) sb);
+            }
+            if (sb instanceof GuidedDecisionTableRHSBuilder) {
+                rhsBuilders.add((GuidedDecisionTableRHSBuilder) sb);
+            }
         }
 
-        //Convert the DRL to a RuleModel from which we construct BRLFragment columns
-        final StringBuilder rule = new StringBuilder();
-        if (!(dmo.getPackageName() == null || dmo.getPackageName().isEmpty())) {
-            rule.append("package ").append(dmo.getPackageName()).append("\n");
-        }
-        rule.append("rule 'temp' \n").append("when \n");
-        for (GuidedDecisionTableSourceBuilder sb : sourceBuilders) {
-            if (sb instanceof GuidedDecisionTableLHSBuilder) {
-                rule.append(sb.getResult());
+        //-- PROCESS LHS PATTERNS
+        // For each GuidedDecisionTableLHSBuilder gather IPatterns generated
+        // from each accumulative iteration and convert to RuleModel
+        int previousPatternCount = 0;
+        for (int i = 0; i < lhsBuilders.size(); i++) {
+            //Construct DRL for this and previous builders
+            final StringBuilder rule = new StringBuilder();
+            if (!(dmo.getPackageName() == null || dmo.getPackageName().isEmpty())) {
+                rule.append("package ").append(dmo.getPackageName()).append("\n");
             }
-        }
-        rule.append("\nthen \n");
-        for (GuidedDecisionTableSourceBuilder sb : sourceBuilders) {
-            if (sb instanceof GuidedDecisionTableRHSBuilder) {
-                rule.append(sb.getResult());
+            rule.append("rule 'temp' \n").append("when \n");
+            for (int inner = 0; inner <= i; inner++) {
+                final GuidedDecisionTableLHSBuilder lhsBuilder = lhsBuilders.get(inner);
+                rule.append(lhsBuilder.getResult());
             }
-        }
-        rule.append("end");
-        final RuleModel rm = RuleModelDRLPersistenceImpl.getInstance().unmarshal(rule.toString(),
-                                                                                 Collections.emptyList(),
-                                                                                 dmo);
-        if (rm.lhs != null) {
-            for (IPattern pattern : rm.lhs) {
+            rule.append("\nthen \n");
+            rule.append("end");
+
+            //Convert to RuleModel
+            final RuleModel rm = RuleModelDRLPersistenceImpl.getInstance().unmarshal(rule.toString(),
+                                                                                     Collections.emptyList(),
+                                                                                     dmo);
+
+            if (Objects.nonNull(rm.lhs)) {
+                final Map<IPattern, Map<InterpolationVariable, Integer>> patternTemplateKeys = new HashMap<>();
                 final BRLConditionColumn column = new BRLConditionColumn();
-                column.getDefinition().add(pattern);
                 dtable.getConditions().add(column);
 
-                final Map<InterpolationVariable, Integer> templateKeys = new HashMap<>();
-                final RuleModelVisitor rmv = new RuleModelVisitor(templateKeys);
-                rmv.visit(pattern);
+                //Extract Template Keys for Patterns in iteration
+                boolean allPatternsHaveTemplateKeys = true;
+                for (int iPattern = previousPatternCount; iPattern < rm.lhs.length; iPattern++) {
+                    final IPattern pattern = rm.lhs[iPattern];
+                    final Map<InterpolationVariable, Integer> templateKeys = new HashMap<>();
+                    final RuleModelVisitor rmv = new RuleModelVisitor(templateKeys);
+                    rmv.visit(pattern);
 
-                final List<InterpolationVariable> ivs = new ArrayList<>(templateKeys.keySet());
-                for (BRLVariableColumn variableColumn : variableColumns) {
-                    final Iterator<InterpolationVariable> ivsIts = ivs.iterator();
-                    while (ivsIts.hasNext()) {
-                        final InterpolationVariable iv = ivsIts.next();
-                        if (iv.getVarName().equals(variableColumn.getVarName())) {
-                            final BRLConditionVariableColumn source = (BRLConditionVariableColumn) variableColumn;
-                            final BRLConditionVariableColumn target = makeBRLConditionVariableColumn(source,
-                                                                                                     iv);
-                            column.getChildColumns().add(target);
-                            ivsIts.remove();
+                    patternTemplateKeys.put(pattern, templateKeys);
+
+                    if (templateKeys.isEmpty()) {
+                        allPatternsHaveTemplateKeys = false;
+                    }
+                }
+
+                // Copy definition to column.
+                // If ALL patterns in the iteration have Template keys we can use IPattern otherwise fallback to FreeFormLine
+                if (allPatternsHaveTemplateKeys) {
+                    for (int iPattern = previousPatternCount; iPattern < rm.lhs.length; iPattern++) {
+                        final IPattern pattern = rm.lhs[iPattern];
+                        column.getDefinition().add(pattern);
+                    }
+                } else {
+                    final FreeFormLine ffl = new FreeFormLine();
+                    ffl.setText(lhsBuilders.get(i).getResult());
+                    column.setDefinition(Collections.singletonList(ffl));
+                }
+
+                //Copy variables to column
+                for (int iPattern = previousPatternCount; iPattern < rm.lhs.length; iPattern++) {
+                    final IPattern pattern = rm.lhs[iPattern];
+                    final Map<InterpolationVariable, Integer> templateKeys = patternTemplateKeys.get(pattern);
+                    if (Objects.nonNull(templateKeys)) {
+                        final List<InterpolationVariable> ivs = new ArrayList<>(templateKeys.keySet());
+                        for (BRLVariableColumn variableColumn : variableColumns) {
+                            final Iterator<InterpolationVariable> ivsIts = ivs.iterator();
+                            while (ivsIts.hasNext()) {
+                                final InterpolationVariable iv = ivsIts.next();
+                                if (iv.getVarName().equals(variableColumn.getVarName())) {
+                                    final BRLConditionVariableColumn source = (BRLConditionVariableColumn) variableColumn;
+                                    final BRLConditionVariableColumn target = makeBRLConditionVariableColumn(source, iv);
+                                    column.getChildColumns().add(target);
+                                    ivsIts.remove();
+                                }
+                            }
                         }
                     }
                 }
 
+                //Give the column a header
                 if (column.getChildColumns().isEmpty()) {
                     setZeroParameterConditionColumnHeader(column,
                                                           variableColumns);
@@ -178,7 +221,27 @@ public class GuidedDecisionTablePopulater {
                     setCompositeColumnHeader(column);
                 }
             }
+            previousPatternCount = rm.lhs.length;
         }
+
+        //-- PROCESS RHS ACTIONS
+        final StringBuilder rule = new StringBuilder();
+        if (!(dmo.getPackageName() == null || dmo.getPackageName().isEmpty())) {
+            rule.append("package ").append(dmo.getPackageName()).append("\n");
+        }
+        rule.append("rule 'temp' \n").append("when \n");
+        for (GuidedDecisionTableSourceBuilder sb : lhsBuilders) {
+            rule.append(sb.getResult());
+        }
+
+        rule.append("\nthen \n");
+        for (GuidedDecisionTableSourceBuilder sb : rhsBuilders) {
+            rule.append(sb.getResult());
+        }
+        rule.append("end");
+        final RuleModel rm = RuleModelDRLPersistenceImpl.getInstance().unmarshal(rule.toString(),
+                                                                                 Collections.emptyList(),
+                                                                                 dmo);
 
         if (rm.rhs != null) {
             for (IAction action : rm.rhs) {
@@ -479,7 +542,6 @@ public class GuidedDecisionTablePopulater {
                                          final List<ParameterizedValueBuilder> valueBuilders,
                                          final int maxRowCount) {
         if (varName.equals("")) {
-            boolean dataAdded = false;
             for (ParameterizedValueBuilder pvb : valueBuilders) {
                 if (pvb instanceof LiteralValueBuilder) {
                     for (int iRowIndex = 0; iRowIndex < maxRowCount; iRowIndex++) {
@@ -496,22 +558,8 @@ public class GuidedDecisionTablePopulater {
                                                                                                       _rowIndex,
                                                                                                       _columnIndex));
                         dtableRow.add(fragmentCell);
-                        dataAdded = true;
                     }
                     break;
-                }
-            }
-
-            // See https://issues.redhat.com/browse/RHDM-1159. If a XLS column contained two Patterns, one without
-            // a constraint there is no corresponding ParameterizedValueBuilder and hence no cell is created so default
-            // to a boolean cell. It is not possible to add an additional LiteralValueBuilder as we don't know at the
-            // stage in addIndirectSourceBuildersColumns() whether the cell needs to be before, after or in the middle
-            // of other ParameterizedValueBuilders for which there is a Template binding.
-            if (!dataAdded) {
-                for (int iRowIndex = 0; iRowIndex < maxRowCount; iRowIndex++) {
-                    final List<DTCellValue52> dtableRow = dtable.getData().get(iRowIndex);
-                    final DTCellValue52 fragmentCell = new DTCellValue52(true);
-                    dtableRow.add(fragmentCell);
                 }
             }
         } else {
