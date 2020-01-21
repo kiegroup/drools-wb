@@ -146,7 +146,8 @@ public class CheatSheetViewImpl
         ruleCheatSheetParagraph2.setInnerHTML(ScenarioSimulationEditorConstants.INSTANCE.ruleCheatSheet2() + "<b>" + " " + ScenarioSimulationEditorConstants.INSTANCE.testEditor() + " " + "</b>"
                                                       + ScenarioSimulationEditorConstants.INSTANCE.ruleCheatSheet3() + " <b>" + ScenarioSimulationEditorConstants.INSTANCE.ruleCheatSheet4() + " </b>"
                                                       + ScenarioSimulationEditorConstants.INSTANCE.ruleCheatSheet5());
-        ruleCheatSheetParagraphBackground.setInnerHTML(ScenarioSimulationEditorConstants.INSTANCE.commonCheatSheetBackground());
+
+        ruleCheatSheetParagraphBackground.setInnerHTML(backgroundMessage());
         ruleCheatSheetParagraph3.setInnerHTML(ScenarioSimulationEditorConstants.INSTANCE.ruleCheatSheet6());
         ruleCheatSheetParagraph4.setInnerHTML(ScenarioSimulationEditorConstants.INSTANCE.ruleCheatSheet7());
         ruleCheatSheetList1.setInnerHTML("<tt>=</tt>" + " " + ScenarioSimulationEditorConstants.INSTANCE.ruleCheatSheet8());
@@ -176,7 +177,7 @@ public class CheatSheetViewImpl
                                                      + ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet3());
         dmnCheatSheetParagraph3.setInnerHTML(ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet4());
         dmnCheatSheetParagraph4.setInnerHTML(ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet5());
-        dmnCheatSheetParagraphBackground.setInnerHTML(ScenarioSimulationEditorConstants.INSTANCE.commonCheatSheetBackground());
+        dmnCheatSheetParagraphBackground.setInnerHTML(backgroundMessage());
         dmnCheatSheetParagraph5.setInnerHTML(ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet6());
         dmnCheatSheetList1.setInnerHTML("<i>" + ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet7() + " " + "</i>" + ScenarioSimulationEditorConstants.INSTANCE.and()
                 + " " + "<i>" + ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet8() + "</i>" + " " + ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet9() + " "
@@ -201,5 +202,10 @@ public class CheatSheetViewImpl
     public void reset() {
         dmnCheatSheet.getStyle().setDisplay(Style.Display.NONE);
         ruleCheatSheet.getStyle().setDisplay(Style.Display.NONE);
+    }
+
+    private String backgroundMessage() {
+        return ScenarioSimulationEditorConstants.INSTANCE.commonCheatSheetBackground("<b>Background</b>", "<b>Model</b>");
+
     }
 }
