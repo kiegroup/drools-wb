@@ -118,7 +118,7 @@ public class GuidedDecisionTablePopulater {
     }
 
     private void addIndirectSourceBuildersColumns() {
-        //Extract BRLVariableColumn and SourceBuilders for respective potions of the rule
+        //Extract BRLVariableColumn and SourceBuilders for respective sections of the rule
         final List<BRLVariableColumn> variableColumns = new ArrayList<>();
         final List<GuidedDecisionTableLHSBuilder> lhsBuilders = new ArrayList<>();
         final List<GuidedDecisionTableRHSBuilder> rhsBuilders = new ArrayList<>();
@@ -142,20 +142,10 @@ public class GuidedDecisionTablePopulater {
         int previousPatternCount = 0;
         for (int i = 0; i < lhsBuilders.size(); i++) {
             //Construct DRL for this and previous builders
-            final StringBuilder rule = new StringBuilder();
-            if (!(dmo.getPackageName() == null || dmo.getPackageName().isEmpty())) {
-                rule.append("package ").append(dmo.getPackageName()).append("\n");
-            }
-            rule.append("rule 'temp' \n").append("when \n");
-            for (int inner = 0; inner <= i; inner++) {
-                final GuidedDecisionTableLHSBuilder lhsBuilder = lhsBuilders.get(inner);
-                rule.append(lhsBuilder.getResult());
-            }
-            rule.append("\nthen \n");
-            rule.append("end");
-
-            //Convert to RuleModel
-            final RuleModel rm = RuleModelDRLPersistenceImpl.getInstance().unmarshal(rule.toString(),
+            final String rule = assembleRuleDRL(i,
+                                                lhsBuilders,
+                                                Collections.emptyList());
+            final RuleModel rm = RuleModelDRLPersistenceImpl.getInstance().unmarshal(rule,
                                                                                      Collections.emptyList(),
                                                                                      dmo);
 
@@ -202,7 +192,7 @@ public class GuidedDecisionTablePopulater {
                             final Iterator<InterpolationVariable> ivsIts = ivs.iterator();
                             while (ivsIts.hasNext()) {
                                 final InterpolationVariable iv = ivsIts.next();
-                                if (iv.getVarName().equals(variableColumn.getVarName())) {
+                                if (Objects.equals(iv.getVarName(), variableColumn.getVarName())) {
                                     final BRLConditionVariableColumn source = (BRLConditionVariableColumn) variableColumn;
                                     final BRLConditionVariableColumn target = makeBRLConditionVariableColumn(source, iv);
                                     column.getChildColumns().add(target);
@@ -225,21 +215,10 @@ public class GuidedDecisionTablePopulater {
         }
 
         //-- PROCESS RHS ACTIONS
-        final StringBuilder rule = new StringBuilder();
-        if (!(dmo.getPackageName() == null || dmo.getPackageName().isEmpty())) {
-            rule.append("package ").append(dmo.getPackageName()).append("\n");
-        }
-        rule.append("rule 'temp' \n").append("when \n");
-        for (GuidedDecisionTableSourceBuilder sb : lhsBuilders) {
-            rule.append(sb.getResult());
-        }
-
-        rule.append("\nthen \n");
-        for (GuidedDecisionTableSourceBuilder sb : rhsBuilders) {
-            rule.append(sb.getResult());
-        }
-        rule.append("end");
-        final RuleModel rm = RuleModelDRLPersistenceImpl.getInstance().unmarshal(rule.toString(),
+        final String rule = assembleRuleDRL(lhsBuilders.size() - 1,
+                                            lhsBuilders,
+                                            rhsBuilders);
+        final RuleModel rm = RuleModelDRLPersistenceImpl.getInstance().unmarshal(rule,
                                                                                  Collections.emptyList(),
                                                                                  dmo);
 
@@ -269,6 +248,26 @@ public class GuidedDecisionTablePopulater {
                 }
             }
         }
+    }
+
+    private String assembleRuleDRL(final int currentLHSBuilderIndex,
+                                   final List<GuidedDecisionTableLHSBuilder> lhsBuilders,
+                                   final List<GuidedDecisionTableRHSBuilder> rhsBuilders) {
+        final StringBuilder rule = new StringBuilder();
+        if (!(dmo.getPackageName() == null || dmo.getPackageName().isEmpty())) {
+            rule.append("package ").append(dmo.getPackageName()).append("\n");
+        }
+        rule.append("rule 'temp' \n").append("when \n");
+        for (int lhsBuilderIndex = 0; lhsBuilderIndex <= currentLHSBuilderIndex; lhsBuilderIndex++) {
+            final GuidedDecisionTableLHSBuilder lhsBuilder = lhsBuilders.get(lhsBuilderIndex);
+            rule.append(lhsBuilder.getResult());
+        }
+        rule.append("\nthen \n");
+        for (GuidedDecisionTableSourceBuilder sb : rhsBuilders) {
+            rule.append(sb.getResult());
+        }
+        rule.append("end");
+        return rule.toString();
     }
 
     private void createActionRetractFactChildColumns(final ActionRetractFact arf,
