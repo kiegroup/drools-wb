@@ -192,7 +192,7 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
 
     @Test
     public void validateDmnPath_Valid() {
-        settingsPresenterSpy.validateDmnPath();
+        settingsPresenterSpy.validateScenario();
         verify(settingsScenarioSimulationDropdownMock, times(2)).getValue();
         verify(dmnFilePathErrorLabelStyleMock, times(1)).setDisplay(eq(Style.Display.NONE));
         verify(dmnFilePathErrorLabelMock, times(1)).setInnerText(eq(""));
@@ -204,7 +204,7 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
     public void validateDmnPath_Invalid() {
         KieAssetsDropdownItem item = new KieAssetsDropdownItem("DMNFile", "", "", null);
         when(settingsScenarioSimulationDropdownMock.getValue()).thenReturn(Optional.of(item));
-        settingsPresenterSpy.validateDmnPath();
+        settingsPresenterSpy.validateScenario();
         verify(settingsScenarioSimulationDropdownMock, times(1)).getValue();
         verify(dmnFilePathErrorLabelStyleMock, times(1)).setDisplay(eq(Style.Display.INLINE));
         verify(dmnFilePathErrorLabelMock, times(1)).setInnerText(eq(ScenarioSimulationEditorConstants.INSTANCE.chooseValidDMNAsset()));

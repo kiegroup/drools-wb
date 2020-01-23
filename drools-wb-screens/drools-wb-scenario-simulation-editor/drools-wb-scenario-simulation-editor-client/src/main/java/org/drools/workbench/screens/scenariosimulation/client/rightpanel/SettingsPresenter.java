@@ -123,7 +123,7 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
         view.getDmnFilePathErrorLabel().getStyle().setDisplay(Style.Display.NONE);
         view.getDmnFilePathErrorLabel().setInnerText("");
         settingsScenarioSimulationDropdown.registerOnMissingValueHandler(this::setDmnErrorPath);
-        settingsScenarioSimulationDropdown.registerOnChangeHandler(this::validateDmnPath);
+        settingsScenarioSimulationDropdown.registerOnChangeHandler(this::validateScenario);
         settingsScenarioSimulationDropdown.loadAssets(settings.getDmnFilePath());
     }
 
@@ -168,7 +168,7 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
      * span element. If not valid, the otherwise.
      * This method should be called everytime a value is selected in <code>{@link SettingsScenarioSimulationDropdown}</code> widget
      */
-    protected void validateDmnPath() {
+    protected void validateScenario() {
         final Optional<KieAssetsDropdownItem> value = settingsScenarioSimulationDropdown.getValue();
         String selectedPath = value.map(KieAssetsDropdownItem::getValue).orElse(null);
         boolean isValid = selectedPath != null && !selectedPath.isEmpty();
