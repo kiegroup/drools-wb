@@ -24,7 +24,7 @@ import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.workbench.screens.scenariosimulation.client.dropdown.SettingsScenarioSimulationDropdown;
-import org.drools.workbench.screens.scenariosimulation.client.events.ValidateScenarioEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.ValidateSimulationEvent;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.junit.Before;
 import org.junit.Test;
@@ -192,24 +192,24 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
 
     @Test
     public void validateDmnPath_Valid() {
-        settingsPresenterSpy.validateScenario();
+        settingsPresenterSpy.validateSimulation();
         verify(settingsScenarioSimulationDropdownMock, times(2)).getValue();
         verify(dmnFilePathErrorLabelStyleMock, times(1)).setDisplay(eq(Style.Display.NONE));
         verify(dmnFilePathErrorLabelMock, times(1)).setInnerText(eq(""));
         verify(settingsSpy, times(1)).setDmnFilePath(DMN_FILE_PATH);
-        verify(eventBusMock, times(1)).fireEvent(isA(ValidateScenarioEvent.class));
+        verify(eventBusMock, times(1)).fireEvent(isA(ValidateSimulationEvent.class));
     }
 
     @Test
     public void validateDmnPath_Invalid() {
         KieAssetsDropdownItem item = new KieAssetsDropdownItem("DMNFile", "", "", null);
         when(settingsScenarioSimulationDropdownMock.getValue()).thenReturn(Optional.of(item));
-        settingsPresenterSpy.validateScenario();
+        settingsPresenterSpy.validateSimulation();
         verify(settingsScenarioSimulationDropdownMock, times(1)).getValue();
         verify(dmnFilePathErrorLabelStyleMock, times(1)).setDisplay(eq(Style.Display.INLINE));
         verify(dmnFilePathErrorLabelMock, times(1)).setInnerText(eq(ScenarioSimulationEditorConstants.INSTANCE.chooseValidDMNAsset()));
         verify(settingsSpy, never()).setDmnFilePath(anyString());
-        verify(eventBusMock, never()).fireEvent(isA(ValidateScenarioEvent.class));
+        verify(eventBusMock, never()).fireEvent(isA(ValidateSimulationEvent.class));
     }
 
     @Test

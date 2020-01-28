@@ -22,7 +22,7 @@ import javax.enterprise.event.Event;
 
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.AbstractScenarioSimulationTest;
-import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationEventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.commands.SimulationSimulationEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationView;
 import org.drools.workbench.screens.scenariosimulation.client.menu.ScenarioContextMenuRegistry;
 import org.drools.workbench.screens.scenariosimulation.client.popup.ConfirmPopupPresenter;
@@ -51,7 +51,7 @@ public abstract class AbstractProducerTest extends AbstractScenarioSimulationTes
     @Mock
     protected FileUploadPopupPresenter fileUploadPopupPresenterMock;
     @Mock
-    protected ScenarioSimulationEventHandler scenarioSimulationEventHandlerMock;
+    protected SimulationSimulationEventHandler scenarioSimulationEventHandlerMock;
     @Mock
     protected ScenarioSimulationView scenarioSimulationViewMock;
     @Mock

@@ -24,7 +24,7 @@ import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioCommandManager;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioCommandRegistry;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationEventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.commands.SimulationSimulationEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationView;
 import org.drools.workbench.screens.scenariosimulation.client.menu.ScenarioContextMenuRegistry;
@@ -60,7 +60,7 @@ public class ScenarioSimulationProducer {
     protected FileUploadPopupPresenter fileUploadPopupPresenter;
 
     @Inject
-    protected ScenarioSimulationEventHandler scenarioSimulationEventHandler;
+    protected SimulationSimulationEventHandler scenarioSimulationEventHandler;
 
     @Inject
     protected ScenarioCommandRegistry scenarioCommandRegistry;

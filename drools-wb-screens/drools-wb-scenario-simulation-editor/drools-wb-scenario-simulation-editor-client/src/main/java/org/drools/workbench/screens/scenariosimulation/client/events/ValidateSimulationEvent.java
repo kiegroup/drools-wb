@@ -16,22 +16,22 @@
 package org.drools.workbench.screens.scenariosimulation.client.events;
 
 import com.google.gwt.event.shared.GwtEvent;
-import org.drools.workbench.screens.scenariosimulation.client.handlers.ValidateScenarioEventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.ValidateSimulationEventHandler;
 
 /**
  * <code>GwtEvent</code> to <b>validate</b> a scenario
  */
-public class ValidateScenarioEvent extends GwtEvent<ValidateScenarioEventHandler> {
+public class ValidateSimulationEvent extends GwtEvent<ValidateSimulationEventHandler> {
 
-    public static final Type<ValidateScenarioEventHandler> TYPE = new Type<>();
+    public static final Type<ValidateSimulationEventHandler> TYPE = new Type<>();
 
     @Override
-    public Type<ValidateScenarioEventHandler> getAssociatedType() {
+    public Type<ValidateSimulationEventHandler> getAssociatedType() {
         return TYPE;
     }
 
     @Override
-    protected void dispatch(ValidateScenarioEventHandler handler) {
+    protected void dispatch(ValidateSimulationEventHandler handler) {
         handler.onEvent(this);
     }
 }

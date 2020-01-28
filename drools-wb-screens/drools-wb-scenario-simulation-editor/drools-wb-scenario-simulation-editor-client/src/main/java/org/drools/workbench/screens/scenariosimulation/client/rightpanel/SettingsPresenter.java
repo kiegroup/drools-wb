@@ -29,7 +29,7 @@ import com.google.gwt.event.shared.EventBus;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.workbench.screens.scenariosimulation.client.dropdown.SettingsScenarioSimulationDropdown;
-import org.drools.workbench.screens.scenariosimulation.client.events.ValidateScenarioEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.ValidateSimulationEvent;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
 import org.uberfire.client.annotations.WorkbenchScreen;
@@ -123,7 +123,7 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
         view.getDmnFilePathErrorLabel().getStyle().setDisplay(Style.Display.NONE);
         view.getDmnFilePathErrorLabel().setInnerText("");
         settingsScenarioSimulationDropdown.registerOnMissingValueHandler(this::setDmnErrorPath);
-        settingsScenarioSimulationDropdown.registerOnChangeHandler(this::validateScenario);
+        settingsScenarioSimulationDropdown.registerOnChangeHandler(this::validateSimulation);
         settingsScenarioSimulationDropdown.loadAssets(settings.getDmnFilePath());
     }
 
@@ -165,10 +165,10 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
 
     /**
      * It checks if a user selected DMN path is valid or not. If valid, it clears the <code>dmnPathErrorLabel</code>
-     * span element. If not valid, the otherwise.
+     * span element and it validates the whole Simulation. If not valid, the otherwise.
      * This method should be called everytime a value is selected in <code>{@link SettingsScenarioSimulationDropdown}</code> widget
      */
-    protected void validateScenario() {
+    protected void validateSimulation() {
         final Optional<KieAssetsDropdownItem> value = settingsScenarioSimulationDropdown.getValue();
         String selectedPath = value.map(KieAssetsDropdownItem::getValue).orElse(null);
         boolean isValid = selectedPath != null && !selectedPath.isEmpty();
@@ -179,7 +179,7 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
             this.syncDmnFilePath();
             view.getDmnFilePathErrorLabel().getStyle().setDisplay(Style.Display.NONE);
             view.getDmnFilePathErrorLabel().setInnerText("");
-            eventBus.fireEvent(new ValidateScenarioEvent());
+            eventBus.fireEvent(new ValidateSimulationEvent());
         }
     }
 

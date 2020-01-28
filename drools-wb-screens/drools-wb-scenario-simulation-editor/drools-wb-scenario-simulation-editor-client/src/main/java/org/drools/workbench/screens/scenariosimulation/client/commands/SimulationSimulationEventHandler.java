@@ -78,7 +78,7 @@ import org.drools.workbench.screens.scenariosimulation.client.events.SetInstance
 import org.drools.workbench.screens.scenariosimulation.client.events.SetPropertyHeaderEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.UnsupportedDMNEvent;
-import org.drools.workbench.screens.scenariosimulation.client.events.ValidateScenarioEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.ValidateSimulationEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.AppendColumnEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.AppendRowEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.DeleteColumnEventHandler;
@@ -103,7 +103,7 @@ import org.drools.workbench.screens.scenariosimulation.client.handlers.SetInstan
 import org.drools.workbench.screens.scenariosimulation.client.handlers.SetPropertyHeaderEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.UndoEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.UnsupportedDMNEventHandler;
-import org.drools.workbench.screens.scenariosimulation.client.handlers.ValidateScenarioEventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.ValidateSimulationEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.models.AbstractScesimGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.popup.ConfirmPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.popup.DeletePopupPresenter;
@@ -124,31 +124,31 @@ import static org.drools.workbench.screens.scenariosimulation.service.ImportExpo
  * It follows the GWT standard Event/Handler mechanism
  */
 @Dependent
-public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
-                                                       AppendRowEventHandler,
-                                                       DeleteColumnEventHandler,
-                                                       DeleteRowEventHandler,
-                                                       DisableTestToolsEventHandler,
-                                                       DuplicateInstanceEventHandler,
-                                                       DuplicateRowEventHandler,
-                                                       EnableTestToolsEventHandler,
-                                                       ImportEventHandler,
-                                                       InsertColumnEventHandler,
-                                                       InsertRowEventHandler,
-                                                       PrependColumnEventHandler,
-                                                       PrependRowEventHandler,
-                                                       RedoEventHandler,
-                                                       ReloadTestToolsEventHandler,
-                                                       RunSingleScenarioEventHandler,
-                                                       ScenarioGridReloadEventHandler,
-                                                       ScenarioNotificationEventHandler,
-                                                       SetGridCellValueEventHandler,
-                                                       SetHeaderCellValueEventHandler,
-                                                       SetInstanceHeaderEventHandler,
-                                                       SetPropertyHeaderEventHandler,
-                                                       UndoEventHandler,
-                                                       UnsupportedDMNEventHandler,
-                                                       ValidateScenarioEventHandler {
+public class SimulationSimulationEventHandler implements AppendColumnEventHandler,
+                                                         AppendRowEventHandler,
+                                                         DeleteColumnEventHandler,
+                                                         DeleteRowEventHandler,
+                                                         DisableTestToolsEventHandler,
+                                                         DuplicateInstanceEventHandler,
+                                                         DuplicateRowEventHandler,
+                                                         EnableTestToolsEventHandler,
+                                                         ImportEventHandler,
+                                                         InsertColumnEventHandler,
+                                                         InsertRowEventHandler,
+                                                         PrependColumnEventHandler,
+                                                         PrependRowEventHandler,
+                                                         RedoEventHandler,
+                                                         ReloadTestToolsEventHandler,
+                                                         RunSingleScenarioEventHandler,
+                                                         ScenarioGridReloadEventHandler,
+                                                         ScenarioNotificationEventHandler,
+                                                         SetGridCellValueEventHandler,
+                                                         SetHeaderCellValueEventHandler,
+                                                         SetInstanceHeaderEventHandler,
+                                                         SetPropertyHeaderEventHandler,
+                                                         UndoEventHandler,
+                                                         UnsupportedDMNEventHandler,
+                                                         ValidateSimulationEventHandler {
 
     protected DeletePopupPresenter deletePopupPresenter;
     protected PreserveDeletePopupPresenter preserveDeletePopupPresenter;
@@ -451,7 +451,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
     }
 
     @Override
-    public void onEvent(ValidateScenarioEvent event) {
+    public void onEvent(ValidateSimulationEvent event) {
         scenarioSimulationEditorPresenter.validateSimulation();
     }
 
@@ -520,6 +520,6 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         handlerRegistrationList.add(eventBus.addHandler(SetPropertyHeaderEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(UndoEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(UnsupportedDMNEvent.TYPE, this));
-        handlerRegistrationList.add(eventBus.addHandler(ValidateScenarioEvent.TYPE, this));
+        handlerRegistrationList.add(eventBus.addHandler(ValidateSimulationEvent.TYPE, this));
     }
 }

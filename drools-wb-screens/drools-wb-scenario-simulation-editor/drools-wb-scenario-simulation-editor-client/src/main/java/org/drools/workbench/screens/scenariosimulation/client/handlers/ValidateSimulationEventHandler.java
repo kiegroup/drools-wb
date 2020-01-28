@@ -16,11 +16,11 @@
 package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
 import com.google.gwt.event.shared.EventHandler;
-import org.drools.workbench.screens.scenariosimulation.client.events.ValidateScenarioEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.ValidateSimulationEvent;
 
 /**
- * <code>EventHandler</code> for {@link ValidateScenarioEvent}
+ * <code>EventHandler</code> for {@link ValidateSimulationEvent}
  */
-public interface ValidateScenarioEventHandler extends EventHandler {
-    void onEvent(ValidateScenarioEvent event);
+public interface ValidateSimulationEventHandler extends EventHandler {
+    void onEvent(ValidateSimulationEvent event);
 }
