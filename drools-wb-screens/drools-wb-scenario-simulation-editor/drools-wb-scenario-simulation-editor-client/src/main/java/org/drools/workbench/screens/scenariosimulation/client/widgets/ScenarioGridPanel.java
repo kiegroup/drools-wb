@@ -22,6 +22,8 @@ import javax.enterprise.context.Dependent;
 
 import com.ait.lienzo.client.core.event.NodeMouseOutEvent;
 import com.ait.lienzo.client.core.event.NodeMouseOutHandler;
+import com.ait.lienzo.client.core.event.NodeMouseWheelEvent;
+import com.ait.lienzo.client.core.event.NodeMouseWheelHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ContextMenuEvent;
 import com.google.gwt.event.dom.client.ScrollEvent;
@@ -30,6 +32,7 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.HandlerRegistration;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridPanelClickHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridPanelMouseMoveHandler;
+import org.uberfire.ext.wires.core.grids.client.widget.dom.HasDOMElementResources;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.impl.GridLienzoPanel;
 
 /**
@@ -40,6 +43,7 @@ import org.uberfire.ext.wires.core.grids.client.widget.layer.impl.GridLienzoPane
  */
 @Dependent
 public class ScenarioGridPanel extends GridLienzoPanel implements NodeMouseOutHandler,
+                                                                  NodeMouseWheelHandler,
                                                                   ScrollHandler {
 
     private ScenarioSimulationGridPanelClickHandler clickHandler;
@@ -58,6 +62,7 @@ public class ScenarioGridPanel extends GridLienzoPanel implements NodeMouseOutHa
                                                                         ClickEvent.getType()));
         handlerRegistrations.add(getScenarioGridLayer().addNodeMouseOutHandler(this));
         handlerRegistrations.add(getScenarioGridLayer().addNodeMouseMoveHandler(mouseMoveHandler));
+        handlerRegistrations.add(getScenarioGridLayer().addNodeMouseWheelHandler(this));
         handlerRegistrations.add(getScrollPanel().addDomHandler(this, ScrollEvent.getType()));
     }
 
@@ -93,6 +98,20 @@ public class ScenarioGridPanel extends GridLienzoPanel implements NodeMouseOutHa
     public void onScroll(ScrollEvent scrollEvent) {
         clickHandler.hideMenus();
         mouseMoveHandler.hidePopover();
+    }
+
+    @Override
+    public void onNodeMouseWheel(NodeMouseWheelEvent nodeMouseWheelEvent) {
+        /* It detaches opened DomElementResources currently attached to all columns */
+        getDefaultGridLayer()
+                .getGridWidgets()
+                .forEach(gridWidget -> gridWidget
+                        .getModel()
+                        .getColumns()
+                        .stream()
+                        .filter(gridColumn -> gridColumn instanceof HasDOMElementResources)
+                        .map(gridColumn -> ((HasDOMElementResources) gridColumn))
+                        .forEach(HasDOMElementResources::destroyResources));
     }
 
     @Override
