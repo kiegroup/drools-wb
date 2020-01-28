@@ -171,37 +171,37 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
     @Mock
     private FileUploadPopupPresenter fileUploadPopupPresenterMock;
 
-    private SimulationSimulationEventHandler scenarioSimulationEventHandler;
+    private ScenarioSimulationEventHandler scenarioSimulationEventHandler;
 
     @Before
     public void setup() {
         super.setup();
-        when(eventBusMock.addHandler(eq(AppendColumnEvent.TYPE), isA(SimulationSimulationEventHandler.class))).thenReturn(appendColumnHandlerRegistrationMock);
-        when(eventBusMock.addHandler(eq(AppendRowEvent.TYPE), isA(SimulationSimulationEventHandler.class))).thenReturn(appendRowHandlerRegistrationMock);
-        when(eventBusMock.addHandler(eq(DeleteColumnEvent.TYPE), isA(SimulationSimulationEventHandler.class))).thenReturn(deleteColumnHandlerRegistrationMock);
-        when(eventBusMock.addHandler(eq(DeleteRowEvent.TYPE), isA(SimulationSimulationEventHandler.class))).thenReturn(deleteRowHandlerRegistrationMock);
-        when(eventBusMock.addHandler(eq(DisableTestToolsEvent.TYPE), isA(SimulationSimulationEventHandler.class))).thenReturn(disableTestToolsEventHandlerMock);
-        when(eventBusMock.addHandler(eq(DuplicateInstanceEvent.TYPE), isA((SimulationSimulationEventHandler.class)))).thenReturn(duplicateColumnHandlerRegistrationMock);
-        when(eventBusMock.addHandler(eq(DuplicateRowEvent.TYPE), isA(SimulationSimulationEventHandler.class))).thenReturn(duplicateHandlerRegistrationMock);
-        when(eventBusMock.addHandler(eq(EnableTestToolsEvent.TYPE), isA(SimulationSimulationEventHandler.class))).thenReturn(enableTestToolsEventHandlerMock);
-        when(eventBusMock.addHandler(eq(ImportEvent.TYPE), isA(SimulationSimulationEventHandler.class))).thenReturn(importHandlerRegistrationMock);
-        when(eventBusMock.addHandler(eq(InsertColumnEvent.TYPE), isA(SimulationSimulationEventHandler.class))).thenReturn(insertColumnHandlerRegistrationMock);
-        when(eventBusMock.addHandler(eq(InsertRowEvent.TYPE), isA(SimulationSimulationEventHandler.class))).thenReturn(insertRowHandlerRegistrationMock);
-        when(eventBusMock.addHandler(eq(PrependColumnEvent.TYPE), isA(SimulationSimulationEventHandler.class))).thenReturn(prependColumnHandlerRegistrationMock);
-        when(eventBusMock.addHandler(eq(PrependRowEvent.TYPE), isA(SimulationSimulationEventHandler.class))).thenReturn(prependRowHandlerRegistrationMock);
+        when(eventBusMock.addHandler(eq(AppendColumnEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(appendColumnHandlerRegistrationMock);
+        when(eventBusMock.addHandler(eq(AppendRowEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(appendRowHandlerRegistrationMock);
+        when(eventBusMock.addHandler(eq(DeleteColumnEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(deleteColumnHandlerRegistrationMock);
+        when(eventBusMock.addHandler(eq(DeleteRowEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(deleteRowHandlerRegistrationMock);
+        when(eventBusMock.addHandler(eq(DisableTestToolsEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(disableTestToolsEventHandlerMock);
+        when(eventBusMock.addHandler(eq(DuplicateInstanceEvent.TYPE), isA((ScenarioSimulationEventHandler.class)))).thenReturn(duplicateColumnHandlerRegistrationMock);
+        when(eventBusMock.addHandler(eq(DuplicateRowEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(duplicateHandlerRegistrationMock);
+        when(eventBusMock.addHandler(eq(EnableTestToolsEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(enableTestToolsEventHandlerMock);
+        when(eventBusMock.addHandler(eq(ImportEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(importHandlerRegistrationMock);
+        when(eventBusMock.addHandler(eq(InsertColumnEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(insertColumnHandlerRegistrationMock);
+        when(eventBusMock.addHandler(eq(InsertRowEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(insertRowHandlerRegistrationMock);
+        when(eventBusMock.addHandler(eq(PrependColumnEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(prependColumnHandlerRegistrationMock);
+        when(eventBusMock.addHandler(eq(PrependRowEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(prependRowHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(RedoEvent.TYPE), isA(RedoEventHandler.class))).thenReturn(redoEventHandlerRegistrationMock);
-        when(eventBusMock.addHandler(eq(ReloadTestToolsEvent.TYPE), isA(SimulationSimulationEventHandler.class))).thenReturn(reloadTestToolsHandlerRegistrationMock);
+        when(eventBusMock.addHandler(eq(ReloadTestToolsEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(reloadTestToolsHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(RunSingleScenarioEvent.TYPE), isA(RunSingleScenarioEventHandler.class))).thenReturn(runSingleScenarioHandlerRegistrationMock);
-        when(eventBusMock.addHandler(eq(ScenarioGridReloadEvent.TYPE), isA(SimulationSimulationEventHandler.class))).thenReturn(scenarioGridReloadHandlerRegistrationMock);
+        when(eventBusMock.addHandler(eq(ScenarioGridReloadEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(scenarioGridReloadHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(SetGridCellValueEvent.TYPE), isA(SetGridCellValueEventHandler.class))).thenReturn(setGridCellValueEventHandlerMock);
         when(eventBusMock.addHandler(eq(SetHeaderCellValueEvent.TYPE), isA(SetHeaderCellValueEventHandler.class))).thenReturn(setHeaderCellValueEventHandlerMock);
-        when(eventBusMock.addHandler(eq(SetInstanceHeaderEvent.TYPE), isA(SimulationSimulationEventHandler.class))).thenReturn(setInstanceHeaderEventHandlerMock);
-        when(eventBusMock.addHandler(eq(SetPropertyHeaderEvent.TYPE), isA(SimulationSimulationEventHandler.class))).thenReturn(setPropertyHeaderEventHandlerMock);
+        when(eventBusMock.addHandler(eq(SetInstanceHeaderEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(setInstanceHeaderEventHandlerMock);
+        when(eventBusMock.addHandler(eq(SetPropertyHeaderEvent.TYPE), isA(ScenarioSimulationEventHandler.class))).thenReturn(setPropertyHeaderEventHandlerMock);
         when(eventBusMock.addHandler(eq(UndoEvent.TYPE), isA(UndoEventHandler.class))).thenReturn(undoEventHandlerRegistrationMock);
         when(eventBusMock.addHandler(eq(UnsupportedDMNEvent.TYPE), isA(UnsupportedDMNEventHandler.class))).thenReturn(unsupportedDMNEventHandlerRegistrationMock);
 
         when(scenarioCommandManagerMock.execute(eq(scenarioSimulationContextLocal), isA(AbstractScenarioSimulationCommand.class))).thenReturn(CommandResultBuilder.SUCCESS);
-        scenarioSimulationEventHandler = spy(new SimulationSimulationEventHandler() {
+        scenarioSimulationEventHandler = spy(new ScenarioSimulationEventHandler() {
             {
                 this.eventBus = eventBusMock;
                 this.handlerRegistrationList = handlerRegistrationListMock;
@@ -509,31 +509,31 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
     @Test
     public void registerHandlers() {
         scenarioSimulationEventHandler.registerHandlers();
-        verify(eventBusMock, times(1)).addHandler(eq(AppendColumnEvent.TYPE), isA(SimulationSimulationEventHandler.class));
+        verify(eventBusMock, times(1)).addHandler(eq(AppendColumnEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(appendColumnHandlerRegistrationMock));
-        verify(eventBusMock, times(1)).addHandler(eq(AppendRowEvent.TYPE), isA(SimulationSimulationEventHandler.class));
+        verify(eventBusMock, times(1)).addHandler(eq(AppendRowEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(appendRowHandlerRegistrationMock));
-        verify(eventBusMock, times(1)).addHandler(eq(DeleteColumnEvent.TYPE), isA(SimulationSimulationEventHandler.class));
+        verify(eventBusMock, times(1)).addHandler(eq(DeleteColumnEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(deleteColumnHandlerRegistrationMock));
-        verify(eventBusMock, times(1)).addHandler(eq(DeleteRowEvent.TYPE), isA(SimulationSimulationEventHandler.class));
+        verify(eventBusMock, times(1)).addHandler(eq(DeleteRowEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(deleteRowHandlerRegistrationMock));
-        verify(eventBusMock, times(1)).addHandler(eq(DisableTestToolsEvent.TYPE), isA(SimulationSimulationEventHandler.class));
+        verify(eventBusMock, times(1)).addHandler(eq(DisableTestToolsEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(disableTestToolsEventHandlerMock));
-        verify(eventBusMock, times(1)).addHandler(eq(DuplicateInstanceEvent.TYPE), isA(SimulationSimulationEventHandler.class));
+        verify(eventBusMock, times(1)).addHandler(eq(DuplicateInstanceEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(duplicateColumnHandlerRegistrationMock));
-        verify(eventBusMock, times(1)).addHandler(eq(DuplicateRowEvent.TYPE), isA(SimulationSimulationEventHandler.class));
+        verify(eventBusMock, times(1)).addHandler(eq(DuplicateRowEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(duplicateHandlerRegistrationMock));
-        verify(eventBusMock, times(1)).addHandler(eq(EnableTestToolsEvent.TYPE), isA(SimulationSimulationEventHandler.class));
+        verify(eventBusMock, times(1)).addHandler(eq(EnableTestToolsEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(enableTestToolsEventHandlerMock));
-        verify(eventBusMock, times(1)).addHandler(eq(ImportEvent.TYPE), isA(SimulationSimulationEventHandler.class));
+        verify(eventBusMock, times(1)).addHandler(eq(ImportEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(importHandlerRegistrationMock));
-        verify(eventBusMock, times(1)).addHandler(eq(InsertColumnEvent.TYPE), isA(SimulationSimulationEventHandler.class));
+        verify(eventBusMock, times(1)).addHandler(eq(InsertColumnEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(insertColumnHandlerRegistrationMock));
-        verify(eventBusMock, times(1)).addHandler(eq(InsertRowEvent.TYPE), isA(SimulationSimulationEventHandler.class));
+        verify(eventBusMock, times(1)).addHandler(eq(InsertRowEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(insertRowHandlerRegistrationMock));
-        verify(eventBusMock, times(1)).addHandler(eq(PrependColumnEvent.TYPE), isA(SimulationSimulationEventHandler.class));
+        verify(eventBusMock, times(1)).addHandler(eq(PrependColumnEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(prependColumnHandlerRegistrationMock));
-        verify(eventBusMock, times(1)).addHandler(eq(PrependRowEvent.TYPE), isA(SimulationSimulationEventHandler.class));
+        verify(eventBusMock, times(1)).addHandler(eq(PrependRowEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(prependRowHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(RedoEvent.TYPE), isA(RedoEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(redoEventHandlerRegistrationMock));
@@ -541,15 +541,15 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         verify(handlerRegistrationListMock, times(1)).add(eq(reloadTestToolsHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(RunSingleScenarioEvent.TYPE), isA(RunSingleScenarioEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(runSingleScenarioHandlerRegistrationMock));
-        verify(eventBusMock, times(1)).addHandler(eq(ScenarioGridReloadEvent.TYPE), isA(SimulationSimulationEventHandler.class));
+        verify(eventBusMock, times(1)).addHandler(eq(ScenarioGridReloadEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(scenarioGridReloadHandlerRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(SetGridCellValueEvent.TYPE), isA(SetGridCellValueEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(setGridCellValueEventHandlerMock));
         verify(eventBusMock, times(1)).addHandler(eq(SetHeaderCellValueEvent.TYPE), isA(SetHeaderCellValueEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(setHeaderCellValueEventHandlerMock));
-        verify(eventBusMock, times(1)).addHandler(eq(SetInstanceHeaderEvent.TYPE), isA(SimulationSimulationEventHandler.class));
+        verify(eventBusMock, times(1)).addHandler(eq(SetInstanceHeaderEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(setInstanceHeaderEventHandlerMock));
-        verify(eventBusMock, times(1)).addHandler(eq(SetPropertyHeaderEvent.TYPE), isA(SimulationSimulationEventHandler.class));
+        verify(eventBusMock, times(1)).addHandler(eq(SetPropertyHeaderEvent.TYPE), isA(ScenarioSimulationEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(setPropertyHeaderEventHandlerMock));
         verify(eventBusMock, times(1)).addHandler(eq(UndoEvent.TYPE), isA(UndoEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(undoEventHandlerRegistrationMock));
