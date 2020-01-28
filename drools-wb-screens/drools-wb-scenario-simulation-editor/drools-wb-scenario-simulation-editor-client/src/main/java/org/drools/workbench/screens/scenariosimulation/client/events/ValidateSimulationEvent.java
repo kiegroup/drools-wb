@@ -19,7 +19,7 @@ import com.google.gwt.event.shared.GwtEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ValidateSimulationEventHandler;
 
 /**
- * <code>GwtEvent</code> to <b>validate</b> a scenario
+ * <code>GwtEvent</code> to <b>validate</b> a <code>Simulation</code>
  */
 public class ValidateSimulationEvent extends GwtEvent<ValidateSimulationEventHandler> {
 
