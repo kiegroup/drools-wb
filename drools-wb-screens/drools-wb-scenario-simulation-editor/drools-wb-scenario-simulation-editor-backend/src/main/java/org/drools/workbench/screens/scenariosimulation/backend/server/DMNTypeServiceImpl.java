@@ -59,9 +59,6 @@ public class DMNTypeServiceImpl
 
     @Override
     public FactModelTuple retrieveFactModelTuple(Path path, String dmnPath) {
-        if(false) {
-            throw new RuntimeException("Test");
-        }
         DMNModel dmnModel = getDMNModel(path, dmnPath);
         SortedMap<String, FactModelTree> visibleFacts = new TreeMap<>();
         SortedMap<String, FactModelTree> hiddenFacts = new TreeMap<>();
