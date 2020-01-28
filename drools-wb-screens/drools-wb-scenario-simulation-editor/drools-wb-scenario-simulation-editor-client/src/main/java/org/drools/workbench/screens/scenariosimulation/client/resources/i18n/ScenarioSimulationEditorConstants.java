@@ -104,6 +104,8 @@ public interface ScenarioSimulationEditorConstants
 
     String ruleCheatSheet22();
 
+    String ruleCheatSheet23();
+
     String dmnCheatSheet1();
 
     String dmnCheatSheet2();
@@ -139,6 +141,8 @@ public interface ScenarioSimulationEditorConstants
     String dmnCheatSheet16();
 
     String dmnCheatSheet17();
+
+    String dmnCheatSheet18();
 
     String forExample();
 
@@ -357,4 +361,34 @@ public interface ScenarioSimulationEditorConstants
     String testToolObjectSelectionTooltip();
 
     String testToolClearSelection();
+
+    String commonCheatSheetBackground(String background, String model);
+
+    String saveButton();
+
+    String removeButton();
+
+    String cancelButton();
+
+    String collectionEditorAddNewItem();
+
+    String createLabelList();
+
+    String createLabelMap();
+
+    String collectionListCreation();
+
+    String collectionMapCreation();
+
+    String createLabelListDescription();
+
+    String defineLabelList();
+
+    String defineLabelMap();
+
+    String defineLabelListDescription();
+
+    String createLabelMapDescription();
+
+    String defineLabelMapDescription();
 }
