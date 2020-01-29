@@ -32,7 +32,6 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.HandlerRegistration;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridPanelClickHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationGridPanelMouseMoveHandler;
-import org.uberfire.ext.wires.core.grids.client.widget.dom.HasDOMElementResources;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.impl.GridLienzoPanel;
 
 /**
@@ -102,16 +101,7 @@ public class ScenarioGridPanel extends GridLienzoPanel implements NodeMouseOutHa
 
     @Override
     public void onNodeMouseWheel(NodeMouseWheelEvent nodeMouseWheelEvent) {
-        /* It detaches opened DomElementResources currently attached to all columns */
-        getDefaultGridLayer()
-                .getGridWidgets()
-                .forEach(gridWidget -> gridWidget
-                        .getModel()
-                        .getColumns()
-                        .stream()
-                        .filter(gridColumn -> gridColumn instanceof HasDOMElementResources)
-                        .map(gridColumn -> ((HasDOMElementResources) gridColumn))
-                        .forEach(HasDOMElementResources::destroyResources));
+        getScenarioGrid().getModel().destroyAllTextAreaDOMElementFactoryResources();
     }
 
     @Override
