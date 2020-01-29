@@ -20,9 +20,8 @@ import org.drools.workbench.screens.scenariosimulation.client.factories.Scenario
 import org.uberfire.ext.wires.core.grids.client.model.GridCellEditAction;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseHeaderMetaData;
 import org.uberfire.ext.wires.core.grids.client.widget.context.GridBodyCellEditContext;
-import org.uberfire.ext.wires.core.grids.client.widget.dom.HasDOMElementResources;
 
-public class ScenarioHeaderMetaData extends BaseHeaderMetaData implements HasDOMElementResources {
+public class ScenarioHeaderMetaData extends BaseHeaderMetaData {
 
     public enum MetadataType {
 
@@ -57,7 +56,7 @@ public class ScenarioHeaderMetaData extends BaseHeaderMetaData implements HasDOM
      * @param propertyHeader Set <code>true</code> for <i>property</i>' header <b>or</b> the description/id ones, <code>false</code>
      * @throws IllegalStateException if both <code>instanceHeader</code> and <code>propertyHeader</code> are <code>true</code>
      */
-    public ScenarioHeaderMetaData(String columnId, String columnTitle, String columnGroup, final ScenarioHeaderTextBoxSingletonDOMElementFactory factory, boolean readOnly, boolean instanceHeader, boolean propertyHeader) {
+    public ScenarioHeaderMetaData(String columnId, String columnTitle, String columnGroup, final ScenarioHeaderTextBoxSingletonDOMElementFactory factory, boolean readOnly, boolean instanceHeader, boolean propertyHeader) throws IllegalStateException {
         super(columnTitle, columnGroup);
         if (instanceHeader && propertyHeader) {
             throw new IllegalStateException("A ScenarioHeaderMetaData can not be both InstanceHeader and PropertyHeader");
@@ -86,29 +85,23 @@ public class ScenarioHeaderMetaData extends BaseHeaderMetaData implements HasDOM
      * @param propertyHeader Set <code>true</code> for <i>property</i>' header <b>or</b> the description/id ones, <code>false</code>
      * @throws IllegalStateException if both <code>instanceHeader</code> and <code>propertyHeader</code> are <code>true</code>
      */
-    public ScenarioHeaderMetaData(String columnId, String columnTitle, String columnGroup, final ScenarioHeaderTextBoxSingletonDOMElementFactory factory, boolean instanceHeader, boolean propertyHeader) {
+    public ScenarioHeaderMetaData(String columnId, String columnTitle, String columnGroup, final ScenarioHeaderTextBoxSingletonDOMElementFactory factory, boolean instanceHeader, boolean propertyHeader) throws IllegalStateException {
         this(columnId, columnTitle, columnGroup, factory, false, instanceHeader, propertyHeader);
     }
 
-    @Override
-    public void destroyResources() {
-        factory.destroyResources();
-    }
-
-    @Override
     public void edit(final GridBodyCellEditContext context) {
         if (readOnly) {
             throw new IllegalStateException("A read only header cannot be edited");
         }
         if (!isEditingMode) {
             factory.attachDomElement(context,
-                                     e -> {
+                                     (e) -> {
                                          e.getWidget().setText(getTitle());
                                          if (e instanceof ScenarioHeaderTextAreaDOMElement) {
                                              ((ScenarioHeaderTextAreaDOMElement) e).setScenarioHeaderMetaData(this);
                                          }
                                      },
-                                     e -> e.getWidget().setFocus(true));
+                                     (e) -> e.getWidget().setFocus(true));
             isEditingMode = true;
         }
     }
