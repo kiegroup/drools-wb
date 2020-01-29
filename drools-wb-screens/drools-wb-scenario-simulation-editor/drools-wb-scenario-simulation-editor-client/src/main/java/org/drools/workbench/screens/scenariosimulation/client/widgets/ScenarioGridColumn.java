@@ -25,7 +25,6 @@ import com.google.gwt.user.client.ui.Widget;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.workbench.screens.scenariosimulation.client.domelements.CollectionEditorDOMElement;
 import org.drools.workbench.screens.scenariosimulation.client.domelements.ScenarioCellTextAreaDOMElement;
-import org.drools.workbench.screens.scenariosimulation.client.factories.CollectionEditorSingletonDOMElementFactory;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.values.ScenarioGridCellValue;
 import org.uberfire.ext.wires.core.grids.client.model.GridCell;
@@ -218,9 +217,6 @@ public class ScenarioGridColumn extends BaseGridColumn<String> implements HasDOM
 
     @Override
     public void destroyResources() {
-        if (! (factory instanceof CollectionEditorSingletonDOMElementFactory)) {
-            factory.destroyResources();
-        }
         getHeaderMetaData().stream()
                 .filter(md -> md instanceof HasDOMElementResources)
                 .map(md -> (HasDOMElementResources) md)
