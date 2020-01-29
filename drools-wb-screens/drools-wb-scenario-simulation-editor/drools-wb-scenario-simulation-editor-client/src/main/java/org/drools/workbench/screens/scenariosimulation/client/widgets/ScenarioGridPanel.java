@@ -45,10 +45,9 @@ public class ScenarioGridPanel extends GridLienzoPanel implements NodeMouseOutHa
                                                                   NodeMouseWheelHandler,
                                                                   ScrollHandler {
 
-    private ScenarioSimulationGridPanelClickHandler clickHandler;
-    private ScenarioSimulationGridPanelMouseMoveHandler mouseMoveHandler;
-
-    Set<HandlerRegistration> handlerRegistrations = new HashSet<>();
+    protected ScenarioSimulationGridPanelClickHandler clickHandler;
+    protected ScenarioSimulationGridPanelMouseMoveHandler mouseMoveHandler;
+    protected Set<HandlerRegistration> handlerRegistrations = new HashSet<>();
 
     public void addHandlers(final ScenarioSimulationGridPanelClickHandler clickHandler,
                             final ScenarioSimulationGridPanelMouseMoveHandler mouseMoveHandler) {
