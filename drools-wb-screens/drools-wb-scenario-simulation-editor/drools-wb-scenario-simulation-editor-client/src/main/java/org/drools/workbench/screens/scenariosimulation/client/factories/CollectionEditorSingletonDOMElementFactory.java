@@ -79,7 +79,7 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
         /* Don't propagate MouseWheel and RightClick events to the Grid */
         this.widget.addDomHandler(MouseWheelEvent::stopPropagation,
                                   MouseWheelEvent.getType());
-        this.widget.addDomHandler(ContextMenuEvent::stopPropagation,
+        this.widget.addDomHandler(event -> {event.stopPropagation(); event.preventDefault();},
                                   ContextMenuEvent.getType());
         final AbstractScesimGridModel<? extends AbstractScesimModel, ? extends AbstractScesimData> model = ((ScenarioGrid) gridWidget).getModel();
         final GridData.SelectedCell selectedCellsOrigin = model.getSelectedCellsOrigin();

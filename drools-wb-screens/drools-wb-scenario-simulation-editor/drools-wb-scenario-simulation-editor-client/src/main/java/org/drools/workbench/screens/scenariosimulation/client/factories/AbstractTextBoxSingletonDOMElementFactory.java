@@ -42,7 +42,7 @@ public abstract class AbstractTextBoxSingletonDOMElementFactory<T extends BaseDO
         /* Don't propagate MouseWheel and RightClick events to the Grid */
         textArea.addDomHandler(MouseWheelEvent::stopPropagation,
                                MouseWheelEvent.getType());
-        textArea.addDomHandler(ContextMenuEvent::stopPropagation,
+        textArea.addDomHandler(event -> {event.stopPropagation(); event.preventDefault();},
                                ContextMenuEvent.getType());
         return textArea;
     }
