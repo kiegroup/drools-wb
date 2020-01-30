@@ -216,7 +216,7 @@ public class CollectionPresenter implements CollectionView.Presenter {
     @Override
     public void toggleEditingStatus(boolean editingStatus) {
         createCollectionIsEditing = editingStatus;
-        collectionView.enableCollectionEditorButtons(!editingStatus);
+        collectionView.disableCollectionEditorButtons(editingStatus);
         mapElementPresenter.toggleEditingStatus(editingStatus);
         listElementPresenter.toggleEditingStatus(editingStatus);
     }

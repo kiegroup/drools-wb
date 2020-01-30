@@ -288,9 +288,9 @@ public class CollectionViewImplTest extends AbstractCollectionEditorTest {
         verify(collectionEditorViewImplSpy, times(1)).showDefineCollectionContainer(eq(!toEnable));
         verify(collectionEditorViewImplSpy, times(1)).showAddItemButtonContainer(eq(toEnable));
         if (toEnable && isCreateCollectionEditing) {
-            verify(collectionEditorViewImplSpy).enableCollectionEditorButtons(eq(false));
+            verify(collectionEditorViewImplSpy).disableCollectionEditorButtons(eq(true));
         } else {
-            verify(collectionEditorViewImplSpy).enableCollectionEditorButtons(eq(true));
+            verify(collectionEditorViewImplSpy).disableCollectionEditorButtons(eq(false));
         }
         if (isList) {
             verify(createLabelMock, times(1)).setInnerText(eq(ScenarioSimulationEditorConstants.INSTANCE.createLabelList()));
@@ -321,21 +321,21 @@ public class CollectionViewImplTest extends AbstractCollectionEditorTest {
     }
 
     @Test
-    public void enableCollectionEditorButtons_False() {
-        collectionEditorViewImplSpy.enableCollectionEditorButtons(false);
-        addItemButtonMock.setDisabled(eq(false));
-        cancelButtonMock.setDisabled(eq(false));
-        removeButtonMock.setDisabled(eq(false));
-        saveButtonMock.setDisabled(eq(false));
+    public void disableCollectionEditorButtons_False() {
+        collectionEditorViewImplSpy.disableCollectionEditorButtons(false);
+        verify(addItemButtonMock).setDisabled(eq(false));
+        verify(cancelButtonMock).setDisabled(eq(false));
+        verify(removeButtonMock).setDisabled(eq(false));
+        verify(saveButtonMock).setDisabled(eq(false));
     }
 
     @Test
-    public void enableCollectionEditorButtons_True() {
-        collectionEditorViewImplSpy.enableCollectionEditorButtons(true);
-        addItemButtonMock.setDisabled(eq(true));
-        cancelButtonMock.setDisabled(eq(true));
-        removeButtonMock.setDisabled(eq(true));
-        saveButtonMock.setDisabled(eq(true));
+    public void disableCollectionEditorButtons_True() {
+        collectionEditorViewImplSpy.disableCollectionEditorButtons(true);
+        verify(addItemButtonMock).setDisabled(eq(true));
+        verify(cancelButtonMock).setDisabled(eq(true));
+        verify(removeButtonMock).setDisabled(eq(true));
+        verify(saveButtonMock).setDisabled(eq(true));
     }
 
     @Test
