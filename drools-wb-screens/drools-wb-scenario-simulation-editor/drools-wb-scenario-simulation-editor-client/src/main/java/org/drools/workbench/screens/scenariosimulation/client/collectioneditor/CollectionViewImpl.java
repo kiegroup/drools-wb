@@ -160,8 +160,6 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
      */
     protected String value;
 
-    protected double left;
-
     public CollectionViewImpl() {
         setElement(collectionEditor);
         addKeyDownHandler(DomEvent::stopPropagation);
@@ -280,26 +278,6 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     }
 
     @Override
-    public ButtonElement getAddItemButton() {
-        return addItemButton;
-    }
-
-    @Override
-    public ButtonElement getCancelButton() {
-        return cancelButton;
-    }
-
-    @Override
-    public ButtonElement getRemoveButton() {
-        return removeButton;
-    }
-
-    @Override
-    public ButtonElement getSaveButton() {
-        return saveButton;
-    }
-
-    @Override
     public String getExpression() {
         return expressionElement.getValue();
     }
@@ -328,6 +306,8 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
         showAddItemButtonContainer(toEnable);
         createCollectionRadio.setChecked(toEnable);
         defineCollectionRadio.setChecked(!toEnable);
+        final boolean isCreateCollectionEditorOpenAndEditing = toEnable && presenter.isCreateCollectionEditing();
+        enableCollectionEditorButtons(! isCreateCollectionEditorOpenAndEditing);
         if (listWidget) {
             createLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.createLabelList());
         } else {
@@ -425,6 +405,14 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     @Override
     public void setFixedHeight(double value, Style.Unit unit) {
         collectionEditorModalBody.getStyle().setHeight(value, unit);
+    }
+
+    @Override
+    public void enableCollectionEditorButtons(boolean enable) {
+        addItemButton.setDisabled(!enable);
+        cancelButton.setDisabled(!enable);
+        removeButton.setDisabled(!enable);
+        saveButton.setDisabled(!enable);
     }
 
     protected boolean isShown() {

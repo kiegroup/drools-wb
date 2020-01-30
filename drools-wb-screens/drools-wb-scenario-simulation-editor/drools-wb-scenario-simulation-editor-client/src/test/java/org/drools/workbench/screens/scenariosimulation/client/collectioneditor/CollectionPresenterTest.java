@@ -18,11 +18,9 @@ package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwt.dom.client.SpanElement;
-import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
@@ -49,6 +47,7 @@ import static org.drools.workbench.screens.scenariosimulation.client.TestPropert
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.TEST_PROPERTYNAME;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.UPDATED_VALUE;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
@@ -99,9 +98,6 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
     private LIElement itemElementMock;
 
     @Mock
-    private Style styleMock;
-
-    @Mock
     private JSONString jsonStringMock;
 
     @Mock
@@ -141,18 +137,6 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
     private SpanElement propertyTitleMock;
 
     @Mock
-    private ButtonElement addItemButtonMock;
-
-    @Mock
-    private ButtonElement cancelButtonMock;
-
-    @Mock
-    private ButtonElement removeButtonMock;
-
-    @Mock
-    private ButtonElement saveButtonMock;
-
-    @Mock
     private ScenarioConfirmationPopupPresenter scenarioConfirmationPopupPresenterMock;
 
     @Mock
@@ -167,10 +151,6 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
         when(collectionViewMock.getElementsContainer()).thenReturn(elementsContainerMock);
         when(collectionViewMock.getEditorTitle()).thenReturn(editorTitleMock);
         when(collectionViewMock.getPropertyTitle()).thenReturn(propertyTitleMock);
-        when(collectionViewMock.getAddItemButton()).thenReturn(addItemButtonMock);
-        when(collectionViewMock.getCancelButton()).thenReturn(cancelButtonMock);
-        when(collectionViewMock.getRemoveButton()).thenReturn(removeButtonMock);
-        when(collectionViewMock.getSaveButton()).thenReturn(saveButtonMock);
 
         when(nestedValue1Mock.keySet()).thenReturn(KEY_SET);
         when(nestedValue1Mock.get(eq("prop1"))).thenReturn(jsonValueNeph1Mock);
@@ -374,6 +354,7 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
     public void commonInit() {
         collectionEditorPresenterSpy.collectionView = null;
         collectionEditorPresenterSpy.commonInit(TEST_KEY, collectionViewMock);
+        assertFalse(collectionEditorPresenterSpy.createCollectionIsEditing);
         assertEquals(collectionEditorPresenterSpy.collectionView, collectionViewMock);
         verify(editorTitleMock, times(1)).setInnerText(TEST_KEY);
         verify(propertyTitleMock, times(1)).setInnerText(TEST_PROPERTYNAME);
@@ -399,11 +380,8 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
     @Test
     public void toggleEditingStatusToDisableTrue() {
         collectionEditorPresenterSpy.toggleEditingStatus(true);
-        verify(collectionViewMock, times(1)).getAddItemButton();
-        verify(addItemButtonMock, times(1)).setDisabled(eq(true));
-        verify(cancelButtonMock, times(1)).setDisabled(eq(true));
-        verify(removeButtonMock, times(1)).setDisabled(eq(true));
-        verify(saveButtonMock, times(1)).setDisabled(eq(true));
+        assertTrue(collectionEditorPresenterSpy.createCollectionIsEditing);
+        verify(collectionViewMock, times(1)).enableCollectionEditorButtons(eq(false));
         verify(listElementPresenterMock, times(1)).toggleEditingStatus(eq(true));
         verify(mapElementPresenterMock, times(1)).toggleEditingStatus(eq(true));
     }
@@ -411,11 +389,8 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
     @Test
     public void toggleEditingStatusToDisableFalse() {
         collectionEditorPresenterSpy.toggleEditingStatus(false);
-        verify(collectionViewMock, times(1)).getAddItemButton();
-        verify(addItemButtonMock, times(1)).setDisabled(eq(false));
-        verify(cancelButtonMock, times(1)).setDisabled(eq(false));
-        verify(removeButtonMock, times(1)).setDisabled(eq(false));
-        verify(saveButtonMock, times(1)).setDisabled(eq(false));
+        assertFalse(collectionEditorPresenterSpy.createCollectionIsEditing);
+        verify(collectionViewMock, times(1)).enableCollectionEditorButtons(eq(true));
         verify(listElementPresenterMock, times(1)).toggleEditingStatus(eq(false));
         verify(mapElementPresenterMock, times(1)).toggleEditingStatus(eq(false));
     }

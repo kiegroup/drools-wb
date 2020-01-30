@@ -17,7 +17,6 @@ package org.drools.workbench.screens.scenariosimulation.client.collectioneditor;
 
 import java.util.Map;
 
-import com.google.gwt.dom.client.ButtonElement;
 import com.google.gwt.dom.client.HeadingElement;
 import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
@@ -64,6 +63,11 @@ public interface CollectionView {
          *
          */
         void showEditingBox();
+
+        /**
+         * It defines if <b>Create Collection</b> guided editor is in editing status or not.
+         */
+        boolean isCreateCollectionEditing();
 
         /**
          * Toggle the expansion of the items included in the collection.
@@ -147,13 +151,11 @@ public interface CollectionView {
 
     SpanElement getPropertyTitle();
 
-    ButtonElement getAddItemButton();
-
-    ButtonElement getCancelButton();
-
-    ButtonElement getRemoveButton();
-
-    ButtonElement getSaveButton();
+    /**
+     * It enables/disables buttons group which manage the Collection Editor
+     * @param enable
+     */
+    void enableCollectionEditorButtons(boolean enable);
 
     String getExpression();
 
