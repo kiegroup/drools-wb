@@ -74,6 +74,8 @@ public class CollectionViewImplTest extends AbstractCollectionEditorTest {
     @Mock
     private ButtonElement removeButtonMock;
     @Mock
+    private ButtonElement addItemButtonMock;
+    @Mock
     private SpanElement addItemButtonLabelMock;
     @Mock
     private DivElement createCollectionContainerMock;
@@ -114,6 +116,7 @@ public class CollectionViewImplTest extends AbstractCollectionEditorTest {
                 this.cancelButton = cancelButtonMock;
                 this.removeButton = removeButtonMock;
                 this.addItemButtonLabel = addItemButtonLabelMock;
+                this.addItemButton = addItemButtonMock;
             }
         });
     }
@@ -259,30 +262,36 @@ public class CollectionViewImplTest extends AbstractCollectionEditorTest {
 
     @Test
     public void enableCreateCollectionContainer_CreateList() {
-        enableCreateCollectionContainer(true, true);
+        enableCreateCollectionContainer(true, true, false);
     }
 
     @Test
     public void enableCreateCollectionContainer_CreateMap() {
-        enableCreateCollectionContainer(true, false);
+        enableCreateCollectionContainer(true, false, false);
     }
 
     @Test
     public void enableCreateCollectionContainer_DefineList() {
-        enableCreateCollectionContainer(false, true);
+        enableCreateCollectionContainer(false, true, false);
     }
 
     @Test
     public void enableCreateCollectionContainer_DefineMap() {
-        enableCreateCollectionContainer(false, false);
+        enableCreateCollectionContainer(false, false, false);
     }
 
-    private void enableCreateCollectionContainer(boolean toEnable, boolean isList) {
+    private void enableCreateCollectionContainer(boolean toEnable, boolean isList, boolean isCreateCollectionEditing) {
+        when(collectionPresenterMock.isCreateCollectionEditing()).thenReturn(isCreateCollectionEditing);
         collectionEditorViewImplSpy.listWidget = isList;
         collectionEditorViewImplSpy.enableCreateCollectionContainer(toEnable);
         verify(collectionEditorViewImplSpy, times(1)).showCreateCollectionContainer(eq(toEnable));
         verify(collectionEditorViewImplSpy, times(1)).showDefineCollectionContainer(eq(!toEnable));
         verify(collectionEditorViewImplSpy, times(1)).showAddItemButtonContainer(eq(toEnable));
+        if (toEnable && isCreateCollectionEditing) {
+            verify(collectionEditorViewImplSpy).enableCollectionEditorButtons(eq(false));
+        } else {
+            verify(collectionEditorViewImplSpy).enableCollectionEditorButtons(eq(true));
+        }
         if (isList) {
             verify(createLabelMock, times(1)).setInnerText(eq(ScenarioSimulationEditorConstants.INSTANCE.createLabelList()));
         } else {
@@ -309,6 +318,24 @@ public class CollectionViewImplTest extends AbstractCollectionEditorTest {
         collectionEditorViewImplSpy.setExpression("test");
         verify(collectionEditorViewImplSpy, times(1)).enableCreateCollectionContainer(eq(false));
         verify(expressionElementMock, times(1)).setValue(eq("test"));
+    }
+
+    @Test
+    public void enableCollectionEditorButtons_False() {
+        collectionEditorViewImplSpy.enableCollectionEditorButtons(false);
+        addItemButtonMock.setDisabled(eq(false));
+        cancelButtonMock.setDisabled(eq(false));
+        removeButtonMock.setDisabled(eq(false));
+        saveButtonMock.setDisabled(eq(false));
+    }
+
+    @Test
+    public void enableCollectionEditorButtons_True() {
+        collectionEditorViewImplSpy.enableCollectionEditorButtons(true);
+        addItemButtonMock.setDisabled(eq(true));
+        cancelButtonMock.setDisabled(eq(true));
+        removeButtonMock.setDisabled(eq(true));
+        saveButtonMock.setDisabled(eq(true));
     }
 
     @Test

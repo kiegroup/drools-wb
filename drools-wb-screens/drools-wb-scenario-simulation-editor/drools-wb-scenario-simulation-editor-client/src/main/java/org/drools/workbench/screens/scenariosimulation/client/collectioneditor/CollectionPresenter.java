@@ -70,6 +70,11 @@ public class CollectionPresenter implements CollectionView.Presenter {
      */
     protected Map<String, Map<String, Map<String, String>>> expandablePropertiesMap = new HashMap<>();
 
+    /**
+     * It defines if <b>Create collection</b> guided editor is in editing status or not.
+     */
+    protected boolean createCollectionIsEditing = false;
+
     protected CollectionView collectionView;
 
     @Override
@@ -130,6 +135,11 @@ public class CollectionPresenter implements CollectionView.Presenter {
                     .appendChild(editingBox);
         }
         toggleEditingStatus(true);
+    }
+
+    @Override
+    public boolean isCreateCollectionEditing() {
+        return createCollectionIsEditing;
     }
 
     @Override
@@ -204,13 +214,11 @@ public class CollectionPresenter implements CollectionView.Presenter {
     }
 
     @Override
-    public void toggleEditingStatus(boolean toDisable) {
-        collectionView.getAddItemButton().setDisabled(toDisable);
-        collectionView.getCancelButton().setDisabled(toDisable);
-        collectionView.getRemoveButton().setDisabled(toDisable);
-        collectionView.getSaveButton().setDisabled(toDisable);
-        mapElementPresenter.toggleEditingStatus(toDisable);
-        listElementPresenter.toggleEditingStatus(toDisable);
+    public void toggleEditingStatus(boolean editingStatus) {
+        createCollectionIsEditing = editingStatus;
+        collectionView.enableCollectionEditorButtons(!editingStatus);
+        mapElementPresenter.toggleEditingStatus(editingStatus);
+        listElementPresenter.toggleEditingStatus(editingStatus);
     }
 
     // Indirection add for test
@@ -225,6 +233,7 @@ public class CollectionPresenter implements CollectionView.Presenter {
     }
 
     protected void commonInit(String key, CollectionView collectionView) {
+        createCollectionIsEditing = false;
         this.collectionView = collectionView;
         String propertyName = key.substring(key.lastIndexOf('#') + 1);
         this.collectionView.getEditorTitle().setInnerText(key);
