@@ -280,6 +280,26 @@ public class CollectionViewImplTest extends AbstractCollectionEditorTest {
         enableCreateCollectionContainer(false, false, false);
     }
 
+    @Test
+    public void enableCreateCollectionContainerEditing_CreateList() {
+        enableCreateCollectionContainer(true, true, true);
+    }
+
+    @Test
+    public void enableCreateCollectionContainerEditing_CreateMap() {
+        enableCreateCollectionContainer(true, false, true);
+    }
+
+    @Test
+    public void enableCreateCollectionContainerEditing_DefineList() {
+        enableCreateCollectionContainer(false, true, true);
+    }
+
+    @Test
+    public void enableCreateCollectionContainerEditing_DefineMap() {
+        enableCreateCollectionContainer(false, false, true);
+    }
+
     private void enableCreateCollectionContainer(boolean toEnable, boolean isList, boolean isCreateCollectionEditing) {
         when(collectionPresenterMock.isCreateCollectionEditing()).thenReturn(isCreateCollectionEditing);
         collectionEditorViewImplSpy.listWidget = isList;
