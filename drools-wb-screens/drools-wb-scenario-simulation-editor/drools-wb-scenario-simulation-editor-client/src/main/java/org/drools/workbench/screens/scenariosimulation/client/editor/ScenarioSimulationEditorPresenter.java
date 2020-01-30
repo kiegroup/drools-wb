@@ -425,10 +425,6 @@ public class ScenarioSimulationEditorPresenter {
         redoMenuItem.setEnabled(false);
     }
 
-    public Supplier<ScenarioSimulationModel> getContentSupplier() {
-        return () -> model;
-    }
-
     public void addCommonActions(final FileMenuBuilder fileMenuBuilder, MenuItem versionMenuItem, MenuItem alertsButtonMenuItem) {
         fileMenuBuilder
                 .addNewTopLevelMenu(versionMenuItem)
@@ -479,6 +475,12 @@ public class ScenarioSimulationEditorPresenter {
         scenarioMainGridWidget.deselect();
         scenarioBackgroundGridWidget.clearSelections();
         scenarioBackgroundGridWidget.deselect();
+    }
+
+    public void validateSimulation() {
+        scenarioSimulationEditorWrapper.validate(context.getStatus().getSimulation(),
+                                                 context.getSettings(),
+                                                 getValidationCallback());
     }
 
     public void selectSimulationTab() {
@@ -536,7 +538,7 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     protected Command getValidateCommand() {
-        return () -> scenarioSimulationEditorWrapper.validate(context.getStatus().getSimulation(), context.getSettings(), getValidationCallback());
+        return this::validateSimulation;
     }
 
     protected RemoteCallback<List<FactMappingValidationError>> getValidationCallback() {
@@ -666,6 +668,7 @@ public class ScenarioSimulationEditorPresenter {
 
     protected void setSettings(SettingsView.Presenter presenter) {
         Type modelType = dataManagementStrategy instanceof AbstractDMODataManagementStrategy ? Type.RULE : Type.DMN;
+        presenter.setEventBus(eventBus);
         presenter.setScenarioType(modelType, context.getSettings(), path.getFileName());
     }
 
