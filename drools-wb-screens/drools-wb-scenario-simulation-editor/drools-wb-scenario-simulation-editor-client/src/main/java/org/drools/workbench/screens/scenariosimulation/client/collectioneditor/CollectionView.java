@@ -155,7 +155,7 @@ public interface CollectionView {
      * It enables/disables buttons group which manage the Collection Editor
      * @param enable
      */
-    void enableCollectionEditorButtons(boolean enable);
+    void disableCollectionEditorButtons(boolean enable);
 
     String getExpression();
 

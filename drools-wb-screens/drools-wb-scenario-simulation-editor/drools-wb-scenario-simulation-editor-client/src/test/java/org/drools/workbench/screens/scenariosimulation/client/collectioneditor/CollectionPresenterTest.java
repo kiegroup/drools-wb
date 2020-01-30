@@ -381,7 +381,7 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
     public void toggleEditingStatusToDisableTrue() {
         collectionEditorPresenterSpy.toggleEditingStatus(true);
         assertTrue(collectionEditorPresenterSpy.createCollectionIsEditing);
-        verify(collectionViewMock, times(1)).enableCollectionEditorButtons(eq(false));
+        verify(collectionViewMock, times(1)).disableCollectionEditorButtons(eq(true));
         verify(listElementPresenterMock, times(1)).toggleEditingStatus(eq(true));
         verify(mapElementPresenterMock, times(1)).toggleEditingStatus(eq(true));
     }
@@ -390,7 +390,7 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
     public void toggleEditingStatusToDisableFalse() {
         collectionEditorPresenterSpy.toggleEditingStatus(false);
         assertFalse(collectionEditorPresenterSpy.createCollectionIsEditing);
-        verify(collectionViewMock, times(1)).enableCollectionEditorButtons(eq(true));
+        verify(collectionViewMock, times(1)).disableCollectionEditorButtons(eq(false));
         verify(listElementPresenterMock, times(1)).toggleEditingStatus(eq(false));
         verify(mapElementPresenterMock, times(1)).toggleEditingStatus(eq(false));
     }
