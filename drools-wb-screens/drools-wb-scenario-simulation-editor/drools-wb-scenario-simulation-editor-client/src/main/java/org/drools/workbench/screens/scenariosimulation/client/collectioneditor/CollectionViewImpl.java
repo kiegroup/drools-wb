@@ -72,9 +72,6 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     @DataField("collectionEditor")
     protected DivElement collectionEditor = Document.get().createDivElement();
 
-    @DataField("collectionEditorModalDialog")
-    protected DivElement collectionEditorModalDialog = Document.get().createDivElement();
-
     @DataField("collectionEditorModalBody")
     protected DivElement collectionEditorModalBody = Document.get().createDivElement();
 
