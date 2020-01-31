@@ -147,7 +147,7 @@ public interface CollectionView {
     SpanElement getPropertyTitle();
 
     /**
-     * It disables buttons group which manage the Collection Editor
+     * It enable the view to Editing Mode of the Guided collection editor
      * @param isEditingMode
      */
     void enableEditingMode(boolean isEditingMode);

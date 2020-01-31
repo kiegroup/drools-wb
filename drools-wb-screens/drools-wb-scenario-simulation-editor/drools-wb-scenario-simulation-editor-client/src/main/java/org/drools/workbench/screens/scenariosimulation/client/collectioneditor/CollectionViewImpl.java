@@ -407,6 +407,7 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
 
     @Override
     public void enableEditingMode(boolean isEditingMode) {
+        createCollectionRadio.setDisabled(isEditingMode);
         defineCollectionRadio.setDisabled(isEditingMode);
         addItemButton.setDisabled(isEditingMode);
         cancelButton.setDisabled(isEditingMode);
