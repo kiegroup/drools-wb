@@ -85,9 +85,6 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     @DataField("closeCollectionEditorButton")
     protected ButtonElement closeCollectionEditorButton = Document.get().createPushButtonElement();
 
-    @DataField("addItemButtonContainer")
-    protected DivElement addItemButtonContainer = Document.get().createDivElement();
-
     @DataField("createCollectionRadio")
     protected InputElement createCollectionRadio = Document.get().createRadioInputElement("collectionRadio");
 
@@ -185,6 +182,7 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
         collectionCreationCreateSpan.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.createLabelListDescription());
         collectionCreationDefineLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.defineLabelList());
         collectionCreationDefineSpan.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.defineLabelListDescription());
+        addItemButtonLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.addNewListItem());
         presenter.initListStructure(key, simplePropertiesMap, expandablePropertiesMap, this);
     }
 
@@ -207,6 +205,7 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
         collectionCreationCreateSpan.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.createLabelMapDescription());
         collectionCreationDefineLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.defineLabelMap());
         collectionCreationDefineSpan.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.defineLabelMapDescription());
+        addItemButtonLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.addNewMapItem());
         presenter.initMapStructure(key, keyPropertyMap, valuePropertyMap, this);
     }
 
@@ -215,7 +214,6 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
         saveButton.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.saveButton());
         cancelButton.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.cancelButton());
         removeButton.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.removeButton());
-        addItemButtonLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.collectionEditorAddNewItem());
         enableCreateCollectionContainer(true);
         if (RULE.equals(scenarioType)) {
             initAndRegisterHandlerForExpressionTextArea();
@@ -325,7 +323,6 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     protected void enableCreateCollectionContainer(boolean toEnable) {
         showCreateCollectionContainer(toEnable);
         showDefineCollectionContainer(!toEnable);
-        showAddItemButtonContainer(toEnable);
         createCollectionRadio.setChecked(toEnable);
         defineCollectionRadio.setChecked(!toEnable);
         if (listWidget) {
@@ -396,11 +393,6 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
         clickEvent.stopPropagation();
     }
 
-    @EventHandler("addItemButtonContainer")
-    public void onAddItemButtonContainerClick(ClickEvent clickEvent) {
-        clickEvent.stopPropagation();
-    }
-
     @Override
     public void toggleRowExpansion() {
         toggleRowExpansion(!isShown());
@@ -454,14 +446,6 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
             defineCollectionContainer.getStyle().setDisplay(Style.Display.BLOCK);
         } else {
             defineCollectionContainer.getStyle().setDisplay(Style.Display.NONE);
-        }
-    }
-
-    protected void showAddItemButtonContainer(boolean show) {
-        if (show) {
-            addItemButtonContainer.getStyle().setDisplay(Style.Display.BLOCK);
-        } else {
-            addItemButtonContainer.getStyle().setDisplay(Style.Display.NONE);
         }
     }
 }

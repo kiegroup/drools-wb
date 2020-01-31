@@ -108,7 +108,6 @@ public class CollectionViewImplTest extends AbstractCollectionEditorTest {
                 this.collectionCreationDefineSpan = collectionCreationDefineSpanMock;
                 this.createCollectionContainer = createCollectionContainerMock;
                 this.defineCollectionContainer = defineCollectionContainerMock;
-                this.addItemButtonContainer = addItemButtonContainerMock;
                 this.expressionElement = expressionElementMock;
                 this.saveButton = saveButtonMock;
                 this.cancelButton = cancelButtonMock;
@@ -129,6 +128,7 @@ public class CollectionViewImplTest extends AbstractCollectionEditorTest {
         verify(collectionCreationDefineLabelMock, times(1)).setInnerText(ScenarioSimulationEditorConstants.INSTANCE.defineLabelList());
         verify(collectionCreationDefineSpanMock, times(1)).setInnerText(ScenarioSimulationEditorConstants.INSTANCE.defineLabelListDescription());
         verify(collectionPresenterMock, times(1)).initListStructure(eq("key"), eq(Collections.EMPTY_MAP), eq(Collections.EMPTY_MAP), eq(collectionEditorViewImplSpy));
+        verify(addItemButtonLabelMock, times(1)).setInnerText(ScenarioSimulationEditorConstants.INSTANCE.addNewListItem());
         assertTrue(collectionEditorViewImplSpy.listWidget);
     }
 
@@ -142,6 +142,7 @@ public class CollectionViewImplTest extends AbstractCollectionEditorTest {
         verify(collectionCreationCreateSpanMock, times(1)).setInnerText(ScenarioSimulationEditorConstants.INSTANCE.createLabelMapDescription());
         verify(collectionCreationDefineLabelMock, times(1)).setInnerText(ScenarioSimulationEditorConstants.INSTANCE.defineLabelMap());
         verify(collectionCreationDefineSpanMock, times(1)).setInnerText(ScenarioSimulationEditorConstants.INSTANCE.defineLabelMapDescription());
+        verify(addItemButtonLabelMock, times(1)).setInnerText(ScenarioSimulationEditorConstants.INSTANCE.addNewMapItem());
         verify(collectionPresenterMock, times(1)).initMapStructure(eq("key"), eq(Collections.EMPTY_MAP), eq(Collections.EMPTY_MAP), eq(collectionEditorViewImplSpy));
         assertFalse(collectionEditorViewImplSpy.listWidget);
     }
@@ -153,7 +154,6 @@ public class CollectionViewImplTest extends AbstractCollectionEditorTest {
         verify(saveButtonMock, times(1)).setInnerText(ScenarioSimulationEditorConstants.INSTANCE.saveButton());
         verify(cancelButtonMock, times(1)).setInnerText(ScenarioSimulationEditorConstants.INSTANCE.cancelButton());
         verify(removeButtonMock, times(1)).setInnerText(ScenarioSimulationEditorConstants.INSTANCE.removeButton());
-        verify(addItemButtonLabelMock, times(1)).setInnerText(ScenarioSimulationEditorConstants.INSTANCE.collectionEditorAddNewItem());
         verify(collectionEditorViewImplSpy, times(1)).enableCreateCollectionContainer(eq(true));
         verify(collectionEditorViewImplSpy, times(1)).initAndRegisterHandlerForExpressionTextArea();
     }
@@ -165,7 +165,6 @@ public class CollectionViewImplTest extends AbstractCollectionEditorTest {
         verify(saveButtonMock, times(1)).setInnerText(ScenarioSimulationEditorConstants.INSTANCE.saveButton());
         verify(cancelButtonMock, times(1)).setInnerText(ScenarioSimulationEditorConstants.INSTANCE.cancelButton());
         verify(removeButtonMock, times(1)).setInnerText(ScenarioSimulationEditorConstants.INSTANCE.removeButton());
-        verify(addItemButtonLabelMock, times(1)).setInnerText(ScenarioSimulationEditorConstants.INSTANCE.collectionEditorAddNewItem());
         verify(collectionEditorViewImplSpy, times(1)).enableCreateCollectionContainer(eq(true));
         verify(collectionEditorViewImplSpy, never()).initAndRegisterHandlerForExpressionTextArea();
     }
@@ -282,7 +281,6 @@ public class CollectionViewImplTest extends AbstractCollectionEditorTest {
         collectionEditorViewImplSpy.enableCreateCollectionContainer(toEnable);
         verify(collectionEditorViewImplSpy, times(1)).showCreateCollectionContainer(eq(toEnable));
         verify(collectionEditorViewImplSpy, times(1)).showDefineCollectionContainer(eq(!toEnable));
-        verify(collectionEditorViewImplSpy, times(1)).showAddItemButtonContainer(eq(toEnable));
         if (isList) {
             verify(createLabelMock, times(1)).setInnerText(eq(ScenarioSimulationEditorConstants.INSTANCE.createLabelList()));
         } else {
@@ -325,14 +323,6 @@ public class CollectionViewImplTest extends AbstractCollectionEditorTest {
         checkStyleDisplay(defineCollectionContainerStyleMock, false);
         collectionEditorViewImplSpy.showDefineCollectionContainer(true);
         checkStyleDisplay(defineCollectionContainerStyleMock, true);
-    }
-
-    @Test
-    public void showAddItemButtonContainer() {
-        collectionEditorViewImplSpy.showAddItemButtonContainer(false);
-        checkStyleDisplay(addItemButtonContainerStyleMock, false);
-        collectionEditorViewImplSpy.showAddItemButtonContainer(true);
-        checkStyleDisplay(addItemButtonContainerStyleMock, true);
     }
 
     private void checkStyleDisplay(Style styleElement, boolean show) {
