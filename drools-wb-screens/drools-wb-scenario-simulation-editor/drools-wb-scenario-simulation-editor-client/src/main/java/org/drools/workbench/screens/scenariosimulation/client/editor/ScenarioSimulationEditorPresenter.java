@@ -477,6 +477,12 @@ public class ScenarioSimulationEditorPresenter {
         scenarioBackgroundGridWidget.deselect();
     }
 
+    public void validateSimulation() {
+        scenarioSimulationEditorWrapper.validate(context.getStatus().getSimulation(),
+                                                 context.getSettings(),
+                                                 getValidationCallback());
+    }
+
     public void selectSimulationTab() {
         scenarioSimulationEditorWrapper.selectSimulationTab();
     }
@@ -532,7 +538,7 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     protected Command getValidateCommand() {
-        return () -> scenarioSimulationEditorWrapper.validate(context.getStatus().getSimulation(), context.getSettings(), getValidationCallback());
+        return this::validateSimulation;
     }
 
     protected RemoteCallback<List<FactMappingValidationError>> getValidationCallback() {
@@ -662,6 +668,7 @@ public class ScenarioSimulationEditorPresenter {
 
     protected void setSettings(SettingsView.Presenter presenter) {
         Type modelType = dataManagementStrategy instanceof AbstractDMODataManagementStrategy ? Type.RULE : Type.DMN;
+        presenter.setEventBus(eventBus);
         presenter.setScenarioType(modelType, context.getSettings(), path.getFileName());
     }
 

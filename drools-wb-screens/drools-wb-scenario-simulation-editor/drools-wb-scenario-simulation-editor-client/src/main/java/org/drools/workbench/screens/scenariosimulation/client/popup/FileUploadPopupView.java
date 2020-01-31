@@ -52,7 +52,7 @@ public class FileUploadPopupView extends AbstractScenarioPopupView implements Fi
 
     protected static String fileContents;
 
-    protected static  String fileName = null;
+    protected static String fileName = null;
 
     public static void fileLoaded(String fileContents) {
         FileUploadPopupView.fileContents = fileContents;
@@ -64,7 +64,7 @@ public class FileUploadPopupView extends AbstractScenarioPopupView implements Fi
                      final Command okCommand) {
         fileContents = "";
         fileText.setValue("");
-        if (acceptedExtension.size() > 0) {
+        if (!acceptedExtension.isEmpty()) {
             file.setAccept(String.join(",", acceptedExtension));
         }
         uploadWarning.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.uploadWarning());
