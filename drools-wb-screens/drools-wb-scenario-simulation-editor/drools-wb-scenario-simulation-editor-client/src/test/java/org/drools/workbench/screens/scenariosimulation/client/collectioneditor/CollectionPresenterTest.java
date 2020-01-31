@@ -47,7 +47,6 @@ import static org.drools.workbench.screens.scenariosimulation.client.TestPropert
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.TEST_PROPERTYNAME;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.UPDATED_VALUE;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
@@ -354,7 +353,6 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
     public void commonInit() {
         collectionEditorPresenterSpy.collectionView = null;
         collectionEditorPresenterSpy.commonInit(TEST_KEY, collectionViewMock);
-        assertFalse(collectionEditorPresenterSpy.createCollectionIsEditing);
         assertEquals(collectionEditorPresenterSpy.collectionView, collectionViewMock);
         verify(editorTitleMock, times(1)).setInnerText(TEST_KEY);
         verify(propertyTitleMock, times(1)).setInnerText(TEST_PROPERTYNAME);
@@ -380,8 +378,7 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
     @Test
     public void toggleEditingStatusToDisableTrue() {
         collectionEditorPresenterSpy.toggleEditingStatus(true);
-        assertTrue(collectionEditorPresenterSpy.createCollectionIsEditing);
-        verify(collectionViewMock, times(1)).disableCollectionEditorButtons(eq(true));
+        verify(collectionViewMock, times(1)).enableEditingMode(eq(true));
         verify(listElementPresenterMock, times(1)).toggleEditingStatus(eq(true));
         verify(mapElementPresenterMock, times(1)).toggleEditingStatus(eq(true));
     }
@@ -389,8 +386,7 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
     @Test
     public void toggleEditingStatusToDisableFalse() {
         collectionEditorPresenterSpy.toggleEditingStatus(false);
-        assertFalse(collectionEditorPresenterSpy.createCollectionIsEditing);
-        verify(collectionViewMock, times(1)).disableCollectionEditorButtons(eq(false));
+        verify(collectionViewMock, times(1)).enableEditingMode(eq(false));
         verify(listElementPresenterMock, times(1)).toggleEditingStatus(eq(false));
         verify(mapElementPresenterMock, times(1)).toggleEditingStatus(eq(false));
     }

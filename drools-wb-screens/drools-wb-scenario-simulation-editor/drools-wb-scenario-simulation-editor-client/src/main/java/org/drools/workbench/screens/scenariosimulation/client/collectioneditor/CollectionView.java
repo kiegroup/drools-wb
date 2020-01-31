@@ -65,11 +65,6 @@ public interface CollectionView {
         void showEditingBox();
 
         /**
-         * It defines if <b>Create Collection</b> guided editor is in editing status or not.
-         */
-        boolean isCreateCollectionEditing();
-
-        /**
          * Toggle the expansion of the items included in the collection.
          *
          * @param isShown the <b>current</b> expansion status of the collection
@@ -152,10 +147,10 @@ public interface CollectionView {
     SpanElement getPropertyTitle();
 
     /**
-     * It enables/disables buttons group which manage the Collection Editor
-     * @param enable
+     * It disables buttons group which manage the Collection Editor
+     * @param isEditingMode
      */
-    void disableCollectionEditorButtons(boolean enable);
+    void enableEditingMode(boolean isEditingMode);
 
     String getExpression();
 

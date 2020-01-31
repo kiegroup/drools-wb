@@ -306,8 +306,6 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
         showAddItemButtonContainer(toEnable);
         createCollectionRadio.setChecked(toEnable);
         defineCollectionRadio.setChecked(!toEnable);
-        final boolean isCreateCollectionEditorOpenAndEditing = toEnable && presenter.isCreateCollectionEditing();
-        disableCollectionEditorButtons(isCreateCollectionEditorOpenAndEditing);
         if (listWidget) {
             createLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.createLabelList());
         } else {
@@ -408,11 +406,12 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     }
 
     @Override
-    public void disableCollectionEditorButtons(boolean disable) {
-        addItemButton.setDisabled(disable);
-        cancelButton.setDisabled(disable);
-        removeButton.setDisabled(disable);
-        saveButton.setDisabled(disable);
+    public void enableEditingMode(boolean isEditingMode) {
+        defineCollectionRadio.setDisabled(isEditingMode);
+        addItemButton.setDisabled(isEditingMode);
+        cancelButton.setDisabled(isEditingMode);
+        removeButton.setDisabled(isEditingMode);
+        saveButton.setDisabled(isEditingMode);
     }
 
     protected boolean isShown() {
