@@ -265,7 +265,6 @@ public class CollectionPresenterTest extends AbstractCollectionEditorTest {
         verify(elementsContainerMock, times(1)).appendChild(eq(listEditingBoxMock));
         verify(listEditingBoxMock, times(1)).scrollIntoView();
         verify(mapEditingBoxMock, never()).scrollIntoView();
-
     }
 
     @Test
