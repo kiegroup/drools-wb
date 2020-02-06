@@ -660,16 +660,16 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(presenterSpy, times(1)).populateRightDocks(eq(TestToolsPresenter.IDENTIFIER));
         verify(presenterSpy, times(1)).setItemMenuEnabled(eq(true));
         verify(scenarioGridWidgetSpy, times(1)).clearSelections();
-        verify(scenarioGridWidgetSpy, times(1)).select();
-        verify(backgroundGridWidgetSpy, times(1)).deselect();
+        verify(scenarioGridWidgetSpy, times(1)).selectAndFocus();
+        verify(backgroundGridWidgetSpy, times(1)).deselectAndUnFocus();
     }
 
     @Test
     public void onBackgroundTabSelected() {
         presenterSpy.onBackgroundTabSelected();
         verify(backgroundGridWidgetSpy, times(1)).clearSelections();
-        verify(backgroundGridWidgetSpy, times(1)).select();
-        verify(scenarioGridWidgetSpy, times(1)).deselect();
+        verify(backgroundGridWidgetSpy, times(1)).selectAndFocus();
+        verify(scenarioGridWidgetSpy, times(1)).deselectAndUnFocus();
         verify(presenterSpy, times(1)).setItemMenuEnabled(eq(true));
         verify(presenterSpy, times(1)).populateRightDocks(eq(TestToolsPresenter.IDENTIFIER));
     }
@@ -680,8 +680,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(presenterSpy, times(1)).setItemMenuEnabled(eq(false));
         verify(scenarioGridWidgetSpy, times(1)).clearSelections();
         verify(backgroundGridWidgetSpy, times(1)).clearSelections();
-        verify(scenarioGridWidgetSpy, times(1)).deselect();
-        verify(backgroundGridWidgetSpy, times(1)).deselect();
+        verify(scenarioGridWidgetSpy, times(1)).deselectAndUnFocus();
+        verify(backgroundGridWidgetSpy, times(1)).deselectAndUnFocus();
     }
 
     @Test
@@ -690,8 +690,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(presenterSpy, times(1)).setItemMenuEnabled(eq(false));
         verify(scenarioGridWidgetSpy, times(1)).clearSelections();
         verify(backgroundGridWidgetSpy, times(1)).clearSelections();
-        verify(scenarioGridWidgetSpy, times(1)).deselect();
-        verify(backgroundGridWidgetSpy, times(1)).deselect();
+        verify(scenarioGridWidgetSpy, times(1)).deselectAndUnFocus();
+        verify(backgroundGridWidgetSpy, times(1)).deselectAndUnFocus();
     }
 
     @Test
