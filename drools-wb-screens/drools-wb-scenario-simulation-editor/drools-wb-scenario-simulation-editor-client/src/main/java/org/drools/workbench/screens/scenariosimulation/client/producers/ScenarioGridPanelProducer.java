@@ -105,8 +105,8 @@ public class ScenarioGridPanelProducer {
     @PostConstruct
     public void init() {
         scenarioSimulationContext = new ScenarioSimulationContext(simulationGridWidget, backgroundGridWidget);
-        initializeGrid(simulationGridLayer, simulationGridPanel, new ScenarioGridModel(false), scenarioSimulationContext, 1,0);
-        initializeGrid(backgroundGridLayer, backgroundGridPanel, new BackgroundGridModel(false), scenarioSimulationContext, 0,0);
+        initializeGrid(simulationGridLayer, simulationGridPanel, new ScenarioGridModel(false), scenarioSimulationContext, 1, 0);
+        initializeGrid(backgroundGridLayer, backgroundGridPanel, new BackgroundGridModel(false), scenarioSimulationContext, 0, 0);
     }
 
     public ScenarioSimulationContext getScenarioSimulationContext() {
