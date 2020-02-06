@@ -144,13 +144,13 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
 
     @Override
     public void populateTestTools(TestToolsPresenterData data) {
+        setGridWidget(data.getGridWidget());
         setDataObjectFieldsMap(data.getDataObjectFieldsMap());
         setSimpleJavaTypeFieldsMap(data.getSimpleJavaTypeFieldsMap());
         setInstanceFieldsMap(data.getInstanceFieldsMap());
         setSimpleJavaInstanceFieldsMap(data.getSimpleJavaInstanceFieldsMap());
         setHiddenFieldsMap(data.getHiddenFieldsMap());
         hideProperties(data.getPropertiesToHide());
-        setGridWidget(data.getGridWidget());
     }
 
     protected void setDataObjectFieldsMap(SortedMap<String, FactModelTree> dataObjectFieldsMap) {

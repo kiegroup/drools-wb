@@ -447,16 +447,16 @@ public class ScenarioSimulationEditorPresenter {
 
     public void onEditTabSelected() {
         setItemMenuEnabled(true);
+        populateRightDocks(TestToolsPresenter.IDENTIFIER);
         scenarioMainGridWidget.selectAndFocus();
         scenarioBackgroundGridWidget.deselectAndUnFocus();
-        populateRightDocks(TestToolsPresenter.IDENTIFIER);
     }
 
     public void onBackgroundTabSelected() {
         setItemMenuEnabled(true);
+        populateRightDocks(TestToolsPresenter.IDENTIFIER);
         scenarioBackgroundGridWidget.selectAndFocus();
         scenarioMainGridWidget.deselectAndUnFocus();
-        populateRightDocks(TestToolsPresenter.IDENTIFIER);
     }
 
     public void onOverviewSelected() {
