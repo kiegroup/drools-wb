@@ -508,9 +508,9 @@ public class ScenarioGridTest {
     }
 
     @Test
-    public void ensureDefaultCellIsSelected_EmptyGrid() {
+    public void ensureCellIsSelected_EmptyGrid() {
         when(scenarioGridModelMock.getColumnCount()).thenReturn(0);
-        scenarioGridSpy.ensureDefaultCellIsSelected();
+        scenarioGridSpy.ensureCellIsSelected();
         verify(scenarioGridSpy, never()).selectCell(anyInt(), anyInt(), anyBoolean(), anyBoolean());
         verify(scenarioGridSpy, never()).signalTestTools();
     }

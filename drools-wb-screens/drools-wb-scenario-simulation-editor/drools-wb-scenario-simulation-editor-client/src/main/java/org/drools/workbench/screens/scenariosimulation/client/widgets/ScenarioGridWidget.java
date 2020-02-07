@@ -70,7 +70,7 @@ public class ScenarioGridWidget extends ResizeComposite {
     public void selectAndFocus() {
         scenarioGridPanel.getScenarioGrid().select();
         scenarioGridPanel.setFocus(true);
-        scenarioGridPanel.ensureDataCellIsSelected();
+        scenarioGridPanel.ensureCellIsSelected();
         selected = true;
     }
 

@@ -153,10 +153,10 @@ public class ScenarioGrid extends BaseGridWidget {
     }
 
     /**
-     * It ensure there is a selected cell (can be Header / Data cell) in the grid. If not, it selects the one defined
+     * It ensures there is a selected cell (can be Header / Data cell) in the grid. If not, it selects the one defined
      * in <code>defaultSelectedDataCellX</code> and <code>defaultSelectedDataCellY</code> fields.
      */
-    public void ensureDefaultCellIsSelected() {
+    public void ensureCellIsSelected() {
         /* If model is empty, data are not available / loaded, do nothing */
         if (model.getColumnCount() == 0) {
             return;

@@ -91,7 +91,7 @@ public class ScenarioGridWidgetTest extends AbstractScenarioSimulationTest {
         scenarioGridWidget.selectAndFocus();
         verify(scenarioGridMock, times(1)).select();
         verify(scenarioGridPanelMock, times(1)).setFocus(eq(true));
-        verify(scenarioGridPanelMock, times(1)).ensureDataCellIsSelected();
+        verify(scenarioGridPanelMock, times(1)).ensureCellIsSelected();
         assertTrue(scenarioGridWidget.selected);
     }
 
