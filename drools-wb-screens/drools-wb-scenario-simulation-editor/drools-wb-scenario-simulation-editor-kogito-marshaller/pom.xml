@@ -13,7 +13,7 @@
   <artifactId>drools-wb-scenario-simulation-editor-kogito-marshaller</artifactId>
   <packaging>jar</packaging>
 
-  <name>Drools Workbench - Scenario Simulation Editor - Marshaller</name>
+  <name>Drools Workbench - Scenario Simulation Editor - Kogito - Marshaller</name>
   <description>Drools Workbench - Scenario Simulation Editor - Kogito - Marshaller</description>
 
   <properties>
