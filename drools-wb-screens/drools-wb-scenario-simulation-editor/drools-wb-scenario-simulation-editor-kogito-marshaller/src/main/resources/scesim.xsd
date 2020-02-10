@@ -131,7 +131,6 @@
       <xs:element type="wrappedImportsType" name="imports" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
-
   <xs:complexType name="ScenarioSimulationModelType">
     <xs:sequence>
       <xs:element type="simulationType" name="simulation"/>
