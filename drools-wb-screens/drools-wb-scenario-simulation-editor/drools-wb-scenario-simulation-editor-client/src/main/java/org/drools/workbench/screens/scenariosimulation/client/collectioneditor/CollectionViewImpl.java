@@ -30,7 +30,6 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.dom.client.UListElement;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.DomEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.FocusWidget;
@@ -72,9 +71,6 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
 
     @DataField("collectionEditor")
     protected DivElement collectionEditor = Document.get().createDivElement();
-
-    @DataField("collectionEditorModalDialog")
-    protected DivElement collectionEditorModalDialog = Document.get().createDivElement();
 
     @DataField("collectionEditorModalBody")
     protected DivElement collectionEditorModalBody = Document.get().createDivElement();
@@ -160,11 +156,8 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
      */
     protected String value;
 
-    protected double left;
-
     public CollectionViewImpl() {
         setElement(collectionEditor);
-        addKeyDownHandler(DomEvent::stopPropagation);
     }
 
     /**
@@ -280,26 +273,6 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     }
 
     @Override
-    public ButtonElement getAddItemButton() {
-        return addItemButton;
-    }
-
-    @Override
-    public ButtonElement getCancelButton() {
-        return cancelButton;
-    }
-
-    @Override
-    public ButtonElement getRemoveButton() {
-        return removeButton;
-    }
-
-    @Override
-    public ButtonElement getSaveButton() {
-        return saveButton;
-    }
-
-    @Override
     public String getExpression() {
         return expressionElement.getValue();
     }
@@ -313,13 +286,11 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     @EventHandler("createCollectionRadio")
     public void onCreateCollectionClick(ClickEvent clickEvent) {
         enableCreateCollectionContainer(true);
-        clickEvent.stopPropagation();
     }
 
     @EventHandler("defineCollectionRadio")
     public void onDefineCollectionClick(ClickEvent clickEvent) {
         enableCreateCollectionContainer(false);
-        clickEvent.stopPropagation();
     }
 
     protected void enableCreateCollectionContainer(boolean toEnable) {
@@ -335,70 +306,34 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
         }
     }
 
-    @EventHandler("collectionEditor")
-    public void onCollectionEditorClick(ClickEvent clickEvent) {
-        clickEvent.stopPropagation();
-    }
-
-    @EventHandler("collectionEditorModalDialog")
-    public void onCollectionEditorModalDialogClick(ClickEvent clickEvent) {
-        clickEvent.stopPropagation();
-    }
-
-    @EventHandler("editorTitle")
-    public void onEditorTitleClick(ClickEvent clickEvent) {
-        clickEvent.stopPropagation();
-    }
-
-    @EventHandler("elementsContainer")
-    public void onElementsContainerClick(ClickEvent clickEvent) {
-        clickEvent.stopPropagation();
-    }
-
     @EventHandler("closeCollectionEditorButton")
     public void onCloseCollectionEditorButtonClick(ClickEvent clickEvent) {
         close();
-        clickEvent.stopPropagation();
     }
 
     @EventHandler("cancelButton")
     public void onCancelButtonClick(ClickEvent clickEvent) {
         close();
-        clickEvent.stopPropagation();
     }
 
     @EventHandler("removeButton")
     public void onRemoveButtonClick(ClickEvent clickEvent) {
         presenter.remove();
-        clickEvent.stopPropagation();
     }
 
     @EventHandler("saveButton")
     public void onSaveButtonClick(ClickEvent clickEvent) {
         presenter.save();
-        clickEvent.stopPropagation();
     }
 
     @EventHandler("addItemButton")
     public void onAddItemButton(ClickEvent clickEvent) {
         presenter.showEditingBox();
-        clickEvent.stopPropagation();
     }
 
     @EventHandler("faAngleRight")
     public void onFaAngleRightClick(ClickEvent clickEvent) {
         presenter.onToggleRowExpansion(isShown());
-        clickEvent.stopPropagation();
-    }
-
-    @EventHandler("propertyTitle")
-    public void onPropertyTitleClick(ClickEvent clickEvent) {
-        clickEvent.stopPropagation();
-    }
-
-    @EventHandler("addItemButtonContainer")
-    public void onAddItemButtonContainerClick(ClickEvent clickEvent) {
-        clickEvent.stopPropagation();
     }
 
     @Override
@@ -425,6 +360,16 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     @Override
     public void setFixedHeight(double value, Style.Unit unit) {
         collectionEditorModalBody.getStyle().setHeight(value, unit);
+    }
+
+    @Override
+    public void enableEditingMode(boolean isEditingMode) {
+        createCollectionRadio.setDisabled(isEditingMode);
+        defineCollectionRadio.setDisabled(isEditingMode);
+        addItemButton.setDisabled(isEditingMode);
+        cancelButton.setDisabled(isEditingMode);
+        removeButton.setDisabled(isEditingMode);
+        saveButton.setDisabled(isEditingMode);
     }
 
     protected boolean isShown() {
