@@ -26,7 +26,6 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
 import org.drools.workbench.screens.guided.dtable.client.resources.HitPolicyInternationalizer;
-import org.gwtbootstrap3.client.ui.CheckBox;
 import org.gwtbootstrap3.client.ui.Heading;
 import org.gwtbootstrap3.client.ui.html.Paragraph;
 
@@ -43,9 +42,6 @@ public class GuidedDecisionTableOptions extends Composite {
 
     private static GuidedDecisionTableOptionsBinder uiBinder = GWT.create(GuidedDecisionTableOptionsBinder.class);
 
-    @UiField
-    CheckBox chkUseWizard;
-
     @UiField(provided = true)
     HitPolicySelector hitPolicySelector;
 
@@ -54,8 +50,6 @@ public class GuidedDecisionTableOptions extends Composite {
 
     @UiField
     Paragraph hitPolicyDescriptionText;
-
-    private boolean isUsingWizard = false;
 
     private GuidedDecisionTable52.TableFormat tableFormat = GuidedDecisionTable52.TableFormat.EXTENDED_ENTRY;
     private GuidedDecisionTable52.HitPolicy hitPolicy = GuidedDecisionTable52.HitPolicy.NONE;
@@ -73,21 +67,12 @@ public class GuidedDecisionTableOptions extends Composite {
         setHitPolicyDescription(GuidedDecisionTable52.HitPolicy.NONE);
     }
 
-    public boolean isUsingWizard() {
-        return this.isUsingWizard;
-    }
-
     public GuidedDecisionTable52.TableFormat getTableFormat() {
         return this.tableFormat;
     }
 
     public GuidedDecisionTable52.HitPolicy getHitPolicy() {
         return hitPolicy;
-    }
-
-    @UiHandler(value = "chkUseWizard")
-    void chkUseWizardClick(ClickEvent event) {
-        this.isUsingWizard = chkUseWizard.getValue();
     }
 
     @UiHandler(value = "optExtendedEntry")

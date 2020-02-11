@@ -19,21 +19,16 @@ package org.drools.workbench.screens.guided.dtable.client.handlers;
 import com.google.gwtmockito.GwtMock;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
-import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52.TableFormat;
 import org.drools.workbench.models.guided.dtable.shared.model.MetadataCol52;
 import org.drools.workbench.screens.guided.dtable.client.type.GuidedDTableResourceType;
-import org.drools.workbench.screens.guided.dtable.client.wizard.NewGuidedDecisionTableWizardHelper;
-import org.drools.workbench.screens.guided.dtable.client.wizard.table.NewGuidedDecisionTableWizard;
 import org.drools.workbench.screens.guided.dtable.service.GuidedDecisionTableEditorService;
 import org.guvnor.common.services.project.categories.Decision;
 import org.guvnor.common.services.project.model.Package;
 import org.jboss.errai.common.client.api.Caller;
-import org.jboss.errai.ioc.client.container.SyncBeanDef;
 import org.jboss.errai.ioc.client.container.SyncBeanManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracleFactory;
 import org.kie.workbench.common.widgets.client.handlers.NewResourcePresenter;
 import org.kie.workbench.common.widgets.client.handlers.NewResourceSuccessEvent;
@@ -83,12 +78,6 @@ public class NewGuidedDecisionTableHandlerTest {
     private SyncBeanManager beanManager;
 
     @Mock
-    private SyncBeanDef<NewGuidedDecisionTableWizard> wizardBeanDef;
-
-    @Mock
-    private NewGuidedDecisionTableWizard wizardBean;
-
-    @Mock
     private EventSourceMock<NewResourceSuccessEvent> newResourceSuccessEventMock;
 
     @GwtMock
@@ -101,21 +90,16 @@ public class NewGuidedDecisionTableHandlerTest {
     private ArgumentCaptor<String> fileNameCaptor;
 
     private NewGuidedDecisionTableHandler handler;
-    private NewGuidedDecisionTableWizardHelper helper;
     private GuidedDTableResourceType resourceType = new GuidedDTableResourceType(new Decision());
 
     @Before
     public void setup() {
         serviceCaller = new CallerMock<>(service);
-        helper = new NewGuidedDecisionTableWizardHelper(serviceCaller,
-                                                        oracleFactory,
-                                                        beanManager);
         final NewGuidedDecisionTableHandler wrapped = new NewGuidedDecisionTableHandler(placeManager,
                                                                                         serviceCaller,
                                                                                         resourceType,
                                                                                         options,
-                                                                                        busyIndicatorView,
-                                                                                        helper) {
+                                                                                        busyIndicatorView) {
 
             {
                 this.notificationEvent = mockNotificationEvent;
@@ -123,9 +107,6 @@ public class NewGuidedDecisionTableHandlerTest {
             }
         };
         handler = spy(wrapped);
-
-        when(beanManager.lookupBean(eq(NewGuidedDecisionTableWizard.class))).thenReturn(wizardBeanDef);
-        when(wizardBeanDef.getInstance()).thenReturn(wizardBean);
 
         when(service.create(any(Path.class),
                             any(String.class),
@@ -140,31 +121,6 @@ public class NewGuidedDecisionTableHandlerTest {
     }
 
     @Test
-    public void testCreate_WithWizard() {
-        final String fileName = "fileName";
-        final Package pkg = mock(Package.class);
-        final Path resourcesPath = PathFactory.newPath("resources",
-                                                       "default://project/src/main/resources");
-
-        when(pkg.getPackageMainResourcesPath()).thenReturn(resourcesPath);
-        when(options.isUsingWizard()).thenReturn(true);
-        when(options.getTableFormat()).thenReturn(TableFormat.EXTENDED_ENTRY);
-        when(options.getHitPolicy()).thenReturn(GuidedDecisionTable52.HitPolicy.FIRST_HIT);
-
-        handler.create(pkg,
-                       fileName,
-                       newResourcePresenter);
-
-        verify(wizardBean,
-               times(1)).setContent(pathCaptor.capture(),
-                                    fileNameCaptor.capture(),
-                                    eq(TableFormat.EXTENDED_ENTRY),
-                                    eq(GuidedDecisionTable52.HitPolicy.FIRST_HIT),
-                                    any(AsyncPackageDataModelOracle.class),
-                                    any(NewGuidedDecisionTableWizard.GuidedDecisionTableWizardHandler.class));
-    }
-
-    @Test
     public void testCreate_WithoutWizard() {
         final String fileName = "fileName";
         final Package pkg = mock(Package.class);
@@ -172,7 +128,6 @@ public class NewGuidedDecisionTableHandlerTest {
                                                        "default://project/src/main/resources");
 
         when(pkg.getPackageMainResourcesPath()).thenReturn(resourcesPath);
-        when(options.isUsingWizard()).thenReturn(false);
 
         handler.create(pkg,
                        fileName,
@@ -208,7 +163,6 @@ public class NewGuidedDecisionTableHandlerTest {
                                                        "default://project/src/main/resources");
 
         when(pkg.getPackageMainResourcesPath()).thenReturn(resourcesPath);
-        when(options.isUsingWizard()).thenReturn(false);
         when(options.getHitPolicy()).thenReturn(GuidedDecisionTable52.HitPolicy.RESOLVED_HIT);
 
         handler.create(pkg,

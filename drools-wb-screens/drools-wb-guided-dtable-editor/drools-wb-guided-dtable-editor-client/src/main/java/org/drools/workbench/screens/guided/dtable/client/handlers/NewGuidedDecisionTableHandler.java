@@ -27,7 +27,6 @@ import org.drools.workbench.models.guided.dtable.shared.model.MetadataCol52;
 import org.drools.workbench.screens.guided.dtable.client.resources.GuidedDecisionTableResources;
 import org.drools.workbench.screens.guided.dtable.client.resources.i18n.GuidedDecisionTableConstants;
 import org.drools.workbench.screens.guided.dtable.client.type.GuidedDTableResourceType;
-import org.drools.workbench.screens.guided.dtable.client.wizard.NewGuidedDecisionTableWizardHelper;
 import org.drools.workbench.screens.guided.dtable.service.GuidedDecisionTableEditorService;
 import org.guvnor.common.services.project.model.Package;
 import org.jboss.errai.common.client.api.Caller;
@@ -55,7 +54,6 @@ public class NewGuidedDecisionTableHandler extends DefaultNewResourceHandler {
     private GuidedDTableResourceType resourceType;
     private GuidedDecisionTableOptions options;
     private BusyIndicatorView busyIndicatorView;
-    private NewGuidedDecisionTableWizardHelper helper;
 
     private NewResourcePresenter newResourcePresenter;
 
@@ -68,14 +66,12 @@ public class NewGuidedDecisionTableHandler extends DefaultNewResourceHandler {
                                          final Caller<GuidedDecisionTableEditorService> service,
                                          final GuidedDTableResourceType resourceType,
                                          final GuidedDecisionTableOptions options,
-                                         final BusyIndicatorView busyIndicatorView,
-                                         final NewGuidedDecisionTableWizardHelper helper) {
+                                         final BusyIndicatorView busyIndicatorView) {
         this.placeManager = placeManager;
         this.service = service;
         this.resourceType = resourceType;
         this.options = options;
         this.busyIndicatorView = busyIndicatorView;
-        this.helper = helper;
     }
 
     @PostConstruct
@@ -104,13 +100,9 @@ public class NewGuidedDecisionTableHandler extends DefaultNewResourceHandler {
                        final String baseFileName,
                        final NewResourcePresenter presenter) {
         this.newResourcePresenter = presenter;
-        if (!options.isUsingWizard()) {
-            createEmptyDecisionTable(pkg.getPackageMainResourcesPath(),
-                                     baseFileName);
-        } else {
-            createDecisionTableWithWizard(pkg.getPackageMainResourcesPath(),
-                                          baseFileName);
-        }
+
+        createEmptyDecisionTable(pkg.getPackageMainResourcesPath(),
+                                 baseFileName);
     }
 
     private void createEmptyDecisionTable(final Path contextPath,
@@ -139,16 +131,6 @@ public class NewGuidedDecisionTableHandler extends DefaultNewResourceHandler {
                                                                                                        resourceType),
                                                                                          model,
                                                                                          "");
-    }
-
-    private void createDecisionTableWithWizard(final Path contextPath,
-                                               final String baseFileName) {
-        helper.createNewGuidedDecisionTable(contextPath,
-                                            baseFileName,
-                                            options.getTableFormat(),
-                                            options.getHitPolicy(),
-                                            busyIndicatorView,
-                                            getSuccessCallback(newResourcePresenter));
     }
 
     @Override

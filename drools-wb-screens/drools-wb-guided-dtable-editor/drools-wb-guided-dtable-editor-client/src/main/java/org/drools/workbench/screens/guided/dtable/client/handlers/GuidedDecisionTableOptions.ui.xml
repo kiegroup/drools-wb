@@ -25,9 +25,6 @@
   <ui:with field="resources" type="org.kie.workbench.common.widgets.client.resources.CommonsResources"/>
 
   <b:Form type="HORIZONTAL">
-    <b:FormGroup addStyleNames="col-lg-12">
-      <b:CheckBox text="{i18n.UseWizardToBuildAsset}" ui:field="chkUseWizard" title="${i18n.UseWizardTooltip}" />
-    </b:FormGroup>
     <b:FormGroup>
       <html:Div addStyleNames="col-lg-4">
         <b:FormLabel for="hitPolicySelector" text="{i18n.HitPolicy}" title="{i18n.HitPolicyTooltip}"/>

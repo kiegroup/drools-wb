@@ -17,7 +17,6 @@
 package org.drools.workbench.screens.guided.dtable.client.editor;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -47,19 +46,20 @@ import org.drools.workbench.screens.guided.dtable.client.editor.page.ColumnsPage
 import org.drools.workbench.screens.guided.dtable.client.editor.search.GuidedDecisionTableEditorSearchIndex;
 import org.drools.workbench.screens.guided.dtable.client.editor.search.GuidedDecisionTableSearchableElement;
 import org.drools.workbench.screens.guided.dtable.client.editor.search.SearchableElementFactory;
+import org.drools.workbench.screens.guided.dtable.client.handlers.NewGuidedDecisionTableHandler;
 import org.drools.workbench.screens.guided.dtable.client.type.GuidedDTableGraphResourceType;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTableModellerView;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTablePresenter;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTablePresenter.Access;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTableView;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.events.cdi.DecisionTableSelectedEvent;
-import org.drools.workbench.screens.guided.dtable.client.wizard.NewGuidedDecisionTableWizardHelper;
 import org.drools.workbench.screens.guided.dtable.model.GuidedDecisionTableEditorContent;
 import org.drools.workbench.screens.guided.dtable.model.GuidedDecisionTableEditorGraphContent;
 import org.drools.workbench.screens.guided.dtable.model.GuidedDecisionTableEditorGraphModel;
 import org.drools.workbench.screens.guided.dtable.service.GuidedDecisionTableEditorService;
 import org.drools.workbench.screens.guided.dtable.service.GuidedDecisionTableGraphEditorService;
 import org.drools.workbench.screens.guided.dtable.service.GuidedDecisionTableGraphSaveAndRenameService;
+import org.guvnor.common.services.project.model.Package;
 import org.guvnor.common.services.project.model.WorkspaceProject;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
 import org.guvnor.common.services.shared.metadata.model.Overview;
@@ -73,6 +73,7 @@ import org.kie.workbench.common.services.shared.project.KieModuleService;
 import org.kie.workbench.common.services.verifier.reporting.client.panel.AnalysisReportScreen;
 import org.kie.workbench.common.widgets.client.callbacks.CommandDrivenErrorCallback;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
+import org.kie.workbench.common.widgets.client.handlers.NewResourcePresenter;
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
 import org.kie.workbench.common.widgets.client.popups.validation.ValidationPopup;
 import org.kie.workbench.common.widgets.client.search.common.HasSearchableElements;
@@ -149,7 +150,8 @@ public class GuidedDecisionTableGraphEditorPresenter extends BaseGuidedDecisionT
     private GuidedDecisionTableEditorGraphContent content;
     private LoadGraphLatch loadGraphLatch = null;
     private SaveGraphLatch saveGraphLatch = null;
-    private NewGuidedDecisionTableWizardHelper helper;
+    private NewGuidedDecisionTableHandler newTableHandler;
+    private NewResourcePresenter newResource;
     private final Event<SearchPerformedEvent> searchPerformedEvent;
 
     @Inject
@@ -172,7 +174,6 @@ public class GuidedDecisionTableGraphEditorPresenter extends BaseGuidedDecisionT
                                                    final InsertMenuBuilder insertMenuBuilder,
                                                    final RadarMenuBuilder radarMenuBuilder,
                                                    final GuidedDecisionTableModellerView.Presenter modeller,
-                                                   final NewGuidedDecisionTableWizardHelper helper,
                                                    final SyncBeanManager beanManager,
                                                    final PlaceManager placeManager,
                                                    final LockManager lockManager,
@@ -183,6 +184,8 @@ public class GuidedDecisionTableGraphEditorPresenter extends BaseGuidedDecisionT
                                                    final GuidedDecisionTableEditorSearchIndex editorSearchIndex,
                                                    final SearchBarComponent<GuidedDecisionTableSearchableElement> searchBarComponent,
                                                    final SearchableElementFactory searchableElementFactory,
+                                                   final NewGuidedDecisionTableHandler newTableHandler,
+                                                   final NewResourcePresenter newResource,
                                                    final Event<SearchPerformedEvent> searchPerformedEvent) {
         super(view,
               service,
@@ -207,13 +210,14 @@ public class GuidedDecisionTableGraphEditorPresenter extends BaseGuidedDecisionT
         this.graphService = graphService;
         this.moduleService = moduleService;
         this.saveInProgressEvent = saveInProgressEvent;
-        this.helper = helper;
         this.lockManager = lockManager;
         this.graphSaveAndRenameService = graphSaveAndRenameService;
         this.saveAndRenameCommandBuilder = saveAndRenameCommandBuilder;
         this.editorSearchIndex = editorSearchIndex;
         this.searchBarComponent = searchBarComponent;
         this.searchableElementFactory = searchableElementFactory;
+        this.newTableHandler = newTableHandler;
+        this.newResource = newResource;
         this.searchPerformedEvent = searchPerformedEvent;
         this.modeller.analysisReportScreen(analysisReportScreen);
     }
@@ -366,13 +370,15 @@ public class GuidedDecisionTableGraphEditorPresenter extends BaseGuidedDecisionT
     }
 
     void onNewDocument() {
-        moduleService.call((org.guvnor.common.services.project.model.Package pkg) -> {
-            helper.createNewGuidedDecisionTable(pkg.getPackageMainResourcesPath(),
-                                                "",
-                                                GuidedDecisionTable52.TableFormat.EXTENDED_ENTRY,
-                                                GuidedDecisionTable52.HitPolicy.NONE,
-                                                view,
-                                                (path) -> onOpenDocumentsInEditor(Collections.singletonList(path)));
+        moduleService.call((Package pkg) -> {
+            newTableHandler.getCommand(newResource).execute();
+//            helper.createNewGuidedDecisionTable(pkg.getPackageMainResourcesPath(),
+//                                                "",
+//                                                GuidedDecisionTable52.TableFormat.EXTENDED_ENTRY,
+//                                                GuidedDecisionTable52.HitPolicy.NONE,
+//                                                view,
+//                                                (path) -> onOpenDocumentsInEditor(Collections.singletonList(path)));
+//            TODO
         }).resolvePackage(editorPath);
     }
 
