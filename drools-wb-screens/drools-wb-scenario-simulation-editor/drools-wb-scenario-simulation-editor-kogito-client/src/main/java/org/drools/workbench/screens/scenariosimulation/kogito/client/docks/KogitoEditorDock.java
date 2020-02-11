@@ -35,9 +35,7 @@ import org.uberfire.mvp.PlaceRequest;
 public class KogitoEditorDock implements AuthoringEditorDock {
 
     protected UberfireDocks uberfireDocks;
-
     protected ManagedInstance<WorkbenchDocksHandler> installedHandlers;
-
     protected String authoringPerspectiveIdentifier = null;
     protected WorkbenchDocksHandler activeHandler = null;
     protected UberfireDock[] activeDocks;
