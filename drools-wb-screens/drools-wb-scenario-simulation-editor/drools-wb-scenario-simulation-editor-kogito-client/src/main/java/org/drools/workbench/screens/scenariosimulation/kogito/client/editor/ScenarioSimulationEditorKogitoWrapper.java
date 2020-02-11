@@ -126,7 +126,7 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     }
 
     @Override
-    public void setContent(String value) {
+    public void setContent(String path, String value) {
         unmarshallContent(value);
     }
 
