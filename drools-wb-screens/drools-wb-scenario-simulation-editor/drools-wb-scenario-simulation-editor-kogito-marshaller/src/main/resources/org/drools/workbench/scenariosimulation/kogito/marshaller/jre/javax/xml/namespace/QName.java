@@ -90,7 +90,7 @@ public class QName {
 
     @Override
     public String toString() {
-        if (getNamespaceURI().equals(XMLConstants.NULL_NS_URI)) {
+        if (Objects.equals(getNamespaceURI(), XMLConstants.NULL_NS_URI)) {
             return getLocalPart();
         } else {
             return "{" + getNamespaceURI() + "}" + getLocalPart();
