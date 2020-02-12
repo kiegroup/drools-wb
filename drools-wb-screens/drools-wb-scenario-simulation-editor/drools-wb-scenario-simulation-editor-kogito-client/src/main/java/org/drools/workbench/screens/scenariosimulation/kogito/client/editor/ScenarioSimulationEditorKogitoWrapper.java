@@ -117,7 +117,7 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     @Override
     protected void buildMenuBar() {
         setMenus(fileMenuBuilder.build());
-        getMenus().getItemsMap().values().forEach(menuItem -> menuItem.setEnabled(true));
+        getMenus().getItems().forEach(menuItem -> menuItem.setEnabled(true));
     }
 
     @Override
