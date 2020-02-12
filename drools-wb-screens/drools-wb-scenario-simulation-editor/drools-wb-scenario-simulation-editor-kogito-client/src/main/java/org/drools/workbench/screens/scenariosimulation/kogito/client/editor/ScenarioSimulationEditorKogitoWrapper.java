@@ -219,14 +219,17 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
         return currentPath;
     }
 
+    @Override
     public boolean mayClose() {
         return !scenarioSimulationEditorPresenter.isDirty();
     }
 
+    @Override
     public IsWidget getTitle() {
         return super.getTitle();
     }
 
+    @Override
     public MultiPageEditorContainerView getWidget() {
         return super.getWidget();
     }
