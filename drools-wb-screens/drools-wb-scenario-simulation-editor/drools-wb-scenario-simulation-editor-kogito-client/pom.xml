@@ -116,6 +116,14 @@
       <artifactId>base</artifactId>
     </dependency>
     <!-- END MARSHALLING -->
+
+    <!-- TEST -->
+    <dependency>
+      <groupId>com.google.gwt.gwtmockito</groupId>
+      <artifactId>gwtmockito</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- END TEST -->
   </dependencies>
 
   <dependencyManagement>
