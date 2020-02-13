@@ -89,6 +89,7 @@ public class FieldItemViewTest extends AbstractTestToolsTest {
     public void onFieldElementSelected() {
         fieldItemViewSpy.onFieldElementSelected();
         verify(lIElementMock, times(1)).addClassName(eq(ConstantHolder.SELECTED));
+        verify(fieldItemViewSpy, times(1)).showCheck(eq(true));
         verify(fieldItemPresenter, times(1)).onFieldElementClick(eq(fieldItemViewSpy));
     }
 
