@@ -128,29 +128,6 @@
 
   <dependencyManagement>
     <dependencies>
-      <dependency>
-        <groupId>org.kie.workbench.widgets</groupId>
-        <artifactId>kie-wb-common-ui</artifactId>
-        <version>${version.org.kie}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie.workbench</groupId>
-        <artifactId>kie-wb-common-kogito-api</artifactId>
-        <!-- momentary fix -->
-        <version>${version.org.kie}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie.workbench</groupId>
-        <artifactId>kie-wb-common-kogito-client</artifactId>
-        <!-- momentary fix -->
-        <version>${version.org.kie}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.drools</groupId>
-        <artifactId>drools-scenario-simulation-api</artifactId>
-        <version>${version.org.kie}</version>
-      </dependency>
-
       <!-- MARSHALLING -->
       <dependency>
         <groupId>org.drools</groupId>
