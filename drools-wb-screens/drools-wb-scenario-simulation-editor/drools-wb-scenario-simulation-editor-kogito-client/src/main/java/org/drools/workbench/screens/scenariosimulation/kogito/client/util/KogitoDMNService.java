@@ -16,7 +16,6 @@
 package org.drools.workbench.screens.scenariosimulation.kogito.client.util;
 
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
-import org.jboss.errai.bus.server.annotations.Remote;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITDefinitions;
@@ -26,7 +25,6 @@ import org.uberfire.backend.vfs.Path;
  * Interface required because <b>runtime</b> and <b>testing</b> environments would
  * need/provide different implementations
  */
-@Remote
 public interface KogitoDMNService {
 
     void getDMNContent(final Path path, final RemoteCallback<String> remoteCallback, final ErrorCallback<Object> errorCallback);
