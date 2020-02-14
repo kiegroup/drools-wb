@@ -50,7 +50,7 @@ public class KogitoDMODataManagementStrategy extends AbstractDMODataManagementSt
 
     @Override
     protected void manageDataObjects(List<String> dataObjectsTypes, TestToolsView.Presenter testToolsPresenter, int expectedElements, SortedMap<String, FactModelTree> dataObjectsFieldsMap, ScenarioSimulationContext context, List<String> simpleJavaTypes, GridWidget gridWidget) {
-        //                 Iterate over all dataObjects to retrieve their modelfields
+        // Iterate over all dataObjects to retrieve their modelfields
         dataObjectsTypes.forEach(factType -> {
             ModelField[] retrieved = kogitoOracle.getFieldCompletions(factType);
             FactModelTree toSend = getFactModelTree(factType, retrieved);

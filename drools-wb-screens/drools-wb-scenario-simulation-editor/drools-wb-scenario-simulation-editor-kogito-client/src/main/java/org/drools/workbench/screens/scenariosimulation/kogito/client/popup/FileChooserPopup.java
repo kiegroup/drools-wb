@@ -22,14 +22,6 @@ import org.uberfire.mvp.Command;
 public interface FileChooserPopup extends AbstractScenarioPopup,
                                           HasPresenter<FileChooserPopup.Presenter> {
 
-    /**
-     * Makes this popup container(and the main content along with it) invisible. Has no effect if the popup is not
-     * already showing.
-     */
-    void hide();
-
-    String getFileName();
-
     interface Presenter extends AbstractScenarioPopup.Presenter {
 
         /**
@@ -44,4 +36,12 @@ public interface FileChooserPopup extends AbstractScenarioPopup,
 
         String getFileName();
     }
+
+    /**
+     * Makes this popup container(and the main content along with it) invisible. Has no effect if the popup is not
+     * already showing.
+     */
+    void hide();
+
+    String getFileName();
 }
