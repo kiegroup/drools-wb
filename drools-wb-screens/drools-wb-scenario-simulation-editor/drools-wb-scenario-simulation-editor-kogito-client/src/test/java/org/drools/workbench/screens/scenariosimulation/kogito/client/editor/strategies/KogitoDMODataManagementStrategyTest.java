@@ -15,6 +15,113 @@
  */
 package org.drools.workbench.screens.scenariosimulation.kogito.client.editor.strategies;
 
+import java.util.List;
+
+import com.google.gwtmockito.GwtMockitoTestRunner;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.fakes.KogitoAsyncPackageDataModelOracle;
+import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.uberfire.backend.vfs.ObservablePath;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+@RunWith(GwtMockitoTestRunner.class)
 public class KogitoDMODataManagementStrategyTest {
+
+    private static final String FACT_NAME = "factName";
+
+    @Mock
+    private KogitoAsyncPackageDataModelOracle oracleMock;
+    @Mock
+    private ObservablePath observablePathMock;
+    @Mock
+    private ScenarioSimulationModelContent scenarioSimulationModelContentMock;
+
+    private KogitoDMODataManagementStrategy kogitoDMODataManagementStrategySpy;
+
+    @Before
+    public void setup() {
+        kogitoDMODataManagementStrategySpy = spy(new KogitoDMODataManagementStrategy(oracleMock));
+    }
+
+    @Test
+    public void manageScenarioSimulationModelContent() {
+        kogitoDMODataManagementStrategySpy.manageScenarioSimulationModelContent(observablePathMock,
+                                                                                scenarioSimulationModelContentMock);
+        verify(scenarioSimulationModelContentMock, times(1)).getModel();
+        verify(oracleMock, times(1)).init(eq(observablePathMock));
+    }
+
+    @Test
+    public void isADataTypeEmpty() {
+        when(oracleMock.getFactTypes()).thenReturn(new String[0]);
+        assertFalse(kogitoDMODataManagementStrategySpy.isADataType("Test"));
+    }
+
+    @Test
+    public void isADataTypeTrue() {
+        String[] array = {"Test"};
+        when(oracleMock.getFactTypes()).thenReturn(array);
+        assertTrue(kogitoDMODataManagementStrategySpy.isADataType("Test"));
+    }
+
+    @Test
+    public void isADataTypeFalse() {
+        String[] array = {"Est"};
+        when(oracleMock.getFactTypes()).thenReturn(array);
+        assertFalse(kogitoDMODataManagementStrategySpy.isADataType("Test"));
+    }
+
+
+    @Test
+    public void getFactTypesEmpty() {
+        when(oracleMock.getFactTypes()).thenReturn(new String[0]);
+        List<String> facts = kogitoDMODataManagementStrategySpy.getFactTypes();
+        assertTrue(facts.isEmpty());
+    }
+
+    @Test
+    public void getFactTypes() {
+        String[] array = {"Test"};
+        when(oracleMock.getFactTypes()).thenReturn(array);
+        List<String> facts = kogitoDMODataManagementStrategySpy.getFactTypes();
+        assertTrue(facts.size() == 1);
+        assertEquals("Test", facts.get(0));
+    }
+
+    @Test
+    public void skipPopulateTestToolsEmptyArray() {
+        when(oracleMock.getFactTypes()).thenReturn(new String[0]);
+        assertTrue(kogitoDMODataManagementStrategySpy.skipPopulateTestTools());
+    }
+
+    @Test
+    public void skipPopulateTestToolsArrayPopulated() {
+        String[] array = {"Test"};
+        when(oracleMock.getFactTypes()).thenReturn(array);
+        assertFalse(kogitoDMODataManagementStrategySpy.skipPopulateTestTools());
+    }
+
+    @Test
+    public void getFQCNByFactName() {
+        kogitoDMODataManagementStrategySpy.getFQCNByFactName(FACT_NAME);
+        verify(oracleMock, times(1)).getFQCNByFactName(eq(FACT_NAME));
+    }
+
+    @Test
+    public void getParametricFieldType() {
+        kogitoDMODataManagementStrategySpy.getParametricFieldType(FACT_NAME, "propertyName");
+        verify(oracleMock, times(1)).getParametricFieldType(eq(FACT_NAME), eq("propertyName"));
+    }
 
 }
