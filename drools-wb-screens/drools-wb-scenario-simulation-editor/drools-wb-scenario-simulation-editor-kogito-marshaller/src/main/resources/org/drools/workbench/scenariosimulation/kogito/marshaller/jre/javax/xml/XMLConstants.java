@@ -21,9 +21,14 @@ import jsinterop.annotations.JsType;
 /**
  * GWT Super-source version of javax.xml.XMLConstants.
  */
-@SuppressWarnings("unused")
 @JsType(namespace = JsPackage.GLOBAL)
 public final class XMLConstants {
+
+    /**
+     * <p>Private constructor to prevent instantiation.</p>
+     */
+    private XMLConstants() {
+    }
 
     public static final String NULL_NS_URI = "";
 
