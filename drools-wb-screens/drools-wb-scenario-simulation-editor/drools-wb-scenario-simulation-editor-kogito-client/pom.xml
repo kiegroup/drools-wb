@@ -105,6 +105,10 @@
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-workbench-client-views-patternfly</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.kie</groupId>
+      <artifactId>kie-dmn-feel</artifactId>
+    </dependency>
 
     <!-- MARSHALLING -->
     <dependency>
@@ -117,20 +121,15 @@
     </dependency>
     <!-- END MARSHALLING -->
 
-    <dependency>
-      <groupId>org.kie</groupId>
-      <artifactId>kie-dmn-feel</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.kie</groupId>
-      <artifactId>kie-dmn-feel</artifactId>
-      <classifier>sources</classifier>
-    </dependency>
-
     <!-- TEST -->
     <dependency>
       <groupId>com.google.gwt.gwtmockito</groupId>
       <artifactId>gwtmockito</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>xml-apis</groupId>
+      <artifactId>xml-apis</artifactId>
       <scope>test</scope>
     </dependency>
     <!-- END TEST -->
