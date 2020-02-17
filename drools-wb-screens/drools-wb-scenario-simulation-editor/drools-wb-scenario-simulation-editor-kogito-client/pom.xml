@@ -117,6 +117,16 @@
     </dependency>
     <!-- END MARSHALLING -->
 
+    <dependency>
+      <groupId>org.kie</groupId>
+      <artifactId>kie-dmn-feel</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.kie</groupId>
+      <artifactId>kie-dmn-feel</artifactId>
+      <classifier>sources</classifier>
+    </dependency>
+
     <!-- TEST -->
     <dependency>
       <groupId>com.google.gwt.gwtmockito</groupId>
