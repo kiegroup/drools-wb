@@ -196,7 +196,7 @@
         <configuration>
           <excludes>
             org/drools/workbench/scenariosimulation/kogito/marshaller/js/**/*,
-            org/drools/workbench/scenariosimulation/kogito/marshaller/mapper/**/*,
+            org/drools/workbench/scenariosimulation/kogito/marshaller/mapper/**/*
           </excludes>
         </configuration>
       </plugin>
