@@ -189,12 +189,15 @@
           <noServer>false</noServer>
         </configuration>
       </plugin>
-      <!-- DISABLE CHECKSTYLE -->
+      <!-- Exclude generated code from checkstyle validation -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
         <configuration>
-          <skip>true</skip>
+          <excludes>
+            org/drools/workbench/scenariosimulation/kogito/marshaller/js/**/*,
+            org/drools/workbench/scenariosimulation/kogito/marshaller/mapper/**/*,
+          </excludes>
         </configuration>
       </plugin>
     </plugins>
