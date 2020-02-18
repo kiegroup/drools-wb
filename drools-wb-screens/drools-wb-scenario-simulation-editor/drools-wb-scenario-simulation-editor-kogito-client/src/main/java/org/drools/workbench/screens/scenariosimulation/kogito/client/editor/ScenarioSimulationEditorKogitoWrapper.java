@@ -83,15 +83,15 @@ import static org.drools.workbench.screens.scenariosimulation.kogito.client.conv
 public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContainerPresenter<ScenarioSimulationModel> implements ScenarioSimulationEditorWrapper {
 
     protected ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter;
-    private FileMenuBuilder fileMenuBuilder;
-    private AuthoringEditorDock authoringWorkbenchDocks;
-    private SCESIM scesimContainer;
-    private Promises promises;
-    private Path currentPath;
-    private KogitoDMNService dmnTypeService;
-    private KogitoAsyncPackageDataModelOracle kogitoOracle;
+    protected FileMenuBuilder fileMenuBuilder;
+    protected AuthoringEditorDock authoringWorkbenchDocks;
+    protected SCESIM scesimContainer;
+    protected Promises promises;
+    protected Path currentPath;
+    protected KogitoDMNService dmnTypeService;
+    protected KogitoAsyncPackageDataModelOracle kogitoOracle;
 
-    private ScenarioSimulationEditorKogitoWrapper() {
+    public ScenarioSimulationEditorKogitoWrapper() {
         //Zero-parameter constructor for CDI proxies
     }
 
