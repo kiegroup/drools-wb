@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2020 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ public class KogitoEditorDock implements AuthoringEditorDock {
     @PostConstruct
     public void initialize() {
         // Initializing the handlers
-        installedHandlers.forEach(handler -> {
+        installedHandlers.iterator().forEachRemaining(handler -> {
             Command initCommand = () -> setActiveHandler(handler);
             handler.init(initCommand);
         });
@@ -98,7 +98,6 @@ public class KogitoEditorDock implements AuthoringEditorDock {
             uberfireDocks.hide(UberfireDockPosition.EAST,
                                authoringPerspectiveIdentifier);
         } else {
-
             // first remove the existing docks
             if (activeDocks != null) {
                 uberfireDocks.remove(activeDocks);

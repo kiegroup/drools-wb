@@ -15,14 +15,24 @@
  */
 package org.drools.workbench.screens.scenariosimulation.kogito.client.editor.strategies;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
+import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.fakes.KogitoAsyncPackageDataModelOracle;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
+import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.kie.soup.project.datamodel.oracle.ModelField;
 import org.mockito.Mock;
 import org.uberfire.backend.vfs.ObservablePath;
 
@@ -46,12 +56,29 @@ public class KogitoDMODataManagementStrategyTest {
     private ObservablePath observablePathMock;
     @Mock
     private ScenarioSimulationModelContent scenarioSimulationModelContentMock;
+    @Mock
+    private ScenarioSimulationContext scenarioSimulationContextMock;
+    @Mock
+    private TestToolsPresenter testToolsPresenterMock;
+    @Mock
+    private FactModelTree factModelTreeMock;
+    @Mock
+    private GridWidget gridWidgetMock;
 
     private KogitoDMODataManagementStrategy kogitoDMODataManagementStrategySpy;
 
     @Before
     public void setup() {
-        kogitoDMODataManagementStrategySpy = spy(new KogitoDMODataManagementStrategy(oracleMock));
+        kogitoDMODataManagementStrategySpy = spy(new KogitoDMODataManagementStrategy(oracleMock) {
+            @Override
+            public FactModelTree getFactModelTree(String factName, ModelField[] modelFields) {
+                return factModelTreeMock;
+            }
+            @Override
+            public void aggregatorCallbackMethod(TestToolsView.Presenter testToolsPresenter, int expectedElements, SortedMap<String, FactModelTree> factTypeFieldsMap, ScenarioSimulationContext context, FactModelTree result, List<String> simpleJavaTypes, GridWidget gridWidget) {
+                // DO nothing
+            }
+        });
     }
 
     @Test
@@ -82,6 +109,19 @@ public class KogitoDMODataManagementStrategyTest {
         assertFalse(kogitoDMODataManagementStrategySpy.isADataType("Test"));
     }
 
+    @Test
+    public void retrieveFactModelTuple() {
+        String factType = "factType";
+        ModelField[] modelFields = new ModelField[1];
+        when(oracleMock.getFieldCompletions(eq(factType))).thenReturn(modelFields);
+        List<String> dataObjectsType = Arrays.asList(factType);
+        SortedMap<String, FactModelTree> dataObjectsFieldMap = new TreeMap<>();
+        List<String> javaSimpleType = new ArrayList<>();
+        kogitoDMODataManagementStrategySpy.manageDataObjects(dataObjectsType, testToolsPresenterMock, 1, dataObjectsFieldMap, scenarioSimulationContextMock, javaSimpleType, gridWidgetMock);
+        verify(oracleMock, times(1)).getFieldCompletions(eq(factType));
+        verify(kogitoDMODataManagementStrategySpy, times(1)).getFactModelTree(eq(factType), eq(modelFields));
+        verify(kogitoDMODataManagementStrategySpy, times(1)).aggregatorCallbackMethod(eq(testToolsPresenterMock), eq(1), eq(dataObjectsFieldMap), eq(scenarioSimulationContextMock), eq(factModelTreeMock), eq(javaSimpleType), eq(gridWidgetMock));
+    }
 
     @Test
     public void getFactTypesEmpty() {
@@ -123,5 +163,4 @@ public class KogitoDMODataManagementStrategyTest {
         kogitoDMODataManagementStrategySpy.getParametricFieldType(FACT_NAME, "propertyName");
         verify(oracleMock, times(1)).getParametricFieldType(eq(FACT_NAME), eq("propertyName"));
     }
-
 }
