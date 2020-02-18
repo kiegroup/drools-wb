@@ -50,7 +50,7 @@ public class KogitoEditorDock implements AuthoringEditorDock {
     @PostConstruct
     public void initialize() {
         // Initializing the handlers
-        installedHandlers.forEach(handler -> {
+        installedHandlers.iterator().forEachRemaining(handler -> {
             Command initCommand = () -> setActiveHandler(handler);
             handler.init(initCommand);
         });
@@ -98,7 +98,6 @@ public class KogitoEditorDock implements AuthoringEditorDock {
             uberfireDocks.hide(UberfireDockPosition.EAST,
                                authoringPerspectiveIdentifier);
         } else {
-
             // first remove the existing docks
             if (activeDocks != null) {
                 uberfireDocks.remove(activeDocks);
