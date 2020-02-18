@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2020 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,14 @@ import jsinterop.annotations.JsType;
 /**
  * GWT Super-source version of javax.xml.XMLConstants.
  */
-@SuppressWarnings("unused")
 @JsType(namespace = JsPackage.GLOBAL)
 public final class XMLConstants {
+
+    /**
+     * <p>Private constructor to prevent instantiation.</p>
+     */
+    private XMLConstants() {
+    }
 
     public static final String NULL_NS_URI = "";
 
