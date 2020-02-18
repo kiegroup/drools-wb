@@ -121,11 +121,11 @@ public class KogitoEditorDockTest {
         handler.refresh(true, false);
         kogitoEditorDockSpy.setActiveHandler(handler);
         assertSame(kogitoEditorDockSpy.activeHandler, handler);
-        verify(handler, times(1)).provideDocks(eq(AUTHORING_PERSPECTIVE));
+        verify(handler, atLeastOnce()).provideDocks(eq(AUTHORING_PERSPECTIVE));
         assertTrue(kogitoEditorDockSpy.activeDocks.length == 2);
         verify(uberfireDocks, never()).remove(any());
-        verify(uberfireDocks, times(1)).add(isA(UberfireDock.class), isA(UberfireDock.class));
-        verify(uberfireDocks, times(1)).show(eq(UberfireDockPosition.EAST),eq(AUTHORING_PERSPECTIVE));
+        verify(uberfireDocks, atLeastOnce()).add(isA(UberfireDock.class), isA(UberfireDock.class));
+        verify(uberfireDocks, atLeastOnce()).show(eq(UberfireDockPosition.EAST),eq(AUTHORING_PERSPECTIVE));
         verify(uberfireDocks, never()).hide(any(), any());
     }
 

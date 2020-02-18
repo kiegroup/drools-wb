@@ -21,18 +21,12 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSim
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.kie.workbench.common.kogito.client.editor.BaseKogitoEditor;
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
 import org.mockito.Mock;
 import org.uberfire.client.promise.Promises;
-import org.uberfire.client.views.pfly.multipage.MultiPageEditorViewImpl;
-import org.uberfire.client.views.pfly.multipage.PageImpl;
-import org.uberfire.client.workbench.widgets.multipage.MultiPageEditor;
 import org.uberfire.workbench.model.menu.Menus;
 
-import static org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorWrapper.BACKGROUND_TAB_INDEX;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -51,7 +45,6 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
     private ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenterMock;
     @Mock
     private ScenarioSimulationModel scenarioSimulationModel;
-
 
     private ScenarioSimulationEditorKogitoWrapper scenarioSimulationEditorKogitoWrapperSpy;
 
