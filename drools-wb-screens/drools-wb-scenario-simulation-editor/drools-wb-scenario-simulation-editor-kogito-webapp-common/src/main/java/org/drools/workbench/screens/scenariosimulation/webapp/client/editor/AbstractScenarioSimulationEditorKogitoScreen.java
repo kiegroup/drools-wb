@@ -41,7 +41,6 @@ public abstract class AbstractScenarioSimulationEditorKogitoScreen implements Ko
     @Inject
     private KogitoScesimPopupPresenter kogitoScesimPopupPresenter;
 
-
     /**
      *
      * @param baseUri the folder/position into which the file will be saved
