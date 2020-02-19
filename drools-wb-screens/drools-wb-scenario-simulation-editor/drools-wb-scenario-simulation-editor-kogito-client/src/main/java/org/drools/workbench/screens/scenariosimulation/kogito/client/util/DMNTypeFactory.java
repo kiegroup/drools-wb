@@ -29,6 +29,10 @@ import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSIT
  */
 public class DMNTypeFactory {
 
+    private DMNTypeFactory() {
+        // Utility class, not instantiable
+    }
+
     public static DMNType getDMNType(final JSITItemDefinition itemDefinition,
                                      final String namespace,
                                      final Map<String, DMNType> dmnTypesMap) {
