@@ -23,7 +23,6 @@ import java.util.function.Supplier;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.PopupPanel;
 import elemental2.promise.Promise;
@@ -81,6 +80,8 @@ import static org.drools.workbench.screens.scenariosimulation.kogito.client.conv
  */
 @Dependent
 public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContainerPresenter<ScenarioSimulationModel> implements ScenarioSimulationEditorWrapper {
+
+    public static final String DEFAULT_PACKAGE = "com";
 
     protected ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter;
     protected FileMenuBuilder fileMenuBuilder;
@@ -287,27 +288,20 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     }
 
     protected SCESIMMarshallCallback getJSInteropMarshallCallback(Promise.PromiseExecutorCallbackFn.ResolveCallbackFn<String> resolveCallbackFn) {
-        return xml -> {
-            GWT.log("xml " + xml);
-            resolveCallbackFn.onInvoke(xml);
-        };
+        return resolveCallbackFn::onInvoke;
     }
 
     protected SCESIMUnmarshallCallback getJSInteropUnmarshallCallback() {
         return scesim -> {
             this.scesimContainer = scesim;
             final JSIScenarioSimulationModelType scenarioSimulationModelType = Js.uncheckedCast(JsUtils.getUnwrappedElement(scesim));
-            try {
-                final ScenarioSimulationModel scenarioSimulationModel = getScenarioSimulationModel(scenarioSimulationModelType);
-                getModelSuccessCallbackMethod(scenarioSimulationModel);
-            } catch (Exception e) {
-                GWT.log("Failed to transform scesim", e);
-            }
+            final ScenarioSimulationModel scenarioSimulationModel = getScenarioSimulationModel(scenarioSimulationModelType);
+            getModelSuccessCallbackMethod(scenarioSimulationModel);
         };
     }
 
     protected void getModelSuccessCallbackMethod(ScenarioSimulationModel model) {
-        scenarioSimulationEditorPresenter.setPackageName("com");
+        scenarioSimulationEditorPresenter.setPackageName(DEFAULT_PACKAGE);
         DataManagementStrategy dataManagementStrategy;
         if (ScenarioSimulationModel.Type.RULE.equals(model.getSettings().getType())) {
             dataManagementStrategy = new KogitoDMODataManagementStrategy(kogitoOracle);
@@ -323,9 +317,4 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     protected void onBackgroundTabSelected() {
         scenarioSimulationEditorPresenter.onBackgroundTabSelected();
     }
-
-    protected void onImportsTabSelected() {
-        scenarioSimulationEditorPresenter.onImportsTabSelected();
-    }
-
 }
