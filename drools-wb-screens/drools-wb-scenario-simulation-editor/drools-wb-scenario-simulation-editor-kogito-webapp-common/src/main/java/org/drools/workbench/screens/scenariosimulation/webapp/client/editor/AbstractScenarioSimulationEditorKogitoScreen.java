@@ -62,7 +62,7 @@ public abstract class AbstractScenarioSimulationEditorKogitoScreen implements Ko
             }
             String savedFileName = "created.scesim";
             final Path path = PathFactory.newPath(savedFileName, baseUri + savedFileName);
-            scenarioSimulationBuilder.populateScenarioSimulationModel(path, new ScenarioSimulationModel(), selectedType, value, content -> {
+            scenarioSimulationBuilder.populateScenarioSimulationModel(new ScenarioSimulationModel(), selectedType, value, content -> {
                 saveFile(path, content);
                 scenarioSimulationEditorKogitoWrapper.gotoPath(path);
                 scenarioSimulationEditorKogitoWrapper.setContent(null, content);
