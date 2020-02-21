@@ -13,23 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.kie.dmn.feel.lang.types;
+package org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.feel;
 
-/*
-TODO {gcardosi} restore/replace them
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.OffsetDateTime;
-import java.time.OffsetTime;
-import java.time.ZonedDateTime;
-import java.time.chrono.ChronoPeriod;
-import java.time.temporal.ChronoField;
-import java.time.temporal.Temporal;
-import java.time.temporal.TemporalAccessor;
-import java.time.temporal.TemporalQueries;
- */
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -37,12 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.kie.dmn.feel.lang.SimpleType;
-import org.kie.dmn.feel.lang.Type;
-
-/**
- * GWT Super-source version of org.kie.dmn.feel.lang.types of kie-dmn-feel module.
- */
 public enum BuiltInType implements SimpleType {
 
     UNKNOWN(SimpleType.ANY, "unknown", "any"), // updated FEEL lattice of types from DMN v1.2
@@ -92,8 +71,8 @@ public enum BuiltInType implements SimpleType {
     @Override
     public String toString() {
         return "Type{ " +
-                names[0] +
-                " }";
+               names[0] +
+               " }";
     }
 
     public static Type determineTypeFromName( String name ) {
@@ -119,33 +98,12 @@ public enum BuiltInType implements SimpleType {
             return STRING;
         } else if( o instanceof Date ) {
             return DATE;
-//        } else if( o instanceof LocalTime || o instanceof OffsetTime ) {
-//            return TIME;
-//        } else if( o instanceof ZonedDateTime || o instanceof OffsetDateTime || o instanceof LocalDateTime ) {
-//            return DATE_TIME;
-//        } else if (o instanceof Duration || o instanceof ChronoPeriod) {
-//            return DURATION;
         } else if( o instanceof Boolean ) {
             return BOOLEAN;
-        /* TODO {gcardosi} correct implementation
-        } else if( o instanceof UnaryTest ) {
-            return UNARY_TEST;
-        } else if( o instanceof Range ) {
-            return RANGE;
-        } else if( o instanceof FEELFunction ) {
-            return FUNCTION;*/
         } else if( o instanceof List ) {
             return LIST;
         } else if( o instanceof Map ) {
             return CONTEXT;
-//        } else if (o instanceof TemporalAccessor) {
-//            // last, determine if it's a FEEL time with TZ
-//            TemporalAccessor ta = (TemporalAccessor) o;
-//            if (!(ta instanceof Temporal) && ta.isSupported(ChronoField.HOUR_OF_DAY)
-//                    && ta.isSupported(ChronoField.MINUTE_OF_HOUR) && ta.isSupported(ChronoField.SECOND_OF_MINUTE)
-//                    && ta.query(TemporalQueries.zone()) != null) {
-//                return TIME;
-//            }
         }
         return UNKNOWN;
     }
@@ -181,4 +139,5 @@ public enum BuiltInType implements SimpleType {
     public boolean conformsTo(Type t) {
         return t == UNKNOWN || this == t;
     }
+
 }

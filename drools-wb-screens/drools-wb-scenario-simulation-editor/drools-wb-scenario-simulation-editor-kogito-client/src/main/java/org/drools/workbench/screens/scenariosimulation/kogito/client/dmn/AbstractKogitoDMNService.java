@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.scenariosimulation.kogito.client.util;
+package org.drools.workbench.screens.scenariosimulation.kogito.client.dmn;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,11 +30,11 @@ import javax.xml.namespace.QName;
 
 import com.google.gwt.core.client.GWT;
 import jsinterop.base.Js;
-import org.drools.workbench.screens.scenariosimulation.kogito.client.util.DMNTypeFactory.DMNType;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.DMNTypeFactory.DMNType;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.feel.BuiltInType;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.feel.Type;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
-import org.kie.dmn.feel.lang.Type;
-import org.kie.dmn.feel.lang.types.BuiltInType;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITDMNElement;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITDRGElement;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITDecision;
