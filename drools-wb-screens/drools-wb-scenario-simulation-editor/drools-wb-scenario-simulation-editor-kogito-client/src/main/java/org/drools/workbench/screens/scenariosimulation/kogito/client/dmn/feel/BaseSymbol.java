@@ -69,13 +69,21 @@ public class BaseSymbol implements Symbol {
 
     @Override
     public boolean equals(Object o) {
-        if ( this == o ) return true;
-        if ( !(o instanceof BaseSymbol) ) return false;
+        if ( this == o ) {
+            return true;
+        }
+        if ( !(o instanceof BaseSymbol) ) {
+            return false;
+        }
 
         BaseSymbol that = (BaseSymbol) o;
 
-        if ( id != null ? !id.equals( that.id ) : that.id != null ) return false;
-        if ( type != null ? !type.equals( that.type ) : that.type != null ) return false;
+        if ( id != null ? !id.equals( that.id ) : that.id != null ) {
+            return false;
+        }
+        if ( type != null ? !type.equals( that.type ) : that.type != null ) {
+            return false;
+        }
         return !(scope != null ? !scope.equals( that.scope ) : that.scope != null);
 
     }
