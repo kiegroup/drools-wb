@@ -13,21 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.scenariosimulation.kogito.client.util;
+package org.drools.workbench.screens.scenariosimulation.kogito.client.dmn;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import jsinterop.base.Js;
-import org.kie.dmn.feel.lang.Type;
-import org.kie.dmn.feel.lang.impl.MapBackedType;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.feel.MapBackedType;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.feel.Type;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITItemDefinition;
 
 /**
  * Utility factory for <code>DMNType</code>
  */
 public class DMNTypeFactory {
+
+    private DMNTypeFactory() {
+        // Utility class, not instantiable
+    }
 
     public static DMNType getDMNType(final JSITItemDefinition itemDefinition,
                                      final String namespace,

@@ -13,19 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.scenariosimulation.webapp.backend;
+package org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.feel;
 
-import javax.enterprise.context.ApplicationScoped;
+public interface Symbol {
 
-import org.kie.workbench.common.kogito.webapp.base.backend.IOServiceNio2WrapperProvider;
-import org.uberfire.io.impl.IOServiceNio2WrapperImpl;
+    String getId();
 
-@ApplicationScoped
-public class IOServiceNio2WrapperProviderImpl implements IOServiceNio2WrapperProvider {
+    Type getType();
 
-    @Override
-    public IOServiceNio2WrapperImpl getIOServiceNio2() {
-        return new IOServiceNio2WrapperImpl("scesim");
-    }
+    Scope getScope();
 }
-

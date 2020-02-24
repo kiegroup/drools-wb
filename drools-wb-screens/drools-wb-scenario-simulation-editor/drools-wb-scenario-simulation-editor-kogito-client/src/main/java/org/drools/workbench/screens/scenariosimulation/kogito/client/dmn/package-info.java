@@ -13,19 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.scenariosimulation.webapp.backend;
+package org.drools.workbench.screens.scenariosimulation.kogito.client.dmn;
 
-import javax.enterprise.context.ApplicationScoped;
-
-import org.kie.workbench.common.kogito.webapp.base.backend.IOServiceNio2WrapperProvider;
-import org.uberfire.io.impl.IOServiceNio2WrapperImpl;
-
-@ApplicationScoped
-public class IOServiceNio2WrapperProviderImpl implements IOServiceNio2WrapperProvider {
-
-    @Override
-    public IOServiceNio2WrapperImpl getIOServiceNio2() {
-        return new IOServiceNio2WrapperImpl("scesim");
-    }
-}
-
+/**
+ * Aim of this module is to manage a DMN file and use it to define Data Objects usable inside Scenario Simulation.
+ * Most of these classes are copied from other external modules, which are not compatible with GWT.
+ * Classes on dmn/feel package are copied from kie-dmn-feel module.
+ * Classes on dmn package contains code copied from backend side of ScenarioSimulation
+ **/
