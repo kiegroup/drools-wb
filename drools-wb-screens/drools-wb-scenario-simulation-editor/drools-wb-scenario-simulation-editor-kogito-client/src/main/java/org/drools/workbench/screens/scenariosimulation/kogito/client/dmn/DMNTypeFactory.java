@@ -82,11 +82,6 @@ public class DMNTypeFactory {
             if (feelType == null) {
                 feelType = new MapBackedType(name);
                 this.feelType = feelType;
-                if (fields != null) {
-                    for (Map.Entry<String, DMNType> field : fields.entrySet()) {
-                        ((MapBackedType) feelType).addField(field.getKey(), (field.getValue()).getFeelType());
-                    }
-                }
             }
         }
 

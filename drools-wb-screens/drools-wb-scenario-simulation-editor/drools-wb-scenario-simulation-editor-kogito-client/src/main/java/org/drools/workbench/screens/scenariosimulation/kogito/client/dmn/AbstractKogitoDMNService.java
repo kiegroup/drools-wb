@@ -54,10 +54,6 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
 
     public static final String URI_FEEL = "http://www.omg.org/spec/DMN/20180521/FEEL/";
     public static final String WRONG_DMN_MESSAGE = "Wrong DMN Type";
-    private static final DMNType UNKNOWN = new DMNType(URI_FEEL,
-                                                       BuiltInType.UNKNOWN.getName(),
-                                                       null, true, false, null, null,
-                                                       BuiltInType.UNKNOWN);
     private static final QName TYPEREF_QNAME = new QName("", "typeRef", "");
 
     @Override
@@ -103,16 +99,14 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
     }
 
     protected Map<String, DMNType> getDMNTypesMap(final List<JSITItemDefinition> jsitItemDefinitions,
-                                                                 final String nameSpace) {
+                                                  final String nameSpace) {
         Map<String, DMNType> toReturn = new HashMap<>();
         for (BuiltInType type : BuiltInType.values()) {
             for (String name : type.getNames()) {
                 DMNType feelPrimitiveType;
-                if (type == BuiltInType.UNKNOWN) {
+                if (type == BuiltInType.ANY) {
                     // already added, skip it
                     continue;
-                } else if (type == BuiltInType.LIST) {
-                    feelPrimitiveType = new DMNType(URI_FEEL, name, null, false, UNKNOWN, type);
                 } else if (type == BuiltInType.CONTEXT) {
                     feelPrimitiveType = new DMNType(URI_FEEL, name, null, false, true, Collections.emptyMap(), null, type);
                 } else {
@@ -201,7 +195,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
         if (toReturn) {
             Type feelType = getRootType(type);
             // BuiltInType.UNKNOWN is a special case: it is instantiated as collection but it should be considered as single for editing
-            if (feelType instanceof BuiltInType && feelType.equals(BuiltInType.UNKNOWN)) {
+            if (feelType instanceof BuiltInType && feelType.equals(BuiltInType.ANY)) {
                 toReturn = false;
             }
         }

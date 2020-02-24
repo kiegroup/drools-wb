@@ -16,6 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.kogito.client.docks;
 
 import java.util.Collection;
+import java.util.Objects;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -86,7 +87,7 @@ public class KogitoEditorDock implements AuthoringEditorDock {
 
     protected void setActiveHandler(WorkbenchDocksHandler handler) {
         // If there's an active handler let's check if it should refresh docks
-        if (activeHandler != null && activeHandler.equals(handler) && !activeHandler.shouldRefreshDocks()) {
+        if (Objects.equals(activeHandler, handler) && !activeHandler.shouldRefreshDocks()) {
             return;
         }
 
