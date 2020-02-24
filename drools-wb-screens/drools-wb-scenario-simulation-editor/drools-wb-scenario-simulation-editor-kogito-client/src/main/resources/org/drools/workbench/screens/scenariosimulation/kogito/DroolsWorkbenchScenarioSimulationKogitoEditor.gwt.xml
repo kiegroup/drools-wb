@@ -21,10 +21,6 @@
 
   <source path="client"/>
 
-  <super-source path="emulated"/>
-
-  <!-- DMN FEEL-->
-  <inherits name="org.kie.dmn.feel.DMNFeel" />
   <!-- SCENARIO EDITOR -->
   <inherits name="org.drools.workbench.screens.scenariosimulation.DroolsWorkbenchScenarioSimulationEditorAPI"/>
   <inherits name='org.drools.workbench.screens.scenariosimulation.DroolsWorkbenchScenarioSimulationEditorClient'/>
