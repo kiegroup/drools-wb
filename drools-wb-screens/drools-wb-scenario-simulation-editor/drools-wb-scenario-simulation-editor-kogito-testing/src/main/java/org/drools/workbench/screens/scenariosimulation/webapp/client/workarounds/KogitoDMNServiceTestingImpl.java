@@ -18,7 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.webapp.client.workaround
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import org.drools.workbench.screens.scenariosimulation.kogito.client.util.AbstractKogitoDMNService;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.AbstractKogitoDMNService;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.uberfire.backend.vfs.Path;
