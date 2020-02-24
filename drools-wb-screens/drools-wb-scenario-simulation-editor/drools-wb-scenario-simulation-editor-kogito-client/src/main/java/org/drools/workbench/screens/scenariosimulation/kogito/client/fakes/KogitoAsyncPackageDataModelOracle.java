@@ -32,7 +32,9 @@ public interface KogitoAsyncPackageDataModelOracle {
 
     List<String> getPackageNames();
 
-    String[] getFactTypes();
+    default String[] getFactTypes() {
+        return new String[0];
+    };
 
     String[] getAllFactTypes();
 
