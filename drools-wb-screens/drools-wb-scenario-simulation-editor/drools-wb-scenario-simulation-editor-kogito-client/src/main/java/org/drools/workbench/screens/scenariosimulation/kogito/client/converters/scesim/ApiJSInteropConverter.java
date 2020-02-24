@@ -99,7 +99,7 @@ public class ApiJSInteropConverter {
         toReturn.setImports(jsiWrappedImportsType);
         if (imports != null) {
             imports.stream().map(ApiJSInteropConverter::getImport).forEach(
-                    jsiImport -> jsiWrappedImportsType.addImport(jsiImport));
+                    jsiWrappedImportsType::addImport);
         }
         return toReturn;
     }
@@ -118,7 +118,7 @@ public class ApiJSInteropConverter {
         JSIScenariosType jsiScenariosType = new JSIScenariosType();
         toReturn.setScesimData(jsiScenariosType);
         unmodifiableScenarios.stream().map(ApiJSInteropConverter::getScenario).forEach(
-                jsiScenarioType -> jsiScenariosType.addScenario(jsiScenarioType));
+                jsiScenariosType::addScenario);
         return toReturn;
     }
 
@@ -140,7 +140,7 @@ public class ApiJSInteropConverter {
         JSIBackgroundDatasType jsiBackgroundDatasType = new JSIBackgroundDatasType();
         toReturn.setScesimData(jsiBackgroundDatasType);
         unmodifiableBackgroundDatas.stream().map(ApiJSInteropConverter::getBackgroundData).forEach(
-                jSIBackgroundDataType -> jsiBackgroundDatasType.addBackgroundData(jSIBackgroundDataType));
+                jsiBackgroundDatasType::addBackgroundData);
         return toReturn;
     }
 
