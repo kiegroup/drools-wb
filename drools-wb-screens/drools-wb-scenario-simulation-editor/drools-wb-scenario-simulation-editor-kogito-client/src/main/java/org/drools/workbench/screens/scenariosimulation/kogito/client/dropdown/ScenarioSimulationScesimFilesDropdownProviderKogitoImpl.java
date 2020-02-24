@@ -29,7 +29,6 @@ public class ScenarioSimulationScesimFilesDropdownProviderKogitoImpl implements 
 
     @Override
     public void getItems(Consumer<List<KieAssetsDropdownItem>> assetListConsumer) {
-        List<KieAssetsDropdownItem> toAccept = new ArrayList<>();
-        assetListConsumer.accept(toAccept);
+        assetListConsumer.accept(new ArrayList<>());
     }
 }

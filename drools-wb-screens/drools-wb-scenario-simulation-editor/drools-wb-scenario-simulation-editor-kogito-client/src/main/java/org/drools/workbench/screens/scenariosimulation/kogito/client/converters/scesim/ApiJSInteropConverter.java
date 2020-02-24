@@ -98,8 +98,8 @@ public class ApiJSInteropConverter {
         JSIWrappedImportsType jsiWrappedImportsType = new JSIWrappedImportsType();
         toReturn.setImports(jsiWrappedImportsType);
         if (imports != null) {
-            List<JSIImportType> toSet = imports.stream().map(ApiJSInteropConverter::getImport).collect(Collectors.toList());
-            jsiWrappedImportsType.setImport(toSet);
+            imports.stream().map(ApiJSInteropConverter::getImport).forEach(
+                    jsiImport -> jsiWrappedImportsType.addImport(jsiImport));
         }
         return toReturn;
     }
@@ -117,9 +117,8 @@ public class ApiJSInteropConverter {
         final List<Scenario> unmodifiableScenarios = source.getUnmodifiableData();
         JSIScenariosType jsiScenariosType = new JSIScenariosType();
         toReturn.setScesimData(jsiScenariosType);
-        List<JSIScenarioType> toSet = unmodifiableScenarios.stream()
-                .map(ApiJSInteropConverter::getScenario).collect(Collectors.toList());
-        jsiScenariosType.setScenario(toSet);
+        unmodifiableScenarios.stream().map(ApiJSInteropConverter::getScenario).forEach(
+                jsiScenarioType -> jsiScenariosType.addScenario(jsiScenarioType));
         return toReturn;
     }
 
@@ -128,8 +127,7 @@ public class ApiJSInteropConverter {
         JSIFactMappingValuesType factMappingValuesType = new JSIFactMappingValuesType();
         toReturn.setFactMappingValues(factMappingValuesType);
         final List<FactMappingValue> unmodifiableFactMappingValues = source.getUnmodifiableFactMappingValues();
-        List<JSIFactMappingValueType> toSet = new ArrayList<>();
-        populateJSIFactMappingValuesType(toSet, unmodifiableFactMappingValues);
+        List<JSIFactMappingValueType> toSet = populateJSIFactMappingValuesType(unmodifiableFactMappingValues);
         factMappingValuesType.setFactMappingValue(toSet);
         return toReturn;
     }
@@ -141,9 +139,8 @@ public class ApiJSInteropConverter {
         final List<BackgroundData> unmodifiableBackgroundDatas = source.getUnmodifiableData();
         JSIBackgroundDatasType jsiBackgroundDatasType = new JSIBackgroundDatasType();
         toReturn.setScesimData(jsiBackgroundDatasType);
-        List<JSIBackgroundDataType> toSet = unmodifiableBackgroundDatas.stream()
-                .map(ApiJSInteropConverter::getBackgroundData).collect(Collectors.toList());
-        jsiBackgroundDatasType.setBackgroundData(toSet);
+        unmodifiableBackgroundDatas.stream().map(ApiJSInteropConverter::getBackgroundData).forEach(
+                jSIBackgroundDataType -> jsiBackgroundDatasType.addBackgroundData(jSIBackgroundDataType));
         return toReturn;
     }
 
@@ -152,17 +149,18 @@ public class ApiJSInteropConverter {
         JSIFactMappingValuesType factMappingValuesType = new JSIFactMappingValuesType();
         toReturn.setFactMappingValues(factMappingValuesType);
         final List<FactMappingValue> unmodifiableFactMappingValues = source.getUnmodifiableFactMappingValues();
-        List<JSIFactMappingValueType> toSet = new ArrayList<>();
-        populateJSIFactMappingValuesType(toSet, unmodifiableFactMappingValues);
+        List<JSIFactMappingValueType> toSet = populateJSIFactMappingValuesType(unmodifiableFactMappingValues);
         factMappingValuesType.setFactMappingValue(toSet);
         return toReturn;
     }
 
-    protected static void populateJSIFactMappingValuesType(List<JSIFactMappingValueType> toPopulate, List<FactMappingValue> source) {
+    protected static List<JSIFactMappingValueType> populateJSIFactMappingValuesType(List<FactMappingValue> source) {
+        List<JSIFactMappingValueType> toReturn = new ArrayList<>();
         for (int i = 0; i < source.size(); i++) {
             FactMappingValue factMappingValue = source.get(i);
-            toPopulate.add(Js.uncheckedCast(getFactMappingValue(factMappingValue)));
+            toReturn.add(Js.uncheckedCast(getFactMappingValue(factMappingValue)));
         }
+        return toReturn;
     }
 
     protected static JSIScesimModelDescriptorType getScesimModelDescriptor(ScesimModelDescriptor source) {

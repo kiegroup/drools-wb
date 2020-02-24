@@ -83,11 +83,9 @@ public class JSInteropApiConverter {
 
     protected static Imports getImports(JSIImportsType source) {
         Imports toReturn = new Imports();
-        if (source != null) {
+        if (source != null && source.getImports() != null) {
             final JSIWrappedImportsType imports = source.getImports();
-            if (imports != null) {
-                imports.getImport().forEach(importsType -> toReturn.addImport(getImport(importsType)));
-            }
+            imports.getImport().forEach(importsType -> toReturn.addImport(getImport(importsType)));
         }
         return toReturn;
     }
