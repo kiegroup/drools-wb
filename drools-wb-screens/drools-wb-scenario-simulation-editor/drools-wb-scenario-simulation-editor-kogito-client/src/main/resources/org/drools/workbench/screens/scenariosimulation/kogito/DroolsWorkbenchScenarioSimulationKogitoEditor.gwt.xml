@@ -21,7 +21,6 @@
 
   <source path="client"/>
 
-  <!-- SCENARIO EDITOR -->
   <inherits name="org.drools.workbench.screens.scenariosimulation.DroolsWorkbenchScenarioSimulationEditorAPI"/>
   <inherits name='org.drools.workbench.screens.scenariosimulation.DroolsWorkbenchScenarioSimulationEditorClient'/>
   <!-- MARSHALLING -->

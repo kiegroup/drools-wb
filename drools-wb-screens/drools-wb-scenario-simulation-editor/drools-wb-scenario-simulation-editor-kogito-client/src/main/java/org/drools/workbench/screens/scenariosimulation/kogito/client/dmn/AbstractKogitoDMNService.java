@@ -32,7 +32,6 @@ import com.google.gwt.core.client.GWT;
 import jsinterop.base.Js;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.DMNTypeFactory.DMNType;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.feel.BuiltInType;
-import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.feel.Type;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITDMNElement;
@@ -108,9 +107,9 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
                     // already added, skip it
                     continue;
                 } else if (type == BuiltInType.CONTEXT) {
-                    feelPrimitiveType = new DMNType(URI_FEEL, name, null, false, true, Collections.emptyMap(), null, type);
+                    feelPrimitiveType = new DMNType(URI_FEEL, name, null, false, true, Collections.emptyMap(), type);
                 } else {
-                    feelPrimitiveType = new DMNType(URI_FEEL, name, null, false, false, null, null, type);
+                    feelPrimitiveType = new DMNType(URI_FEEL, name, null, false, false, null, type);
                 }
                 toReturn.put(name, feelPrimitiveType);
             }
@@ -193,9 +192,9 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
     protected boolean isToBeManagedAsCollection(final DMNType type) {
         boolean toReturn = type.isCollection();
         if (toReturn) {
-            Type feelType = getRootType(type);
-            // BuiltInType.UNKNOWN is a special case: it is instantiated as collection but it should be considered as single for editing
-            if (feelType instanceof BuiltInType && feelType.equals(BuiltInType.ANY)) {
+            BuiltInType feelType = type.getFeelType();
+            // BuiltInType.CONTEXT is a special case: it is instantiated as composite but has no nested fields so it should be considered as simple for editing
+            if (feelType != null && feelType.equals(BuiltInType.CONTEXT)) {
                 toReturn = false;
             }
         }
@@ -210,26 +209,13 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
     protected boolean isToBeManagedAsComposite(final DMNType type) {
         boolean toReturn = type.isComposite();
         if (toReturn) {
-            Type feelType = getRootType(type);
+            BuiltInType feelType = type.getFeelType();
             // BuiltInType.CONTEXT is a special case: it is instantiated as composite but has no nested fields so it should be considered as simple for editing
-            if (feelType instanceof BuiltInType && feelType.equals(BuiltInType.CONTEXT)) {
+            if (feelType != null && feelType.equals(BuiltInType.CONTEXT)) {
                 toReturn = false;
             }
         }
         return toReturn;
-    }
-
-    /**
-     * @param dmnType
-     * @return
-     */
-    protected Type getRootType(final DMNType dmnType) {
-        if (dmnType.getFeelType() instanceof BuiltInType) {
-            return dmnType.getFeelType();
-        } else if (dmnType.getBaseType() != null) {
-            return getRootType(dmnType.getBaseType());
-        }
-        return dmnType.getFeelType();
     }
 
     /**
