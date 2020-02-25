@@ -48,9 +48,9 @@ public class DMNTypeFactory {
                 }
                 fields.put(jsitItemDefinition.getName(), dmnTypesMap.get(typeRef));
             }
-            return new DMNType(namespace, itemDefinition.getName(), itemDefinition.getId(), itemDefinition.getIsCollection(), true, fields, null, null);
+            return new DMNType(namespace, itemDefinition.getName(), itemDefinition.getId(), itemDefinition.getIsCollection(), true, fields, null);
         } else {
-            return new DMNType(namespace, itemDefinition.getName(), itemDefinition.getId(), itemDefinition.getIsCollection(), null, null);
+            return new DMNType(namespace, itemDefinition.getName(), itemDefinition.getId(), itemDefinition.getIsCollection(), null);
         }
     }
 
@@ -64,19 +64,18 @@ public class DMNTypeFactory {
         private boolean composite;
         private Map<String, DMNType> fields;
         private Type feelType;
-        private DMNType baseType;
 
-        public DMNType(String namespace, String name, String id, boolean isCollection, DMNType baseType, Type feelType) {
+
+        public DMNType(String namespace, String name, String id, boolean isCollection, Type feelType) {
             this.namespace = namespace;
             this.name = name;
             this.id = id;
             this.collection = isCollection;
             this.feelType = feelType;
-            this.baseType = baseType;
         }
 
-        public DMNType(String namespace, String name, String id, boolean isCollection, boolean isComposite, Map<String, DMNType> fields, DMNType baseType, Type feelType) {
-            this(namespace, name, id, isCollection, baseType, feelType);
+        public DMNType(String namespace, String name, String id, boolean isCollection, boolean isComposite, Map<String, DMNType> fields, Type feelType) {
+            this(namespace, name, id, isCollection, feelType);
             this.fields = fields;
             this.composite = isComposite;
             if (feelType == null) {
@@ -111,10 +110,6 @@ public class DMNTypeFactory {
 
         public Type getFeelType() {
             return feelType;
-        }
-
-        public DMNType getBaseType() {
-            return baseType;
         }
     }
 
