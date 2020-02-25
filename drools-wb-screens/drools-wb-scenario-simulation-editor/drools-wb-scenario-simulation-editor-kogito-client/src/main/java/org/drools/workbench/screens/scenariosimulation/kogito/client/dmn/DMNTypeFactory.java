@@ -20,8 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import jsinterop.base.Js;
-import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.feel.MapBackedType;
-import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.feel.Type;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.feel.BuiltInType;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITItemDefinition;
 
 /**
@@ -48,9 +47,9 @@ public class DMNTypeFactory {
                 }
                 fields.put(jsitItemDefinition.getName(), dmnTypesMap.get(typeRef));
             }
-            return new DMNType(namespace, itemDefinition.getName(), itemDefinition.getId(), itemDefinition.getIsCollection(), true, fields, null, null);
+            return new DMNType(namespace, itemDefinition.getName(), itemDefinition.getId(), itemDefinition.getIsCollection(), true, fields, null);
         } else {
-            return new DMNType(namespace, itemDefinition.getName(), itemDefinition.getId(), itemDefinition.getIsCollection(), null, null);
+            return new DMNType(namespace, itemDefinition.getName(), itemDefinition.getId(), itemDefinition.getIsCollection(), null);
         }
     }
 
@@ -63,26 +62,21 @@ public class DMNTypeFactory {
         private boolean collection;
         private boolean composite;
         private Map<String, DMNType> fields;
-        private Type feelType;
-        private DMNType baseType;
+        private BuiltInType feelType;
 
-        public DMNType(String namespace, String name, String id, boolean isCollection, DMNType baseType, Type feelType) {
+
+        public DMNType(String namespace, String name, String id, boolean isCollection, BuiltInType feelType) {
             this.namespace = namespace;
             this.name = name;
             this.id = id;
             this.collection = isCollection;
             this.feelType = feelType;
-            this.baseType = baseType;
         }
 
-        public DMNType(String namespace, String name, String id, boolean isCollection, boolean isComposite, Map<String, DMNType> fields, DMNType baseType, Type feelType) {
-            this(namespace, name, id, isCollection, baseType, feelType);
+        public DMNType(String namespace, String name, String id, boolean isCollection, boolean isComposite, Map<String, DMNType> fields, BuiltInType feelType) {
+            this(namespace, name, id, isCollection, feelType);
             this.fields = fields;
             this.composite = isComposite;
-            if (feelType == null) {
-                feelType = new MapBackedType(name);
-                this.feelType = feelType;
-            }
         }
 
         public String getNamespace() {
@@ -109,12 +103,8 @@ public class DMNTypeFactory {
             return fields;
         }
 
-        public Type getFeelType() {
+        public BuiltInType getFeelType() {
             return feelType;
-        }
-
-        public DMNType getBaseType() {
-            return baseType;
         }
     }
 

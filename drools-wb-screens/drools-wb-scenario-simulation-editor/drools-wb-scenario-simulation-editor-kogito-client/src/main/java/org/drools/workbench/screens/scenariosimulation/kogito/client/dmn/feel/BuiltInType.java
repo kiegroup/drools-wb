@@ -18,7 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.feel;
 /**
  * FEEL Types managed by DMN Editor. Copied from org.kie.workbench.common.dmn.api module
  */
-public enum BuiltInType implements Type {
+public enum BuiltInType {
 
     NUMBER("number"),
     STRING("string"),
@@ -39,7 +39,6 @@ public enum BuiltInType implements Type {
         this.names = names;
     }
 
-    @Override
     public String getName() {
         return names[0];
     }
