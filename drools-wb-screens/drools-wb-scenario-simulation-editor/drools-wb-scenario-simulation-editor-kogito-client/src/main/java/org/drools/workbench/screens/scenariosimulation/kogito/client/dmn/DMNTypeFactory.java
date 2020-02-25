@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 
 import jsinterop.base.Js;
-import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.feel.MapBackedType;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.feel.Type;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITItemDefinition;
 
@@ -78,10 +77,6 @@ public class DMNTypeFactory {
             this(namespace, name, id, isCollection, feelType);
             this.fields = fields;
             this.composite = isComposite;
-            if (feelType == null) {
-                feelType = new MapBackedType(name);
-                this.feelType = feelType;
-            }
         }
 
         public String getNamespace() {

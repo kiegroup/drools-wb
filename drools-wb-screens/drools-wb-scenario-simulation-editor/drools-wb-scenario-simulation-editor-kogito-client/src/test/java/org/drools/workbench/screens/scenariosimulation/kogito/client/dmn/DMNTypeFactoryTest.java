@@ -40,9 +40,9 @@ public class DMNTypeFactoryTest {
     public static final String ID = "id";
 
     @Mock
-    JSITItemDefinition jsitItemDefinitionMock;
+    private JSITItemDefinition jsitItemDefinitionMock;
     @Mock
-    JSITItemDefinition jsitItemDefinitionNestedMock;
+    private JSITItemDefinition jsitItemDefinitionNestedMock;
 
     @Before
     public void setup() {
@@ -78,6 +78,6 @@ public class DMNTypeFactoryTest {
         assertEquals(NAME, dmnType.getName());
         assertFalse(dmnType.isCollection());
         assertTrue(dmnType.isComposite());
-        assertEquals(NAME, dmnType.getFeelType().getName());
+        assertNull(dmnType.getFeelType());
     }
 }

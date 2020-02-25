@@ -194,8 +194,8 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
         boolean toReturn = type.isCollection();
         if (toReturn) {
             Type feelType = type.getFeelType();
-            // BuiltInType.UNKNOWN is a special case: it is instantiated as collection but it should be considered as single for editing
-            if (feelType instanceof BuiltInType && feelType.equals(BuiltInType.ANY)) {
+            // BuiltInType.CONTEXT is a special case: it is instantiated as composite but has no nested fields so it should be considered as simple for editing
+            if (feelType instanceof BuiltInType && feelType.equals(BuiltInType.CONTEXT)) {
                 toReturn = false;
             }
         }
