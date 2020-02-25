@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import jsinterop.base.Js;
-import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.feel.Type;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.feel.BuiltInType;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITItemDefinition;
 
 /**
@@ -62,10 +62,10 @@ public class DMNTypeFactory {
         private boolean collection;
         private boolean composite;
         private Map<String, DMNType> fields;
-        private Type feelType;
+        private BuiltInType feelType;
 
 
-        public DMNType(String namespace, String name, String id, boolean isCollection, Type feelType) {
+        public DMNType(String namespace, String name, String id, boolean isCollection, BuiltInType feelType) {
             this.namespace = namespace;
             this.name = name;
             this.id = id;
@@ -73,7 +73,7 @@ public class DMNTypeFactory {
             this.feelType = feelType;
         }
 
-        public DMNType(String namespace, String name, String id, boolean isCollection, boolean isComposite, Map<String, DMNType> fields, Type feelType) {
+        public DMNType(String namespace, String name, String id, boolean isCollection, boolean isComposite, Map<String, DMNType> fields, BuiltInType feelType) {
             this(namespace, name, id, isCollection, feelType);
             this.fields = fields;
             this.composite = isComposite;
@@ -103,7 +103,7 @@ public class DMNTypeFactory {
             return fields;
         }
 
-        public Type getFeelType() {
+        public BuiltInType getFeelType() {
             return feelType;
         }
     }
