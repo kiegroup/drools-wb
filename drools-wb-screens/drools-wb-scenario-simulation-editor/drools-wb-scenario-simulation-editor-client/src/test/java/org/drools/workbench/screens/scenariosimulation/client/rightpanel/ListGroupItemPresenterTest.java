@@ -16,6 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -26,6 +27,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Spy;
 
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FACT_NAME;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FULL_PACKAGE;
@@ -54,8 +56,8 @@ public class ListGroupItemPresenterTest extends AbstractTestToolsTest {
     @Mock
     private DivElement divElementMock;
 
-    @Mock
-    private FieldItemPresenter fieldItemPresenterMock;
+    @Spy
+    private FieldItemPresenter fieldItemPresenterSpy;
 
     @Mock
     private Map<String, ListGroupItemView> listGroupItemViewMapMock;
@@ -76,7 +78,7 @@ public class ListGroupItemPresenterTest extends AbstractTestToolsTest {
         this.listGroupItemPresenter = spy(new ListGroupItemPresenter() {
             {
                 listGroupItemViewMap = listGroupItemViewMapMock;
-                fieldItemPresenter = fieldItemPresenterMock;
+                fieldItemPresenter = fieldItemPresenterSpy;
                 viewsProvider = viewsProviderMock;
                 testToolsPresenter = testToolsPresenterMock;
             }
@@ -163,7 +165,7 @@ public class ListGroupItemPresenterTest extends AbstractTestToolsTest {
         Map<String, String> simpleProperties = FACT_MODEL_TREE.getSimpleProperties();
         for (String key : simpleProperties.keySet()) {
             String value = simpleProperties.get(key);
-            verify(fieldItemPresenterMock, times(1)).getLIElement(eq(FACT_MODEL_TREE.getFactName()), eq(FACT_MODEL_TREE.getFactName()), eq(key), eq(value));
+            verify(fieldItemPresenterSpy, times(1)).getLIElement(eq(FACT_MODEL_TREE.getFactName()), eq(FACT_MODEL_TREE.getFactName()), eq(key), eq(value));
         }
         verify(listGroupItemViewMock, times(simpleProperties.size())).addFactField(anyObject());
         reset(listGroupItemViewMock);
@@ -179,6 +181,19 @@ public class ListGroupItemPresenterTest extends AbstractTestToolsTest {
     public void resetTest() {
         listGroupItemPresenter.reset();
         verify(listGroupItemViewMapMock, times(1)).clear();
-        verify(fieldItemPresenterMock, times(1)).reset();
+        verify(fieldItemPresenterSpy, times(1)).reset();
+    }
+
+    @Test
+    public void testSelectPropertyNoFieldAvailableJustExpression() {
+        final String instance = "Applicant";
+        final String property = "expression";
+
+        when(listGroupItemViewMapMock.get(instance)).thenReturn(listGroupItemViewMock);
+        fieldItemPresenterSpy.fieldItemMap = Collections.emptyMap();
+
+        listGroupItemPresenter.selectProperty(instance, Collections.singletonList(property));
+
+        verify(listGroupItemViewMock).showCheck(true);
     }
 }
