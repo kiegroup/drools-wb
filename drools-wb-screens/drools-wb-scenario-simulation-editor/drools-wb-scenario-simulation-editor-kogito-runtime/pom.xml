@@ -140,10 +140,6 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>org.kie</groupId>
-      <artifactId>kie-dmn-feel</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-api</artifactId>
     </dependency>
@@ -699,7 +695,6 @@
 
           <compileSourcesArtifacts>
             <compileSourcesArtifact>org.kie.soup:kie-soup-commons</compileSourcesArtifact>
-            <compileSourcesArtifact>org.kie:kie-dmn-feel</compileSourcesArtifact>
 
             <!-- UberFire -->
             <compileSourcesArtifact>org.uberfire:uberfire-commons</compileSourcesArtifact>
