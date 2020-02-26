@@ -128,8 +128,7 @@ public class ApiJSInteropConverter {
         JSIFactMappingValuesType factMappingValuesType = new JSIFactMappingValuesType();
         toReturn.setFactMappingValues(factMappingValuesType);
         final List<FactMappingValue> unmodifiableFactMappingValues = source.getUnmodifiableFactMappingValues();
-        List<JSIFactMappingValueType> toSet = new ArrayList<>();
-        populateJSIFactMappingValuesType(toSet, unmodifiableFactMappingValues);
+        List<JSIFactMappingValueType> toSet = populateJSIFactMappingValuesType(unmodifiableFactMappingValues);
         factMappingValuesType.setFactMappingValue(toSet);
         return toReturn;
     }
@@ -152,17 +151,18 @@ public class ApiJSInteropConverter {
         JSIFactMappingValuesType factMappingValuesType = new JSIFactMappingValuesType();
         toReturn.setFactMappingValues(factMappingValuesType);
         final List<FactMappingValue> unmodifiableFactMappingValues = source.getUnmodifiableFactMappingValues();
-        List<JSIFactMappingValueType> toSet = new ArrayList<>();
-        populateJSIFactMappingValuesType(toSet, unmodifiableFactMappingValues);
+        List<JSIFactMappingValueType> toSet = populateJSIFactMappingValuesType(unmodifiableFactMappingValues);
         factMappingValuesType.setFactMappingValue(toSet);
         return toReturn;
     }
 
-    protected static void populateJSIFactMappingValuesType(List<JSIFactMappingValueType> toPopulate, List<FactMappingValue> source) {
+    protected static List<JSIFactMappingValueType> populateJSIFactMappingValuesType(List<FactMappingValue> source) {
+        List<JSIFactMappingValueType> toReturn = new ArrayList<>();
         for (int i = 0; i < source.size(); i++) {
             FactMappingValue factMappingValue = source.get(i);
-            toPopulate.add(Js.uncheckedCast(getFactMappingValue(factMappingValue)));
+            toReturn.add(Js.uncheckedCast(getFactMappingValue(factMappingValue)));
         }
+        return toReturn;
     }
 
     protected static JSIScesimModelDescriptorType getScesimModelDescriptor(ScesimModelDescriptor source) {

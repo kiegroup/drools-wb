@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.scenariosimulation.kogito.client.util;
+package org.drools.workbench.screens.scenariosimulation.kogito.client.dmn;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -89,19 +89,18 @@ public class KogitoScenarioSimulationBuilder {
 
     /**
      * Populate the given <code>ScenarioSimulationModel</code> and returns it inn the given <code>callback</code>
-     * @param context
      * @param content
      * @param type
      * @param value
      * @param callback
      */
-    public void populateScenarioSimulationModel(final Path context, final ScenarioSimulationModel content, final ScenarioSimulationModel.Type type, final String value, RemoteCallback<String> callback) {
+    public void populateScenarioSimulationModel(final ScenarioSimulationModel content, final ScenarioSimulationModel.Type type, final String value, RemoteCallback<String> callback) {
         switch (type) {
             case RULE:
                 populateRULE(content, value, callback);
                 break;
             case DMN:
-                populateDMN(content, context, value, callback);
+                populateDMN(content, value, callback);
                 break;
             default:
                 // noop
@@ -115,7 +114,7 @@ public class KogitoScenarioSimulationBuilder {
         convertScenarioSimulationModel(toPopulate, callback);
     }
 
-    private void populateDMN(final ScenarioSimulationModel toPopulate, final Path context, final String dmnFilePath, final RemoteCallback<String> callback) {
+    private void populateDMN(final ScenarioSimulationModel toPopulate, final String dmnFilePath, final RemoteCallback<String> callback) {
         toPopulate.setBackground(createBackground());
         populateDMNSimulationAndSettings(toPopulate, dmnFilePath, callback);
     }
@@ -145,7 +144,7 @@ public class KogitoScenarioSimulationBuilder {
         ScesimModelDescriptor simulationDescriptor = toReturn.getScesimModelDescriptor();
         simulationDescriptor.addFactMapping(FactIdentifier.INDEX.getName(), FactIdentifier.INDEX, ExpressionIdentifier.INDEX);
         simulationDescriptor.addFactMapping(FactIdentifier.DESCRIPTION.getName(), FactIdentifier.DESCRIPTION, ExpressionIdentifier.DESCRIPTION);
-        ScenarioWithIndex scenarioWithIndex = createScesimDataWithIndex(toReturn, (integer, scenario) -> new ScenarioWithIndex(integer, scenario));
+        ScenarioWithIndex scenarioWithIndex = createScesimDataWithIndex(toReturn, ScenarioWithIndex::new);
 
         // Add GIVEN Fact
         createEmptyColumn(simulationDescriptor,
@@ -292,8 +291,8 @@ public class KogitoScenarioSimulationBuilder {
         }
     }
 
-    private SCESIMMarshallCallback getSCESIMMarshallCallback(final RemoteCallback<String> callback) {
-        return xmlString -> callback.callback(xmlString);
+    private SCESIMMarshallCallback getSCESIMMarshallCallback(final RemoteCallback<String> remoteCallback) {
+        return remoteCallback::callback;
     }
 
     private DMN12UnmarshallCallback getDMN12UnmarshallCallback(final ScenarioSimulationModel toPopulate, final String dmnFilePath, final RemoteCallback<String> callback) {
