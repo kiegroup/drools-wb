@@ -15,9 +15,32 @@
  */
 package org.drools.workbench.screens.scenariosimulation.kogito.client.dmn;
 
-/**
- * Aim of this module is to manage a DMN file and use it to define Data Objects usable inside Scenario Simulation.
- * Most of these classes are copied from other external modules, which are not compatible with GWT.
- * Class on dmn/feel package is copied from kie-wb-common-dmn-api (BuiltInType)
- * Classes on dmn package contains code copied from backend side of ScenarioSimulation and kie-dmn-core module
- **/
+import com.google.gwtmockito.GwtMockitoTestRunner;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+@RunWith(GwtMockitoTestRunner.class)
+public class KogitoScenarioSimulationBuilderTest {
+
+    @Before
+    public void setup() {
+
+    }
+
+    @Test
+    public void convertInput() {
+        //KogitoScenarioSimulationBuilder.convert(FactModelTree.Type.INPUT);
+
+        /*switch (modelTreeType) {
+            case INPUT:
+                return GIVEN;
+            case DECISION:
+                return EXPECT;
+            default:
+                throw new IllegalArgumentException("Impossible to map");
+        } */
+    }
+
+
+}

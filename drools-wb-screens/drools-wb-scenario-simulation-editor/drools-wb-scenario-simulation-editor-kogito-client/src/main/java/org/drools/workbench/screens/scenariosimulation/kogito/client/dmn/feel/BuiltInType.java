@@ -28,7 +28,7 @@ public enum BuiltInType {
     TIME("time"),
     DATE_TIME("date and time", "dateTime"),
 
-    ANY("Any", "unknown", "any"),
+    ANY("Any"),
     DATE("date"),
     CONTEXT("context"),
     UNDEFINED("<Undefined>");
