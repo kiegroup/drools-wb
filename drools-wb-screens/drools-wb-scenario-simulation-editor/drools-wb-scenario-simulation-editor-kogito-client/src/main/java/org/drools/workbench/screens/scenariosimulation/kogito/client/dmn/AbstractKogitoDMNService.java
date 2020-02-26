@@ -103,10 +103,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
         for (BuiltInType type : BuiltInType.values()) {
             for (String name : type.getNames()) {
                 DMNType feelPrimitiveType;
-                if (type == BuiltInType.ANY) {
-                    // already added, skip it
-                    continue;
-                } else if (type == BuiltInType.CONTEXT) {
+                if (type == BuiltInType.CONTEXT) {
                     feelPrimitiveType = new DMNType(URI_FEEL, name, null, false, true, Collections.emptyMap(), type);
                 } else {
                     feelPrimitiveType = new DMNType(URI_FEEL, name, null, false, false, null, type);

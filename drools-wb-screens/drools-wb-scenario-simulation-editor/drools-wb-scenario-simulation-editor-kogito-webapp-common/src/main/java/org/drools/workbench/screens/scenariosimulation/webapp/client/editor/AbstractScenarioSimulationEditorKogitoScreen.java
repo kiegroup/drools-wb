@@ -67,7 +67,6 @@ public abstract class AbstractScenarioSimulationEditorKogitoScreen implements Ko
                 scenarioSimulationEditorKogitoWrapper.gotoPath(path);
                 scenarioSimulationEditorKogitoWrapper.setContent(null, content);
             });
-            kogitoScesimPopupPresenter.hide();
         };
         kogitoScesimPopupPresenter.show("Choose SCESIM type", createCommand);
     }

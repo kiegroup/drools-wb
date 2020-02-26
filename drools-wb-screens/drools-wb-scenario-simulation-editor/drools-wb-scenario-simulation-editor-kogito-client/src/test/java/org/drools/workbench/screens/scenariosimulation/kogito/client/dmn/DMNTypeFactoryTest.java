@@ -28,6 +28,7 @@ import org.mockito.Mock;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -67,6 +68,8 @@ public class DMNTypeFactoryTest {
         assertEquals(NAMESPACE, dmnType.getNamespace());
         assertEquals(NAME, dmnType.getName());
         assertFalse(dmnType.isCollection());
+        assertFalse(dmnType.isComposite());
+        assertNull(dmnType.getFields());
         assertNull(dmnType.getFeelType());
     }
 
@@ -78,6 +81,8 @@ public class DMNTypeFactoryTest {
         assertEquals(NAME, dmnType.getName());
         assertFalse(dmnType.isCollection());
         assertTrue(dmnType.isComposite());
+        assertNotNull(dmnType.getFields());
+        assertTrue(dmnType.getFields().size() == 1);
         assertNull(dmnType.getFeelType());
     }
 }
