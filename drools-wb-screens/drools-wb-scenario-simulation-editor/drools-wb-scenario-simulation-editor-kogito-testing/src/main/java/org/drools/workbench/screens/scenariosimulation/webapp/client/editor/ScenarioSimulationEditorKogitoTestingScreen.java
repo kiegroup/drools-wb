@@ -139,7 +139,6 @@ public class ScenarioSimulationEditorKogitoTestingScreen extends AbstractScenari
                 scenarioSimulationEditorKogitoWrapper.gotoPath(path);
                 scenarioSimulationEditorKogitoWrapper.setContent(null, content);
             }, getErrorCallback("Failed to load"));
-            loadScesimPopupPresenter.hide();
         };
         loadScesimPopupPresenter.show("Choose SCESIM", loadCommand);
     }
