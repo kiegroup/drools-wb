@@ -64,7 +64,6 @@ public class DMNTypeFactory {
         private Map<String, DMNType> fields;
         private BuiltInType feelType;
 
-
         public DMNType(String namespace, String name, String id, boolean isCollection, BuiltInType feelType) {
             this.namespace = namespace;
             this.name = name;
@@ -107,5 +106,4 @@ public class DMNTypeFactory {
             return feelType;
         }
     }
-
 }
