@@ -76,7 +76,7 @@ public class AbstractKogitoDMNServiceTest {
 
     @Test
     public void getDMNTypesMapEmptyItemDefinitions() {
-        Map<String, DMNTypeFactory.DMNType> dmnTypesMap = abstractKogitoDMNServiceSpy.getDMNTypesMap(jstiItemDefinitions, NAMESPACE);
+        Map<String, DMNTypeFactory.ClientDMNType> dmnTypesMap = abstractKogitoDMNServiceSpy.getDMNTypesMap(jstiItemDefinitions, NAMESPACE);
         // It must contains all elements defined in BuiltInType ENUM without ANY
         assertTrue(dmnTypesMap.size() == 14);
     }
@@ -86,7 +86,7 @@ public class AbstractKogitoDMNServiceTest {
         JSITItemDefinition jstiItemDefinitionMock = mock(JSITItemDefinition.class);
         when(jstiItemDefinitionMock.getName()).thenReturn("name");
         jstiItemDefinitions.add(jstiItemDefinitionMock);
-        Map<String, DMNTypeFactory.DMNType> dmnTypesMap = abstractKogitoDMNServiceSpy.getDMNTypesMap(jstiItemDefinitions, NAMESPACE);
+        Map<String, DMNTypeFactory.ClientDMNType> dmnTypesMap = abstractKogitoDMNServiceSpy.getDMNTypesMap(jstiItemDefinitions, NAMESPACE);
         // It must contains all elements defined in BuiltInType ENUM + one defined jstiItemDefinitionMock item
         assertTrue(dmnTypesMap.size() == 15);
     }
