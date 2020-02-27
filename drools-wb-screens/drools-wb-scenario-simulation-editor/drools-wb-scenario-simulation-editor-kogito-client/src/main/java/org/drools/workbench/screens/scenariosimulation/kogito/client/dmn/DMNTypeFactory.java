@@ -56,7 +56,7 @@ public class DMNTypeFactory {
                 }
             } else {
                 throw new IllegalStateException(
-                        "Item: " + itemDefinition.getName() + " refers to typeRef: " + itemDefinition.getTypeRef() + "which can't be found.");
+                        "Item: " + itemDefinition.getName() + " refers to typeRef: " + itemDefinition.getTypeRef() + " which can't be found.");
             }
         }
         /* Second Step: retrieving fields defined into current itemDefinition */
