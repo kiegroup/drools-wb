@@ -54,35 +54,35 @@ public class DMNTypeFactoryTest {
 
     @Test
     public void getDMNTypeNullItems() {
-        DMNTypeFactory.DMNType dmnType = DMNTypeFactory.getDMNType(jsitItemDefinitionMock, NAMESPACE, new HashMap<>());
-        assertEquals(NAMESPACE, dmnType.getNamespace());
-        assertEquals(NAME, dmnType.getName());
-        assertFalse(dmnType.isCollection());
-        assertNull(dmnType.getFeelType());
+        ClientDMNType clientDmnType = DMNTypeFactory.getDMNType(jsitItemDefinitionMock, NAMESPACE, new HashMap<>());
+        assertEquals(NAMESPACE, clientDmnType.getNamespace());
+        assertEquals(NAME, clientDmnType.getName());
+        assertFalse(clientDmnType.isCollection());
+        assertNull(clientDmnType.getFeelType());
     }
 
     @Test
     public void getDMNTypeEmptyItems() {
         when(jsitItemDefinitionMock.getItemComponent()).thenReturn(new ArrayList<>());
-        DMNTypeFactory.DMNType dmnType = DMNTypeFactory.getDMNType(jsitItemDefinitionMock, NAMESPACE, new HashMap<>());
-        assertEquals(NAMESPACE, dmnType.getNamespace());
-        assertEquals(NAME, dmnType.getName());
-        assertFalse(dmnType.isCollection());
-        assertFalse(dmnType.isComposite());
-        assertNull(dmnType.getFields());
-        assertNull(dmnType.getFeelType());
+        ClientDMNType clientDmnType = DMNTypeFactory.getDMNType(jsitItemDefinitionMock, NAMESPACE, new HashMap<>());
+        assertEquals(NAMESPACE, clientDmnType.getNamespace());
+        assertEquals(NAME, clientDmnType.getName());
+        assertFalse(clientDmnType.isCollection());
+        assertFalse(clientDmnType.isComposite());
+        assertNull(clientDmnType.getFields());
+        assertNull(clientDmnType.getFeelType());
     }
 
     @Test
     public void getDMNTypeItems() {
         when(jsitItemDefinitionMock.getItemComponent()).thenReturn(Arrays.asList(jsitItemDefinitionNestedMock));
-        DMNTypeFactory.DMNType dmnType = DMNTypeFactory.getDMNType(jsitItemDefinitionMock, NAMESPACE, new HashMap<>());
-        assertEquals(NAMESPACE, dmnType.getNamespace());
-        assertEquals(NAME, dmnType.getName());
-        assertFalse(dmnType.isCollection());
-        assertTrue(dmnType.isComposite());
-        assertNotNull(dmnType.getFields());
-        assertTrue(dmnType.getFields().size() == 1);
-        assertNull(dmnType.getFeelType());
+        ClientDMNType clientDmnType = DMNTypeFactory.getDMNType(jsitItemDefinitionMock, NAMESPACE, new HashMap<>());
+        assertEquals(NAMESPACE, clientDmnType.getNamespace());
+        assertEquals(NAME, clientDmnType.getName());
+        assertFalse(clientDmnType.isCollection());
+        assertTrue(clientDmnType.isComposite());
+        assertNotNull(clientDmnType.getFields());
+        assertTrue(clientDmnType.getFields().size() == 1);
+        assertNull(clientDmnType.getFeelType());
     }
 }
