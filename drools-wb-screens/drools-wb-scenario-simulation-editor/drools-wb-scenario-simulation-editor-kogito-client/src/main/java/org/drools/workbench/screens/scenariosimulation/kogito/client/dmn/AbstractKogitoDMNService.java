@@ -17,6 +17,7 @@ package org.drools.workbench.screens.scenariosimulation.kogito.client.dmn;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -102,11 +103,32 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
                 toReturn.put(name, feelPrimitiveType);
             }
         }
+        jsitItemDefinitions.sort(getItemDefinitionComparator());
         for (int i = 0; i < jsitItemDefinitions.size(); i++) {
             final JSITItemDefinition jsitItemDefinition = Js.uncheckedCast(jsitItemDefinitions.get(i));
             toReturn.put(jsitItemDefinition.getName(), DMNTypeFactory.getDMNType(jsitItemDefinition, nameSpace, toReturn));
         }
         return toReturn;
+    }
+
+    /**
+     * This comparator sorts a collection of <code>JSITItemDefinition</code> putting all items with a typeRef
+     * BEFORE items without typeRef
+     * @return
+     */
+    protected Comparator<JSITItemDefinition> getItemDefinitionComparator() {
+        return (o1, o2) -> {
+            if (o1.getTypeRef() == null && o2.getTypeRef() == null) {
+                return 0;
+            }
+            if (o1.getTypeRef() == null) {
+                return -1;
+            }
+            if (o2.getTypeRef() == null) {
+                return 1;
+            }
+            return 0;
+        };
     }
 
     /**

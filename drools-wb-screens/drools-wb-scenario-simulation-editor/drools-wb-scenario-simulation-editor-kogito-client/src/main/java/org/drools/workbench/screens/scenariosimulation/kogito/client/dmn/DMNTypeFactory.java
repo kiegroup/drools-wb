@@ -32,12 +32,37 @@ public class DMNTypeFactory {
         // Utility class, not instantiable
     }
 
+    /**
+     * This method creates a <code>ClientDMNType</code> object of a given <code>JSITItemDefinition</code> object.
+     * To correctly work, it requires a sorted <code>dmnTypesMap</code>, in order to process items which don't refer to
+     * a "super items" BEFORE items with a refer to another item.
+     * @param itemDefinition
+     * @param namespace
+     * @param dmnTypesMap
+     * @return
+     */
     public static ClientDMNType getDMNType(final JSITItemDefinition itemDefinition,
                                            final String namespace,
                                            final Map<String, ClientDMNType> dmnTypesMap) {
+        Map<String, ClientDMNType> fields = new HashMap<>();
+        /* First Step: inheriting fields defined from item's typeRef, which represent its "super item".
+        *  This is required when a typeRef is defined for current itemDefinition AND it's not a collection */
+        if (itemDefinition.getTypeRef() != null && !itemDefinition.getIsCollection()) {
+            final ClientDMNType clientDmnType = dmnTypesMap.get(itemDefinition.getTypeRef());
+            if (clientDmnType != null) {
+                /* Fields are added if the referred "super item" it's a composite (eg. it holds user defined fields
+                 * and it's not a collection */
+                if (clientDmnType.isComposite() && !clientDmnType.isCollection()) {
+                    fields.putAll(clientDmnType.getFields());
+                }
+            } else {
+                throw new IllegalStateException(
+                        "Item: " + itemDefinition.getName() + " refers to typeRef: " + itemDefinition.getTypeRef() + "which can't be found.");
+            }
+        }
+        /* Second Step: retrieving fields defined into current itemDefinition */
         List<JSITItemDefinition> jsitItemDefinitions = itemDefinition.getItemComponent();
         if (jsitItemDefinitions != null && !jsitItemDefinitions.isEmpty()) {
-            Map<String, ClientDMNType> fields = new HashMap<>();
             for (int i = 0; i < jsitItemDefinitions.size(); i++) {
                 final JSITItemDefinition jsitItemDefinition = Js.uncheckedCast(jsitItemDefinitions.get(i));
                 final String typeRef = jsitItemDefinition.getTypeRef();
@@ -47,10 +72,14 @@ public class DMNTypeFactory {
                 }
                 fields.put(jsitItemDefinition.getName(), dmnTypesMap.get(typeRef));
             }
-            return new ClientDMNType(namespace, itemDefinition.getName(), itemDefinition.getId(), itemDefinition.getIsCollection(), true, fields, null);
-        } else {
-            return new ClientDMNType(namespace, itemDefinition.getName(), itemDefinition.getId(), itemDefinition.getIsCollection(), null);
         }
+        return new ClientDMNType(namespace,
+                                 itemDefinition.getName(),
+                                 itemDefinition.getId(),
+                                 itemDefinition.getIsCollection(),
+                                 !fields.isEmpty(),
+                                 fields,
+                                 null);
     }
 
 
