@@ -54,7 +54,7 @@ public class DMNTypeFactoryTest {
 
     @Test
     public void getDMNTypeNullItems() {
-        DMNTypeFactory.ClientDMNType clientDmnType = DMNTypeFactory.getDMNType(jsitItemDefinitionMock, NAMESPACE, new HashMap<>());
+        ClientDMNType clientDmnType = DMNTypeFactory.getDMNType(jsitItemDefinitionMock, NAMESPACE, new HashMap<>());
         assertEquals(NAMESPACE, clientDmnType.getNamespace());
         assertEquals(NAME, clientDmnType.getName());
         assertFalse(clientDmnType.isCollection());
@@ -64,7 +64,7 @@ public class DMNTypeFactoryTest {
     @Test
     public void getDMNTypeEmptyItems() {
         when(jsitItemDefinitionMock.getItemComponent()).thenReturn(new ArrayList<>());
-        DMNTypeFactory.ClientDMNType clientDmnType = DMNTypeFactory.getDMNType(jsitItemDefinitionMock, NAMESPACE, new HashMap<>());
+        ClientDMNType clientDmnType = DMNTypeFactory.getDMNType(jsitItemDefinitionMock, NAMESPACE, new HashMap<>());
         assertEquals(NAMESPACE, clientDmnType.getNamespace());
         assertEquals(NAME, clientDmnType.getName());
         assertFalse(clientDmnType.isCollection());
@@ -76,7 +76,7 @@ public class DMNTypeFactoryTest {
     @Test
     public void getDMNTypeItems() {
         when(jsitItemDefinitionMock.getItemComponent()).thenReturn(Arrays.asList(jsitItemDefinitionNestedMock));
-        DMNTypeFactory.ClientDMNType clientDmnType = DMNTypeFactory.getDMNType(jsitItemDefinitionMock, NAMESPACE, new HashMap<>());
+        ClientDMNType clientDmnType = DMNTypeFactory.getDMNType(jsitItemDefinitionMock, NAMESPACE, new HashMap<>());
         assertEquals(NAMESPACE, clientDmnType.getNamespace());
         assertEquals(NAME, clientDmnType.getName());
         assertFalse(clientDmnType.isCollection());

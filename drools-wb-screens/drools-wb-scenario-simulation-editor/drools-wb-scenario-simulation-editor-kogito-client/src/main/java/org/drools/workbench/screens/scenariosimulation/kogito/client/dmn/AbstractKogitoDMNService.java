@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -30,7 +31,7 @@ import java.util.TreeSet;
 import javax.xml.namespace.QName;
 
 import jsinterop.base.Js;
-import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.DMNTypeFactory.ClientDMNType;
+
 import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.feel.BuiltInType;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
@@ -84,7 +85,8 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
         return toReturn;
     }
 
-    protected ClientDMNType getDMNTypeFromMaps(Map<String, ClientDMNType> dmnTypesMap, Map<QName, String> source) {
+    protected ClientDMNType getDMNTypeFromMaps(final Map<String, ClientDMNType> dmnTypesMap,
+                                               final Map<QName, String> source) {
         String typeRef = source.get(TYPEREF_QNAME);
         return dmnTypesMap.get(typeRef);
     }
@@ -203,8 +205,9 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
         boolean toReturn = type.isCollection();
         if (toReturn) {
             BuiltInType feelType = type.getFeelType();
-            // BuiltInType.CONTEXT is a special case: it is instantiated as composite but has no nested fields so it should be considered as simple for editing
-            if (feelType != null && feelType.equals(BuiltInType.CONTEXT)) {
+            // BuiltInType.CONTEXT is a special case: it is instantiated as composite but has no nested fields
+            // so it should be considered as simple for editing
+            if (Objects.equals(BuiltInType.CONTEXT, feelType)) {
                 toReturn = false;
             }
         }
@@ -221,7 +224,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
         if (toReturn) {
             BuiltInType feelType = type.getFeelType();
             // BuiltInType.CONTEXT is a special case: it is instantiated as composite but has no nested fields so it should be considered as simple for editing
-            if (feelType != null && feelType.equals(BuiltInType.CONTEXT)) {
+            if (Objects.equals(BuiltInType.CONTEXT, feelType)) {
                 toReturn = false;
             }
         }
