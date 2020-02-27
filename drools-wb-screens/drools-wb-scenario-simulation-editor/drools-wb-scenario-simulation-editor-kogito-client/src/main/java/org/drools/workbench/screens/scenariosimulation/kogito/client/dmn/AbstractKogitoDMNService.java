@@ -28,9 +28,8 @@ import java.util.TreeSet;
 
 import javax.xml.namespace.QName;
 
-import com.google.gwt.core.client.GWT;
 import jsinterop.base.Js;
-import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.DMNTypeFactory.DMNType;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.DMNTypeFactory.ClientDMNType;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.feel.BuiltInType;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
@@ -60,30 +59,22 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
         SortedMap<String, FactModelTree> visibleFacts = new TreeMap<>();
         SortedMap<String, FactModelTree> hiddenFacts = new TreeMap<>();
         ErrorHolder errorHolder = new ErrorHolder();
-        Map<String, DMNType> dmnTypesMap = getDMNTypesMap(jsitDefinitions.getItemDefinition(), jsitDefinitions.getNamespace());
+        Map<String, ClientDMNType> dmnTypesMap = getDMNTypesMap(jsitDefinitions.getItemDefinition(), jsitDefinitions.getNamespace());
         final List<JSITDRGElement> jsitdrgElements = jsitDefinitions.getDrgElement();
         for (int i = 0; i < jsitdrgElements.size(); i++) {
             final JSITDRGElement jsitdrgElement = Js.uncheckedCast(jsitdrgElements.get(i));
             if (JSITInputData.instanceOf(jsitdrgElement)) {
-                try {
-                    JSITInputData jsitInputData = Js.uncheckedCast(jsitdrgElement);
-                    final JSITInformationItem jsitInputDataVariable = jsitInputData.getVariable();
-                    DMNType type = getDMNTypeFromMaps(dmnTypesMap, JSITDMNElement.getOtherAttributesMap(jsitInputDataVariable));
-                    checkTypeSupport(type, errorHolder, jsitInputData.getName());
-                    visibleFacts.put(jsitInputData.getName(), createTopLevelFactModelTree(jsitInputData.getName(), type, hiddenFacts, FactModelTree.Type.INPUT));
-                } catch (Exception e) {
-                    GWT.log("Exception " + e.getMessage(), e);
-                }
+                JSITInputData jsitInputData = Js.uncheckedCast(jsitdrgElement);
+                final JSITInformationItem jsitInputDataVariable = jsitInputData.getVariable();
+                ClientDMNType type = getDMNTypeFromMaps(dmnTypesMap, JSITDMNElement.getOtherAttributesMap(jsitInputDataVariable));
+                checkTypeSupport(type, errorHolder, jsitInputData.getName());
+                visibleFacts.put(jsitInputData.getName(), createTopLevelFactModelTree(jsitInputData.getName(), type, hiddenFacts, FactModelTree.Type.INPUT));
             } else if (JSITDecision.instanceOf(jsitdrgElement)) {
                 JSITDecision jsitDecision = Js.uncheckedCast(jsitdrgElement);
                 final JSITInformationItem jsitDecisionVariable = jsitDecision.getVariable();
-                DMNType type = getDMNTypeFromMaps(dmnTypesMap, JSITDMNElement.getOtherAttributesMap(jsitDecisionVariable));
+                ClientDMNType type = getDMNTypeFromMaps(dmnTypesMap, JSITDMNElement.getOtherAttributesMap(jsitDecisionVariable));
                 checkTypeSupport(type, errorHolder, jsitdrgElement.getName());
-                try {
-                    visibleFacts.put(jsitDecisionVariable.getName(), createTopLevelFactModelTree(jsitDecisionVariable.getName(), type, hiddenFacts, FactModelTree.Type.DECISION));
-                } catch (Exception e) {
-                    GWT.log("Exception " + e.getMessage(), e);
-                }
+                visibleFacts.put(jsitDecisionVariable.getName(), createTopLevelFactModelTree(jsitDecisionVariable.getName(), type, hiddenFacts, FactModelTree.Type.DECISION));
             }
         }
         FactModelTuple toReturn = new FactModelTuple(visibleFacts, hiddenFacts);
@@ -92,21 +83,21 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
         return toReturn;
     }
 
-    protected DMNType getDMNTypeFromMaps(Map<String, DMNType> dmnTypesMap, Map<QName, String> source) {
+    protected ClientDMNType getDMNTypeFromMaps(Map<String, ClientDMNType> dmnTypesMap, Map<QName, String> source) {
         String typeRef = source.get(TYPEREF_QNAME);
         return dmnTypesMap.get(typeRef);
     }
 
-    protected Map<String, DMNType> getDMNTypesMap(final List<JSITItemDefinition> jsitItemDefinitions,
-                                                  final String nameSpace) {
-        Map<String, DMNType> toReturn = new HashMap<>();
+    protected Map<String, ClientDMNType> getDMNTypesMap(final List<JSITItemDefinition> jsitItemDefinitions,
+                                                        final String nameSpace) {
+        Map<String, ClientDMNType> toReturn = new HashMap<>();
         for (BuiltInType type : BuiltInType.values()) {
             for (String name : type.getNames()) {
-                DMNType feelPrimitiveType;
+                ClientDMNType feelPrimitiveType;
                 if (type == BuiltInType.CONTEXT) {
-                    feelPrimitiveType = new DMNType(URI_FEEL, name, null, false, true, Collections.emptyMap(), type);
+                    feelPrimitiveType = new ClientDMNType(URI_FEEL, name, null, false, true, Collections.emptyMap(), type);
                 } else {
-                    feelPrimitiveType = new DMNType(URI_FEEL, name, null, false, false, null, type);
+                    feelPrimitiveType = new ClientDMNType(URI_FEEL, name, null, false, false, null, type);
                 }
                 toReturn.put(name, feelPrimitiveType);
             }
@@ -124,7 +115,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
      * @param errorHolder
      * @param fullPropertyPath
      */
-    protected void checkTypeSupport(final DMNType type,
+    protected void checkTypeSupport(final ClientDMNType type,
                                     final ErrorHolder errorHolder,
                                     final String fullPropertyPath) {
         internalCheckTypeSupport(type, false, errorHolder, fullPropertyPath, new HashSet<>());
@@ -137,16 +128,16 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
      * @param fullPropertyPath
      * @param alreadyVisited
      */
-    protected void internalCheckTypeSupport(final DMNType type,
+    protected void internalCheckTypeSupport(final ClientDMNType type,
                                             final boolean alreadyInCollection,
                                             final ErrorHolder errorHolder,
                                             final String fullPropertyPath,
                                             final Set<String> alreadyVisited) {
         alreadyVisited.add(type.getName());
         if (type.isComposite()) {
-            for (Map.Entry<String, DMNType> entry : type.getFields().entrySet()) {
+            for (Map.Entry<String, ClientDMNType> entry : type.getFields().entrySet()) {
                 String name = entry.getKey();
-                DMNType nestedType = entry.getValue();
+                ClientDMNType nestedType = entry.getValue();
                 String nestedPath = fullPropertyPath + "." + name;
                 if (alreadyInCollection && nestedType.isCollection()) {
                     errorHolder.getMultipleNestedCollection().add(nestedPath);
@@ -175,9 +166,9 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
      * @throws Exception
      */
     protected FactModelTree createTopLevelFactModelTree(final String factName,
-                                                        final DMNType type,
+                                                        final ClientDMNType type,
                                                         final SortedMap<String, FactModelTree> hiddenFacts,
-                                                        final FactModelTree.Type fmType) throws Exception {
+                                                        final FactModelTree.Type fmType) {
         return isToBeManagedAsCollection(type) ? createFactModelTreeForCollection(new HashMap<>(), factName, type, hiddenFacts, fmType, new ArrayList<>()) : createFactModelTreeForNoCollection(new HashMap<>(), factName, factName, type.getName(), type, hiddenFacts, fmType, new ArrayList<>());
     }
 
@@ -186,7 +177,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
      * @param type
      * @return <code>true</code> if <code>DMNType.isCollection() == true</code> <b>and</b> <code>BaseDMNTypeImpl.getFeelType() != BuiltInType.UNKNOWN</code>
      */
-    protected boolean isToBeManagedAsCollection(final DMNType type) {
+    protected boolean isToBeManagedAsCollection(final ClientDMNType type) {
         boolean toReturn = type.isCollection();
         if (toReturn) {
             BuiltInType feelType = type.getFeelType();
@@ -203,7 +194,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
      * @param type
      * @return <code>true</code> if <code>DMNType.isCollection() == true</code> <b>and</b> <code>BaseDMNTypeImpl.getFeelType() != BuiltInType.UNKNOWN</code>
      */
-    protected boolean isToBeManagedAsComposite(final DMNType type) {
+    protected boolean isToBeManagedAsComposite(final ClientDMNType type) {
         boolean toReturn = type.isComposite();
         if (toReturn) {
             BuiltInType feelType = type.getFeelType();
@@ -228,10 +219,10 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
      */
     protected FactModelTree createFactModelTreeForCollection(final Map<String, List<String>> genericTypeInfoMap,
                                                              final String factName,
-                                                             final DMNType type,
+                                                             final ClientDMNType type,
                                                              final SortedMap<String, FactModelTree> hiddenFacts,
                                                              final FactModelTree.Type fmType,
-                                                             final List<String> alreadyVisited) throws Exception {
+                                                             final List<String> alreadyVisited) {
         if (!type.isCollection() && !isToBeManagedAsCollection(type)) {
             throw new IllegalStateException(WRONG_DMN_MESSAGE);
         }
@@ -279,10 +270,10 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
                                                                final String factName,
                                                                final String propertyName,
                                                                final String fullPropertyPath,
-                                                               final DMNType type,
+                                                               final ClientDMNType type,
                                                                final SortedMap<String, FactModelTree> hiddenFacts,
                                                                final FactModelTree.Type fmType,
-                                                               final List<String> alreadyVisited) throws Exception {
+                                                               final List<String> alreadyVisited) {
         if (type.isCollection() && isToBeManagedAsCollection(type)) {
             throw new IllegalStateException(WRONG_DMN_MESSAGE);
         }
@@ -306,10 +297,10 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
                                                               final String factName,
                                                               final String propertyName,
                                                               final String fullPropertyPath,
-                                                              final DMNType type,
+                                                              final ClientDMNType type,
                                                               final SortedMap<String, FactModelTree> hiddenFacts,
                                                               final FactModelTree.Type fmType,
-                                                              final List<String> alreadyVisited) throws Exception {
+                                                              final List<String> alreadyVisited) {
         return type.isComposite() ? createFactModelTreeForComposite(genericTypeInfoMap, propertyName, fullPropertyPath, type, hiddenFacts, fmType, alreadyVisited) : createFactModelTreeForSimple(genericTypeInfoMap, factName, type.getName(), fmType);
     }
 
@@ -348,16 +339,16 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
     protected FactModelTree createFactModelTreeForComposite(final Map<String, List<String>> genericTypeInfoMap,
                                                             final String name,
                                                             final String fullPropertyPath,
-                                                            final DMNType type,
+                                                            final ClientDMNType type,
                                                             final SortedMap<String, FactModelTree> hiddenFacts,
                                                             final FactModelTree.Type fmType,
-                                                            final List<String> alreadyVisited) throws Exception {
+                                                            final List<String> alreadyVisited) {
         if (!type.isComposite() && !isToBeManagedAsComposite(type)) {
             throw new IllegalStateException(WRONG_DMN_MESSAGE);
         }
         Map<String, String> simpleFields = new HashMap<>();
         FactModelTree toReturn = new FactModelTree(name, "", simpleFields, genericTypeInfoMap, fmType);
-        for (Map.Entry<String, DMNType> entry : type.getFields().entrySet()) {
+        for (Map.Entry<String, ClientDMNType> entry : type.getFields().entrySet()) {
             String expandablePropertyName = fullPropertyPath + "." + entry.getKey();
             if (isToBeManagedAsCollection(entry.getValue())) {  // if it is a collection, generate the generic and add as hidden fact a simple or composite fact model tree
                 FactModelTree fact = createFactModelTreeForCollection(new HashMap<>(), entry.getKey(), entry.getValue(), hiddenFacts, FactModelTree.Type.UNDEFINED, alreadyVisited);

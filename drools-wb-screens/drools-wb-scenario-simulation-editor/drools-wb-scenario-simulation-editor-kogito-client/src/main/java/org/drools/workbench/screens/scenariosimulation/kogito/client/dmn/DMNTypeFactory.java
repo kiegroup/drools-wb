@@ -32,39 +32,39 @@ public class DMNTypeFactory {
         // Utility class, not instantiable
     }
 
-    public static DMNType getDMNType(final JSITItemDefinition itemDefinition,
-                                     final String namespace,
-                                     final Map<String, DMNType> dmnTypesMap) {
+    public static ClientDMNType getDMNType(final JSITItemDefinition itemDefinition,
+                                           final String namespace,
+                                           final Map<String, ClientDMNType> dmnTypesMap) {
         List<JSITItemDefinition> jsitItemDefinitions = itemDefinition.getItemComponent();
         if (jsitItemDefinitions != null && !jsitItemDefinitions.isEmpty()) {
-            Map<String, DMNType> fields = new HashMap<>();
+            Map<String, ClientDMNType> fields = new HashMap<>();
             for (int i = 0; i < jsitItemDefinitions.size(); i++) {
                 final JSITItemDefinition jsitItemDefinition = Js.uncheckedCast(jsitItemDefinitions.get(i));
                 final String typeRef = jsitItemDefinition.getTypeRef();
                 if (!dmnTypesMap.containsKey(typeRef)) {
-                    DMNType nestedDMNType = getDMNType(jsitItemDefinition, namespace, dmnTypesMap);
-                    dmnTypesMap.put(typeRef, nestedDMNType);
+                    ClientDMNType nestedClientDMNType = getDMNType(jsitItemDefinition, namespace, dmnTypesMap);
+                    dmnTypesMap.put(typeRef, nestedClientDMNType);
                 }
                 fields.put(jsitItemDefinition.getName(), dmnTypesMap.get(typeRef));
             }
-            return new DMNType(namespace, itemDefinition.getName(), itemDefinition.getId(), itemDefinition.getIsCollection(), true, fields, null);
+            return new ClientDMNType(namespace, itemDefinition.getName(), itemDefinition.getId(), itemDefinition.getIsCollection(), true, fields, null);
         } else {
-            return new DMNType(namespace, itemDefinition.getName(), itemDefinition.getId(), itemDefinition.getIsCollection(), null);
+            return new ClientDMNType(namespace, itemDefinition.getName(), itemDefinition.getId(), itemDefinition.getIsCollection(), null);
         }
     }
 
 
-    public static class DMNType {
+    public static class ClientDMNType {
 
         private String namespace;
         private String name;
         private String id;
         private boolean collection;
         private boolean composite;
-        private Map<String, DMNType> fields;
+        private Map<String, ClientDMNType> fields;
         private BuiltInType feelType;
 
-        public DMNType(String namespace, String name, String id, boolean isCollection, BuiltInType feelType) {
+        public ClientDMNType(String namespace, String name, String id, boolean isCollection, BuiltInType feelType) {
             this.namespace = namespace;
             this.name = name;
             this.id = id;
@@ -72,7 +72,7 @@ public class DMNTypeFactory {
             this.feelType = feelType;
         }
 
-        public DMNType(String namespace, String name, String id, boolean isCollection, boolean isComposite, Map<String, DMNType> fields, BuiltInType feelType) {
+        public ClientDMNType(String namespace, String name, String id, boolean isCollection, boolean isComposite, Map<String, ClientDMNType> fields, BuiltInType feelType) {
             this(namespace, name, id, isCollection, feelType);
             this.fields = fields;
             this.composite = isComposite;
@@ -98,7 +98,7 @@ public class DMNTypeFactory {
             return composite;
         }
 
-        public Map<String, DMNType> getFields() {
+        public Map<String, ClientDMNType> getFields() {
             return fields;
         }
 
