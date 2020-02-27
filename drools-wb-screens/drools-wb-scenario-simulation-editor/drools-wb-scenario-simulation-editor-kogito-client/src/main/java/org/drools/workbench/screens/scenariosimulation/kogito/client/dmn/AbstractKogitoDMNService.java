@@ -17,10 +17,12 @@ package org.drools.workbench.screens.scenariosimulation.kogito.client.dmn;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -29,7 +31,7 @@ import java.util.TreeSet;
 import javax.xml.namespace.QName;
 
 import jsinterop.base.Js;
-import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.DMNTypeFactory.ClientDMNType;
+
 import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.feel.BuiltInType;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
@@ -83,7 +85,8 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
         return toReturn;
     }
 
-    protected ClientDMNType getDMNTypeFromMaps(Map<String, ClientDMNType> dmnTypesMap, Map<QName, String> source) {
+    protected ClientDMNType getDMNTypeFromMaps(final Map<String, ClientDMNType> dmnTypesMap,
+                                               final Map<QName, String> source) {
         String typeRef = source.get(TYPEREF_QNAME);
         return dmnTypesMap.get(typeRef);
     }
@@ -102,11 +105,37 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
                 toReturn.put(name, feelPrimitiveType);
             }
         }
+        jsitItemDefinitions.sort(getItemDefinitionComparator());
         for (int i = 0; i < jsitItemDefinitions.size(); i++) {
             final JSITItemDefinition jsitItemDefinition = Js.uncheckedCast(jsitItemDefinitions.get(i));
             toReturn.put(jsitItemDefinition.getName(), DMNTypeFactory.getDMNType(jsitItemDefinition, nameSpace, toReturn));
         }
         return toReturn;
+    }
+
+    /**
+     * This comparator sorts a collection of <code>JSITItemDefinition</code> putting all items with a typeRef
+     * BEFORE items without typeRef
+     * @return
+     */
+    protected Comparator<JSITItemDefinition> getItemDefinitionComparator() {
+        return (o1, o2) -> {
+            if (o1.getTypeRef() == null && o2.getTypeRef() == null) {
+                return 0;
+            }
+            if (o1.getTypeRef() == null) {
+                return -1;
+            }
+            if (o2.getTypeRef() == null) {
+                return 1;
+            }
+            if (o1.getTypeRef().equals(o2.getName()))
+                return -1;
+
+            if (o2.getTypeRef().equals(o1.getName()))
+                return 1;
+            return 0;
+        };
     }
 
     /**
@@ -181,8 +210,9 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
         boolean toReturn = type.isCollection();
         if (toReturn) {
             BuiltInType feelType = type.getFeelType();
-            // BuiltInType.CONTEXT is a special case: it is instantiated as composite but has no nested fields so it should be considered as simple for editing
-            if (feelType != null && feelType.equals(BuiltInType.CONTEXT)) {
+            // BuiltInType.CONTEXT is a special case: it is instantiated as composite but has no nested fields
+            // so it should be considered as simple for editing
+            if (Objects.equals(BuiltInType.CONTEXT, feelType)) {
                 toReturn = false;
             }
         }
@@ -199,7 +229,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
         if (toReturn) {
             BuiltInType feelType = type.getFeelType();
             // BuiltInType.CONTEXT is a special case: it is instantiated as composite but has no nested fields so it should be considered as simple for editing
-            if (feelType != null && feelType.equals(BuiltInType.CONTEXT)) {
+            if (Objects.equals(BuiltInType.CONTEXT, feelType)) {
                 toReturn = false;
             }
         }
