@@ -108,14 +108,14 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
         jsitItemDefinitions.sort(getItemDefinitionComparator());
         for (int i = 0; i < jsitItemDefinitions.size(); i++) {
             final JSITItemDefinition jsitItemDefinition = Js.uncheckedCast(jsitItemDefinitions.get(i));
-            toReturn.put(jsitItemDefinition.getName(), DMNTypeFactory.getDMNType(jsitItemDefinition, nameSpace, toReturn));
+            toReturn.put(jsitItemDefinition.getName(), getDMNType(jsitItemDefinition, nameSpace, toReturn));
         }
         return toReturn;
     }
 
     /**
-     * This comparator sorts a collection of <code>JSITItemDefinition</code> putting all items with a typeRef
-     * BEFORE items without typeRef
+     * This comparator sorts a collection of <code>JSITItemDefinition</code> in order to have dependent items, referred by
+     * typeRef field, BEFORE their referred items.
      * @return
      */
     protected Comparator<JSITItemDefinition> getItemDefinitionComparator() {
@@ -134,6 +134,59 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
             }
             return 0;
         };
+    }
+
+    /**
+     * This method creates a <code>ClientDMNType</code> object of a given <code>JSITItemDefinition</code> object.
+     * To correctly work, it requires a sorted <code>dmnTypesMap</code>, in order to process items which don't refer to
+     * a "super items" BEFORE items with a refer to another items.
+     * @param itemDefinition
+     * @param namespace
+     * @param dmnTypesMap
+     * @return
+     */
+    public ClientDMNType getDMNType(final JSITItemDefinition itemDefinition,
+                                    final String namespace,
+                                    final Map<String, ClientDMNType> dmnTypesMap) {
+        final Map<String, ClientDMNType> fields = new HashMap<>();
+        boolean isCollection = itemDefinition.getIsCollection();
+        /* First Step: inheriting fields defined from item's typeRef, which represent its "super item".
+         *  This is required when a typeRef is defined for current itemDefinition */
+        if (itemDefinition.getTypeRef() != null) {
+            final ClientDMNType clientDmnType = dmnTypesMap.get(itemDefinition.getTypeRef());
+            if (clientDmnType != null) {
+                /* Fields are added if the referred "super item" it's a composite (eg. it holds user defined fields) */
+                if (clientDmnType.isComposite()) {
+                    fields.putAll(clientDmnType.getFields());
+                }
+                /* If "super item" is a collection, current item must inherit this property */
+                isCollection = clientDmnType.isCollection() ? clientDmnType.isCollection() : isCollection;
+            } else {
+                throw new IllegalStateException(
+                        "Item: " + itemDefinition.getName() + " refers to typeRef: " + itemDefinition.getTypeRef()
+                                + " which can't be found.");
+            }
+        }
+        /* Second Step: retrieving fields defined into current itemDefinition */
+        List<JSITItemDefinition> jsitItemDefinitions = itemDefinition.getItemComponent();
+        if (jsitItemDefinitions != null && !jsitItemDefinitions.isEmpty()) {
+            for (int i = 0; i < jsitItemDefinitions.size(); i++) {
+                final JSITItemDefinition jsitItemDefinition = Js.uncheckedCast(jsitItemDefinitions.get(i));
+                final String typeRef = jsitItemDefinition.getTypeRef();
+                if (!dmnTypesMap.containsKey(typeRef)) {
+                    ClientDMNType nestedClientDMNType = getDMNType(jsitItemDefinition, namespace, dmnTypesMap);
+                    dmnTypesMap.put(typeRef, nestedClientDMNType);
+                }
+                fields.put(jsitItemDefinition.getName(), dmnTypesMap.get(typeRef));
+            }
+        }
+        return new ClientDMNType(namespace,
+                                 itemDefinition.getName(),
+                                 itemDefinition.getId(),
+                                 isCollection,
+                                 !fields.isEmpty(),
+                                 fields,
+                                 null);
     }
 
     /**
