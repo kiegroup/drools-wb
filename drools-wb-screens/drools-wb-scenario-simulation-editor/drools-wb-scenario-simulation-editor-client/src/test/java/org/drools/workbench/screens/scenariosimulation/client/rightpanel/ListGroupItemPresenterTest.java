@@ -57,7 +57,10 @@ public class ListGroupItemPresenterTest extends AbstractTestToolsTest {
     private DivElement divElementMock;
 
     @Spy
-    private FieldItemPresenter fieldItemPresenterSpy;
+    private FieldItemPresenter fieldItemPresenterSpy = new FieldItemPresenter();
+
+    @Mock
+    private FieldItemView fieldItemViewMock;
 
     @Mock
     private Map<String, ListGroupItemView> listGroupItemViewMapMock;
@@ -72,6 +75,7 @@ public class ListGroupItemPresenterTest extends AbstractTestToolsTest {
     public void setup() {
         super.setup();
         when(viewsProviderMock.getListGroupItemView()).thenReturn(listGroupItemViewMock);
+        when(viewsProviderMock.getFieldItemView()).thenReturn(fieldItemViewMock);
         when(listGroupItemViewMock.getListGroupItem()).thenReturn(divElementMock);
         when(listGroupItemViewMock.getListGroupExpansion()).thenReturn(divElementMock);
         when(listGroupItemViewMapMock.values()).thenReturn(listGroupItemViewValuesMock);
@@ -83,6 +87,7 @@ public class ListGroupItemPresenterTest extends AbstractTestToolsTest {
                 testToolsPresenter = testToolsPresenterMock;
             }
         });
+        fieldItemPresenterSpy.viewsProvider = viewsProviderMock;
     }
 
     @Test
