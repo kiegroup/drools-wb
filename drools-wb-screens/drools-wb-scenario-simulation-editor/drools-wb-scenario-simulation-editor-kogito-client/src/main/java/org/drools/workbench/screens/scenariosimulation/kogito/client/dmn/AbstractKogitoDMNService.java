@@ -129,6 +129,11 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
             if (o2.getTypeRef() == null) {
                 return 1;
             }
+            if (o1.getTypeRef().equals(o2.getName()))
+                return -1;
+
+            if (o2.getTypeRef().equals(o1.getName()))
+                return 1;
             return 0;
         };
     }
