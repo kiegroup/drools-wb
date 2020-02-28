@@ -97,6 +97,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
         for (BuiltInType type : BuiltInType.values()) {
             for (String name : type.getNames()) {
                 ClientDMNType feelPrimitiveType;
+                /* CONTEXT is a particular case of primitive type */
                 if (type == BuiltInType.CONTEXT) {
                     feelPrimitiveType = new ClientDMNType(URI_FEEL, name, null, false, true, Collections.emptyMap(), type);
                 } else {
@@ -105,6 +106,9 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
                 toReturn.put(name, feelPrimitiveType);
             }
         }
+        /* Evaluating not primitive types defined into DMN file */
+        /* A sort of the items is mandatory to start the process. The reason is it needs to have dependent items,
+         * referred by typeRef field, BEFORE their referred items.  */
         jsitItemDefinitions.sort(getItemDefinitionComparator());
         for (int i = 0; i < jsitItemDefinitions.size(); i++) {
             final JSITItemDefinition jsitItemDefinition = Js.uncheckedCast(jsitItemDefinitions.get(i));
@@ -160,11 +164,11 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
                     fields.putAll(clientDmnType.getFields());
                 }
                 /* If "super item" is a collection, current item must inherit this property */
-                isCollection = clientDmnType.isCollection() ? clientDmnType.isCollection() : isCollection;
+                isCollection = clientDmnType.isCollection() || isCollection;
             } else {
                 throw new IllegalStateException(
                         "Item: " + itemDefinition.getName() + " refers to typeRef: " + itemDefinition.getTypeRef()
-                                + " which can't be found.");
+                                + " which can't be found. The item can be missing or required items sort is wrong");
             }
         }
         /* Second Step: retrieving fields defined into current itemDefinition */
