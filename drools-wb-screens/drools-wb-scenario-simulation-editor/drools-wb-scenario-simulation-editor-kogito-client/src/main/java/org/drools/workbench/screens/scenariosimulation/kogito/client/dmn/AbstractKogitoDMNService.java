@@ -54,7 +54,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
 
     public static final String URI_FEEL = "http://www.omg.org/spec/DMN/20180521/FEEL/";
     public static final String WRONG_DMN_MESSAGE = "Wrong DMN Type";
-    private static final QName TYPEREF_QNAME = new QName("", "typeRef", "");
+    protected static final QName TYPEREF_QNAME = new QName("", "typeRef", "");
 
     @Override
     public FactModelTuple getFactModelTuple(final JSITDefinitions jsitDefinitions) {
@@ -65,13 +65,13 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
         final List<JSITDRGElement> jsitdrgElements = jsitDefinitions.getDrgElement();
         for (int i = 0; i < jsitdrgElements.size(); i++) {
             final JSITDRGElement jsitdrgElement = Js.uncheckedCast(jsitdrgElements.get(i));
-            if (JSITInputData.instanceOf(jsitdrgElement)) {
+            if (isJSITInputData(jsitdrgElement)) {
                 JSITInputData jsitInputData = Js.uncheckedCast(jsitdrgElement);
                 final JSITInformationItem jsitInputDataVariable = jsitInputData.getVariable();
                 ClientDMNType type = getDMNTypeFromMaps(dmnTypesMap, JSITDMNElement.getOtherAttributesMap(jsitInputDataVariable));
                 checkTypeSupport(type, errorHolder, jsitInputData.getName());
                 visibleFacts.put(jsitInputData.getName(), createTopLevelFactModelTree(jsitInputData.getName(), type, hiddenFacts, FactModelTree.Type.INPUT));
-            } else if (JSITDecision.instanceOf(jsitdrgElement)) {
+            } else if (isJSITDecision(jsitdrgElement)) {
                 JSITDecision jsitDecision = Js.uncheckedCast(jsitdrgElement);
                 final JSITInformationItem jsitDecisionVariable = jsitDecision.getVariable();
                 ClientDMNType type = getDMNTypeFromMaps(dmnTypesMap, JSITDMNElement.getOtherAttributesMap(jsitDecisionVariable));
@@ -247,7 +247,6 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
      * @param hiddenFacts
      * @param fmType
      * @return
-     * @throws Exception
      */
     protected FactModelTree createTopLevelFactModelTree(final String factName,
                                                         final ClientDMNType type,
@@ -455,6 +454,17 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
         }
         return toReturn;
     }
+
+    // Indirection required for tests
+    public boolean isJSITInputData(JSITDRGElement jsitdrgElement) {
+        return JSITInputData.instanceOf(jsitdrgElement);
+    }
+
+    // Indirection required for tests
+    public boolean isJSITDecision(JSITDRGElement jsitdrgElement) {
+        return JSITDecision.instanceOf(jsitdrgElement);
+    }
+
 
     private static class ErrorHolder {
 
