@@ -16,6 +16,8 @@
 package org.drools.workbench.screens.scenariosimulation.kogito.client.dmn;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +34,10 @@ import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSIT
 import org.mockito.Mock;
 import org.uberfire.backend.vfs.Path;
 
+import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -41,7 +47,13 @@ import static org.mockito.Mockito.when;
 public class AbstractKogitoDMNServiceTest {
 
     public static final String NAMESPACE = "namespace";
+    public static final String NAME = "name";
+    public static final String ID = "id";
 
+    @Mock
+    private JSITItemDefinition jsitItemDefinitionMock;
+    @Mock
+    private JSITItemDefinition jsitItemDefinitionNestedMock;
     @Mock
     private JSITDefinitions jsiITDefinitionsMock;
 
@@ -63,6 +75,9 @@ public class AbstractKogitoDMNServiceTest {
         when(jsiITDefinitionsMock.getNamespace()).thenReturn(NAMESPACE);
         when(jsiITDefinitionsMock.getItemDefinition()).thenReturn(jstiItemDefinitions);
         when(jsiITDefinitionsMock.getDrgElement()).thenReturn(jsitdrgElements);
+        when(jsitItemDefinitionMock.getName()).thenReturn(NAME);
+        when(jsitItemDefinitionMock.getId()).thenReturn(ID);
+        when(jsitItemDefinitionMock.getIsCollection()).thenReturn(false);
     }
 
     @Test
@@ -90,6 +105,41 @@ public class AbstractKogitoDMNServiceTest {
         // It must contains all elements defined in BuiltInType ENUM + one defined jstiItemDefinitionMock item
         assertTrue(dmnTypesMap.size() == 15);
     }
+
+    @Test
+    public void getDMNTypeNullItems() {
+        ClientDMNType clientDmnType = abstractKogitoDMNServiceSpy.getDMNType(jsitItemDefinitionMock, NAMESPACE, new HashMap<>());
+        assertEquals(NAMESPACE, clientDmnType.getNamespace());
+        assertEquals(NAME, clientDmnType.getName());
+        assertFalse(clientDmnType.isCollection());
+        assertNull(clientDmnType.getFeelType());
+    }
+
+    @Test
+    public void getDMNTypeEmptyItems() {
+        when(jsitItemDefinitionMock.getItemComponent()).thenReturn(new ArrayList<>());
+        ClientDMNType clientDmnType = abstractKogitoDMNServiceSpy.getDMNType(jsitItemDefinitionMock, NAMESPACE, new HashMap<>());
+        assertEquals(NAMESPACE, clientDmnType.getNamespace());
+        assertEquals(NAME, clientDmnType.getName());
+        assertFalse(clientDmnType.isCollection());
+        assertFalse(clientDmnType.isComposite());
+        assertTrue(clientDmnType.getFields().isEmpty());
+        assertNull(clientDmnType.getFeelType());
+    }
+
+    @Test
+    public void getDMNTypeItems() {
+        when(jsitItemDefinitionMock.getItemComponent()).thenReturn(Arrays.asList(jsitItemDefinitionNestedMock));
+        ClientDMNType clientDmnType = abstractKogitoDMNServiceSpy.getDMNType(jsitItemDefinitionMock, NAMESPACE, new HashMap<>());
+        assertEquals(NAMESPACE, clientDmnType.getNamespace());
+        assertEquals(NAME, clientDmnType.getName());
+        assertFalse(clientDmnType.isCollection());
+        assertTrue(clientDmnType.isComposite());
+        assertNotNull(clientDmnType.getFields());
+        assertTrue(clientDmnType.getFields().size() == 1);
+        assertNull(clientDmnType.getFeelType());
+    }
+
 }
 
 
