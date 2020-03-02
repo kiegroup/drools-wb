@@ -255,7 +255,9 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
                                                         final ClientDMNType type,
                                                         final SortedMap<String, FactModelTree> hiddenFacts,
                                                         final FactModelTree.Type fmType) {
-        return isToBeManagedAsCollection(type) ? createFactModelTreeForCollection(new HashMap<>(), factName, type, hiddenFacts, fmType, new ArrayList<>()) : createFactModelTreeForNoCollection(new HashMap<>(), factName, factName, type.getName(), type, hiddenFacts, fmType, new ArrayList<>());
+        return isToBeManagedAsCollection(type) ?
+                createFactModelTreeForCollection(new HashMap<>(), factName, type, hiddenFacts, fmType, new ArrayList<>()) :
+                createFactModelTreeForNoCollection(new HashMap<>(), factName, factName, type.getName(), type, hiddenFacts, fmType, new ArrayList<>());
     }
 
     /**
@@ -364,7 +366,9 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
         if (type.isCollection() && isToBeManagedAsCollection(type)) {
             throw new IllegalStateException(WRONG_DMN_MESSAGE);
         }
-        return isToBeManagedAsComposite(type) ? createFactModelTreeForComposite(genericTypeInfoMap, propertyName, fullPropertyPath, type, hiddenFacts, fmType, alreadyVisited) : createFactModelTreeForSimple(genericTypeInfoMap, factName, type.getName(), fmType);
+        return isToBeManagedAsComposite(type) ?
+                createFactModelTreeForComposite(genericTypeInfoMap, propertyName, fullPropertyPath, type, hiddenFacts, fmType, alreadyVisited) :
+                createFactModelTreeForSimple(genericTypeInfoMap, factName, type.getName(), fmType);
     }
 
     /**

@@ -487,7 +487,7 @@ public class AbstractKogitoDMNServiceTest {
     @Test
     public void createTopLevelFactModelTreeSimpleNoCollection() {
         // Single property retrieve
-        ClientDMNType simpleString = new ClientDMNType(NAMESPACE, NAME, null, false, false, null, null);
+        ClientDMNType simpleString = getSimpleNoCollection();
         FactModelTree retrieved = abstractKogitoDMNServiceSpy.createTopLevelFactModelTree("testPath", simpleString, new TreeMap<>(), FactModelTree.Type.INPUT);
         Assert.assertNotNull(retrieved);
         assertEquals("testPath", retrieved.getFactName());
@@ -501,7 +501,7 @@ public class AbstractKogitoDMNServiceTest {
     @Test
     public void createTopLevelFactModelTreeSimpleCollection() {
         // Single property collection retrieve
-        ClientDMNType simpleCollectionString = new ClientDMNType(NAMESPACE, NAME, null, true, false, null, null);
+        ClientDMNType simpleCollectionString = getSimpleCollection();
         TreeMap<String, FactModelTree> hiddenFactSimpleCollection = new TreeMap<>();
         FactModelTree retrieved = abstractKogitoDMNServiceSpy.createTopLevelFactModelTree("testPath", simpleCollectionString, hiddenFactSimpleCollection, FactModelTree.Type.INPUT);
         Assert.assertNotNull(retrieved);
@@ -517,35 +517,34 @@ public class AbstractKogitoDMNServiceTest {
         assertEquals(simpleCollectionString.getName(), retrieved.getGenericTypesMap().get(VALUE).get(0));
     }
 
-    /*
     @Test
     public void createTopLevelFactModelTreeCompositeNoCollection() {
         // Single property retrieve
-        ClientDMNType compositePerson = new ClientDMNType(NAMESPACE, NAME, null, true, true, new LinkedHashMap<>(), null);
+        ClientDMNType compositePerson = getSingleCompositeWithSimpleCollection();
         FactModelTree retrieved = abstractKogitoDMNServiceSpy.createTopLevelFactModelTree("testPath", compositePerson, new TreeMap<>(), FactModelTree.Type.INPUT);
         Assert.assertNotNull(retrieved);
         assertEquals("testPath", retrieved.getFactName());
         assertEquals(2, retrieved.getSimpleProperties().size());
         assertTrue(retrieved.getSimpleProperties().containsKey("friends"));
         assertEquals("java.util.List", retrieved.getSimpleProperties().get("friends"));
-        assertTrue(retrieved.getSimpleProperties().containsKey("name"));
-        assertEquals(NAME, retrieved.getSimpleProperties().get("name"));
+        assertTrue(retrieved.getSimpleProperties().containsKey(NAME));
+        assertEquals(NAME, retrieved.getSimpleProperties().get(NAME));
         //
         assertEquals(1, retrieved.getGenericTypesMap().size());
         assertTrue(retrieved.getGenericTypesMap().containsKey("friends"));
         assertEquals(compositePerson.getFields().get("friends").getName(), retrieved.getGenericTypesMap().get("friends").get(0));
         //
         assertEquals(2, retrieved.getExpandableProperties().size());
-        /*assertTrue(retrieved.getExpandableProperties().containsKey(EXPANDABLE_PROPERTY_PHONENUMBERS));
-        assertEquals("tPhoneNumber", retrieved.getExpandableProperties().get(EXPANDABLE_PROPERTY_PHONENUMBERS));
-        assertTrue(retrieved.getExpandableProperties().containsKey(EXPANDABLE_PROPERTY_DETAILS));
-        assertEquals("tDetails", retrieved.getExpandableProperties().get(EXPANDABLE_PROPERTY_DETAILS));
+        assertTrue(retrieved.getExpandableProperties().containsKey("EXPANDABLE_PROPERTY_PHONENUMBERS"));
+        assertEquals("tPhoneNumber", retrieved.getExpandableProperties().get("EXPANDABLE_PROPERTY_PHONENUMBERS"));
+        assertTrue(retrieved.getExpandableProperties().containsKey("EXPANDABLE_PROPERTY_DETAILS"));
+        assertEquals("tDetails", retrieved.getExpandableProperties().get("EXPANDABLE_PROPERTY_DETAILS"));
     }
 
     @Test
     public void createTopLevelFactModelTreeCompositeCollection() {
         // Single property collection retrieve
-        ClientDMNType compositePerson = new ClientDMNType(NAMESPACE, NAME, null, true, true, new LinkedHashMap<>(), null);
+        ClientDMNType compositePerson = getCompositeCollection();
         TreeMap<String, FactModelTree> hiddenFactSimpleCollection = new TreeMap<>();
         FactModelTree retrieved = abstractKogitoDMNServiceSpy.createTopLevelFactModelTree("testPath", compositePerson, hiddenFactSimpleCollection, FactModelTree.Type.INPUT);
         Assert.assertNotNull(retrieved);
@@ -561,24 +560,61 @@ public class AbstractKogitoDMNServiceTest {
         assertEquals(compositePerson.getName(), retrieved.getGenericTypesMap().get(VALUE).get(0));
     }
 
-    @Test
-    public void createTopLevelFactModelTreeRecursiveTypes() {
-        SortedMap<String, FactModelTree> hiddenFacts = new TreeMap<>();
-        FactModelTree person = dmnTypeServiceImpl.createTopLevelFactModelTree("person", getRecursivePersonComposite(false), hiddenFacts, FactModelTree.Type.DECISION);
-        Assert.assertNotNull(person);
-        assertTrue(person.getExpandableProperties().containsKey("parent"));
-        assertEquals("tPerson", person.getExpandableProperties().get("parent"));
-        assertTrue(hiddenFacts.containsKey("tPerson"));
+    private ClientDMNType getSimpleNoCollection() {
+        return new ClientDMNType(NAMESPACE, NAME, null, false, false, null, null);
+    }
 
-        hiddenFacts = new TreeMap<>();
-        FactModelTree personCollection = dmnTypeServiceImpl.createTopLevelFactModelTree("person", getRecursivePersonComposite(true), hiddenFacts, FactModelTree.Type.DECISION);
+    private ClientDMNType getSimpleCollection() {
+        return new ClientDMNType(NAMESPACE, NAME, null, true, false, null, null);
+    }
 
-        Assert.assertNotNull(personCollection);
-        assertTrue(personCollection.getGenericTypesMap().containsKey(VALUE));
-        assertEquals("tPerson", personCollection.getGenericTypeInfo(VALUE).get(0));
-        assertTrue(hiddenFacts.containsKey("tPerson"));
-        assertTrue(hiddenFacts.containsKey("tPersonList"));
-    }*/
+    private ClientDMNType getSingleCompositeWithSimpleCollection() {
+        Map<String, ClientDMNType> phoneNumberCompositeFields = new HashMap<>();
+        phoneNumberCompositeFields.put("PHONENUMBER_PREFIX", new ClientDMNType(null, NAME, null, false, null));
+        phoneNumberCompositeFields.put("PHONENUMBER_NUMBER", new ClientDMNType(null, NAME, null, false, null));
+        ClientDMNType phoneNumberComposite = new ClientDMNType(NAMESPACE, "tPhoneNumber", null, false, true, phoneNumberCompositeFields, null);
+
+        Map<String, ClientDMNType> detailsCompositeFields = new HashMap<>();
+
+        detailsCompositeFields.put("gender", new ClientDMNType(null, NAME, null, false, null));
+        detailsCompositeFields.put("weight", new ClientDMNType(null, NAME, null, false, null));
+        ClientDMNType detailsComposite = new ClientDMNType(NAMESPACE, "tDetails", "tDetails", false, true, detailsCompositeFields, null);
+
+        ClientDMNType nameSimple = new ClientDMNType(null, NAME, null, false, null);
+
+        ClientDMNType friendsSimpleCollection = new ClientDMNType(null, NAME, null, true, null);
+
+        Map<String, ClientDMNType> compositePersonField = new HashMap<>();
+        compositePersonField.put("friends", friendsSimpleCollection);
+        compositePersonField.put("EXPANDABLE_PROPERTY_PHONENUMBERS", phoneNumberComposite);
+        compositePersonField.put("EXPANDABLE_PROPERTY_DETAILS", detailsComposite);
+        compositePersonField.put("name", nameSimple);
+        return new ClientDMNType(NAMESPACE, NAME, null, false, true, compositePersonField, null);
+    }
+
+    protected ClientDMNType getCompositeCollection() {
+        Map<String, ClientDMNType> phoneNumberCompositeFields = new HashMap<>();
+        phoneNumberCompositeFields.put("PHONENUMBER_PREFIX", new ClientDMNType(null, NAME, null, false, null));
+        phoneNumberCompositeFields.put("PHONENUMBER_NUMBER", new ClientDMNType(null, NAME, null, false, null));
+        ClientDMNType phoneNumberComposite = new ClientDMNType(NAMESPACE, "tPhoneNumber", null, false, true, phoneNumberCompositeFields, null);
+
+        Map<String, ClientDMNType> detailsCompositeFields = new HashMap<>();
+        detailsCompositeFields.put("gender", new ClientDMNType(null, NAME, null, false, null));
+        detailsCompositeFields.put("weight", new ClientDMNType(null, NAME, null, false, null));
+        ClientDMNType detailsComposite = new ClientDMNType(NAMESPACE, "tDetails", "tDetails", false, true, detailsCompositeFields, null);
+
+        ClientDMNType nameSimple = new ClientDMNType(null, NAME, null, false, null);
+
+        ClientDMNType friendsSimpleCollection = new ClientDMNType(null, NAME, null, true, null);
+
+        Map<String, ClientDMNType> compositePersonField = new HashMap<>();
+        compositePersonField.put("friends", friendsSimpleCollection);
+        compositePersonField.put("EXPANDABLE_PROPERTY_PHONENUMBERS", phoneNumberComposite);
+        compositePersonField.put("EXPANDABLE_PROPERTY_DETAILS", detailsComposite);
+        compositePersonField.put("name", nameSimple);
+
+        return new ClientDMNType(NAMESPACE, NAME, null, true, true, compositePersonField, null);
+    }
 }
 
 
