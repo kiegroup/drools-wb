@@ -68,13 +68,13 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
             if (isJSITInputData(jsitdrgElement)) {
                 JSITInputData jsitInputData = Js.uncheckedCast(jsitdrgElement);
                 final JSITInformationItem jsitInputDataVariable = jsitInputData.getVariable();
-                ClientDMNType type = getDMNTypeFromMaps(dmnTypesMap, JSITDMNElement.getOtherAttributesMap(jsitInputDataVariable));
+                ClientDMNType type = getDMNTypeFromMaps(dmnTypesMap, getOtherAttributesMap(jsitInputDataVariable));
                 checkTypeSupport(type, errorHolder, jsitInputData.getName());
                 visibleFacts.put(jsitInputData.getName(), createTopLevelFactModelTree(jsitInputData.getName(), type, hiddenFacts, FactModelTree.Type.INPUT));
             } else if (isJSITDecision(jsitdrgElement)) {
                 JSITDecision jsitDecision = Js.uncheckedCast(jsitdrgElement);
                 final JSITInformationItem jsitDecisionVariable = jsitDecision.getVariable();
-                ClientDMNType type = getDMNTypeFromMaps(dmnTypesMap, JSITDMNElement.getOtherAttributesMap(jsitDecisionVariable));
+                ClientDMNType type = getDMNTypeFromMaps(dmnTypesMap, getOtherAttributesMap(jsitDecisionVariable));
                 checkTypeSupport(type, errorHolder, jsitdrgElement.getName());
                 visibleFacts.put(jsitDecisionVariable.getName(), createTopLevelFactModelTree(jsitDecisionVariable.getName(), type, hiddenFacts, FactModelTree.Type.DECISION));
             }
@@ -135,6 +135,9 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
             }
             if (o1.getTypeRef().equals(o2.getName())) {
                 return 1;
+            }
+            if (o2.getTypeRef().equals(o1.getName())) {
+                return -1;
             }
             return 0;
         };
@@ -465,6 +468,10 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
         return JSITDecision.instanceOf(jsitdrgElement);
     }
 
+    // Indirection required for tests
+    public Map<QName, String> getOtherAttributesMap(JSITDMNElement jsitInputDataVariable) {
+        return JSITDMNElement.getOtherAttributesMap(jsitInputDataVariable);
+    }
 
     private static class ErrorHolder {
 
