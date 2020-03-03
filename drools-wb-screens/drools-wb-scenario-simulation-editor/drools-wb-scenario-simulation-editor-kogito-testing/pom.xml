@@ -131,6 +131,11 @@
     <!-- Core UberFire dependencies -->
     <dependency>
       <groupId>org.uberfire</groupId>
+      <artifactId>appformer-client-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.uberfire</groupId>
       <artifactId>uberfire-client-all</artifactId>
       <exclusions>
         <exclusion>
@@ -782,6 +787,7 @@
             <compileSourcesArtifact>org.uberfire:uberfire-wires-core-grids</compileSourcesArtifact>
 
             <compileSourcesArtifact>org.uberfire:appformer-js-bridge</compileSourcesArtifact>
+            <compileSourcesArtifact>org.uberfire:appformer-client-api</compileSourcesArtifact>
 
             <compileSourcesArtifact>org.kie.soup:kie-soup-dataset-api</compileSourcesArtifact>
 
