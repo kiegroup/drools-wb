@@ -62,7 +62,7 @@ import static org.mockito.Mockito.when;
 public class AbstractKogitoDMNServiceTest {
 
     public static final String NAMESPACE = "namespace";
-    public static final String NAME = "name";
+    public static final String TYPE_NAME = "name";
     public static final String ID = "id";
 
     @Mock
@@ -76,20 +76,24 @@ public class AbstractKogitoDMNServiceTest {
     @Mock
     private JSITInputData jsiITInputDataMock;
     @Mock
-    private JSITInformationItem jsiITInformationItemMock;
+    private JSITInformationItem jsiITInformationItemInputMock;
+    @Mock
+    private JSITInformationItem jsiITInformationItemDecisionMock;
 
     private AbstractKogitoDMNService abstractKogitoDMNServiceSpy;
     private List<JSITItemDefinition> jstiItemDefinitions;
     private List<JSITDRGElement> jsitdrgElements;
     private List<JSITDRGElement> drgElements;
-    private Map<QName, String> attributesMap;
+    private Map<QName, String> attributesMapInput;
+    private Map<QName, String> attributesMapDecision;
 
     @Before
     public void setup() {
         jstiItemDefinitions = new ArrayList<>();
         jsitdrgElements = new ArrayList<>();
         drgElements = new ArrayList<>();
-        attributesMap = new HashMap<>();
+        attributesMapInput = new HashMap<>();
+        attributesMapDecision = new HashMap<>();
         abstractKogitoDMNServiceSpy = spy(new AbstractKogitoDMNService() {
             @Override
             public void getDMNContent(Path path, RemoteCallback<String> remoteCallback, ErrorCallback<Object> errorCallback) {
@@ -98,57 +102,103 @@ public class AbstractKogitoDMNServiceTest {
         });
         doReturn(true).when(abstractKogitoDMNServiceSpy).isJSITInputData(eq(jsiITInputDataMock));
         doReturn(true).when(abstractKogitoDMNServiceSpy).isJSITDecision(eq(jsiITDecisionMock));
-        doReturn(attributesMap).when(abstractKogitoDMNServiceSpy).getOtherAttributesMap(eq(jsiITInformationItemMock));
+        doReturn(attributesMapInput).when(abstractKogitoDMNServiceSpy).getOtherAttributesMap(eq(jsiITInformationItemInputMock));
+        doReturn(attributesMapDecision).when(abstractKogitoDMNServiceSpy).getOtherAttributesMap(eq(jsiITInformationItemDecisionMock));
         when(jsiITDefinitionsMock.getNamespace()).thenReturn(NAMESPACE);
         when(jsiITDefinitionsMock.getItemDefinition()).thenReturn(jstiItemDefinitions);
         when(jsiITDefinitionsMock.getDrgElement()).thenReturn(jsitdrgElements);
-        when(jsiITInputDataMock.getVariable()).thenReturn(jsiITInformationItemMock);
-        when(jsitItemDefinitionMock.getName()).thenReturn(NAME);
+        when(jsiITInputDataMock.getVariable()).thenReturn(jsiITInformationItemInputMock);
+        when(jsiITDecisionMock.getVariable()).thenReturn(jsiITInformationItemDecisionMock);
+        when(jsitItemDefinitionMock.getName()).thenReturn(TYPE_NAME);
         when(jsitItemDefinitionMock.getId()).thenReturn(ID);
         when(jsitItemDefinitionMock.getIsCollection()).thenReturn(false);
     }
 
     @Test
     public void getFactModelTupleEmptyElements() {
-        attributesMap.put(TYPEREF_QNAME, "number");
+        attributesMapInput.put(TYPEREF_QNAME, "number");
         FactModelTuple factModelTuple = abstractKogitoDMNServiceSpy.getFactModelTuple(jsiITDefinitionsMock);
         assertTrue(factModelTuple.getVisibleFacts().isEmpty());
         assertTrue(factModelTuple.getHiddenFacts().isEmpty());
     }
 
-    //TODO getFactModelTuple()
-
-    /*public void getFactModelTupleInputData() {
+    @Test
+    public void getFactModelTupleSimpleInputData() {
+        when(jsiITInputDataMock.getName()).thenReturn("inputDataName");
         drgElements.add(jsiITInputDataMock);
         when(jsiITDefinitionsMock.getDrgElement()).thenReturn(drgElements);
+        attributesMapInput.put(TYPEREF_QNAME, "number");
         FactModelTuple factModelTuple = abstractKogitoDMNServiceSpy.getFactModelTuple(jsiITDefinitionsMock);
-        // VisibleFacts should match inputs and decisions on given model
-        //int expectedVisibleFacts = dmnModelLocal.getInputs().size() + dmnModelLocal.getDecisions().size();
-        //assertEquals(expectedVisibleFacts, factModelTuple.getVisibleFacts().size());
-        // Verify each inputDataNode has been correctly mapped
-        //dmnModelLocal.getInputs().forEach(inputDataNode -> verifyFactModelTree(factModelTuple, inputDataNode, factModelTuple.getHiddenFacts()));
-        // Verify each decisionNode has been correctly mapped
-        //dmnModelLocal.getDecisions().forEach(decisionNode -> verifyFactModelTree(factModelTuple, decisionNode, factModelTuple.getHiddenFacts()));
+        assertTrue(factModelTuple.getVisibleFacts().size() == 1);
+        FactModelTree inputDataNameFact = factModelTuple.getVisibleFacts().get("inputDataName");
+        assertNotNull(inputDataNameFact);
+        assertTrue(inputDataNameFact.getSimpleProperties().size() == 1);
+        assertTrue(inputDataNameFact.getSimpleProperties().values().contains("number"));
+    }
+
+    @Test
+    public void getFactModelTupleSimpleDecisionData() {
+        when(jsiITInformationItemDecisionMock.getName()).thenReturn("inputDecisionName");
+        drgElements.add(jsiITDecisionMock);
+        when(jsiITDefinitionsMock.getDrgElement()).thenReturn(drgElements);
+        attributesMapDecision.put(TYPEREF_QNAME, "string");
+        FactModelTuple factModelTuple = abstractKogitoDMNServiceSpy.getFactModelTuple(jsiITDefinitionsMock);
+        assertTrue(factModelTuple.getVisibleFacts().size() == 1);
+        FactModelTree decisionDataNameFact = factModelTuple.getVisibleFacts().get("inputDecisionName");
+        assertNotNull(decisionDataNameFact);
+        assertTrue(decisionDataNameFact.getSimpleProperties().size() == 1);
+        assertTrue(decisionDataNameFact.getSimpleProperties().values().contains("string"));
+    }
+
+    @Test
+    public void getFactModelTupleSimpleInputAndDecisionData() {
+        when(jsiITInputDataMock.getName()).thenReturn("inputDataName");
+        when(jsiITInformationItemDecisionMock.getName()).thenReturn("inputDecisionName");
+        drgElements.add(jsiITDecisionMock);
+        drgElements.add(jsiITInputDataMock);
+        when(jsiITDefinitionsMock.getDrgElement()).thenReturn(drgElements);
+        attributesMapInput.put(TYPEREF_QNAME, "number");
+        attributesMapDecision.put(TYPEREF_QNAME, "string");
+        FactModelTuple factModelTuple = abstractKogitoDMNServiceSpy.getFactModelTuple(jsiITDefinitionsMock);
+        assertTrue(factModelTuple.getVisibleFacts().size() == 2);
+        FactModelTree inputDataNameFact = factModelTuple.getVisibleFacts().get("inputDataName");
+        assertNotNull(inputDataNameFact);
+        assertTrue(inputDataNameFact.getSimpleProperties().size() == 1);
+        assertTrue(inputDataNameFact.getSimpleProperties().values().contains("number"));
+        FactModelTree decisionDataNameFact = factModelTuple.getVisibleFacts().get("inputDecisionName");
+        assertNotNull(decisionDataNameFact);
+        assertTrue(decisionDataNameFact.getSimpleProperties().size() == 1);
+        assertTrue(decisionDataNameFact.getSimpleProperties().values().contains("string"));
     }
 
     /*@Test
-    public void retrieveFactModelTupleDmnListComposite()  {
-        setDmnModelLocal("dmn-list-composite.dmn", "https://github.com/kiegroup/drools/kie-dmn/_25BF2679-3109-488F-9AD1-DDBCCEBBE5F1", "dmn-list-composite");
-        FactModelTuple factModelTuple = dmnTypeServiceImpl.retrieveFactModelTuple(mock(Path.class), null);
-        // VisibleFacts should match inputs and decisions on given model
-        int expectedVisibleFacts = dmnModelLocal.getInputs().size() + dmnModelLocal.getDecisions().size();
-        assertEquals(expectedVisibleFacts, factModelTuple.getVisibleFacts().size());
-        // Verify each inputDataNode has been correctly mapped
-        dmnModelLocal.getInputs().forEach(inputDataNode -> verifyFactModelTree(factModelTuple, inputDataNode, factModelTuple.getHiddenFacts()));
-        // Verify each decisionNode has been correctly mapped
-        dmnModelLocal.getDecisions().forEach(decisionNode -> verifyFactModelTree(factModelTuple, decisionNode, factModelTuple.getHiddenFacts()));
+    public void getFactModelTupleCompositeInputData() {
+        when(jsiITInputDataMock.getName()).thenReturn("tPerson");
+        drgElements.add(jsiITInputDataMock);
+        when(jsiITDefinitionsMock.getDrgElement()).thenReturn(drgElements);
+        attributesMapInput.put(TYPEREF_QNAME, TYPE_NAME);
+
+        when(jsitItemDefinitionNestedMock.getName()).thenReturn("age");
+        when(jsitItemDefinitionNestedMock.getTypeRef()).thenReturn("number");
+        JSITItemDefinition jsitItemDefinitionNested2Mock = mock(JSITItemDefinition.class);
+        when(jsitItemDefinitionNested2Mock.getName()).thenReturn("friend");
+        when(jsitItemDefinitionNested2Mock.getTypeRef()).thenReturn(TYPE_NAME);
+        when(jsitItemDefinitionMock.getItemComponent()).thenReturn(Arrays.asList(jsitItemDefinitionNestedMock,
+                                                                                 jsitItemDefinitionNested2Mock));
+        jstiItemDefinitions.add(jsitItemDefinitionMock);
+        FactModelTuple factModelTuple = abstractKogitoDMNServiceSpy.getFactModelTuple(jsiITDefinitionsMock);
+        assertTrue(factModelTuple.getVisibleFacts().size() == 1);
+        FactModelTree inputDataNameFact = factModelTuple.getVisibleFacts().get("inputDataName");
+        assertNotNull(inputDataNameFact);
+        assertTrue(inputDataNameFact.getSimpleProperties().size() == 1);
+        assertTrue(inputDataNameFact.getSimpleProperties().values().contains(TYPE_NAME));
     }*/
 
     @Test
     public void getDMNTypeFromMaps() {
         Map<String, ClientDMNType> dmnTypesMap = abstractKogitoDMNServiceSpy.getDMNTypesMap(jstiItemDefinitions, NAMESPACE);
-        attributesMap.put(TYPEREF_QNAME, "number");
-        ClientDMNType clientDMNType = abstractKogitoDMNServiceSpy.getDMNTypeFromMaps(dmnTypesMap, attributesMap);
+        attributesMapInput.put(TYPEREF_QNAME, "number");
+        ClientDMNType clientDMNType = abstractKogitoDMNServiceSpy.getDMNTypeFromMaps(dmnTypesMap, attributesMapInput);
         assertNotNull(clientDMNType);
         assertTrue(BuiltInType.NUMBER.equals(clientDMNType.getFeelType()));
     }
@@ -176,11 +226,11 @@ public class AbstractKogitoDMNServiceTest {
         for (BuiltInType builtInType : BuiltInType.values()) {
             Arrays.stream(builtInType.getNames()).forEach(name -> assertNotNull(dmnTypesMap.get(name)));
         }
-        assertNotNull(dmnTypesMap.get(NAME));
-        assertNull(dmnTypesMap.get(NAME).getFeelType());
-        assertEquals(NAME, dmnTypesMap.get(NAME).getName());
-        assertEquals(NAMESPACE, dmnTypesMap.get(NAME).getNamespace());
-        assertFalse(dmnTypesMap.get(NAME).isCollection());
+        assertNotNull(dmnTypesMap.get(TYPE_NAME));
+        assertNull(dmnTypesMap.get(TYPE_NAME).getFeelType());
+        assertEquals(TYPE_NAME, dmnTypesMap.get(TYPE_NAME).getName());
+        assertEquals(NAMESPACE, dmnTypesMap.get(TYPE_NAME).getNamespace());
+        assertFalse(dmnTypesMap.get(TYPE_NAME).isCollection());
     }
 
     @Test
@@ -257,7 +307,7 @@ public class AbstractKogitoDMNServiceTest {
                                                                              NAMESPACE,
                                                                              abstractKogitoDMNServiceSpy.getDMNTypesMap(jstiItemDefinitions, NAMESPACE));
         assertEquals(NAMESPACE, clientDmnType.getNamespace());
-        assertEquals(NAME, clientDmnType.getName());
+        assertEquals(TYPE_NAME, clientDmnType.getName());
         assertFalse(clientDmnType.isCollection());
         assertNull(clientDmnType.getFeelType());
     }
@@ -269,7 +319,7 @@ public class AbstractKogitoDMNServiceTest {
                                                                              NAMESPACE,
                                                                              abstractKogitoDMNServiceSpy.getDMNTypesMap(jstiItemDefinitions, NAMESPACE));
         assertEquals(NAMESPACE, clientDmnType.getNamespace());
-        assertEquals(NAME, clientDmnType.getName());
+        assertEquals(TYPE_NAME, clientDmnType.getName());
         assertFalse(clientDmnType.isCollection());
         assertFalse(clientDmnType.isComposite());
         assertTrue(clientDmnType.getFields().isEmpty());
@@ -283,7 +333,7 @@ public class AbstractKogitoDMNServiceTest {
                                                                              NAMESPACE,
                                                                              new HashMap<>());
         assertEquals(NAMESPACE, clientDmnType.getNamespace());
-        assertEquals(NAME, clientDmnType.getName());
+        assertEquals(TYPE_NAME, clientDmnType.getName());
         assertFalse(clientDmnType.isCollection());
         assertTrue(clientDmnType.isComposite());
         assertNotNull(clientDmnType.getFields());
@@ -299,7 +349,7 @@ public class AbstractKogitoDMNServiceTest {
                                                                              NAMESPACE,
                                                                              new HashMap<>());
         assertEquals(NAMESPACE, clientDmnType.getNamespace());
-        assertEquals(NAME, clientDmnType.getName());
+        assertEquals(TYPE_NAME, clientDmnType.getName());
         assertTrue(clientDmnType.isCollection());
         assertTrue(clientDmnType.isComposite());
         assertNotNull(clientDmnType.getFields());
@@ -527,8 +577,8 @@ public class AbstractKogitoDMNServiceTest {
         assertEquals(2, retrieved.getSimpleProperties().size());
         assertTrue(retrieved.getSimpleProperties().containsKey("friends"));
         assertEquals("java.util.List", retrieved.getSimpleProperties().get("friends"));
-        assertTrue(retrieved.getSimpleProperties().containsKey(NAME));
-        assertEquals(NAME, retrieved.getSimpleProperties().get(NAME));
+        assertTrue(retrieved.getSimpleProperties().containsKey(TYPE_NAME));
+        assertEquals(TYPE_NAME, retrieved.getSimpleProperties().get(TYPE_NAME));
         //
         assertEquals(1, retrieved.getGenericTypesMap().size());
         assertTrue(retrieved.getGenericTypesMap().containsKey("friends"));
@@ -561,51 +611,51 @@ public class AbstractKogitoDMNServiceTest {
     }
 
     private ClientDMNType getSimpleNoCollection() {
-        return new ClientDMNType(NAMESPACE, NAME, null, false, false, null, null);
+        return new ClientDMNType(NAMESPACE, TYPE_NAME, null, false, false, null, null);
     }
 
     private ClientDMNType getSimpleCollection() {
-        return new ClientDMNType(NAMESPACE, NAME, null, true, false, null, null);
+        return new ClientDMNType(NAMESPACE, TYPE_NAME, null, true, false, null, null);
     }
 
     private ClientDMNType getSingleCompositeWithSimpleCollection() {
         Map<String, ClientDMNType> phoneNumberCompositeFields = new HashMap<>();
-        phoneNumberCompositeFields.put("PHONENUMBER_PREFIX", new ClientDMNType(null, NAME, null, false, null));
-        phoneNumberCompositeFields.put("PHONENUMBER_NUMBER", new ClientDMNType(null, NAME, null, false, null));
+        phoneNumberCompositeFields.put("PHONENUMBER_PREFIX", new ClientDMNType(null, TYPE_NAME, null, false, null));
+        phoneNumberCompositeFields.put("PHONENUMBER_NUMBER", new ClientDMNType(null, TYPE_NAME, null, false, null));
         ClientDMNType phoneNumberComposite = new ClientDMNType(NAMESPACE, "tPhoneNumber", null, false, true, phoneNumberCompositeFields, null);
 
         Map<String, ClientDMNType> detailsCompositeFields = new HashMap<>();
 
-        detailsCompositeFields.put("gender", new ClientDMNType(null, NAME, null, false, null));
-        detailsCompositeFields.put("weight", new ClientDMNType(null, NAME, null, false, null));
+        detailsCompositeFields.put("gender", new ClientDMNType(null, TYPE_NAME, null, false, null));
+        detailsCompositeFields.put("weight", new ClientDMNType(null, TYPE_NAME, null, false, null));
         ClientDMNType detailsComposite = new ClientDMNType(NAMESPACE, "tDetails", "tDetails", false, true, detailsCompositeFields, null);
 
-        ClientDMNType nameSimple = new ClientDMNType(null, NAME, null, false, null);
+        ClientDMNType nameSimple = new ClientDMNType(null, TYPE_NAME, null, false, null);
 
-        ClientDMNType friendsSimpleCollection = new ClientDMNType(null, NAME, null, true, null);
+        ClientDMNType friendsSimpleCollection = new ClientDMNType(null, TYPE_NAME, null, true, null);
 
         Map<String, ClientDMNType> compositePersonField = new HashMap<>();
         compositePersonField.put("friends", friendsSimpleCollection);
         compositePersonField.put("EXPANDABLE_PROPERTY_PHONENUMBERS", phoneNumberComposite);
         compositePersonField.put("EXPANDABLE_PROPERTY_DETAILS", detailsComposite);
         compositePersonField.put("name", nameSimple);
-        return new ClientDMNType(NAMESPACE, NAME, null, false, true, compositePersonField, null);
+        return new ClientDMNType(NAMESPACE, TYPE_NAME, null, false, true, compositePersonField, null);
     }
 
     protected ClientDMNType getCompositeCollection() {
         Map<String, ClientDMNType> phoneNumberCompositeFields = new HashMap<>();
-        phoneNumberCompositeFields.put("PHONENUMBER_PREFIX", new ClientDMNType(null, NAME, null, false, null));
-        phoneNumberCompositeFields.put("PHONENUMBER_NUMBER", new ClientDMNType(null, NAME, null, false, null));
+        phoneNumberCompositeFields.put("PHONENUMBER_PREFIX", new ClientDMNType(null, TYPE_NAME, null, false, null));
+        phoneNumberCompositeFields.put("PHONENUMBER_NUMBER", new ClientDMNType(null, TYPE_NAME, null, false, null));
         ClientDMNType phoneNumberComposite = new ClientDMNType(NAMESPACE, "tPhoneNumber", null, false, true, phoneNumberCompositeFields, null);
 
         Map<String, ClientDMNType> detailsCompositeFields = new HashMap<>();
-        detailsCompositeFields.put("gender", new ClientDMNType(null, NAME, null, false, null));
-        detailsCompositeFields.put("weight", new ClientDMNType(null, NAME, null, false, null));
+        detailsCompositeFields.put("gender", new ClientDMNType(null, TYPE_NAME, null, false, null));
+        detailsCompositeFields.put("weight", new ClientDMNType(null, TYPE_NAME, null, false, null));
         ClientDMNType detailsComposite = new ClientDMNType(NAMESPACE, "tDetails", "tDetails", false, true, detailsCompositeFields, null);
 
-        ClientDMNType nameSimple = new ClientDMNType(null, NAME, null, false, null);
+        ClientDMNType nameSimple = new ClientDMNType(null, TYPE_NAME, null, false, null);
 
-        ClientDMNType friendsSimpleCollection = new ClientDMNType(null, NAME, null, true, null);
+        ClientDMNType friendsSimpleCollection = new ClientDMNType(null, TYPE_NAME, null, true, null);
 
         Map<String, ClientDMNType> compositePersonField = new HashMap<>();
         compositePersonField.put("friends", friendsSimpleCollection);
@@ -613,7 +663,7 @@ public class AbstractKogitoDMNServiceTest {
         compositePersonField.put("EXPANDABLE_PROPERTY_DETAILS", detailsComposite);
         compositePersonField.put("name", nameSimple);
 
-        return new ClientDMNType(NAMESPACE, NAME, null, true, true, compositePersonField, null);
+        return new ClientDMNType(NAMESPACE, TYPE_NAME, null, true, true, compositePersonField, null);
     }
 }
 
