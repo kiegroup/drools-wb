@@ -54,7 +54,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
 
     public static final String URI_FEEL = "http://www.omg.org/spec/DMN/20180521/FEEL/";
     public static final String WRONG_DMN_MESSAGE = "Wrong DMN Type";
-    private static final QName TYPEREF_QNAME = new QName("", "typeRef", "");
+    protected static final QName TYPEREF_QNAME = new QName("", "typeRef", "");
 
     @Override
     public FactModelTuple getFactModelTuple(final JSITDefinitions jsitDefinitions) {
@@ -65,16 +65,16 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
         final List<JSITDRGElement> jsitdrgElements = jsitDefinitions.getDrgElement();
         for (int i = 0; i < jsitdrgElements.size(); i++) {
             final JSITDRGElement jsitdrgElement = Js.uncheckedCast(jsitdrgElements.get(i));
-            if (JSITInputData.instanceOf(jsitdrgElement)) {
+            if (isJSITInputData(jsitdrgElement)) {
                 JSITInputData jsitInputData = Js.uncheckedCast(jsitdrgElement);
                 final JSITInformationItem jsitInputDataVariable = jsitInputData.getVariable();
-                ClientDMNType type = getDMNTypeFromMaps(dmnTypesMap, JSITDMNElement.getOtherAttributesMap(jsitInputDataVariable));
+                ClientDMNType type = getDMNTypeFromMaps(dmnTypesMap, getOtherAttributesMap(jsitInputDataVariable));
                 checkTypeSupport(type, errorHolder, jsitInputData.getName());
                 visibleFacts.put(jsitInputData.getName(), createTopLevelFactModelTree(jsitInputData.getName(), type, hiddenFacts, FactModelTree.Type.INPUT));
-            } else if (JSITDecision.instanceOf(jsitdrgElement)) {
+            } else if (isJSITDecision(jsitdrgElement)) {
                 JSITDecision jsitDecision = Js.uncheckedCast(jsitdrgElement);
                 final JSITInformationItem jsitDecisionVariable = jsitDecision.getVariable();
-                ClientDMNType type = getDMNTypeFromMaps(dmnTypesMap, JSITDMNElement.getOtherAttributesMap(jsitDecisionVariable));
+                ClientDMNType type = getDMNTypeFromMaps(dmnTypesMap, getOtherAttributesMap(jsitDecisionVariable));
                 checkTypeSupport(type, errorHolder, jsitdrgElement.getName());
                 visibleFacts.put(jsitDecisionVariable.getName(), createTopLevelFactModelTree(jsitDecisionVariable.getName(), type, hiddenFacts, FactModelTree.Type.DECISION));
             }
@@ -97,6 +97,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
         for (BuiltInType type : BuiltInType.values()) {
             for (String name : type.getNames()) {
                 ClientDMNType feelPrimitiveType;
+                /* CONTEXT is a particular case of primitive type */
                 if (type == BuiltInType.CONTEXT) {
                     feelPrimitiveType = new ClientDMNType(URI_FEEL, name, null, false, true, Collections.emptyMap(), type);
                 } else {
@@ -105,17 +106,20 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
                 toReturn.put(name, feelPrimitiveType);
             }
         }
+        /* Evaluating not primitive types defined into DMN file */
+        /* A sort of the items is mandatory to start the process. The reason is it needs to have dependent items,
+         * referred by typeRef field, BEFORE their referred items.  */
         jsitItemDefinitions.sort(getItemDefinitionComparator());
         for (int i = 0; i < jsitItemDefinitions.size(); i++) {
             final JSITItemDefinition jsitItemDefinition = Js.uncheckedCast(jsitItemDefinitions.get(i));
-            toReturn.put(jsitItemDefinition.getName(), DMNTypeFactory.getDMNType(jsitItemDefinition, nameSpace, toReturn));
+            toReturn.put(jsitItemDefinition.getName(), getDMNType(jsitItemDefinition, nameSpace, toReturn));
         }
         return toReturn;
     }
 
     /**
-     * This comparator sorts a collection of <code>JSITItemDefinition</code> putting all items with a typeRef
-     * BEFORE items without typeRef
+     * This comparator sorts a collection of <code>JSITItemDefinition</code> in order to have dependent items, referred by
+     * typeRef field, BEFORE their referred items.
      * @return
      */
     protected Comparator<JSITItemDefinition> getItemDefinitionComparator() {
@@ -129,13 +133,67 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
             if (o2.getTypeRef() == null) {
                 return 1;
             }
-            if (o1.getTypeRef().equals(o2.getName()))
-                return -1;
-
-            if (o2.getTypeRef().equals(o1.getName()))
+            if (o1.getTypeRef().equals(o2.getName())) {
                 return 1;
+            }
+            if (o2.getTypeRef().equals(o1.getName())) {
+                return -1;
+            }
             return 0;
         };
+    }
+
+    /**
+     * This method creates a <code>ClientDMNType</code> object of a given <code>JSITItemDefinition</code> object.
+     * To correctly work, it requires a sorted <code>dmnTypesMap</code>, in order to process items which don't refer to
+     * a "super items" BEFORE items with a refer to another items.
+     * @param itemDefinition
+     * @param namespace
+     * @param dmnTypesMap
+     * @return
+     */
+    public ClientDMNType getDMNType(final JSITItemDefinition itemDefinition,
+                                    final String namespace,
+                                    final Map<String, ClientDMNType> dmnTypesMap) {
+        final Map<String, ClientDMNType> fields = new HashMap<>();
+        boolean isCollection = itemDefinition.getIsCollection();
+        /* First Step: inheriting fields defined from item's typeRef, which represent its "super item".
+         *  This is required when a typeRef is defined for current itemDefinition */
+        if (itemDefinition.getTypeRef() != null) {
+            final ClientDMNType clientDmnType = dmnTypesMap.get(itemDefinition.getTypeRef());
+            if (clientDmnType != null) {
+                /* Fields are added if the referred "super item" it's a composite (eg. it holds user defined fields) */
+                if (clientDmnType.isComposite()) {
+                    fields.putAll(clientDmnType.getFields());
+                }
+                /* If "super item" is a collection, current item must inherit this property */
+                isCollection = clientDmnType.isCollection() || isCollection;
+            } else {
+                throw new IllegalStateException(
+                        "Item: " + itemDefinition.getName() + " refers to typeRef: " + itemDefinition.getTypeRef()
+                                + " which can't be found. The item can be missing or required items sort is wrong");
+            }
+        }
+        /* Second Step: retrieving fields defined into current itemDefinition */
+        List<JSITItemDefinition> jsitItemDefinitions = itemDefinition.getItemComponent();
+        if (jsitItemDefinitions != null && !jsitItemDefinitions.isEmpty()) {
+            for (int i = 0; i < jsitItemDefinitions.size(); i++) {
+                final JSITItemDefinition jsitItemDefinition = Js.uncheckedCast(jsitItemDefinitions.get(i));
+                final String typeRef = jsitItemDefinition.getTypeRef();
+                if (!dmnTypesMap.containsKey(typeRef)) {
+                    ClientDMNType nestedClientDMNType = getDMNType(jsitItemDefinition, namespace, dmnTypesMap);
+                    dmnTypesMap.put(typeRef, nestedClientDMNType);
+                }
+                fields.put(jsitItemDefinition.getName(), dmnTypesMap.get(typeRef));
+            }
+        }
+        return new ClientDMNType(namespace,
+                                 itemDefinition.getName(),
+                                 itemDefinition.getId(),
+                                 isCollection,
+                                 !fields.isEmpty(),
+                                 fields,
+                                 null);
     }
 
     /**
@@ -192,13 +250,14 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
      * @param hiddenFacts
      * @param fmType
      * @return
-     * @throws Exception
      */
     protected FactModelTree createTopLevelFactModelTree(final String factName,
                                                         final ClientDMNType type,
                                                         final SortedMap<String, FactModelTree> hiddenFacts,
                                                         final FactModelTree.Type fmType) {
-        return isToBeManagedAsCollection(type) ? createFactModelTreeForCollection(new HashMap<>(), factName, type, hiddenFacts, fmType, new ArrayList<>()) : createFactModelTreeForNoCollection(new HashMap<>(), factName, factName, type.getName(), type, hiddenFacts, fmType, new ArrayList<>());
+        return isToBeManagedAsCollection(type) ?
+                createFactModelTreeForCollection(new HashMap<>(), factName, type, hiddenFacts, fmType, new ArrayList<>()) :
+                createFactModelTreeForNoCollection(new HashMap<>(), factName, factName, type.getName(), type, hiddenFacts, fmType, new ArrayList<>());
     }
 
     /**
@@ -307,7 +366,9 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
         if (type.isCollection() && isToBeManagedAsCollection(type)) {
             throw new IllegalStateException(WRONG_DMN_MESSAGE);
         }
-        return isToBeManagedAsComposite(type) ? createFactModelTreeForComposite(genericTypeInfoMap, propertyName, fullPropertyPath, type, hiddenFacts, fmType, alreadyVisited) : createFactModelTreeForSimple(genericTypeInfoMap, factName, type.getName(), fmType);
+        return isToBeManagedAsComposite(type) ?
+                createFactModelTreeForComposite(genericTypeInfoMap, propertyName, fullPropertyPath, type, hiddenFacts, fmType, alreadyVisited) :
+                createFactModelTreeForSimple(genericTypeInfoMap, factName, type.getName(), fmType);
     }
 
     /**
@@ -399,6 +460,21 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
             }
         }
         return toReturn;
+    }
+
+    // Indirection required for tests
+    public boolean isJSITInputData(JSITDRGElement jsitdrgElement) {
+        return JSITInputData.instanceOf(jsitdrgElement);
+    }
+
+    // Indirection required for tests
+    public boolean isJSITDecision(JSITDRGElement jsitdrgElement) {
+        return JSITDecision.instanceOf(jsitdrgElement);
+    }
+
+    // Indirection required for tests
+    public Map<QName, String> getOtherAttributesMap(JSITDMNElement jsitInputDataVariable) {
+        return JSITDMNElement.getOtherAttributesMap(jsitInputDataVariable);
     }
 
     private static class ErrorHolder {
