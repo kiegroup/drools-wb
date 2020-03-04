@@ -269,7 +269,9 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
      */
     @Override
     public void addBackgroundPage(final ScenarioGridWidget scenarioGridWidget) {
-        kieView.getMultiPage().addPage(BACKGROUND_TAB_INDEX, new PageImpl(scenarioGridWidget, ScenarioSimulationEditorConstants.INSTANCE.backgroundTabTitle()) {
+        final MultiPageEditorViewImpl editorMultiPageView = (MultiPageEditorViewImpl) kieView.getMultiPage().getView();
+        final int backgroundPageIndex = editorMultiPageView.getPageIndex(CommonConstants.INSTANCE.EditTabTitle()) + 1;
+        kieView.getMultiPage().addPage(backgroundPageIndex, new PageImpl(scenarioGridWidget, ScenarioSimulationEditorConstants.INSTANCE.backgroundTabTitle()) {
             @Override
             public void onFocus() {
                 super.onFocus();
@@ -291,7 +293,9 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
 
     @Override
     public void selectSimulationTab() {
-        final TabListItem item = (TabListItem) ((MultiPageEditorViewImpl) kieView.getMultiPage().getView()).getTabBar().getWidget(SIMULATION_TAB_INDEX);
+        final MultiPageEditorViewImpl editorMultiPageView = (MultiPageEditorViewImpl) kieView.getMultiPage().getView();
+        final int pageIndex = editorMultiPageView.getPageIndex(CommonConstants.INSTANCE.EditTabTitle());
+        final TabListItem item = (TabListItem) editorMultiPageView.getTabBar().getWidget(pageIndex);
         if (item != null) {
             item.showTab(false);
         }
@@ -299,7 +303,9 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
 
     @Override
     public void selectBackgroundTab() {
-        final TabListItem item = (TabListItem) ((MultiPageEditorViewImpl) kieView.getMultiPage().getView()).getTabBar().getWidget(BACKGROUND_TAB_INDEX);
+        final MultiPageEditorViewImpl editorMultiPageView = (MultiPageEditorViewImpl) kieView.getMultiPage().getView();
+        final int pageIndex = editorMultiPageView.getPageIndex(ScenarioSimulationEditorConstants.INSTANCE.backgroundTabTitle());
+        final TabListItem item = (TabListItem) editorMultiPageView.getTabBar().getWidget(pageIndex);
         if (item != null) {
             item.showTab(false);
         }
