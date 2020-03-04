@@ -26,7 +26,7 @@ public class ExperimentalActivitiesAuthorizationManagerMock implements Experimen
 
     @Override
     public void init() {
-
+        // Not used in KogitoScesim
     }
 
     @Override
@@ -46,6 +46,6 @@ public class ExperimentalActivitiesAuthorizationManagerMock implements Experimen
 
     @Override
     public void securePart(PartDefinition part, PanelDefinition panel) {
-
+        // Not used in KogitoScesim
     }
 }
