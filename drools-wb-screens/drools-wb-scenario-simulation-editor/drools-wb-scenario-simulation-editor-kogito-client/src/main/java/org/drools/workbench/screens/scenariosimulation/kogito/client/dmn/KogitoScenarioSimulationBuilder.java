@@ -103,7 +103,7 @@ public class KogitoScenarioSimulationBuilder {
                 populateDMN(content, value, callback);
                 break;
             default:
-                // noop
+                throw new IllegalArgumentException("Impossible to map");
         }
     }
 
