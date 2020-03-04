@@ -131,6 +131,11 @@
     <!-- Core UberFire dependencies -->
     <dependency>
       <groupId>org.uberfire</groupId>
+      <artifactId>appformer-client-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.uberfire</groupId>
       <artifactId>uberfire-client-all</artifactId>
       <exclusions>
         <exclusion>
@@ -723,7 +728,6 @@
             <compileSourcesArtifact>org.kie.workbench.services:kie-wb-common-services-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.kie.workbench:kie-wb-common-kogito-client</compileSourcesArtifact>
 
-
             <!-- UF-ext -->
             <compileSourcesArtifact>org.uberfire:uberfire-runtime-plugins-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-commons-editor-api</compileSourcesArtifact>
@@ -745,6 +749,7 @@
             <compileSourcesArtifact>org.uberfire:uberfire-experimental-client</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:uberfire-wires-core-grids</compileSourcesArtifact>
 
+            <compileSourcesArtifact>org.uberfire:appformer-client-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.uberfire:appformer-js-bridge</compileSourcesArtifact>
 
             <compileSourcesArtifact>org.kie.soup:kie-soup-dataset-api</compileSourcesArtifact>
