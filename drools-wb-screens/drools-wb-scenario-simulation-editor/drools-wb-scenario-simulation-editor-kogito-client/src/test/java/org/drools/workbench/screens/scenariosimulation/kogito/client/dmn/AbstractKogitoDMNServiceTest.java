@@ -171,29 +171,6 @@ public class AbstractKogitoDMNServiceTest {
         assertTrue(decisionDataNameFact.getSimpleProperties().values().contains("string"));
     }
 
-    /*@Test
-    public void getFactModelTupleCompositeInputData() {
-        when(jsiITInputDataMock.getName()).thenReturn("tPerson");
-        drgElements.add(jsiITInputDataMock);
-        when(jsiITDefinitionsMock.getDrgElement()).thenReturn(drgElements);
-        attributesMapInput.put(TYPEREF_QNAME, TYPE_NAME);
-
-        when(jsitItemDefinitionNestedMock.getName()).thenReturn("age");
-        when(jsitItemDefinitionNestedMock.getTypeRef()).thenReturn("number");
-        JSITItemDefinition jsitItemDefinitionNested2Mock = mock(JSITItemDefinition.class);
-        when(jsitItemDefinitionNested2Mock.getName()).thenReturn("friend");
-        when(jsitItemDefinitionNested2Mock.getTypeRef()).thenReturn(TYPE_NAME);
-        when(jsitItemDefinitionMock.getItemComponent()).thenReturn(Arrays.asList(jsitItemDefinitionNestedMock,
-                                                                                 jsitItemDefinitionNested2Mock));
-        jstiItemDefinitions.add(jsitItemDefinitionMock);
-        FactModelTuple factModelTuple = abstractKogitoDMNServiceSpy.getFactModelTuple(jsiITDefinitionsMock);
-        assertTrue(factModelTuple.getVisibleFacts().size() == 1);
-        FactModelTree inputDataNameFact = factModelTuple.getVisibleFacts().get("inputDataName");
-        assertNotNull(inputDataNameFact);
-        assertTrue(inputDataNameFact.getSimpleProperties().size() == 1);
-        assertTrue(inputDataNameFact.getSimpleProperties().values().contains(TYPE_NAME));
-    }*/
-
     @Test
     public void getDMNTypeFromMaps() {
         Map<String, ClientDMNType> dmnTypesMap = abstractKogitoDMNServiceSpy.getDMNTypesMap(jstiItemDefinitions, NAMESPACE);
