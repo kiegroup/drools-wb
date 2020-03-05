@@ -270,8 +270,11 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     @Override
     public void addBackgroundPage(final ScenarioGridWidget scenarioGridWidget) {
         final MultiPageEditorViewImpl editorMultiPageView = (MultiPageEditorViewImpl) kieView.getMultiPage().getView();
-        final int backgroundPageIndex = editorMultiPageView.getPageIndex(CommonConstants.INSTANCE.EditTabTitle()) + 1;
-        kieView.getMultiPage().addPage(backgroundPageIndex, new PageImpl(scenarioGridWidget, ScenarioSimulationEditorConstants.INSTANCE.backgroundTabTitle()) {
+        final String mainPageTitle = CommonConstants.INSTANCE.EditTabTitle();
+        final String backgroundPageTitle = ScenarioSimulationEditorConstants.INSTANCE.backgroundTabTitle();
+        final int mainPageIndex = editorMultiPageView.getPageIndex(mainPageTitle);
+        final int backgroundPageIndex = mainPageIndex + 1;
+        kieView.getMultiPage().addPage(backgroundPageIndex, new PageImpl(scenarioGridWidget, backgroundPageTitle) {
             @Override
             public void onFocus() {
                 super.onFocus();
