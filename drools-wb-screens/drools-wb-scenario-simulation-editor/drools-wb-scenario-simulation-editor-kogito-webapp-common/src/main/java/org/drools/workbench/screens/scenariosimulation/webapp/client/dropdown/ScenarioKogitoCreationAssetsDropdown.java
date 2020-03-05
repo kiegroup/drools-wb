@@ -23,10 +23,11 @@ import org.drools.workbench.screens.scenariosimulation.client.dropdown.ScenarioS
 import org.kie.workbench.common.widgets.client.assets.dropdown.AbstractKieAssetsDropdown;
 
 @Dependent
-public class NewScenarioSimulationDropdown extends AbstractKieAssetsDropdown {
+public class ScenarioKogitoCreationAssetsDropdown extends AbstractKieAssetsDropdown {
 
     @Inject
-    public NewScenarioSimulationDropdown(@Named(ScenarioSimulationDropdownView.BEAN_NAME) ScenarioSimulationDropdownView view, DmnAssetsDropdownProvider dataProvider) {
+    public ScenarioKogitoCreationAssetsDropdown(@Named(ScenarioSimulationDropdownView.BEAN_NAME) ScenarioSimulationDropdownView view,
+                                                ScenarioKogitoCreationAssetsDropdownProvider dataProvider) {
         super(view, dataProvider);
     }
 }
