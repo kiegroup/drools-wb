@@ -58,6 +58,11 @@ public class ScenarioKogitoCreationPopupView extends AbstractScenarioPopupView i
 
     @Override
     public void show(String mainTitleText, Command okCommand) {
+        initialize();
+        super.show(mainTitleText, "Create", okCommand);
+    }
+
+    protected void initialize() {
         okButton.setEnabled(false);
         cancelButton.setText("Cancel");
         divElement.setAttribute(ConstantHolder.HIDDEN, "");
@@ -71,7 +76,6 @@ public class ScenarioKogitoCreationPopupView extends AbstractScenarioPopupView i
             final Optional<KieAssetsDropdownItem> value = scenarioKogitoCreationAssetsDropdown.getValue();
             selectedPath = value.map(KieAssetsDropdownItem::getValue).orElse(null);
         });
-        super.show(mainTitleText, "Create", okCommand);
     }
 
     @Override

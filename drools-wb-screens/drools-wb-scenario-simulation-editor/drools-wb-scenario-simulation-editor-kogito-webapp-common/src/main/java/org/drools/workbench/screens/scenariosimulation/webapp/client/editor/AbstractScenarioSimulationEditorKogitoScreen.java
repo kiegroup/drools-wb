@@ -20,7 +20,7 @@ import javax.inject.Inject;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.KogitoScenarioSimulationBuilder;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.ScenarioSimulationEditorKogitoWrapper;
-import org.drools.workbench.screens.scenariosimulation.webapp.client.popup.KogitoScesimPopupPresenter;
+import org.drools.workbench.screens.scenariosimulation.webapp.client.popup.ScenarioKogitoCreationPopupPresenter;
 import org.gwtbootstrap3.client.ui.Popover;
 import org.kie.workbench.common.kogito.webapp.base.client.editor.KogitoScreen;
 import org.uberfire.backend.vfs.Path;
@@ -36,10 +36,10 @@ public abstract class AbstractScenarioSimulationEditorKogitoScreen implements Ko
     protected ScenarioSimulationEditorKogitoWrapper scenarioSimulationEditorKogitoWrapper;
 
     @Inject
-    private KogitoScenarioSimulationBuilder scenarioSimulationBuilder;
+    protected KogitoScenarioSimulationBuilder scenarioSimulationBuilder;
 
     @Inject
-    private KogitoScesimPopupPresenter kogitoScesimPopupPresenter;
+    protected ScenarioKogitoCreationPopupPresenter scenarioKogitoCreationPopupPresenter;
 
     /**
      *
@@ -47,14 +47,14 @@ public abstract class AbstractScenarioSimulationEditorKogitoScreen implements Ko
      */
     protected void newFile(String baseUri) {
         Command createCommand = () -> {
-            final ScenarioSimulationModel.Type selectedType = kogitoScesimPopupPresenter.getSelectedType();
-            String value = "";
+            final ScenarioSimulationModel.Type selectedType = scenarioKogitoCreationPopupPresenter.getSelectedType();
             if (selectedType == null) {
                 showPopover("ERROR", "Missing selected type");
                 return;
             }
+            String value = "";
             if (ScenarioSimulationModel.Type.DMN.equals(selectedType)) {
-                value = kogitoScesimPopupPresenter.getSelectedPath();
+                value = scenarioKogitoCreationPopupPresenter.getSelectedPath();
                 if (value == null || value.isEmpty()) {
                     showPopover("ERROR", "Missing dmn path");
                     return;
@@ -65,10 +65,10 @@ public abstract class AbstractScenarioSimulationEditorKogitoScreen implements Ko
             scenarioSimulationBuilder.populateScenarioSimulationModel(new ScenarioSimulationModel(), selectedType, value, content -> {
                 saveFile(path, content);
                 scenarioSimulationEditorKogitoWrapper.gotoPath(path);
-                scenarioSimulationEditorKogitoWrapper.setContent(null, content);
+                scenarioSimulationEditorKogitoWrapper.setContent(path.toURI(), content);
             });
         };
-        kogitoScesimPopupPresenter.show("Create new Test Scenario", createCommand);
+        scenarioKogitoCreationPopupPresenter.show("Create new Test Scenario", createCommand);
     }
 
     protected void showPopover(String title, String content) {
@@ -78,4 +78,6 @@ public abstract class AbstractScenarioSimulationEditorKogitoScreen implements Ko
     protected void saveFile(final Path path, final String content) {
         // TO BE OVERRIDDEN
     }
+
+
 }

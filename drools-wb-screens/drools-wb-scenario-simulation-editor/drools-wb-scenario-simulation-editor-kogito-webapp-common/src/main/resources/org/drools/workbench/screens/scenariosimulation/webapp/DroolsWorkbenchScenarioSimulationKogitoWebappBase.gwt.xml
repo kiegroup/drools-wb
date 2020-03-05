@@ -20,6 +20,7 @@
 <module>
 
   <source path="client"/>
+  <source path="workarounds"/>
 
   <!-- Uberfire dependencies -->
   <inherits name="org.uberfire.UberfireClient"/>

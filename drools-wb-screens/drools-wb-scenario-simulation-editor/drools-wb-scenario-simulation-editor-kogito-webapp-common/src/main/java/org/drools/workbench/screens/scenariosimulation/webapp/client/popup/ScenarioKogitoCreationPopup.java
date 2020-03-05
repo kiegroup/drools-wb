@@ -21,7 +21,7 @@ import org.uberfire.mvp.Command;
 public interface ScenarioKogitoCreationPopup {
 
     /**
-     * Makes the <code>NewScesimPopup</code> visible with OK/CANCEL.
+     * Makes the <code>ScenarioKogitoCreationPopup</code> visible with OK/CANCEL.
      * @param mainTitleText
      * @param okCommand
      */
