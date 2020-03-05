@@ -25,25 +25,25 @@ import org.uberfire.mvp.Command;
 public class ScenarioKogitoCreationPopupPresenter implements ScenarioKogitoCreationPopup.Presenter {
 
     @Inject
-    protected ScenarioKogitoCreationPopupView newScesimPopup;
+    protected ScenarioKogitoCreationPopupView scenarioKogitoCreationPopupView;
 
     @Override
     public void show(String mainTitleText, Command okCommand) {
-        newScesimPopup.show(mainTitleText, okCommand);
+        scenarioKogitoCreationPopupView.show(mainTitleText, okCommand);
     }
 
     @Override
     public void hide() {
-        newScesimPopup.hide();
+        scenarioKogitoCreationPopupView.hide();
     }
 
     @Override
     public ScenarioSimulationModel.Type getSelectedType() {
-        return newScesimPopup.getSelectedType();
+        return scenarioKogitoCreationPopupView.getSelectedType();
     }
 
     @Override
     public String getSelectedPath() {
-        return newScesimPopup.getSelectedPath();
+        return scenarioKogitoCreationPopupView.getSelectedPath();
     }
 }
