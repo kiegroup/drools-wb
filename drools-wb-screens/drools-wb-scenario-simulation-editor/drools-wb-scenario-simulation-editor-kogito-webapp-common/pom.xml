@@ -15,13 +15,6 @@
   <name>Drools Workbench - Scenario Simulation Editor - Kogito - Common Webapp</name>
   <description>Drools Workbench - Scenario Simulation Editor - Kogito - Common Webapp</description>
 
-  <properties>
-    <errai.jboss.home>${project.build.directory}/wildfly-${version.org.jboss.errai.wildfly}</errai.jboss.home>
-    <gwt.compiler.localWorkers>4</gwt.compiler.localWorkers>
-    <version.thorntail>2.4.0.Final</version.thorntail>
-    <gwt-interop-utils.version>0.3.0</gwt-interop-utils.version>
-  </properties>
-
   <dependencies>
 
     <!-- Errai -->
@@ -109,130 +102,16 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>org.kie.workbench</groupId>
-        <artifactId>kie-wb-common-kogito-client</artifactId>
-        <!-- momentary fix -->
-        <version>${version.org.kie}</version>
-      </dependency>
-      <dependency>
         <groupId>org.drools</groupId>
         <artifactId>drools-wb-scenario-simulation-editor-kogito-client</artifactId>
         <version>${version.org.kie}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.drools</groupId>
-        <artifactId>drools-scenario-simulation-backend</artifactId>
-        <version>${version.org.kie}</version>
-        <classifier>tests</classifier>
-        <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>org.dashbuilder</groupId>
         <artifactId>dashbuilder-renderer-google</artifactId>
         <version>2.19.0-SNAPSHOT</version>
       </dependency>
-
-      <!-- MARSHALLING -->
-      <dependency>
-        <groupId>org.drools</groupId>
-        <artifactId>drools-wb-scenario-simulation-editor-kogito-marshaller</artifactId>
-        <version>${version.org.kie}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.github.gwtreact</groupId>
-        <artifactId>gwt-interop-utils</artifactId>
-        <version>${gwt-interop-utils.version}</version>
-      </dependency>
-      <!-- END MARSHALLING -->
-      <dependency>
-        <groupId>org.kie.workbench</groupId>
-        <artifactId>kie-wb-common-kogito-webapp-base</artifactId>
-        <version>${version.org.kie}</version>
-      </dependency>
-
     </dependencies>
   </dependencyManagement>
-
-  <build>
-    <finalName>${project.artifactId}</finalName>
-
-    <plugins>
-      <!-- Tests are skipped by default because they require additional GWT dependencies. Run mvn with
-        -Pintegration-test to enable testing. -->
-      <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <skipTests>true</skipTests>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <artifactId>maven-clean-plugin</artifactId>
-        <configuration>
-          <filesets>
-            <fileset>
-              <directory>${basedir}</directory>
-              <includes>
-                <include>src/main/gwt-unitCache</include>
-                <include>**/gwt-unitCache/**</include>
-                <include>.gwt/**</include>
-                <include>.errai/</include>
-                <include>.security/</include>
-                <include>.niogit/**</include>
-                <include>.index/**</include>
-                <include>**/*.JUnit/**</include>
-                <include>repositories/</include>
-              </includes>
-            </fileset>
-          </filesets>
-        </configuration>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>unpack</id>
-            <phase>process-resources</phase>
-            <goals>
-              <goal>unpack</goal>
-            </goals>
-            <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>org.jboss.errai</groupId>
-                  <artifactId>wildfly-dist</artifactId>
-                  <version>${version.org.jboss.errai.wildfly}</version>
-                  <type>zip</type>
-                  <overWrite>false</overWrite>
-                  <outputDirectory>${project.build.directory}</outputDirectory>
-                </artifactItem>
-              </artifactItems>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-enforcer-plugin</artifactId>
-        <configuration>
-          <skip>true</skip>
-        </configuration>
-      </plugin>
-
-      <!-- DISABLE CHECKSTYLE -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <configuration>
-          <skip>true</skip>
-        </configuration>
-      </plugin>
-    </plugins>
-
-  </build>
 
 </project>
