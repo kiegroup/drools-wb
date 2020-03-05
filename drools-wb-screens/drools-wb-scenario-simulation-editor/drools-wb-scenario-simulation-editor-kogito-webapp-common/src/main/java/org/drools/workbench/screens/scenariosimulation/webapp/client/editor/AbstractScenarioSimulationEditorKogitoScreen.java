@@ -36,10 +36,10 @@ public abstract class AbstractScenarioSimulationEditorKogitoScreen implements Ko
     protected ScenarioSimulationEditorKogitoWrapper scenarioSimulationEditorKogitoWrapper;
 
     @Inject
-    private KogitoScenarioSimulationBuilder scenarioSimulationBuilder;
+    protected KogitoScenarioSimulationBuilder scenarioSimulationBuilder;
 
     @Inject
-    private KogitoScesimPopupPresenter kogitoScesimPopupPresenter;
+    protected KogitoScesimPopupPresenter kogitoScesimPopupPresenter;
 
     /**
      *
@@ -48,11 +48,11 @@ public abstract class AbstractScenarioSimulationEditorKogitoScreen implements Ko
     protected void newFile(String baseUri) {
         Command createCommand = () -> {
             final ScenarioSimulationModel.Type selectedType = kogitoScesimPopupPresenter.getSelectedType();
-            String value = "";
             if (selectedType == null) {
                 showPopover("ERROR", "Missing selected type");
                 return;
             }
+            String value = "";
             if (ScenarioSimulationModel.Type.DMN.equals(selectedType)) {
                 value = kogitoScesimPopupPresenter.getSelectedPath();
                 if (value == null || value.isEmpty()) {
@@ -65,7 +65,7 @@ public abstract class AbstractScenarioSimulationEditorKogitoScreen implements Ko
             scenarioSimulationBuilder.populateScenarioSimulationModel(new ScenarioSimulationModel(), selectedType, value, content -> {
                 saveFile(path, content);
                 scenarioSimulationEditorKogitoWrapper.gotoPath(path);
-                scenarioSimulationEditorKogitoWrapper.setContent(null, content);
+                scenarioSimulationEditorKogitoWrapper.setContent(path.toURI(), content);
             });
         };
         kogitoScesimPopupPresenter.show("Create new Test Scenario", createCommand);
@@ -78,4 +78,6 @@ public abstract class AbstractScenarioSimulationEditorKogitoScreen implements Ko
     protected void saveFile(final Path path, final String content) {
         // TO BE OVERRIDDEN
     }
+
+
 }
