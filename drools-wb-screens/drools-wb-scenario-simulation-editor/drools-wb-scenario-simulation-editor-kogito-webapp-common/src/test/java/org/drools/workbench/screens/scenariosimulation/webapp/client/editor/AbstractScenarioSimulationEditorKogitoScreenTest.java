@@ -1,10 +1,25 @@
+/*
+ * Copyright 2020 Red Hat, Inc. and/or its affiliates.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.drools.workbench.screens.scenariosimulation.webapp.client.editor;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.KogitoScenarioSimulationBuilder;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.ScenarioSimulationEditorKogitoWrapper;
-import org.drools.workbench.screens.scenariosimulation.webapp.client.popup.KogitoScesimPopupPresenter;
+import org.drools.workbench.screens.scenariosimulation.webapp.client.popup.ScenarioKogitoCreationPopupPresenter;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +38,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
@@ -34,7 +48,7 @@ public class AbstractScenarioSimulationEditorKogitoScreenTest {
     @Mock
     private KogitoScenarioSimulationBuilder scenarioSimulationBuilderMock;
     @Mock
-    private KogitoScesimPopupPresenter kogitoScesimPopupPresenterMock;
+    private ScenarioKogitoCreationPopupPresenter scenarioKogitoCreationPopupPresenterMock;
     @Captor
     private ArgumentCaptor<Command> createCommandCaptor;
     @Captor
@@ -48,7 +62,7 @@ public class AbstractScenarioSimulationEditorKogitoScreenTest {
     public void setup() {
         abstractScenarioSimulationEditorKogitoScreenSpy = spy(new AbstractScenarioSimulationEditorKogitoScreen() {
             {
-                kogitoScesimPopupPresenter = kogitoScesimPopupPresenterMock;
+                scenarioKogitoCreationPopupPresenter = scenarioKogitoCreationPopupPresenterMock;
                 scenarioSimulationBuilder = scenarioSimulationBuilderMock;
                 scenarioSimulationEditorKogitoWrapper = scenarioSimulationEditorKogitoWrapperMock;
             }
@@ -63,15 +77,15 @@ public class AbstractScenarioSimulationEditorKogitoScreenTest {
                 //Do nothing
             }
         });
-        when(kogitoScesimPopupPresenterMock.getSelectedPath()).thenReturn("selected");
+        when(scenarioKogitoCreationPopupPresenterMock.getSelectedPath()).thenReturn("selected");
     }
 
     @Test
     public void newFileEmptySelectedType() {
         abstractScenarioSimulationEditorKogitoScreenSpy.newFile("fake/path/");
-        verify(kogitoScesimPopupPresenterMock, times(1)).show(isA(String.class), createCommandCaptor.capture());
+        verify(scenarioKogitoCreationPopupPresenterMock, times(1)).show(isA(String.class), createCommandCaptor.capture());
         createCommandCaptor.getValue().execute();
-        verify(kogitoScesimPopupPresenterMock, times(1)).getSelectedType();
+        verify(scenarioKogitoCreationPopupPresenterMock, times(1)).getSelectedType();
         verify(abstractScenarioSimulationEditorKogitoScreenSpy, times(1)).showPopover(eq("ERROR"), eq("Missing selected type"));
 
         verify(scenarioSimulationBuilderMock, never()).populateScenarioSimulationModel(isA(ScenarioSimulationModel.class),
@@ -82,12 +96,12 @@ public class AbstractScenarioSimulationEditorKogitoScreenTest {
 
     @Test
     public void newFileEmptySelectedDMNPath() {
-        when(kogitoScesimPopupPresenterMock.getSelectedPath()).thenReturn(null);
-        when(kogitoScesimPopupPresenterMock.getSelectedType()).thenReturn(ScenarioSimulationModel.Type.DMN);
+        when(scenarioKogitoCreationPopupPresenterMock.getSelectedPath()).thenReturn(null);
+        when(scenarioKogitoCreationPopupPresenterMock.getSelectedType()).thenReturn(ScenarioSimulationModel.Type.DMN);
         abstractScenarioSimulationEditorKogitoScreenSpy.newFile("fake/path/");
-        verify(kogitoScesimPopupPresenterMock, times(1)).show(isA(String.class), createCommandCaptor.capture());
+        verify(scenarioKogitoCreationPopupPresenterMock, times(1)).show(isA(String.class), createCommandCaptor.capture());
         createCommandCaptor.getValue().execute();
-        verify(kogitoScesimPopupPresenterMock, times(1)).getSelectedType();
+        verify(scenarioKogitoCreationPopupPresenterMock, times(1)).getSelectedType();
         verify(abstractScenarioSimulationEditorKogitoScreenSpy, times(1)).showPopover(eq("ERROR"), eq("Missing dmn path"));
         verify(scenarioSimulationBuilderMock, never()).populateScenarioSimulationModel(isA(ScenarioSimulationModel.class),
                                                                                        eq(ScenarioSimulationModel.Type.RULE),
@@ -97,11 +111,11 @@ public class AbstractScenarioSimulationEditorKogitoScreenTest {
 
     @Test
     public void newFileRule() {
-        when(kogitoScesimPopupPresenterMock.getSelectedType()).thenReturn(ScenarioSimulationModel.Type.RULE);
+        when(scenarioKogitoCreationPopupPresenterMock.getSelectedType()).thenReturn(ScenarioSimulationModel.Type.RULE);
         abstractScenarioSimulationEditorKogitoScreenSpy.newFile("fake/path/");
-        verify(kogitoScesimPopupPresenterMock, times(1)).show(isA(String.class), createCommandCaptor.capture());
+        verify(scenarioKogitoCreationPopupPresenterMock, times(1)).show(isA(String.class), createCommandCaptor.capture());
         createCommandCaptor.getValue().execute();
-        verify(kogitoScesimPopupPresenterMock, times(1)).getSelectedType();
+        verify(scenarioKogitoCreationPopupPresenterMock, times(1)).getSelectedType();
         verify(scenarioSimulationBuilderMock, times(1)).populateScenarioSimulationModel(isA(ScenarioSimulationModel.class),
                                                                                                              eq(ScenarioSimulationModel.Type.RULE),
                                                                                                              eq(""),
@@ -116,11 +130,11 @@ public class AbstractScenarioSimulationEditorKogitoScreenTest {
 
     @Test
     public void newFileDMN() {
-        when(kogitoScesimPopupPresenterMock.getSelectedType()).thenReturn(ScenarioSimulationModel.Type.DMN);
+        when(scenarioKogitoCreationPopupPresenterMock.getSelectedType()).thenReturn(ScenarioSimulationModel.Type.DMN);
         abstractScenarioSimulationEditorKogitoScreenSpy.newFile("fake/path/");
-        verify(kogitoScesimPopupPresenterMock, times(1)).show(isA(String.class), createCommandCaptor.capture());
+        verify(scenarioKogitoCreationPopupPresenterMock, times(1)).show(isA(String.class), createCommandCaptor.capture());
         createCommandCaptor.getValue().execute();
-        verify(kogitoScesimPopupPresenterMock, times(1)).getSelectedType();
+        verify(scenarioKogitoCreationPopupPresenterMock, times(1)).getSelectedType();
         verify(scenarioSimulationBuilderMock, times(1)).populateScenarioSimulationModel(isA(ScenarioSimulationModel.class),
                                                                                         eq(ScenarioSimulationModel.Type.DMN),
                                                                                         eq("selected"),
