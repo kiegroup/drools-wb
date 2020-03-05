@@ -30,7 +30,7 @@ import org.kie.workbench.common.kogito.webapp.base.client.workarounds.KogitoReso
 import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
 
 @Dependent
-public class KogitoRuntimeDmnAssetsDropdownProviderImpl implements DmnAssetsDropdownProvider {
+public class KogitoRuntimeDmnAssetsDropdownProviderImpl implements ScenarioKogitoCreationAssetsDropdownProvider {
 
     private static final String FILE_SUFFIX = "dmn";
 
