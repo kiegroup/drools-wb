@@ -26,6 +26,7 @@
   <inherits name="org.uberfire.client.views.PatternFlyTheme"/>
   <inherits name="org.uberfire.ext.widgets.core.UberfireWidgetsCore"/>
   <inherits name="org.uberfire.ext.preferences.UberfirePreferences"/>
+  <inherits name="org.uberfire.preferences.UberfirePreferencesClient"/>
 
   <!-- Errai, Drools etc -->
   <inherits name="org.kie.workbench.common.profile.ProfileAPI"/>
@@ -45,34 +46,5 @@
   <inherits name="org.dashbuilder.CommonClient" />
   <inherits name="org.dashbuilder.JSON" />
   <inherits name="org.dashbuilder.ServicesAPI" />
-
-  <!--
-  <inherits name="com.google.gwt.i18n.I18N"/>
-  <inherits name="com.google.gwt.http.HTTP"/>
-  <inherits name="com.google.gwt.user.User"/>
-
-  <inherits name="com.ait.lienzo.Lienzo"/>
-  <inherits name="org.uberfire.ext.wires.core.grids.WiresCoreGrids"/>
-
-  <inherits name="org.uberfire.ext.editor.commons.UberfireCommonsEditorClient"/>
-  <inherits name="org.uberfire.ext.preferences.UberfirePreferences"/>
-
-  <inherits name='org.kie.workbench.common.services.datamodel.KieWorkbenchCommonDataModelAPI'/>
-
-  <inherits name="org.kie.workbench.common.widgets.KieWorkbenchWidgetsCommon"/>
-  <inherits name="org.kie.workbench.common.widgets.metadata.KieWorkbenchMetadataWidget"/>
-  <inherits name="org.kie.workbench.common.widgets.configresource.KieWorkbenchConfigResourceWidget"/>
-  <inherits name='org.drools.workbench.screens.scenariosimulation.kogito.DroolsWorkbenchScenarioSimulationKogitoEditor'/>
-
-  <inherits name="org.kie.workbench.common.kogito.webapp.base.KogitoWebappBase" />
-
-  <inherits name="org.guvnor.common.services.project.GuvnorProjectClient" />
-
-  <inherits name="org.kie.workbench.common.command.CommonCommandAPI" />
-  <inherits name="org.kie.workbench.common.profile.ProfileAPI" />
-  <inherits name="org.kie.workbench.common.screens.explorer.KieWorkbenchProjectExplorerAPI"/>
-
-  <inherits name="org.kie.workbench.common.kogito.KogitoClient" /> -->
-
 
 </module>
