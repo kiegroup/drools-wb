@@ -22,10 +22,10 @@ import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.uberfire.mvp.Command;
 
 @Dependent
-public class KogitoScesimPopupPresenter implements KogitoScesimPopup.Presenter {
+public class KogitoScesimPopupPresenter implements ScenarioKogitoCreationPopup.Presenter {
 
     @Inject
-    protected KogitoScesimPopupView newScesimPopup;
+    protected ScenarioKogitoCreationPopupView newScesimPopup;
 
     @Override
     public void show(String mainTitleText, Command okCommand) {

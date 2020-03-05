@@ -17,6 +17,6 @@ package org.drools.workbench.screens.scenariosimulation.webapp.client.dropdown;
 
 import org.drools.workbench.screens.scenariosimulation.client.dropdown.ScenarioSimulationAssetsDropdownProvider;
 
-public interface DmnAssetsDropdownProvider extends ScenarioSimulationAssetsDropdownProvider {
+public interface ScenarioKogitoCreationAssetsDropdownProvider extends ScenarioSimulationAssetsDropdownProvider {
 
 }
