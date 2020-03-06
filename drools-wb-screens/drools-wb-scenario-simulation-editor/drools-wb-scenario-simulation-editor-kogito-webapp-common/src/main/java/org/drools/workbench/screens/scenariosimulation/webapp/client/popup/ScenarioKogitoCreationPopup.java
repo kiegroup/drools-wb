@@ -16,19 +16,16 @@
 package org.drools.workbench.screens.scenariosimulation.webapp.client.popup;
 
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
-import org.jboss.errai.common.client.dom.HTMLElement;
 import org.uberfire.mvp.Command;
 
-public interface KogitoScesimPopup {
+public interface ScenarioKogitoCreationPopup {
 
     /**
-     * Makes the <code>NewScesimPopup</code> visible with OK/CANCEL.
+     * Makes the <code>ScenarioKogitoCreationPopup</code> visible with OK/CANCEL.
      * @param mainTitleText
      * @param okCommand
      */
     void show(final String mainTitleText, Command okCommand);
-
-    HTMLElement getElement();
 
     /**
      * Makes this popup container(and the main content along with it) invisible. Has no effect if the popup is not

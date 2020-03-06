@@ -22,28 +22,28 @@ import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.uberfire.mvp.Command;
 
 @Dependent
-public class KogitoScesimPopupPresenter implements KogitoScesimPopup.Presenter {
+public class ScenarioKogitoCreationPopupPresenter implements ScenarioKogitoCreationPopup.Presenter {
 
     @Inject
-    protected KogitoScesimPopupView newScesimPopup;
+    protected ScenarioKogitoCreationPopupView scenarioKogitoCreationPopupView;
 
     @Override
     public void show(String mainTitleText, Command okCommand) {
-        newScesimPopup.show(mainTitleText, okCommand);
+        scenarioKogitoCreationPopupView.show(mainTitleText, okCommand);
     }
 
     @Override
     public void hide() {
-        newScesimPopup.hide();
+        scenarioKogitoCreationPopupView.hide();
     }
 
     @Override
     public ScenarioSimulationModel.Type getSelectedType() {
-        return newScesimPopup.getSelectedType();
+        return scenarioKogitoCreationPopupView.getSelectedType();
     }
 
     @Override
     public String getSelectedPath() {
-        return newScesimPopup.getSelectedPath();
+        return scenarioKogitoCreationPopupView.getSelectedPath();
     }
 }

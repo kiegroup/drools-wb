@@ -20,22 +20,22 @@ import java.util.Optional;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
+import com.google.gwt.event.dom.client.ClickEvent;
 import elemental2.dom.HTMLDivElement;
 import elemental2.dom.HTMLInputElement;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.client.popup.AbstractScenarioPopupView;
-import org.drools.workbench.screens.scenariosimulation.webapp.client.dropdown.NewScenarioSimulationDropdown;
-import org.jboss.errai.common.client.dom.MouseEvent;
+import org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder;
+import org.drools.workbench.screens.scenariosimulation.webapp.client.dropdown.ScenarioKogitoCreationAssetsDropdown;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
-import org.jboss.errai.ui.shared.api.annotations.ForEvent;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
 import org.uberfire.mvp.Command;
 
 @Dependent
 @Templated
-public class KogitoScesimPopupView extends AbstractScenarioPopupView implements KogitoScesimPopup {
+public class ScenarioKogitoCreationPopupView extends AbstractScenarioPopupView implements ScenarioKogitoCreationPopup {
 
     @Inject
     @DataField("rule-button")
@@ -54,20 +54,28 @@ public class KogitoScesimPopupView extends AbstractScenarioPopupView implements 
     protected String selectedPath = null;
 
     @Inject
-    protected NewScenarioSimulationDropdown newScenarioSimulationDropdown;
+    protected ScenarioKogitoCreationAssetsDropdown scenarioKogitoCreationAssetsDropdown;
 
     @Override
     public void show(String mainTitleText, Command okCommand) {
-        cancelButton.setText("CANCEL");
-        divElement.appendChild(newScenarioSimulationDropdown.getElement());
-        newScenarioSimulationDropdown.clear();
-        newScenarioSimulationDropdown.init();
-        newScenarioSimulationDropdown.initializeDropdown();
-        newScenarioSimulationDropdown.registerOnChangeHandler(() -> {
-            final Optional<KieAssetsDropdownItem> value = newScenarioSimulationDropdown.getValue();
+        initialize();
+        super.show(mainTitleText, "Create", okCommand);
+    }
+
+    protected void initialize() {
+        okButton.setEnabled(false);
+        cancelButton.setText("Cancel");
+        divElement.setAttribute(ConstantHolder.HIDDEN, "");
+        ruleButton.checked = false;
+        dmnButton.checked = false;
+        divElement.appendChild(scenarioKogitoCreationAssetsDropdown.getElement());
+        scenarioKogitoCreationAssetsDropdown.clear();
+        scenarioKogitoCreationAssetsDropdown.init();
+        scenarioKogitoCreationAssetsDropdown.initializeDropdown();
+        scenarioKogitoCreationAssetsDropdown.registerOnChangeHandler(() -> {
+            final Optional<KieAssetsDropdownItem> value = scenarioKogitoCreationAssetsDropdown.getValue();
             selectedPath = value.map(KieAssetsDropdownItem::getValue).orElse(null);
         });
-        super.show(mainTitleText, "CREATE", okCommand);
     }
 
     @Override
@@ -81,18 +89,20 @@ public class KogitoScesimPopupView extends AbstractScenarioPopupView implements 
     }
 
     @EventHandler("dmn-button")
-    public void onDmnClick(final @ForEvent("click") MouseEvent event) {
+    public void onDmnClick(final ClickEvent event) {
         if (dmnButton.checked) {
             selectedType = ScenarioSimulationModel.Type.DMN;
-            divElement.removeAttribute("hidden");
+            divElement.removeAttribute(ConstantHolder.HIDDEN);
+            okButton.setEnabled(true);
         }
     }
 
     @EventHandler("rule-button")
-    public void onRuleClick(final @ForEvent("click") MouseEvent event) {
+    public void onRuleClick(final ClickEvent event) {
         if (ruleButton.checked) {
             selectedType = ScenarioSimulationModel.Type.RULE;
-            divElement.setAttribute("hidden", "");
+            divElement.setAttribute(ConstantHolder.HIDDEN, "");
+            okButton.setEnabled(true);
         }
     }
 }
