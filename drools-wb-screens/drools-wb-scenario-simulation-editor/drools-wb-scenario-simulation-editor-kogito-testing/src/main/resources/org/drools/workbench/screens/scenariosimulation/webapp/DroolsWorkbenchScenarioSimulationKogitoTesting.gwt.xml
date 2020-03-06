@@ -24,5 +24,4 @@
 
   <inherits name="org.drools.workbench.screens.scenariosimulation.webapp.DroolsWorkbenchScenarioSimulationKogitoWebappBase"/>
 
-
 </module>

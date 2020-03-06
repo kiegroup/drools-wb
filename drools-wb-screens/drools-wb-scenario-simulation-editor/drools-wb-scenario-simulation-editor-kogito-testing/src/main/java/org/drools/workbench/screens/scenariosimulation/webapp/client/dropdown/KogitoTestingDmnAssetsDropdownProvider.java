@@ -34,7 +34,7 @@ import org.uberfire.backend.vfs.Path;
 import static org.drools.workbench.screens.scenariosimulation.webapp.client.editor.ScenarioSimulationEditorKogitoTestingScreen.DMN_PATH;
 
 @Dependent
-public class KogitoTestingDmnAssetsDropdownProvider implements DmnAssetsDropdownProvider {
+public class KogitoTestingDmnAssetsDropdownProvider implements ScenarioKogitoCreationAssetsDropdownProvider {
 
     private static final String FILE_SUFFIX = "dmn";
 
