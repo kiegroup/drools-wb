@@ -28,6 +28,7 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>log4j-over-slf4j</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <!-- MANSTIS - EVERYTHING BELOW THIS HAS BEEN _SANITISED_! -->
@@ -36,18 +37,22 @@
     <dependency>
       <groupId>com.google.inject</groupId>
       <artifactId>guice</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.jboss.errai</groupId>
       <artifactId>errai-ioc</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.jboss.errai</groupId>
       <artifactId>errai-common</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.jboss.errai</groupId>
       <artifactId>errai-bus</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.jboss.errai</groupId>
@@ -62,14 +67,17 @@
     <dependency>
       <groupId>org.jboss.errai</groupId>
       <artifactId>errai-marshalling</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.jboss.errai</groupId>
       <artifactId>errai-security-server</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.jboss.errai</groupId>
       <artifactId>errai-cdi-server</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.jboss.errai</groupId>
@@ -79,6 +87,7 @@
     <dependency>
       <groupId>org.jboss.errai</groupId>
       <artifactId>errai-cdi-shared</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.jboss.errai</groupId>
@@ -88,6 +97,7 @@
     <dependency>
       <groupId>org.jboss.errai</groupId>
       <artifactId>errai-jboss-as-support</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.jboss.errai</groupId>
@@ -117,10 +127,6 @@
       <classifier>sources</classifier>
     </dependency>
 
-    <dependency>
-      <groupId>org.owasp.encoder</groupId>
-      <artifactId>encoder</artifactId>
-    </dependency>
     <!-- UberFire JS exporter -->
     <!-- Needed by uberfire-runtime-plugins-client -->
     <dependency>
@@ -137,6 +143,7 @@
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-client-all</artifactId>
+      <scope>provided</scope>
       <exclusions>
         <exclusion>
           <groupId>log4j</groupId>
@@ -147,31 +154,38 @@
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-api</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-backend-api</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-backend-api</artifactId>
+      <scope>provided</scope>
       <classifier>sources</classifier>
     </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-services-api</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-client</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-client-api</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-security-api</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
@@ -196,6 +210,7 @@
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-widgets-properties-editor-api</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
@@ -204,6 +219,7 @@
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-preferences-client</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <!-- UberFire Kogito dependencies -->
@@ -244,6 +260,7 @@
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-experimental-api</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
@@ -294,7 +311,6 @@
         </exclusion>
       </exclusions>
     </dependency>
-
     <dependency>
       <groupId>org.kie.workbench.services</groupId>
       <artifactId>kie-wb-common-services-api</artifactId>
@@ -920,14 +936,6 @@
         </configuration>
       </plugin>
 
-      <!-- DISABLE CHECKSTYLE -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <configuration>
-          <skip>true</skip>
-        </configuration>
-      </plugin>
     </plugins>
 
   </build>
