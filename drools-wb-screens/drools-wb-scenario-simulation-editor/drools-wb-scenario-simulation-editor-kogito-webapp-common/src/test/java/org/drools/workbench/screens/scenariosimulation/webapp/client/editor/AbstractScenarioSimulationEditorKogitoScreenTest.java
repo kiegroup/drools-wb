@@ -89,9 +89,9 @@ public class AbstractScenarioSimulationEditorKogitoScreenTest {
         verify(abstractScenarioSimulationEditorKogitoScreenSpy, times(1)).showPopover(eq("ERROR"), eq("Missing selected type"));
 
         verify(scenarioSimulationBuilderMock, never()).populateScenarioSimulationModel(isA(ScenarioSimulationModel.class),
-                                                                                        eq(ScenarioSimulationModel.Type.RULE),
-                                                                                        eq(""),
-                                                                                        remoteCallbackArgumentCaptor.capture());
+                                                                                       eq(ScenarioSimulationModel.Type.RULE),
+                                                                                       eq(""),
+                                                                                       remoteCallbackArgumentCaptor.capture());
     }
 
     @Test
