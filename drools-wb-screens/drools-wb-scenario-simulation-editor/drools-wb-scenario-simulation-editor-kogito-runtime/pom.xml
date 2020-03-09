@@ -17,7 +17,6 @@
 
   <properties>
     <errai.jboss.home>${project.build.directory}/wildfly-${version.org.jboss.errai.wildfly}</errai.jboss.home>
-    <gwt.compiler.localWorkers>4</gwt.compiler.localWorkers>
     <version.thorntail>2.4.0.Final</version.thorntail>
     <gwt.helper.includes>Client,Marshaller,KogitoEditor,WebappBase</gwt.helper.includes>
     <gwt.helper.rootDirectories>${project.parent.basedir}/</gwt.helper.rootDirectories>
@@ -674,10 +673,10 @@
         <artifactId>gwt-maven-plugin</artifactId>
         <configuration>
           <deploy>${project.build.directory}/gwt-symbols-deploy</deploy>
-          <localWorkers>1</localWorkers>
+          <localWorkers>4</localWorkers>
           <extraJvmArgs>-Xmx6g -Xms1g -Xss1M -XX:CompileThreshold=7000 -Derrai.jboss.home=${errai.jboss.home} -Derrai.marshalling.server.classOutput=${project.build.outputDirectory} -Derrai.dynamic_validation.enabled=true -Dorg.kie.demo=true -Dorg.kie.clean.onstartup=true -Dorg.uberfire.nio.git.ssh.enabled=true -Djava.util.prefs.syncInterval=2000000 -Dorg.uberfire.async.executor.safemode=true -Derrai.marshalling.very_short_names=false -Dappformer.experimental.features=true -Djava.io.tmpdir=${project.build.directory}</extraJvmArgs>
           <module>org.drools.workbench.screens.scenariosimulation.webapp.DroolsWorkbenchScenarioSimulationKogitoRuntime</module>
-          <extraJvmArgs>-Xmx4096m -Xms1024m -Xss1M -XX:CompileThreshold=7000 -Derrai.dynamic_validation.enabled=true -Derrai.jboss.home=${errai.jboss.home}</extraJvmArgs>
+          <extraJvmArgs>-Xmx4096m -Xms1024m -Xss1M -XX:CompileThreshold=7000 -Derrai.dynamic_validation.enabled=true</extraJvmArgs>
           <optimizationLevel>9</optimizationLevel>
           <style>OBFUSCATED</style>
           <logLevel>INFO</logLevel>
@@ -784,7 +783,7 @@
       <plugin>
         <artifactId>maven-war-plugin</artifactId>
         <configuration>
-          <packagingExcludes>**/*.symbolMap</packagingExcludes>
+          <packagingExcludes>**/javax/**/*.*,**/client/**/*.class,**/*.symbolMap,WEB-INF/classes/**</packagingExcludes>
           <archive>
             <addMavenDescriptor>false</addMavenDescriptor>
           </archive>
@@ -816,11 +815,8 @@
                 <include>**/gwt-unitCache/**</include>
                 <include>.gwt/**</include>
                 <include>.errai/</include>
-                <include>.security/</include>
-                <include>.niogit/**</include>
                 <include>.index/**</include>
                 <include>**/*.JUnit/**</include>
-                <include>repositories/</include>
               </includes>
             </fileset>
           </filesets>
@@ -862,25 +858,6 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <executions>
-          <execution>
-            <id>unpack</id>
-            <phase>process-resources</phase>
-            <goals>
-              <goal>unpack</goal>
-            </goals>
-            <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>org.jboss.errai</groupId>
-                  <artifactId>wildfly-dist</artifactId>
-                  <version>${version.org.jboss.errai.wildfly}</version>
-                  <type>zip</type>
-                  <overWrite>false</overWrite>
-                  <outputDirectory>${project.build.directory}</outputDirectory>
-                </artifactItem>
-              </artifactItems>
-            </configuration>
-          </execution>
           <execution>
             <id>Unpack External Marshaller JS from dependency</id>
             <phase>process-sources</phase>
@@ -1002,7 +979,6 @@
       </activation>
       <properties>
         <gwt.memory.settings>-Xmx3g -Xms1g -Xss1M</gwt.memory.settings>
-        <gwt.compiler.localWorkers>4</gwt.compiler.localWorkers>
       </properties>
       <build>
         <pluginManagement>
