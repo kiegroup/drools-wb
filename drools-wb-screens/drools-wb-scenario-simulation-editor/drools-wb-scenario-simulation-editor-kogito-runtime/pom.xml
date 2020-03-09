@@ -21,7 +21,6 @@
     <version.thorntail>2.4.0.Final</version.thorntail>
     <gwt.helper.includes>Client,Marshaller,KogitoEditor,WebappBase</gwt.helper.includes>
     <gwt.helper.rootDirectories>${project.parent.basedir}/</gwt.helper.rootDirectories>
-    <gwt-interop-utils.version>0.3.0</gwt-interop-utils.version>
   </properties>
 
   <dependencies>
@@ -511,33 +510,10 @@
       <groupId>org.uberfire</groupId>
       <artifactId>appformer-kogito-bridge</artifactId>
       <classifier>sources</classifier>
+      <scope>provided</scope>
     </dependency>
 
     <!-- NEEDED ? -->
-    <dependency>
-      <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-wires-core-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-wires-core-client</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>org.uberfire</groupId>
-          <artifactId>uberfire-all</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-wires-core-trees</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>org.uberfire</groupId>
-          <artifactId>uberfire-all</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
     <dependency>
       <groupId>org.dashbuilder</groupId>
       <artifactId>dashbuilder-widgets</artifactId>
@@ -621,16 +597,6 @@
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-scenario-simulation-editor-kogito-marshaller</artifactId>
     </dependency>
-    <dependency>
-      <groupId>com.github.gwtreact</groupId>
-      <artifactId>gwt-interop-utils</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>com.google.gwt</groupId>
-          <artifactId>gwt-servlet</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
     <!-- END MARSHALLING -->
 
   </dependencies>
@@ -660,11 +626,6 @@
         <groupId>org.drools</groupId>
         <artifactId>drools-wb-scenario-simulation-editor-kogito-marshaller</artifactId>
         <version>${version.org.kie}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.github.gwtreact</groupId>
-        <artifactId>gwt-interop-utils</artifactId>
-        <version>${gwt-interop-utils.version}</version>
       </dependency>
       <!-- END MARSHALLING -->
 
