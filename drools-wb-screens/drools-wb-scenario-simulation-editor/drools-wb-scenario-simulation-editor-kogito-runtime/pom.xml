@@ -215,6 +215,7 @@
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-commons-editor-api</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
@@ -226,6 +227,7 @@
     <dependency>
       <groupId>com.google.elemental2</groupId>
       <artifactId>elemental2-promise</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <!-- Needed for the ACE SIMULATION_READER Editor -->
@@ -239,20 +241,24 @@
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-io</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-nio2-model</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <!-- Needed by org.uberfire.java.nio.file.spi.FileSystemProvider -->
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-nio2-jgit</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-nio2-fs</artifactId>
+      <scope>provided</scope>
     </dependency>
     <!-- END PROVIDERS -->
     <!-- Uberfire Experimentals -->
@@ -272,12 +278,14 @@
     <dependency>
       <groupId>org.kie.soup</groupId>
       <artifactId>kie-soup-commons</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <!-- Required for workbench startup -->
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-commons</artifactId>
+      <scope>provided</scope>
       <exclusions>
         <exclusion>
           <groupId>org.apache.activemq</groupId>
@@ -304,6 +312,7 @@
     <dependency>
       <groupId>org.kie.workbench.widgets</groupId>
       <artifactId>kie-wb-common-ui</artifactId>
+      <scope>provided</scope>
       <exclusions>
         <exclusion>
           <groupId>org.uberfire</groupId>
@@ -314,31 +323,31 @@
     <dependency>
       <groupId>org.kie.workbench.services</groupId>
       <artifactId>kie-wb-common-services-api</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.kie.workbench.services</groupId>
       <artifactId>kie-wb-common-refactoring-api</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.kie.workbench.services</groupId>
       <artifactId>kie-wb-common-datamodel-api</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <!-- Required by uberfire-project -->
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-structure-api</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <!--     Required by uberfire-project-client-->
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-preferences-ui-client</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>xerces</groupId>
-      <artifactId>xercesImpl</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <!-- GWT and extensions -->
@@ -366,16 +375,19 @@
     <dependency>
       <groupId>com.google.elemental2</groupId>
       <artifactId>elemental2-dom</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <!-- Kogito -->
     <dependency>
       <groupId>org.kie.workbench</groupId>
       <artifactId>kie-wb-common-kogito-client</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-scenario-simulation-editor-kogito-webapp-common</artifactId>
+      <scope>provided</scope>
       <exclusions>
             <exclusion>
               <groupId>org.dashbuilder</groupId>
@@ -386,15 +398,18 @@
     <dependency>
       <groupId>org.kie.workbench</groupId>
       <artifactId>kie-wb-common-kogito-webapp-base</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.kie.workbench</groupId>
       <artifactId>kie-wb-common-kogito-webapp-base</artifactId>
+      <scope>provided</scope>
       <classifier>sources</classifier>
     </dependency>
     <dependency>
       <groupId>org.kie.workbench</groupId>
       <artifactId>kie-wb-common-dmn-webapp-kogito-marshaller</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <!-- Test dependencies -->
@@ -413,50 +428,59 @@
     <dependency>
       <groupId>org.kie.soup</groupId>
       <artifactId>kie-soup-project-datamodel-api</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.kie.soup</groupId>
       <artifactId>kie-soup-dataset-api</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.kie.soup</groupId>
       <artifactId>kie-soup-dataset-api</artifactId>
       <classifier>sources</classifier>
-      <scope>compile</scope>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-message-console-api</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-widgets-service-api</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-workbench-models-datamodel-api</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.kie.workbench.profile</groupId>
       <artifactId>kie-wb-common-profile-api</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.kie.workbench.profile</groupId>
       <artifactId>kie-wb-common-profile-api</artifactId>
       <classifier>sources</classifier>
-      <scope>compile</scope>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.google.jsinterop</groupId>
       <artifactId>base</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.google.jsinterop</groupId>
       <artifactId>jsinterop-annotations</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-workbench-client</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
@@ -465,17 +489,18 @@
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-preferences-api</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-project-api</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>xml-apis</groupId>
       <artifactId>xml-apis</artifactId>
       <scope>provided</scope>
     </dependency>
-
 
     <!-- Scenario Simulation -->
     <dependency>
@@ -517,12 +542,6 @@
       <groupId>org.dashbuilder</groupId>
       <artifactId>dashbuilder-widgets</artifactId>
     </dependency>
-    <!-- NEEDED BY org.dashbuilder.renderer.service.RendererSettingsService:RPC -->
-<!--    <dependency>-->
-<!--      <groupId>org.dashbuilder</groupId>-->
-<!--      <artifactId>dashbuilder-services</artifactId>-->
-<!--    </dependency>-->
-    <!-- END NEEDED -->
     <dependency>
       <groupId>org.dashbuilder</groupId>
       <artifactId>dashbuilder-validations</artifactId>
@@ -633,17 +652,6 @@
         <groupId>org.drools</groupId>
         <artifactId>drools-wb-scenario-simulation-editor-kogito-webapp-common</artifactId>
         <scope>provided</scope>
-        <version>${version.org.kie}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie.workbench</groupId>
-        <artifactId>kie-wb-common-kogito-webapp-base</artifactId>
-        <classifier>sources</classifier>
-        <version>${version.org.kie}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie.workbench</groupId>
-        <artifactId>kie-wb-common-kogito-webapp-base</artifactId>
         <version>${version.org.kie}</version>
       </dependency>
 
