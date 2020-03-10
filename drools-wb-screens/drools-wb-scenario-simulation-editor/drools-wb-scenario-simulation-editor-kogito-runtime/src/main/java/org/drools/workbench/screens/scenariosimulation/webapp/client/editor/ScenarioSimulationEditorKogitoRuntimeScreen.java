@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2020 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ public class ScenarioSimulationEditorKogitoRuntimeScreen extends AbstractScenari
 
     private static final PlaceRequest SCENARIO_SIMULATION_KOGITO_RUNTIME_SCREEN_DEFAULT_REQUEST = new DefaultPlaceRequest(IDENTIFIER);
 
-    private PlaceManager placeManager;
+    protected PlaceManager placeManager;
 
     public ScenarioSimulationEditorKogitoRuntimeScreen() {
         //CDI proxy

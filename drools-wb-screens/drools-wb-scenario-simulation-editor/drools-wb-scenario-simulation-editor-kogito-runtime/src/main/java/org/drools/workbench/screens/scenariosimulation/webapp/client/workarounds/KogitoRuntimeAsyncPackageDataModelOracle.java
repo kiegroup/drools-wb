@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2020 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ import org.uberfire.backend.vfs.Path;
 public class KogitoRuntimeAsyncPackageDataModelOracle implements KogitoAsyncPackageDataModelOracle {
 
     @Inject
-    private KogitoResourceContentService kogitoResourceContentService;
+    protected KogitoResourceContentService kogitoResourceContentService;
 
     private Path resourcePath;
     private Map<String, String> parametricFieldMap;
@@ -148,8 +148,7 @@ public class KogitoRuntimeAsyncPackageDataModelOracle implements KogitoAsyncPack
     }
 
     private String[] retrieveFqcnNames() {
-        // TODO implement retrieval from kogitoResourceContentService
-        return new String[0];
+        return fqcnNames;
     }
 
     private Map<String, String> retrieveFqcnNamesMap() {

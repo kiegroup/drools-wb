@@ -10,16 +10,16 @@ Some minimal tests may be done in the following way:
 
 1. full compilation (i.e. included GWT compilation) of the runtime module
 2. open the `drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-runtime/target/drools-wb-scenario-simulation-editor-kogito-runtime/index.html` file inside Chrome
-3. inside the Chrome dev console, issue the command `window.gwtEditorBeans.get("ScenarioSimulationEditorKogitoRuntimeScreen").get().setContent("", "")`; this will create a new - empty - scesim file.
+3. inside the Chrome dev console, issue the command `$wnd.gwtEditorBeans.get("ScenarioSimulationEditor").get().setContent("", "")`; this will create a new - empty - scesim file.
 Some tricks: to avoid CORS and other policy-related issues:
 
 1. set chrome://flags/#allow-insecure-localhost for invalid certificates error
 2. start chrome from cli with the command `chrome --allow-file-access-from-files` to allow loading from file.
 3. Open index.html file:///(path_to_file)/index.html and get no dev compilation error.
-4. window.gwtEditorBeans.get("ScenarioSimulationEditorKogitoRuntimeScreen").get().setContent("") inside dev console
+4. $wnd.gwtEditorBeans.get("ScenarioSimulationEditor").get().setContent("") inside dev console
 5. edit the asset
-6. invoke window.gwtEditorBeans.get("ScenarioSimulationEditorKogitoRuntimeScreen").get().getContent() inside dev console and store the returned xml
-7. invoke window.gwtEditorBeans.get("ScenarioSimulationEditorKogitoRuntimeScreen").get().setContent method with the stored xml
+6. invoke $wnd.gwtEditorBeans.get("ScenarioSimulationEditor").get().getContent() inside dev console and store the returned xml
+7. invoke $wnd.gwtEditorBeans.get("ScenarioSimulationEditor").get().setContent("","") method with the stored xml
 
 VSCODE Integration
 ------------------
@@ -42,4 +42,4 @@ Then, after launched VSCODE
 
 1. Open index.html file:///(path_to_file)/index.html
 and get no dev compliation error.
-2. window.gwtEditorBeans.get("ScenarioSimulationEditorKogitoRuntimeScreen").get().setContent("", "") (inside console ?)
+2. $wnd.gwtEditorBeans.get("ScenarioSimulationEditorKogito").get().setContent("", "") (inside console ?)
