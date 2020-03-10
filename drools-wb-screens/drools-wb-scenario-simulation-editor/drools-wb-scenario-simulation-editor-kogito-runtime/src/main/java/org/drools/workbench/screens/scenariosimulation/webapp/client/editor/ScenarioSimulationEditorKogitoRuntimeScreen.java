@@ -47,7 +47,6 @@ import static org.drools.workbench.screens.scenariosimulation.webapp.client.edit
 @WorkbenchClientEditor(identifier = IDENTIFIER)
 public class ScenarioSimulationEditorKogitoRuntimeScreen extends AbstractScenarioSimulationEditorKogitoScreen {
 
-    public static final String IDENTIFIER = "ScenarioSimulationEditorKogitoRuntimeScreen";
     private static final PlaceRequest SCENARIO_SIMULATION_KOGITO_RUNTIME_SCREEN_DEFAULT_REQUEST = new DefaultPlaceRequest(IDENTIFIER);
 
     private PlaceManager placeManager;
