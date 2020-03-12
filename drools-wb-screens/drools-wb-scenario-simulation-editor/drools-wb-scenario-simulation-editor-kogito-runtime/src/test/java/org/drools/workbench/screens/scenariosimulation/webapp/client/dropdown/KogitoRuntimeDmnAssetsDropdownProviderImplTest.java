@@ -70,8 +70,8 @@ public class KogitoRuntimeDmnAssetsDropdownProviderImplTest {
     public void getItems() {
         kogitoRuntimeDmnAssetsDropdownProviderImplSpy.getItems(assetConsumer);
         verify(kogitoResourceContentServiceMock, times(1)).getFilteredItems(eq(KogitoRuntimeDmnAssetsDropdownProviderImpl.DMN_FILE_EXTENSION),
-                                                                                                isA(RemoteCallback.class),
-                                                                                                isA(ErrorCallback.class));
+                                                                                                 isA(RemoteCallback.class),
+                                                                                                 isA(ErrorCallback.class));
     }
 
     @Test
