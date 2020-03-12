@@ -47,7 +47,7 @@ import static org.drools.workbench.screens.scenariosimulation.webapp.client.edit
 @WorkbenchClientEditor(identifier = IDENTIFIER)
 public class ScenarioSimulationEditorKogitoRuntimeScreen extends AbstractScenarioSimulationEditorKogitoScreen {
 
-    private static final PlaceRequest SCENARIO_SIMULATION_KOGITO_RUNTIME_SCREEN_DEFAULT_REQUEST = new DefaultPlaceRequest(IDENTIFIER);
+    protected static final PlaceRequest SCENARIO_SIMULATION_KOGITO_RUNTIME_SCREEN_DEFAULT_REQUEST = new DefaultPlaceRequest(IDENTIFIER);
 
     protected PlaceManager placeManager;
 
@@ -77,7 +77,7 @@ public class ScenarioSimulationEditorKogitoRuntimeScreen extends AbstractScenari
 
     @WorkbenchPartTitle
     public String getTitleText() {
-        return "Scenario Simulation Kogito Screen";
+        return TITLE;
     }
 
     @WorkbenchPartTitleDecoration

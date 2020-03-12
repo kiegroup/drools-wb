@@ -33,6 +33,7 @@ import org.uberfire.mvp.Command;
 public abstract class AbstractScenarioSimulationEditorKogitoScreen implements KogitoScreen {
 
     public static final String IDENTIFIER = "ScenarioSimulationEditor";
+    public static final String TITLE = "Scenario Simulation - Kogito";
 
     @Inject
     protected ScenarioSimulationEditorKogitoWrapper scenarioSimulationEditorKogitoWrapper;
