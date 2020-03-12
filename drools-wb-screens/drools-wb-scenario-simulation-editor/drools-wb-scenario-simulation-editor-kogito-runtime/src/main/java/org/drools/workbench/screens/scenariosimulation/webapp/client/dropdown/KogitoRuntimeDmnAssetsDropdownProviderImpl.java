@@ -23,35 +23,43 @@ import java.util.stream.Collectors;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
-import com.google.gwt.core.client.GWT;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.kie.workbench.common.kogito.webapp.base.client.workarounds.KogitoResourceContentService;
 import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
+import org.uberfire.client.workbench.widgets.common.ErrorPopupPresenter;
 
 @Dependent
 public class KogitoRuntimeDmnAssetsDropdownProviderImpl implements ScenarioKogitoCreationAssetsDropdownProvider {
 
-    private static final String DMN_FILE_EXTENSION = "*.dmn";
+    protected static final String DMN_FILE_EXTENSION = "*.dmn";
 
     @Inject
-    private KogitoResourceContentService resourceContentService;
+    protected KogitoResourceContentService resourceContentService;
+    @Inject
+    protected ErrorPopupPresenter errorPopupPresenter;
 
     @Override
     public void getItems(Consumer<List<KieAssetsDropdownItem>> assetListConsumer) {
-        getItems(response -> {
+        resourceContentService.getFilteredItems(DMN_FILE_EXTENSION,
+                                                getRemoteCallback(assetListConsumer),
+                                                getErrorCallback());
+    }
+
+    protected RemoteCallback<List<String>> getRemoteCallback(Consumer<List<KieAssetsDropdownItem>> assetListConsumer) {
+        return response -> {
             List<KieAssetsDropdownItem> toAccept = response.stream()
                     .map(this::getKieAssetsDropdownItem)
                     .collect(Collectors.toList());
             assetListConsumer.accept(toAccept);
-        }, (message, throwable) -> {
-            GWT.log(message.toString(), throwable);
-            return false;
-        });
+        };
     }
 
-    protected void getItems(final RemoteCallback<List<String>> callback, final ErrorCallback<Object> errorCallback) {
-        resourceContentService.getFilteredItems(DMN_FILE_EXTENSION, callback, errorCallback);
+    protected ErrorCallback<Object> getErrorCallback() {
+        return (message, throwable) -> {
+            errorPopupPresenter.showMessage(message + ": " + throwable.getMessage());
+            return false;
+        };
     }
 
     protected KieAssetsDropdownItem getKieAssetsDropdownItem(final String asset) {
