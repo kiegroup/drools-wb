@@ -26,7 +26,7 @@ import org.uberfire.backend.vfs.Path;
 public class KogitoDMNServiceRuntimeImpl extends AbstractKogitoDMNService {
 
     @Inject
-    private KogitoResourceContentService resourceContentService;
+    protected KogitoResourceContentService resourceContentService;
 
     @Override
     public void getDMNContent(Path path, RemoteCallback<String> remoteCallback, ErrorCallback<Object> errorCallback) {
