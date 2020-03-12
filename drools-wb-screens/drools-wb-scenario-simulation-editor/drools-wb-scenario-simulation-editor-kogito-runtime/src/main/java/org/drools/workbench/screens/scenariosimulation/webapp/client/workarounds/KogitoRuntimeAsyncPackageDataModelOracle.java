@@ -133,17 +133,14 @@ public class KogitoRuntimeAsyncPackageDataModelOracle implements KogitoAsyncPack
     }
 
     private Map<String, String> retrieveParametricFieldMap() {
-        // TODO implement retrieval from kogitoResourceContentService
         return new HashMap<>();
     }
 
     private List<String> retrievePackageNames() {
-        // TODO implement retrieval from kogitoResourceContentService
         return new ArrayList<>();
     }
 
     private String[] retrieveFactTypes() {
-        // TODO implement retrieval from kogitoResourceContentService
         return new String[0];
     }
 
@@ -152,17 +149,14 @@ public class KogitoRuntimeAsyncPackageDataModelOracle implements KogitoAsyncPack
     }
 
     private Map<String, String> retrieveFqcnNamesMap() {
-        // TODO implement retrieval from kogitoResourceContentService
         return new HashMap<>();
     }
 
     private Map<String, Boolean> retrieveCollectionTypes() {
-        // TODO implement retrieval from kogitoResourceContentService
         return new HashMap<>();
     }
 
     private Map<String, ModelField[]> retrieveModelFieldsMap() {
-        // TODO implement retrieval from kogitoResourceContentService
         return new HashMap<>();
     }
 
