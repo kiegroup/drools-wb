@@ -851,7 +851,6 @@
                 <artifactItem>
                   <groupId>org.kie.workbench</groupId>
                   <artifactId>kie-wb-common-dmn-webapp-kogito-marshaller</artifactId>
-                  <version>${version.org.kie}</version>
                   <type>jar</type>
                   <overWrite>true</overWrite>
                   <outputDirectory>${project.build.directory}/Marshaller</outputDirectory>
