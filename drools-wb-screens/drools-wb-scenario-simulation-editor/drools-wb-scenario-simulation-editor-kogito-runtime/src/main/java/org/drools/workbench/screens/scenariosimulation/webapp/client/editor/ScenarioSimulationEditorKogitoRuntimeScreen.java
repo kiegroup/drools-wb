@@ -47,6 +47,7 @@ import static org.drools.workbench.screens.scenariosimulation.webapp.client.edit
 @WorkbenchClientEditor(identifier = IDENTIFIER)
 public class ScenarioSimulationEditorKogitoRuntimeScreen extends AbstractScenarioSimulationEditorKogitoScreen {
 
+    protected static final String NEW_FILE_NAME = "new-file.scesim";
     protected static final PlaceRequest SCENARIO_SIMULATION_KOGITO_RUNTIME_SCREEN_DEFAULT_REQUEST = new DefaultPlaceRequest(IDENTIFIER);
 
     protected PlaceManager placeManager;
@@ -101,13 +102,23 @@ public class ScenarioSimulationEditorKogitoRuntimeScreen extends AbstractScenari
     }
 
     @SetContent
-    public void setContent(String pathString, String value) {
+    public void setContent(String fullPath, String value) {
+        /* Retrieving file name and its related path */
+        String finalName = NEW_FILE_NAME;
+        String pathString = "/";
+        if (fullPath != null && !fullPath.isEmpty()) {
+            int idx = fullPath.replaceAll("\\\\", "/").lastIndexOf('/');
+            finalName = idx >= 0 ? fullPath.substring(idx + 1) : fullPath;
+            pathString = idx >= 0 ? fullPath.substring(0, idx + 1) : "";
+        }
+        final Path path = PathFactory.newPath(finalName, pathString);
+
         if (value == null || value.isEmpty()) {
-            newFile("");
+            newFile(path);
         } else {
-            final Path path = PathFactory.newPath("fileName", "existingFileName.scesim");
             scenarioSimulationEditorKogitoWrapper.gotoPath(path);
-            scenarioSimulationEditorKogitoWrapper.setContent(null, value);
+            scenarioSimulationEditorKogitoWrapper.setContent(path.toURI() + path.getFileName(), value);
+            scenarioKogitoCreationPopupPresenter.hide();
         }
     }
 

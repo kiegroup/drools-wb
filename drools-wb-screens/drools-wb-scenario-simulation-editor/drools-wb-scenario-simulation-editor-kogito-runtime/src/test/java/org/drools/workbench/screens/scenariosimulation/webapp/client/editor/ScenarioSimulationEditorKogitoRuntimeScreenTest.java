@@ -32,6 +32,7 @@ import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 
 import static org.drools.workbench.screens.scenariosimulation.webapp.client.editor.AbstractScenarioSimulationEditorKogitoScreen.TITLE;
+import static org.drools.workbench.screens.scenariosimulation.webapp.client.editor.ScenarioSimulationEditorKogitoRuntimeScreen.NEW_FILE_NAME;
 import static org.drools.workbench.screens.scenariosimulation.webapp.client.editor.ScenarioSimulationEditorKogitoRuntimeScreen.SCENARIO_SIMULATION_KOGITO_RUNTIME_SCREEN_DEFAULT_REQUEST;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -117,20 +118,57 @@ public class ScenarioSimulationEditorKogitoRuntimeScreenTest {
 
     @Test
     public void setContent() {
-        scenarioSimulationEditorKogitoRuntimeScreenSpy.setContent("path", "value");
+        scenarioSimulationEditorKogitoRuntimeScreenSpy.setContent("path/file.scesim", "value");
         verify(scenarioSimulationEditorKogitoRuntimeScreenSpy, never()).newFile(any());
         verify(scenarioSimulationEditorKogitoWrapperMock, times(1)).gotoPath(pathArgumentCaptor.capture());
-        verify(scenarioSimulationEditorKogitoWrapperMock, times(1)).setContent(eq(null), eq("value"));
-        assertEquals("fileName", pathArgumentCaptor.getValue().getFileName());
-        assertEquals("existingFileName.scesim", pathArgumentCaptor.getValue().toURI());
+        verify(scenarioSimulationEditorKogitoWrapperMock, times(1)).setContent(eq("path/file.scesim"), eq("value"));
+        verify(scenarioKogitoCreationPopupPresenterMock, times(1)).hide();
+        assertEquals("file.scesim", pathArgumentCaptor.getValue().getFileName());
+        assertEquals("path/", pathArgumentCaptor.getValue().toURI());
+    }
+
+    @Test
+    public void setContentNullPath() {
+        scenarioSimulationEditorKogitoRuntimeScreenSpy.setContent("", "value");
+        verify(scenarioSimulationEditorKogitoRuntimeScreenSpy, never()).newFile(any());
+        verify(scenarioSimulationEditorKogitoWrapperMock, times(1)).gotoPath(pathArgumentCaptor.capture());
+        verify(scenarioSimulationEditorKogitoWrapperMock, times(1)).setContent(eq("/" + NEW_FILE_NAME), eq("value"));
+        verify(scenarioKogitoCreationPopupPresenterMock, times(1)).hide();
+        assertEquals(NEW_FILE_NAME, pathArgumentCaptor.getValue().getFileName());
+        assertEquals("/", pathArgumentCaptor.getValue().toURI());
     }
 
     @Test
     public void setContentNullContent() {
         scenarioSimulationEditorKogitoRuntimeScreenSpy.setContent(null, null);
-        verify(scenarioSimulationEditorKogitoRuntimeScreenSpy, times(1)).newFile(eq(""));
+        verify(scenarioSimulationEditorKogitoRuntimeScreenSpy, times(1)).newFile(pathArgumentCaptor.capture());
         verify(scenarioSimulationEditorKogitoWrapperMock, never()).gotoPath(any());
         verify(scenarioSimulationEditorKogitoWrapperMock, never()).setContent(any(), any());
+        verify(scenarioKogitoCreationPopupPresenterMock, never()).hide();
+        assertEquals(NEW_FILE_NAME, pathArgumentCaptor.getValue().getFileName());
+        assertEquals("/", pathArgumentCaptor.getValue().toURI());
+    }
+
+    @Test
+    public void setContentWithPathAndNullContent() {
+        scenarioSimulationEditorKogitoRuntimeScreenSpy.setContent("path/file.scesim", null);
+        verify(scenarioSimulationEditorKogitoRuntimeScreenSpy, times(1)).newFile(pathArgumentCaptor.capture());
+        verify(scenarioSimulationEditorKogitoWrapperMock, never()).gotoPath(any());
+        verify(scenarioSimulationEditorKogitoWrapperMock, never()).setContent(any(), any());
+        verify(scenarioKogitoCreationPopupPresenterMock, never()).hide();
+        assertEquals("file.scesim", pathArgumentCaptor.getValue().getFileName());
+        assertEquals("path/", pathArgumentCaptor.getValue().toURI());
+    }
+
+    @Test
+    public void setContentWithPathAndNullContentWindowsLike() {
+        scenarioSimulationEditorKogitoRuntimeScreenSpy.setContent("path\\file.scesim", null);
+        verify(scenarioSimulationEditorKogitoRuntimeScreenSpy, times(1)).newFile(pathArgumentCaptor.capture());
+        verify(scenarioSimulationEditorKogitoWrapperMock, never()).gotoPath(any());
+        verify(scenarioSimulationEditorKogitoWrapperMock, never()).setContent(any(), any());
+        verify(scenarioKogitoCreationPopupPresenterMock, never()).hide();
+        assertEquals("file.scesim", pathArgumentCaptor.getValue().getFileName());
+        assertEquals("path\\", pathArgumentCaptor.getValue().toURI());
     }
 
     @Test

@@ -995,8 +995,8 @@
     <profile>
       <id>sonarcloud-analysis</id>
       <properties>
-        <!-- Excluding the entire webapp folder from coverage statistics. -->
-        <sonar.coverage.exclusions>webapp/**/*</sonar.coverage.exclusions>
+        <!-- Excluding the entire webapp and workarounds folders from coverage statistics. -->
+        <sonar.coverage.exclusions>webapp/**/*, ,**/workarounds/**.java</sonar.coverage.exclusions>
       </properties>
     </profile>
   </profiles>
