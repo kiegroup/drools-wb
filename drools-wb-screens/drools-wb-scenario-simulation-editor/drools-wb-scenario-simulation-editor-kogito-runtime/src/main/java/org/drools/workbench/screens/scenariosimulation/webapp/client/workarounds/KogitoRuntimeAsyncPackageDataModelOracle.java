@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -165,7 +166,7 @@ public class KogitoRuntimeAsyncPackageDataModelOracle implements KogitoAsyncPack
         if (modelFieldsMap.containsKey(factName)) {
             final ModelField[] modelFields = modelFieldsMap.get(factName);
             for (ModelField modelField : modelFields) {
-                if (modelField.getName().equals(fieldName)) {
+                if (Objects.equals(modelField.getName(), fieldName)) {
                     toReturn = modelField;
                     break;
                 }

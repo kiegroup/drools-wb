@@ -43,6 +43,11 @@ import org.uberfire.workbench.model.menu.Menus;
 
 import static org.drools.workbench.screens.scenariosimulation.webapp.client.editor.ScenarioSimulationEditorKogitoRuntimeScreen.IDENTIFIER;
 
+/**
+ * It represents the KogitoScreen implementation for Scenario Simulation runtime. In other words, this is the editor
+ * entry point. Please note, the <code>IDENTIFIED</code> is the unique key to refer this editor. Please use the same
+ * (eg in kogito-tooling project) to include it in external project or when calling .setContent method (refer to readme.md
+ * for further information */
 @ApplicationScoped
 @WorkbenchClientEditor(identifier = IDENTIFIER)
 public class ScenarioSimulationEditorKogitoRuntimeScreen extends AbstractScenarioSimulationEditorKogitoScreen {
