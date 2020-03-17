@@ -169,7 +169,7 @@ public class ScenarioSimulationEditorKogitoTestingScreen extends AbstractScenari
     }
 
     protected void addTestingMenus(FileMenuBuilder fileMenuBuilder) {
-        fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("New", () -> newFile(BASE_SCESIM_URI)));
+        fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("New", () -> newFile(SCESIM_PATH)));
         fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("Load", this::loadFile));
         fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("Save", () -> scenarioSimulationEditorKogitoWrapper.getContent().then(xml -> {
             saveFile(scenarioSimulationEditorKogitoWrapper.getCurrentPath(), xml);
