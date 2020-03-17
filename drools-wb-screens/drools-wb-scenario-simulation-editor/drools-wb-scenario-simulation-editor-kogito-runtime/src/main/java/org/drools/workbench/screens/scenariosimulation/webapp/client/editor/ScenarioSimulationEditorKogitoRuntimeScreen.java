@@ -114,7 +114,7 @@ public class ScenarioSimulationEditorKogitoRuntimeScreen extends AbstractScenari
         if (fullPath != null && !fullPath.isEmpty()) {
             int idx = fullPath.replaceAll("\\\\", "/").lastIndexOf('/');
             finalName = idx >= 0 ? fullPath.substring(idx + 1) : fullPath;
-            pathString = idx >= 0 ? fullPath.substring(0, idx + 1) : "";
+            pathString = idx >= 0 ? fullPath.substring(0, idx + 1) : pathString;
         }
         final Path path = PathFactory.newPath(finalName, pathString);
 
