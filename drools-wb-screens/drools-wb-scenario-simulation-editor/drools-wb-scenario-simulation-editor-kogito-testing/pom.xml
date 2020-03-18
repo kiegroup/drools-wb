@@ -18,11 +18,9 @@
   <properties>
     <errai.jboss.home>${project.build.directory}/wildfly-${version.org.jboss.errai.wildfly}</errai.jboss.home>
     <gwt.compiler.localWorkers>4</gwt.compiler.localWorkers>
-    <version.thorntail>2.4.0.Final</version.thorntail>
     <gwt.helper.includes>Client,Marshaller,KogitoEditor,WebappBase</gwt.helper.includes>
     <gwt.helper.rootDirectories>${project.parent.basedir}/</gwt.helper.rootDirectories>
-    <gwt-interop-utils.version>0.3.0</gwt-interop-utils.version>
-    <sonar.coverage.exclusions>webapp/**/*, ,**/workarounds/**.java</sonar.coverage.exclusions>
+    <sonar.coverage.exclusions>webapp/**/*</sonar.coverage.exclusions>
   </properties>
 
   <dependencies>
@@ -30,8 +28,6 @@
       <groupId>org.slf4j</groupId>
       <artifactId>log4j-over-slf4j</artifactId>
     </dependency>
-
-    <!-- MANSTIS - EVERYTHING BELOW THIS HAS BEEN _SANITISED_! -->
 
     <!-- Errai -->
     <dependency>
@@ -527,10 +523,6 @@
       <groupId>org.dashbuilder</groupId>
       <artifactId>dashbuilder-renderer-default</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.dashbuilder</groupId>
-      <artifactId>dashbuilder-renderer-google</artifactId>
-    </dependency>
 
     <!-- Add for enforcer -->
     <dependency>
@@ -600,92 +592,14 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- TEST -->
-    <dependency>
-      <groupId>org.drools</groupId>
-      <artifactId>drools-scenario-simulation-backend</artifactId>
-      <classifier>tests</classifier>
-      <scope>test</scope>
-    </dependency>
-
     <!-- MARSHALLING -->
     <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-wb-scenario-simulation-editor-kogito-marshaller</artifactId>
     </dependency>
-    <dependency>
-      <groupId>com.github.gwtreact</groupId>
-      <artifactId>gwt-interop-utils</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>com.google.gwt</groupId>
-          <artifactId>gwt-servlet</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
     <!-- END MARSHALLING -->
 
   </dependencies>
-
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.drools</groupId>
-        <artifactId>drools-wb-scenario-simulation-editor-kogito-client</artifactId>
-        <version>${version.org.kie}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.drools</groupId>
-        <artifactId>drools-scenario-simulation-backend</artifactId>
-        <version>${version.org.kie}</version>
-        <classifier>tests</classifier>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.dashbuilder</groupId>
-        <artifactId>dashbuilder-renderer-google</artifactId>
-        <version>2.19.0-SNAPSHOT</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.drools</groupId>
-        <artifactId>drools-wb-scenario-simulation-editor-kogito-webapp-common</artifactId>
-        <version>${version.org.kie}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.kie.workbench</groupId>
-        <artifactId>kie-wb-common-kogito-webapp-base</artifactId>
-        <classifier>sources</classifier>
-        <version>${version.org.kie}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.kie.workbench</groupId>
-        <artifactId>kie-wb-common-kogito-webapp-base</artifactId>
-        <version>${version.org.kie}</version>
-      </dependency>
-
-      <!-- MARSHALLING -->
-      <dependency>
-        <groupId>org.drools</groupId>
-        <artifactId>drools-wb-scenario-simulation-editor-kogito-marshaller</artifactId>
-        <version>${version.org.kie}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.github.gwtreact</groupId>
-        <artifactId>gwt-interop-utils</artifactId>
-        <version>${gwt-interop-utils.version}</version>
-      </dependency>
-      <!-- END MARSHALLING -->
-
-      <dependency>
-        <groupId>com.google.jsinterop</groupId>
-        <artifactId>base</artifactId>
-        <version>1.0.0-beta-1</version>
-      </dependency>
-
-    </dependencies>
-  </dependencyManagement>
 
   <build>
     <finalName>${project.artifactId}</finalName>
@@ -931,7 +845,6 @@
                 <artifactItem>
                   <groupId>org.kie.workbench</groupId>
                   <artifactId>kie-wb-common-dmn-webapp-kogito-marshaller</artifactId>
-                  <version>${version.org.kie}</version>
                   <type>jar</type>
                   <overWrite>true</overWrite>
                   <outputDirectory>${project.build.directory}/Marshaller</outputDirectory>
@@ -965,79 +878,6 @@
   </build>
 
   <profiles>
-
-    <!-- Thorntail profile -->
-    <profile>
-      <id>thorntail</id>
-      <activation>
-        <property>
-          <name>thorntail</name>
-        </property>
-      </activation>
-
-      <dependencyManagement>
-        <dependencies>
-          <dependency>
-            <groupId>io.thorntail</groupId>
-            <artifactId>bom-all</artifactId>
-            <version>${version.thorntail}</version>
-            <scope>import</scope>
-            <type>pom</type>
-          </dependency>
-        </dependencies>
-      </dependencyManagement>
-
-      <!-- Factions -->
-      <!-- Let Thorntail first discover factions and then add them explicitly -->
-      <!-- to include messaging that was not detected automatically -->
-      <dependencies>
-        <!-- CDI brings in bean-validation, cdi-config, logging, transactions, container and ee -->
-        <dependency>
-          <groupId>io.thorntail</groupId>
-          <artifactId>cdi</artifactId>
-        </dependency>
-        <!-- Undertow brings in io and request-controller -->
-        <dependency>
-          <groupId>io.thorntail</groupId>
-          <artifactId>undertow</artifactId>
-        </dependency>
-        <!-- Required by AppFormer's SocialActivities and Git clustering -->
-        <dependency>
-          <groupId>io.thorntail</groupId>
-          <artifactId>messaging</artifactId>
-        </dependency>
-      </dependencies>
-
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>io.thorntail</groupId>
-            <artifactId>thorntail-maven-plugin</artifactId>
-            <version>${version.thorntail}</version>
-            <executions>
-              <execution>
-                <id>package</id>
-                <goals>
-                  <goal>package</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-
-          <!-- No need to bring in Wildfly when packaging for Thorntail -->
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>unpack</id>
-                <phase>none</phase>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
 
     <!-- Full profile builds all GWT permutations -->
     <profile>
@@ -1083,4 +923,5 @@
     </profile>
 
   </profiles>
+
 </project>
