@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2020 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -61,49 +62,41 @@ public class KogitoTestingScenarioSimulationServiceImpl implements ScenarioSimul
 
     @Override
     public ScenarioSimulationModelContent loadContent(Path path) {
-        // TODO {gcardosi} to implement
         return null;
     }
 
     @Override
     public SimulationRunResult runScenario(Path path, ScesimModelDescriptor simulationDescriptor, List<ScenarioWithIndex> scenarios, Settings settings, Background background) {
-        // TODO {gcardosi} to implement
         return null;
     }
 
     @Override
     public List<FactMappingValidationError> validate(Simulation simulation, Settings settings, Path path) {
-        // TODO {gcardosi} to implement
-        return null;
+        return Collections.emptyList();
     }
 
     @Override
     public Path copy(Path path, String newName, String comment) {
-        // TODO {gcardosi} to implement
         return null;
     }
 
     @Override
     public Path copy(Path path, String newName, Path targetDirectory, String comment) {
-        // TODO {gcardosi} to implement
         return null;
     }
 
     @Override
     public void delete(Path path, String comment) {
-        // TODO {gcardosi} to implement
+        // DO nothing
     }
 
     @Override
     public Path saveAndRename(Path path, String newFileName, Metadata metadata, ScenarioSimulationModel content, String comment) {
-
-        // TODO {gcardosi} to implement
         return null;
     }
 
     @Override
     public Path rename(Path path, String newName, String comment) {
-        // TODO {gcardosi} to implement
         return null;
     }
 }

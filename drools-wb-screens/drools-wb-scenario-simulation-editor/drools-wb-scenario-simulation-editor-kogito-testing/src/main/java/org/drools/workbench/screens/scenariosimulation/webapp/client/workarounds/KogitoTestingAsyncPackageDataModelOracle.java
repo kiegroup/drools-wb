@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2020 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,10 +41,7 @@ public class KogitoTestingAsyncPackageDataModelOracle implements KogitoAsyncPack
     private final List<String> packageNames = Arrays.asList("com", "com.example");
     private final String[] factTypes = {"Author", "Book", String.class.getSimpleName(), Integer.class.getSimpleName()};
     private final String[] fqcnNames = {"com.Author", "com.Book", String.class.getCanonicalName(), Integer.class.getCanonicalName()};
-    private final Map<String, String> fqcnNamesMap = Stream.of(new String[][]{
-            factTypes,
-            fqcnNames,
-    }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
+    private final Map<String, String> fqcnNamesMap = Stream.of(factTypes, fqcnNames).collect(Collectors.toMap(data -> data[0], data -> data[1]));
     private final Map<String, Boolean> collectionTypes = Collections.unmodifiableMap(Stream.of(
             new AbstractMap.SimpleEntry<>("books", true),
             new AbstractMap.SimpleEntry<>("currentlyPrinted", false),

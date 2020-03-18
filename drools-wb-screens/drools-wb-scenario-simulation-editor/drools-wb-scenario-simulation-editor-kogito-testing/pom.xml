@@ -22,6 +22,7 @@
     <gwt.helper.includes>Client,Marshaller,KogitoEditor,WebappBase</gwt.helper.includes>
     <gwt.helper.rootDirectories>${project.parent.basedir}/</gwt.helper.rootDirectories>
     <gwt-interop-utils.version>0.3.0</gwt-interop-utils.version>
+    <sonar.coverage.exclusions>webapp/**/*, ,**/workarounds/**.java</sonar.coverage.exclusions>
   </properties>
 
   <dependencies>
@@ -1080,13 +1081,6 @@
         </plugins>
       </build>
     </profile>
-    <!-- NEEDED TO GENERATE jacoco.exec -->
-    <profile>
-      <id>sonarcloud-analysis</id>
-      <properties>
-        <!-- Excluding the entire webapp folder from coverage statistics. -->
-        <sonar.coverage.exclusions>webapp/**/*</sonar.coverage.exclusions>
-      </properties>
-    </profile>
+
   </profiles>
 </project>
