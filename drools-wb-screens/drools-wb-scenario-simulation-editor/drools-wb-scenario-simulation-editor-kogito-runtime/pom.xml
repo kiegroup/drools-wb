@@ -229,13 +229,6 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- Needed for the ACE SIMULATION_READER Editor -->
-    <dependency>
-      <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-widgets-core-client</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
     <!-- UberFire IO -->
     <dependency>
       <groupId>org.uberfire</groupId>
@@ -776,7 +769,6 @@
                 <compileSourcesArtifact>org.uberfire:uberfire-widgets-properties-editor-api</compileSourcesArtifact>
                 <compileSourcesArtifact>org.uberfire:uberfire-widgets-properties-editor-client</compileSourcesArtifact>
                 <compileSourcesArtifact>org.uberfire:uberfire-widgets-service-api</compileSourcesArtifact>
-                <compileSourcesArtifact>org.uberfire:uberfire-widgets-core-client</compileSourcesArtifact>
 
                 <!-- Uberfire Preferences -->
                 <compileSourcesArtifact>org.uberfire:uberfire-preferences-api</compileSourcesArtifact>
