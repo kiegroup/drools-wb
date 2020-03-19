@@ -294,6 +294,7 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     protected void enableCreateCollectionContainer(boolean toEnable) {
         showCreateCollectionContainer(toEnable);
         showDefineCollectionContainer(!toEnable);
+        showAddItemButton(toEnable);
         createCollectionRadio.setChecked(toEnable);
         defineCollectionRadio.setChecked(!toEnable);
         if (listWidget) {
@@ -363,6 +364,7 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
     public void enableEditingMode(boolean isEditingMode) {
         createCollectionRadio.setDisabled(isEditingMode);
         defineCollectionRadio.setDisabled(isEditingMode);
+        showAddItemButton(!isEditingMode);
         addItemButton.setDisabled(isEditingMode);
         cancelButton.setDisabled(isEditingMode);
         removeButton.setDisabled(isEditingMode);
@@ -396,6 +398,14 @@ public class CollectionViewImpl extends FocusWidget implements HasCloseComposite
             defineCollectionContainer.getStyle().setDisplay(Style.Display.BLOCK);
         } else {
             defineCollectionContainer.getStyle().setDisplay(Style.Display.NONE);
+        }
+    }
+
+    protected void showAddItemButton(boolean show) {
+        if (show) {
+            addItemButton.getStyle().setDisplay(Style.Display.BLOCK);
+        } else {
+            addItemButton.getStyle().setDisplay(Style.Display.NONE);
         }
     }
 }
