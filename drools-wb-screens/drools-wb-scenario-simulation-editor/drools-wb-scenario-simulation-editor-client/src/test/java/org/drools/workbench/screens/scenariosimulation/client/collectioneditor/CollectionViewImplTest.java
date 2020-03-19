@@ -91,9 +91,7 @@ public class CollectionViewImplTest extends AbstractCollectionEditorTest {
     @Mock
     private Style defineCollectionContainerStyleMock;
     @Mock
-    private DivElement addItemButtonContainerMock;
-    @Mock
-    private Style addItemButtonContainerStyleMock;
+    private Style addItemButtonStyleMock;
     @Mock
     private TextAreaElement expressionElementMock;
 
@@ -102,7 +100,7 @@ public class CollectionViewImplTest extends AbstractCollectionEditorTest {
         when(collectionEditorModalBodyMock.getStyle()).thenReturn(styleMock);
         when(createCollectionContainerMock.getStyle()).thenReturn(createCollectionContainerStyleMock);
         when(defineCollectionContainerMock.getStyle()).thenReturn(defineCollectionContainerStyleMock);
-        when(addItemButtonContainerMock.getStyle()).thenReturn(addItemButtonContainerStyleMock);
+        when(addItemButtonMock.getStyle()).thenReturn(addItemButtonStyleMock);
         this.collectionEditorViewImplSpy = spy(new CollectionViewImpl() {
             {
                 this.presenter = collectionPresenterMock;
@@ -284,6 +282,7 @@ public class CollectionViewImplTest extends AbstractCollectionEditorTest {
         collectionEditorViewImplSpy.enableCreateCollectionContainer(toEnable);
         verify(collectionEditorViewImplSpy, times(1)).showCreateCollectionContainer(eq(toEnable));
         verify(collectionEditorViewImplSpy, times(1)).showDefineCollectionContainer(eq(!toEnable));
+        verify(collectionEditorViewImplSpy, times(1)).showAddItemButton(eq(toEnable));
         if (isList) {
             verify(createLabelMock, times(1)).setInnerText(eq(ScenarioSimulationEditorConstants.INSTANCE.createLabelList()));
         } else {
@@ -317,6 +316,7 @@ public class CollectionViewImplTest extends AbstractCollectionEditorTest {
         collectionEditorViewImplSpy.enableEditingMode(false);
         verify(createCollectionRadioMock).setDisabled(eq(false));
         verify(defineCollectionRadioMock).setDisabled(eq(false));
+        verify(collectionEditorViewImplSpy, times(1)).showAddItemButton(eq(true));
         verify(addItemButtonMock).setDisabled(eq(false));
         verify(cancelButtonMock).setDisabled(eq(false));
         verify(removeButtonMock).setDisabled(eq(false));
@@ -328,6 +328,7 @@ public class CollectionViewImplTest extends AbstractCollectionEditorTest {
         collectionEditorViewImplSpy.enableEditingMode(true);
         verify(createCollectionRadioMock).setDisabled(eq(true));
         verify(defineCollectionRadioMock).setDisabled(eq(true));
+        verify(collectionEditorViewImplSpy, times(1)).showAddItemButton(eq(false));
         verify(addItemButtonMock).setDisabled(eq(true));
         verify(cancelButtonMock).setDisabled(eq(true));
         verify(removeButtonMock).setDisabled(eq(true));
@@ -348,6 +349,14 @@ public class CollectionViewImplTest extends AbstractCollectionEditorTest {
         checkStyleDisplay(defineCollectionContainerStyleMock, false);
         collectionEditorViewImplSpy.showDefineCollectionContainer(true);
         checkStyleDisplay(defineCollectionContainerStyleMock, true);
+    }
+
+    @Test
+    public void showAddItemButton() {
+        collectionEditorViewImplSpy.showAddItemButton(false);
+        checkStyleDisplay(addItemButtonStyleMock, false);
+        collectionEditorViewImplSpy.showAddItemButton(true);
+        checkStyleDisplay(addItemButtonStyleMock, true);
     }
 
     private void checkStyleDisplay(Style styleElement, boolean show) {
