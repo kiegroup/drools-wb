@@ -3,7 +3,7 @@
   <parent>
     <groupId>org.drools</groupId>
     <artifactId>drools-wb</artifactId>
-    <version>7.33.0-SNAPSHOT</version>
+    <version>7.35.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>drools-wb-extensions</artifactId>
@@ -15,11 +15,5 @@
   <modules>
     <module>drools-wb-drl-extension</module>
   </modules>
-
-  <properties>
-    <code.coverage.disabled>true</code.coverage.disabled>
-    <sonar.skip>true</sonar.skip>
-  </properties>
-
 
 </project>

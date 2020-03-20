@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.drools</groupId>
     <artifactId>drools-wb-guided-rule-editor</artifactId>
-    <version>7.33.0-SNAPSHOT</version>
+    <version>7.35.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>drools-wb-guided-rule-editor-client</artifactId>
@@ -17,6 +17,7 @@
 
   <properties>
     <java.module.name>org.drools.wb.guided.rule.editor.client</java.module.name>
+    <jacoco.excludes>**/GuidedRuleEditorImages508.class</jacoco.excludes>
   </properties>
 
   <dependencies>

@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.drools</groupId>
     <artifactId>drools-wb-screens</artifactId>
-    <version>7.33.0-SNAPSHOT</version>
+    <version>7.35.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>drools-wb-enum-editor</artifactId>
@@ -36,12 +36,5 @@
     <module>drools-wb-enum-editor-client</module>
     <module>drools-wb-enum-editor-backend</module>
   </modules>
-
-  <properties>
-    <code.coverage.disabled>true</code.coverage.disabled>
-    <sonar.skip>true</sonar.skip>
-  </properties>
-
-
 
 </project>

@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.kie</groupId>
     <artifactId>kie-parent</artifactId>
-    <version>7.33.0-SNAPSHOT</version>
+    <version>7.35.0-SNAPSHOT</version>
   </parent>
 
   <groupId>org.drools</groupId>
@@ -295,17 +295,6 @@
         <jacoco.excludes>*Lexer</jacoco.excludes>
       </properties>
 
-      <dependencyManagement>
-        <dependencies>
-          <dependency>
-            <groupId>org.jacoco</groupId>
-            <artifactId>org.jacoco.agent</artifactId>
-            <classifier>runtime</classifier>
-            <version>${version.jacoco.plugin}</version>
-            <scope>test</scope>
-          </dependency>
-        </dependencies>
-      </dependencyManagement>
       <dependencies>
         <dependency>
           <groupId>org.jacoco</groupId>
@@ -342,6 +331,14 @@
                   </goals>
                 </execution>
               </executions>
+            </plugin>
+            <plugin>
+              <artifactId>maven-surefire-plugin</artifactId>
+              <configuration>
+                <systemPropertyVariables>
+                  <jacoco-agent.destfile>${jacoco.exec.file}</jacoco-agent.destfile>
+                </systemPropertyVariables>
+              </configuration>
             </plugin>
             <plugin>
               <groupId>org.codehaus.mojo</groupId>

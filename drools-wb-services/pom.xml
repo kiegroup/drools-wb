@@ -5,7 +5,7 @@
   <parent>
     <artifactId>drools-wb</artifactId>
     <groupId>org.drools</groupId>
-    <version>7.33.0-SNAPSHOT</version>
+    <version>7.35.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -18,10 +18,5 @@
   <modules>
     <module>drools-wb-verifier</module>
   </modules>
-
-  <properties>
-    <code.coverage.disabled>true</code.coverage.disabled>
-    <sonar.skip>true</sonar.skip>
-  </properties>
 
 </project>
