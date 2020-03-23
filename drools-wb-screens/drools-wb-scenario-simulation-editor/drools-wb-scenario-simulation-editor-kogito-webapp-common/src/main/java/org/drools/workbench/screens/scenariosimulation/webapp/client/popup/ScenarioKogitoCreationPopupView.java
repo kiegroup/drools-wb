@@ -103,7 +103,7 @@ public class ScenarioKogitoCreationPopupView extends AbstractScenarioPopupView i
         if (dmnButton.checked) {
             selectedType = ScenarioSimulationModel.Type.DMN;
             dmnAssetsDivElement.removeAttribute(ConstantHolder.HIDDEN);
-            checkDMNScenarioPrerequisites();
+            enableCreateButtonForDMNScenario();
         }
     }
 
@@ -124,11 +124,11 @@ public class ScenarioKogitoCreationPopupView extends AbstractScenarioPopupView i
         scenarioKogitoCreationAssetsDropdown.registerOnChangeHandler(() -> {
             final Optional<KieAssetsDropdownItem> value = scenarioKogitoCreationAssetsDropdown.getValue();
             selectedPath = value.map(KieAssetsDropdownItem::getValue).orElse(null);
-            checkDMNScenarioPrerequisites();
+            enableCreateButtonForDMNScenario();
         });
     }
 
-    protected void checkDMNScenarioPrerequisites() {
+    protected void enableCreateButtonForDMNScenario() {
         if (selectedPath != null) {
             okButton.setEnabled(true);
         }
