@@ -74,7 +74,7 @@ public class ScenarioKogitoCreationPopupViewTest {
                 ruleButton = ruleButtonMock;
                 okButton = okButtonMock;
                 cancelButton = cancelButtonMock;
-                divElement = divElementMock;
+                dmnAssetsDivElement = divElementMock;
                 modal = modalMock;
             }
         });
