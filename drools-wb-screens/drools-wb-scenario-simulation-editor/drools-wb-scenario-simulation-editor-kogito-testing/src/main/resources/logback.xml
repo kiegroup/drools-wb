@@ -20,7 +20,6 @@
   <appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
       <!-- %l lowers performance -->
-      <!--<pattern>%d [%t] %-5p %l%n  %m%n</pattern>-->
       <pattern>%d [%t] %-5p %m%n</pattern>
     </encoder>
   </appender>
