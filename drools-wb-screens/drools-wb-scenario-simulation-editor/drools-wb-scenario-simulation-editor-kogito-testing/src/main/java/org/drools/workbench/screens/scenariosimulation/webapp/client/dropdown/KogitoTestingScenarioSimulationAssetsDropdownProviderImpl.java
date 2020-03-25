@@ -20,10 +20,10 @@ import java.util.List;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
+import org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds.TestingVFSService;
 import org.jboss.errai.bus.client.api.messaging.Message;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
-import org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds.TestingVFSService;
 import org.uberfire.backend.vfs.Path;
 
 import static org.drools.workbench.screens.scenariosimulation.webapp.client.editor.ScenarioSimulationEditorKogitoTestingScreen.SCESIM_PATH;
