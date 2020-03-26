@@ -129,7 +129,7 @@ public class ScenarioKogitoCreationPopupView extends AbstractScenarioPopupView i
     }
 
     protected void enableCreateButtonForDMNScenario() {
-        if (selectedPath != null) {
+        if (selectedPath != null && !selectedPath.isEmpty()) {
             okButton.setEnabled(true);
         }
     }
