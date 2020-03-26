@@ -5,7 +5,7 @@ This webapp is meant as testing/developing environment. It **provides** buttons,
 
 Testing
 --------------
-1. full compilation (i.e. included GWT compilation) of the testing module
+1. Full compilation (i.e. included GWT compilation) of the testing module
 2. Launch mvn gwt:run from `drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-testing/` directory
 3. Open a browser (Chrome or Firefox are supported) and open `http://127.0.0.1:8888/index.html` url
 4. A popup with this message `Compiling org.drools.workbench.screens.scenariosimulation.webapp.DroolsWorkbenchScenarioSimulationKogitoTesting` will appear. 
