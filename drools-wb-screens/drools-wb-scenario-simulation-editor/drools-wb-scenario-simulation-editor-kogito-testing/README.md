@@ -10,7 +10,7 @@ Testing
 3. Open a browser (Chrome or Firefox are supported) and open `http://127.0.0.1:8888/index.html` url
 4. A popup with this message `Compiling org.drools.workbench.screens.scenariosimulation.webapp.DroolsWorkbenchScenarioSimulationKogitoTesting` will appear. 
    GWT module is compiling, please wait.
-5. An empty scenario simulatiion testing will appear. Here, you can create a new asset pressing
+5. An empty scenario simulation testing will appear. Here, you can create a new asset pressing
    `New` button in the menu. You'll be able to create a **RULE** scenario (with mocked data), 
    and a **DMN** scenario. In this last case, you need to upload a DMN file first, using the 
    `Import DMN` button.   
