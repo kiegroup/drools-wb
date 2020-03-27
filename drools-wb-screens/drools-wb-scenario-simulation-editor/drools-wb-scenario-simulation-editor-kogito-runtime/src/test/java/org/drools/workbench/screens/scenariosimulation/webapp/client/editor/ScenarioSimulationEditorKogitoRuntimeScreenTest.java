@@ -60,7 +60,6 @@ public class ScenarioSimulationEditorKogitoRuntimeScreenTest {
         scenarioSimulationEditorKogitoRuntimeScreenSpy = spy(new ScenarioSimulationEditorKogitoRuntimeScreen(placeManagerMock) {
             {
                 this.scenarioSimulationEditorKogitoWrapper = scenarioSimulationEditorKogitoWrapperMock;
-                this.scenarioKogitoCreationPopupPresenter = scenarioKogitoCreationPopupPresenterMock;
             }
         });
     }

@@ -56,7 +56,6 @@ import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.stra
 import org.drools.workbench.screens.scenariosimulation.kogito.client.fakes.KogitoAsyncPackageDataModelOracle;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.popup.ScenarioKogitoCreationPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
-import org.gwtbootstrap3.client.ui.Popover;
 import org.gwtbootstrap3.client.ui.TabListItem;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
@@ -77,6 +76,7 @@ import org.uberfire.client.views.pfly.multipage.MultiPageEditorViewImpl;
 import org.uberfire.client.views.pfly.multipage.PageImpl;
 import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
+import org.uberfire.workbench.events.NotificationEvent;
 import org.uberfire.workbench.model.menu.Menus;
 
 import static org.drools.workbench.screens.scenariosimulation.kogito.client.converters.scesim.ApiJSInteropConverter.getJSIScenarioSimulationModelType;
@@ -146,23 +146,27 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     @Override
     public Promise setContent(String fullPath, String value) {
         return promises.create((success, failure) -> {
-            /* Retrieving file name and its related path */
-            String finalName = NEW_FILE_NAME;
-            String pathString = "/";
-            if (fullPath != null && !fullPath.isEmpty()) {
-                int idx = fullPath.replaceAll("\\\\", "/").lastIndexOf('/');
-                finalName = idx >= 0 ? fullPath.substring(idx + 1) : fullPath;
-                pathString = idx >= 0 ? fullPath.substring(0, idx + 1) : pathString;
-            }
-            final Path path = PathFactory.newPath(finalName, pathString);
+            try {
+                /* Retrieving file name and its relative path */
+                String finalName = NEW_FILE_NAME;
+                String pathString = "/";
+                if (fullPath != null && !fullPath.isEmpty()) {
+                    int idx = fullPath.replaceAll("\\\\", "/").lastIndexOf('/');
+                    finalName = idx >= 0 ? fullPath.substring(idx + 1) : fullPath;
+                    pathString = idx >= 0 ? fullPath.substring(0, idx + 1) : pathString;
+                }
+                final Path path = PathFactory.newPath(finalName, pathString);
 
-            if (value == null || value.isEmpty()) {
-                newFile(path);
-            } else {
-                gotoPath(path);
-                unmarshallContent(value);
+                if (value == null || value.isEmpty()) {
+                    createNewFile(path);
+                } else {
+                    gotoPath(path);
+                    unmarshallContent(value);
+                }
+                success.onInvoke((Object) null);
+            } catch (Exception e) {
+                failure.onInvoke(e.getMessage());
             }
-            success.onInvoke((Object) null);
         });
     }
 
@@ -362,32 +366,34 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
         scenarioSimulationEditorPresenter.onBackgroundTabSelected();
     }
 
-    protected void newFile(Path path) {
-        Command createCommand = () -> {
+    protected void createNewFile(Path path) {
+        scenarioKogitoCreationPopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.addScenarioSimulation(),
+                                                  createNewFileCommand(path));
+    }
+
+    protected Command createNewFileCommand(Path path) {
+        return () -> {
             final ScenarioSimulationModel.Type selectedType = scenarioKogitoCreationPopupPresenter.getSelectedType();
             if (selectedType == null) {
-                showPopover("ERROR", "Missing selected type");
+                scenarioSimulationEditorPresenter.sendNotification("Missing selected type", NotificationEvent.NotificationType.ERROR);
                 return;
             }
             String value = "";
             if (ScenarioSimulationModel.Type.DMN.equals(selectedType)) {
                 value = scenarioKogitoCreationPopupPresenter.getSelectedPath();
                 if (value == null || value.isEmpty()) {
-                    showPopover("ERROR", "Missing dmn path");
+                    scenarioSimulationEditorPresenter.sendNotification("Missing dmn path", NotificationEvent.NotificationType.ERROR);
                     return;
                 }
             }
-            scenarioSimulationBuilder.populateScenarioSimulationModel(new ScenarioSimulationModel(), selectedType, value, content -> {
-                //saveFile(path, content);
-                gotoPath(path);
-                unmarshallContent(content);
-            });
+            scenarioSimulationBuilder.populateScenarioSimulationModel(new ScenarioSimulationModel(),
+                                                                      selectedType,
+                                                                      value,
+                                                                      content -> {
+                                                                          gotoPath(path);
+                                                                          unmarshallContent(content);
+                                                                      });
         };
-        scenarioKogitoCreationPopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.addScenarioSimulation(),
-                                                  createCommand);
     }
 
-    protected void showPopover(String title, String content) {
-        new Popover(title, content).show();
-    }
 }

@@ -16,28 +16,14 @@
 
 package org.drools.workbench.screens.scenariosimulation.webapp.client.editor;
 
-import java.util.function.Consumer;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import com.google.gwt.user.client.ui.IsWidget;
-import elemental2.promise.Promise;
-import org.kie.workbench.common.kogito.client.editor.MultiPageEditorContainerView;
 import org.uberfire.client.annotations.WorkbenchClientEditor;
-import org.uberfire.client.annotations.WorkbenchMenu;
-import org.uberfire.client.annotations.WorkbenchPartTitle;
-import org.uberfire.client.annotations.WorkbenchPartTitleDecoration;
-import org.uberfire.client.annotations.WorkbenchPartView;
 import org.uberfire.client.mvp.PlaceManager;
-import org.uberfire.lifecycle.GetContent;
-import org.uberfire.lifecycle.IsDirty;
-import org.uberfire.lifecycle.OnMayClose;
 import org.uberfire.lifecycle.OnStartup;
-import org.uberfire.lifecycle.SetContent;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.mvp.impl.DefaultPlaceRequest;
-import org.uberfire.workbench.model.menu.Menus;
 
 import static org.drools.workbench.screens.scenariosimulation.webapp.client.editor.ScenarioSimulationEditorKogitoRuntimeScreen.IDENTIFIER;
 
@@ -50,7 +36,6 @@ import static org.drools.workbench.screens.scenariosimulation.webapp.client.edit
 @WorkbenchClientEditor(identifier = IDENTIFIER)
 public class ScenarioSimulationEditorKogitoRuntimeScreen extends AbstractScenarioSimulationEditorKogitoScreen {
 
-    protected static final String NEW_FILE_NAME = "new-file.scesim";
     protected static final PlaceRequest SCENARIO_SIMULATION_KOGITO_RUNTIME_SCREEN_DEFAULT_REQUEST = new DefaultPlaceRequest(IDENTIFIER);
 
     protected PlaceManager placeManager;
@@ -72,46 +57,6 @@ public class ScenarioSimulationEditorKogitoRuntimeScreen extends AbstractScenari
     @OnStartup
     public void onStartup(final PlaceRequest place) {
         scenarioSimulationEditorKogitoWrapper.onStartup(place);
-    }
-
-    @OnMayClose
-    public boolean mayClose() {
-        return scenarioSimulationEditorKogitoWrapper.mayClose();
-    }
-
-    @WorkbenchPartTitle
-    public String getTitleText() {
-        return TITLE;
-    }
-
-    @WorkbenchPartTitleDecoration
-    public IsWidget getTitle() {
-        return scenarioSimulationEditorKogitoWrapper.getTitle();
-    }
-
-    @WorkbenchPartView
-    public MultiPageEditorContainerView getWidget() {
-        return scenarioSimulationEditorKogitoWrapper.getWidget();
-    }
-
-    @WorkbenchMenu
-    public void setMenus(final Consumer<Menus> menusConsumer) {
-        scenarioSimulationEditorKogitoWrapper.setMenus(menusConsumer);
-    }
-
-    @GetContent
-    public Promise getContent() {
-        return scenarioSimulationEditorKogitoWrapper.getContent();
-    }
-
-    @SetContent
-    public Promise setContent(String fullPath, String value) {
-        return scenarioSimulationEditorKogitoWrapper.setContent(fullPath, value);
-    }
-
-    @IsDirty
-    public boolean isDirty() {
-        return scenarioSimulationEditorKogitoWrapper.isDirty();
     }
 
 }
