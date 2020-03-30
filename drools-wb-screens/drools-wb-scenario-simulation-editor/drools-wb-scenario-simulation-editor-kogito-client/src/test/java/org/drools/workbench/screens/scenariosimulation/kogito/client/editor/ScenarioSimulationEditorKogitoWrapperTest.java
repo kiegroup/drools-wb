@@ -48,6 +48,7 @@ import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
+import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.backend.vfs.PathFactory;
 import org.uberfire.client.mvp.PlaceStatus;
@@ -126,8 +127,6 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
     @Captor
     private ArgumentCaptor<Page> pageCaptor;
     @Captor
-    private ArgumentCaptor<Path> pathArgumentCaptor;
-    @Captor
     private ArgumentCaptor<RemoteCallback> remoteCallbackArgumentCaptor;
 
     private ScenarioSimulationEditorKogitoWrapper scenarioSimulationEditorKogitoWrapperSpy;
@@ -198,7 +197,8 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
     @Test
     public void wrappedSave() {
         scenarioSimulationEditorKogitoWrapperSpy.wrappedSave("commit");
-        verify(scenarioSimulationEditorKogitoWrapperSpy, times(1)).synchronizeColumnsDimension(eq(simulationGridPanelMock), eq(backgroundGridPanelMock));
+        verify(scenarioSimulationEditorKogitoWrapperSpy, times(1)).synchronizeColumnsDimension(eq(simulationGridPanelMock),
+                                                                                                                    eq(backgroundGridPanelMock));
     }
 
     @Test
@@ -211,6 +211,15 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
     public void makeMenuBar() {
         scenarioSimulationEditorPresenterMock.makeMenuBar(fileMenuBuilderMock);
         verify(scenarioSimulationEditorPresenterMock, times(1)).makeMenuBar(eq(fileMenuBuilderMock));
+    }
+
+    @Test
+    public void gotoPath() {
+        scenarioSimulationEditorKogitoWrapperSpy.gotoPath(path);
+        verify(kogitoAsyncPackageDataModelOracleMock, times(1)).init(eq(path));
+        verify(scenarioSimulationEditorPresenterMock, times(1)).init(eq(scenarioSimulationEditorKogitoWrapperSpy),
+                                                                                          isA(ObservablePath.class));
+        assertEquals(path, scenarioSimulationEditorKogitoWrapperSpy.getCurrentPath());
     }
 
     @Test
