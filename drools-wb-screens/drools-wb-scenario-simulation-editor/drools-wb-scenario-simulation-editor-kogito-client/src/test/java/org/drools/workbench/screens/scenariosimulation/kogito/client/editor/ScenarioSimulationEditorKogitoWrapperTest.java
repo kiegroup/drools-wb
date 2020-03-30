@@ -29,10 +29,14 @@ import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridWidget;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.KogitoScenarioSimulationBuilder;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.strategies.KogitoDMNDataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.strategies.KogitoDMODataManagementStrategy;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.oracle.KogitoAsyncPackageDataModelOracle;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.popup.ScenarioSimulationCreationPopupPresenter;
 import org.gwtbootstrap3.client.ui.NavTabs;
 import org.gwtbootstrap3.client.ui.TabListItem;
+import org.jboss.errai.common.client.api.RemoteCallback;
 import org.jboss.errai.ui.client.local.spi.TranslationService;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,16 +48,21 @@ import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
+import org.uberfire.backend.vfs.Path;
+import org.uberfire.backend.vfs.PathFactory;
 import org.uberfire.client.mvp.PlaceStatus;
 import org.uberfire.client.promise.Promises;
 import org.uberfire.client.views.pfly.multipage.MultiPageEditorViewImpl;
 import org.uberfire.client.workbench.widgets.multipage.MultiPageEditor;
 import org.uberfire.client.workbench.widgets.multipage.Page;
+import org.uberfire.mvp.Command;
+import org.uberfire.workbench.events.NotificationEvent;
 import org.uberfire.workbench.model.menu.MenuItem;
 import org.uberfire.workbench.model.menu.Menus;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
@@ -106,12 +115,23 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
     private TabListItem editorItemMock;
     @Mock
     private TabListItem backgroundItemMock;
+    @Mock
+    private ScenarioSimulationCreationPopupPresenter scenarioSimulationCreationPopupPresenterMock;
+    @Mock
+    private KogitoScenarioSimulationBuilder kogitoScenarioSimulationBuilderMock;
+    @Mock
+    private KogitoAsyncPackageDataModelOracle kogitoAsyncPackageDataModelOracleMock;
     @Captor
     private ArgumentCaptor<DataManagementStrategy> dataManagementStrategyCaptor;
     @Captor
     private ArgumentCaptor<Page> pageCaptor;
+    @Captor
+    private ArgumentCaptor<Path> pathArgumentCaptor;
+    @Captor
+    private ArgumentCaptor<RemoteCallback> remoteCallbackArgumentCaptor;
 
     private ScenarioSimulationEditorKogitoWrapper scenarioSimulationEditorKogitoWrapperSpy;
+    private Path path = PathFactory.newPath("file.scesim", "path/");
 
     @Before
     public void setup() {
@@ -129,7 +149,7 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
         when(multiPageEditorViewMock.getTabBar()).thenReturn(navBarsMock);
         when(navBarsMock.getWidget(1)).thenReturn(editorItemMock);
         when(navBarsMock.getWidget(2)).thenReturn(backgroundItemMock);
-
+        when(scenarioSimulationCreationPopupPresenterMock.getSelectedPath()).thenReturn("selected");
 
         when(translationServiceMock.getTranslation(KogitoClientConstants.KieEditorWrapperView_EditTabTitle)).thenReturn(KogitoClientConstants.KieEditorWrapperView_EditTabTitle);
         scenarioSimulationEditorKogitoWrapperSpy = spy(new ScenarioSimulationEditorKogitoWrapper() {
@@ -137,12 +157,20 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
                 this.fileMenuBuilder = fileMenuBuilderMock;
                 this.scenarioSimulationEditorPresenter = scenarioSimulationEditorPresenterMock;
                 this.promises = promisesMock;
+                this.kogitoOracle = kogitoAsyncPackageDataModelOracleMock;
                 this.translationService = translationServiceMock;
+                this.scenarioSimulationCreationPopupPresenter = scenarioSimulationCreationPopupPresenterMock;
+                this.scenarioSimulationBuilder = kogitoScenarioSimulationBuilderMock;
             }
 
             @Override
             public MultiPageEditorContainerView getWidget() {
                 return multiPageEditorContainerViewMock;
+            }
+
+            @Override
+            protected void resetEditorPages() {
+                //Do nothing
             }
         });
     }
@@ -243,5 +271,64 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
     public void onBackgroundTabSelected() {
         scenarioSimulationEditorKogitoWrapperSpy.onBackgroundTabSelected();
         verify(scenarioSimulationEditorPresenterMock, times(1)).onBackgroundTabSelected();
+    }
+
+    @Test
+    public void showScenarioSimulationCreationPopup() {
+        scenarioSimulationEditorKogitoWrapperSpy.showScenarioSimulationCreationPopup(path);
+        verify(scenarioSimulationCreationPopupPresenterMock, times(1)).show(eq(ScenarioSimulationEditorConstants.INSTANCE.addScenarioSimulation()),
+                                                                                                 isA(Command.class));
+    }
+
+    @Test
+    public void newFileEmptySelectedType() {
+        Command command = scenarioSimulationEditorKogitoWrapperSpy.createNewFileCommand(path);
+        command.execute();
+        verify(scenarioSimulationCreationPopupPresenterMock, times(1)).getSelectedType();
+        verify(scenarioSimulationEditorPresenterMock, times(1)).sendNotification(eq(ScenarioSimulationEditorConstants.INSTANCE.missingSelectedType()),
+                                                                                                      eq(NotificationEvent.NotificationType.ERROR));
+        verify(kogitoScenarioSimulationBuilderMock, never()).populateScenarioSimulationModel(any(), any(), any(), any());
+    }
+
+    @Test
+    public void newFileEmptySelectedDMNPath() {
+        when(scenarioSimulationCreationPopupPresenterMock.getSelectedPath()).thenReturn(null);
+        when(scenarioSimulationCreationPopupPresenterMock.getSelectedType()).thenReturn(ScenarioSimulationModel.Type.DMN);
+        Command command = scenarioSimulationEditorKogitoWrapperSpy.createNewFileCommand(path);
+        command.execute();
+        verify(scenarioSimulationCreationPopupPresenterMock, times(1)).getSelectedType();
+        verify(scenarioSimulationEditorPresenterMock, times(1)).sendNotification(eq(ScenarioSimulationEditorConstants.INSTANCE.missingDmnPath()),
+                                                                                                      eq(NotificationEvent.NotificationType.ERROR));
+        verify(kogitoScenarioSimulationBuilderMock, never()).populateScenarioSimulationModel(any(), any(), any(), any());
+    }
+
+    @Test
+    public void newFileRule() {
+        when(scenarioSimulationCreationPopupPresenterMock.getSelectedType()).thenReturn(ScenarioSimulationModel.Type.RULE);
+        Command command = scenarioSimulationEditorKogitoWrapperSpy.createNewFileCommand(path);
+        command.execute();
+        verify(scenarioSimulationCreationPopupPresenterMock, times(1)).getSelectedType();
+        verify(kogitoScenarioSimulationBuilderMock, times(1)).populateScenarioSimulationModel(isA(ScenarioSimulationModel.class),
+                                                                                                                   eq(ScenarioSimulationModel.Type.RULE),
+                                                                                                                   eq(""),
+                                                                                                                   remoteCallbackArgumentCaptor.capture());
+        remoteCallbackArgumentCaptor.getValue().callback("");
+        verify(scenarioSimulationEditorKogitoWrapperSpy, times(1)).gotoPath(eq(path));
+        verify(scenarioSimulationEditorKogitoWrapperSpy, times(1)).unmarshallContent(isA(String.class));
+    }
+
+    @Test
+    public void newFileDMN() {
+        when(scenarioSimulationCreationPopupPresenterMock.getSelectedType()).thenReturn(ScenarioSimulationModel.Type.DMN);
+        Command command = scenarioSimulationEditorKogitoWrapperSpy.createNewFileCommand(path);
+        command.execute();
+        verify(scenarioSimulationCreationPopupPresenterMock, times(1)).getSelectedType();
+        verify(kogitoScenarioSimulationBuilderMock, times(1)).populateScenarioSimulationModel(isA(ScenarioSimulationModel.class),
+                                                                                                                   eq(ScenarioSimulationModel.Type.DMN),
+                                                                                                                   eq("selected"),
+                                                                                                                   remoteCallbackArgumentCaptor.capture());
+        remoteCallbackArgumentCaptor.getValue().callback("");
+        verify(scenarioSimulationEditorKogitoWrapperSpy, times(1)).gotoPath(eq(path));
+        verify(scenarioSimulationEditorKogitoWrapperSpy, times(1)).unmarshallContent(isA(String.class));
     }
 }
