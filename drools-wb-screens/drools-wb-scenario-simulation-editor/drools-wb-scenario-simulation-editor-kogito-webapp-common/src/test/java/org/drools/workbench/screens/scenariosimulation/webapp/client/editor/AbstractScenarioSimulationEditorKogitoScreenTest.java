@@ -17,7 +17,7 @@ package org.drools.workbench.screens.scenariosimulation.webapp.client.editor;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.ScenarioSimulationEditorKogitoWrapper;
-import org.drools.workbench.screens.scenariosimulation.kogito.client.popup.ScenarioKogitoCreationPopupPresenter;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.popup.ScenarioSimulationCreationPopupPresenter;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -37,7 +37,7 @@ public class AbstractScenarioSimulationEditorKogitoScreenTest {
     @Mock
     private ScenarioSimulationEditorKogitoWrapper scenarioSimulationEditorKogitoWrapperMock;
     @Mock
-    private ScenarioKogitoCreationPopupPresenter scenarioKogitoCreationPopupPresenterMock;
+    private ScenarioSimulationCreationPopupPresenter scenarioSimulationCreationPopupPresenterMock;
     @Captor
     private ArgumentCaptor<Command> createCommandCaptor;
     @Captor
@@ -60,7 +60,7 @@ public class AbstractScenarioSimulationEditorKogitoScreenTest {
             }
 
         });
-        when(scenarioKogitoCreationPopupPresenterMock.getSelectedPath()).thenReturn("selected");
+        when(scenarioSimulationCreationPopupPresenterMock.getSelectedPath()).thenReturn("selected");
     }
 
     /*

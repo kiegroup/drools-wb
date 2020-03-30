@@ -15,11 +15,19 @@
  */
 package org.drools.workbench.screens.scenariosimulation.kogito.client.dropdown;
 
-import org.drools.workbench.screens.scenariosimulation.client.dropdown.ScenarioSimulationAssetsDropdownProvider;
+import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
+import javax.inject.Named;
 
-/**
- * To be implemented in submodule, defining the source of the DMN files lists.
- */
-public interface ScenarioKogitoCreationAssetsDropdownProvider extends ScenarioSimulationAssetsDropdownProvider {
+import org.drools.workbench.screens.scenariosimulation.client.dropdown.ScenarioSimulationDropdownView;
+import org.kie.workbench.common.widgets.client.assets.dropdown.AbstractKieAssetsDropdown;
 
+@Dependent
+public class ScenarioSimulationCreationAssetsDropdown extends AbstractKieAssetsDropdown {
+
+    @Inject
+    public ScenarioSimulationCreationAssetsDropdown(@Named(ScenarioSimulationDropdownView.BEAN_NAME) ScenarioSimulationDropdownView view,
+                                                    ScenarioSimulationCreationAssetsDropdownProvider dataProvider) {
+        super(view, dataProvider);
+    }
 }
