@@ -25,19 +25,19 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.uberfire.client.workbench.docks.UberfireDock;
 
-import static org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationDocksHandler.SCESIMEDITOR_ID;
+import static org.drools.workbench.screens.scenariosimulation.client.handlers.AbstractScenarioSimulationDocksHandler.SCESIMEDITOR_ID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class ScenarioSimulationDocksHandlerTest {
+public class AbstractScenarioSimulationDocksHandlerTest {
 
     @Mock
     private AuthoringEditorDock authoringWorkbenchDocks;
     @InjectMocks
-    private ScenarioSimulationDocksHandler scenarioSimulationDocksHandler;
+    private AbstractScenarioSimulationDocksHandler abstractScenarioSimulationDocksHandler;
 
 
     private enum MANAGED_DOCKS {
@@ -50,37 +50,37 @@ public class ScenarioSimulationDocksHandlerTest {
 
     @Test
     public void correctAmountOfItems() {
-        assertEquals(MANAGED_DOCKS.values().length, scenarioSimulationDocksHandler.provideDocks("identifier").size());
+        assertEquals(MANAGED_DOCKS.values().length, abstractScenarioSimulationDocksHandler.provideDocks("identifier").size());
     }
 
     @Test
     public void expandToolsDock() {
-        final Collection<UberfireDock> docks = scenarioSimulationDocksHandler.provideDocks("id");
+        final Collection<UberfireDock> docks = abstractScenarioSimulationDocksHandler.provideDocks("id");
         final UberfireDock toolsDock = (UberfireDock) docks.toArray()[MANAGED_DOCKS.TOOLS.ordinal()];
 
-        scenarioSimulationDocksHandler.expandToolsDock();
+        abstractScenarioSimulationDocksHandler.expandToolsDock();
 
         verify(authoringWorkbenchDocks).expandAuthoringDock(eq(toolsDock));
     }
 
     @Test
     public void expandTestResultsDock() {
-        final Collection<UberfireDock> docks = scenarioSimulationDocksHandler.provideDocks("id");
+        final Collection<UberfireDock> docks = abstractScenarioSimulationDocksHandler.provideDocks("id");
         final UberfireDock reportDock = (UberfireDock) docks.toArray()[MANAGED_DOCKS.REPORT.ordinal()];
 
-        scenarioSimulationDocksHandler.expandTestResultsDock();
+        abstractScenarioSimulationDocksHandler.expandTestResultsDock();
 
         verify(authoringWorkbenchDocks).expandAuthoringDock(eq(reportDock));
     }
 
     @Test
     public void setScesimPath() {
-        final Collection<UberfireDock> docks = scenarioSimulationDocksHandler.provideDocks("id");
+        final Collection<UberfireDock> docks = abstractScenarioSimulationDocksHandler.provideDocks("id");
         final UberfireDock settingsDock = (UberfireDock) docks.toArray()[MANAGED_DOCKS.SETTINGS.ordinal()];
         final UberfireDock toolsDock = (UberfireDock) docks.toArray()[MANAGED_DOCKS.TOOLS.ordinal()];
         final UberfireDock cheatSheetDock = (UberfireDock) docks.toArray()[MANAGED_DOCKS.CHEATSHEET.ordinal()];
         String TEST_PATH = "TEST_PATH";
-        scenarioSimulationDocksHandler.setScesimEditorId(TEST_PATH);
+        abstractScenarioSimulationDocksHandler.setScesimEditorId(TEST_PATH);
         assertTrue(settingsDock.getPlaceRequest().getParameters().containsKey(SCESIMEDITOR_ID));
         assertEquals(TEST_PATH, settingsDock.getPlaceRequest().getParameter(SCESIMEDITOR_ID, "null"));
         assertTrue(toolsDock.getPlaceRequest().getParameters().containsKey(SCESIMEDITOR_ID));

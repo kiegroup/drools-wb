@@ -36,12 +36,14 @@ import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.businesscentral.client.editor.strategies.BusinessCentralDMNDataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.businesscentral.client.editor.strategies.BusinessCentralDMODataManagementStrategy;
+import org.drools.workbench.screens.scenariosimulation.businesscentral.client.handlers.ScenarioSimulationBusinessCentralDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorWrapper;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationHasBusyIndicatorDefaultErrorCallback;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestRunnerReportingPanelWrapper;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridWidget;
@@ -103,6 +105,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     private Caller<DMNTypeService> dmnTypeService;
     private Caller<ImportExportService> importExportService;
     private Caller<RunnerReportService> runnerReportService;
+    protected TestRunnerReportingPanelWrapper testRunnerReportingPanel;
 
     public ScenarioSimulationEditorBusinessCentralWrapper() {
         //Zero-parameter constructor for CDI proxies
@@ -114,6 +117,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
                                                           final ImportsWidgetPresenter importsWidget,
                                                           final AsyncPackageDataModelOracleFactory oracleFactory,
                                                           final PlaceManager placeManager,
+                                                          final TestRunnerReportingPanelWrapper testRunnerReportingPanel,
                                                           final Caller<DMNTypeService> dmnTypeService,
                                                           final Caller<ImportExportService> importExportService,
                                                           final Caller<RunnerReportService> runnerReportService) {
@@ -127,14 +131,14 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
         this.oracleFactory = oracleFactory;
         this.placeManager = placeManager;
         this.type = scenarioSimulationEditorPresenter.getType();
+        this.testRunnerReportingPanel = testRunnerReportingPanel;
     }
 
     @OnStartup
     public void onStartup(final ObservablePath path,
                           final PlaceRequest place) {
-        super.init(path,
-                   place,
-                   type);
+        super.init(path, place, type);
+        testRunnerReportingPanel.reset();
         scenarioSimulationEditorPresenter.init(this, (ObservablePath) place.getPath());
     }
 
@@ -180,6 +184,8 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
         super.showDocks();
         final DefaultPlaceRequest placeRequest = new DefaultPlaceRequest(TestToolsPresenter.IDENTIFIER);
         scenarioSimulationEditorPresenter.showDocks(placeManager.getStatus(placeRequest));
+        testRunnerReportingPanel.reset();
+        wrappedRegisterDock(ScenarioSimulationBusinessCentralDocksHandler.TEST_RUNNER_REPORTING_PANEL, testRunnerReportingPanel.asWidget());
         registerTestToolsCallback();
     }
 

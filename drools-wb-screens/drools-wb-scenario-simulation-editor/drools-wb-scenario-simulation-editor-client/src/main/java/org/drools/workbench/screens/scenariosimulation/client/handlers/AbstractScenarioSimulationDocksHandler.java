@@ -21,42 +21,36 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetPresenter;
-import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CoverageReportPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
 import org.kie.workbench.common.widgets.client.docks.AbstractWorkbenchDocksHandler;
 import org.kie.workbench.common.widgets.client.docks.AuthoringEditorDock;
-import org.kie.workbench.common.widgets.client.docks.DockPlaceHolderPlace;
 import org.uberfire.client.workbench.docks.UberfireDock;
 import org.uberfire.client.workbench.docks.UberfireDockPosition;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.mvp.impl.DefaultPlaceRequest;
 
-@ApplicationScoped
-public class ScenarioSimulationDocksHandler
-        extends AbstractWorkbenchDocksHandler {
+/**
+ * Abstract Handler used to register docks in ScenarioSimulation. Subclasses have to be defined in
+ * Business Cental and Kogito Contest
+ */
+public abstract class AbstractScenarioSimulationDocksHandler extends AbstractWorkbenchDocksHandler {
 
     public static final String SCESIMEDITOR_ID = "scesimeditorid";
 
-    public final static String TEST_RUNNER_REPORTING_PANEL = "testRunnerReportingPanel";
-
     @Inject
-    private AuthoringEditorDock authoringWorkbenchDocks;
+    protected AuthoringEditorDock authoringWorkbenchDocks;
 
     private UberfireDock settingsDock;
     private UberfireDock toolsDock;
     private UberfireDock cheatSheetDock;
-    private UberfireDock reportDock;
-    private UberfireDock coverageDock;
 
     @Override
     public Collection<UberfireDock> provideDocks(final String perspectiveIdentifier) {
-
         List<UberfireDock> result = new ArrayList<>();
         settingsDock = new UberfireDock(UberfireDockPosition.EAST,
                                         "SLIDERS",
@@ -73,43 +67,27 @@ public class ScenarioSimulationDocksHandler
                                           new DefaultPlaceRequest(CheatSheetPresenter.IDENTIFIER),
                                           perspectiveIdentifier);
         result.add(cheatSheetDock.withSize(450).withLabel(ScenarioSimulationEditorConstants.INSTANCE.scenarioCheatSheet()));
-        reportDock = new UberfireDock(UberfireDockPosition.EAST,
-                                      "PLAY_CIRCLE",
-                                      new DockPlaceHolderPlace(TEST_RUNNER_REPORTING_PANEL),
-                                      perspectiveIdentifier);
-        result.add(reportDock.withSize(450).withLabel(ScenarioSimulationEditorConstants.INSTANCE.testReport()));
-        coverageDock = new UberfireDock(UberfireDockPosition.EAST,
-                                        "BAR_CHART",
-                                        new DefaultPlaceRequest(CoverageReportPresenter.IDENTIFIER),
-                                        perspectiveIdentifier);
-        result.add(coverageDock.withSize(450).withLabel(ScenarioSimulationEditorConstants.INSTANCE.coverageReport()));
-
         return result;
     }
 
     public void addDocks() {
-        refreshDocks(true,
-                     false);
+        refreshDocks(true, false);
     }
 
     public void removeDocks() {
-        refreshDocks(true,
-                     true);
+        refreshDocks(true, true);
     }
 
     public void expandToolsDock() {
         authoringWorkbenchDocks.expandAuthoringDock(toolsDock);
     }
 
-    public void expandTestResultsDock() {
-        authoringWorkbenchDocks.expandAuthoringDock(reportDock);
-    }
+    public abstract void expandTestResultsDock();
 
     public void setScesimEditorId(String scesimEditorId) {
         settingsDock.getPlaceRequest().addParameter(SCESIMEDITOR_ID, scesimEditorId);
         toolsDock.getPlaceRequest().addParameter(SCESIMEDITOR_ID, scesimEditorId);
         cheatSheetDock.getPlaceRequest().addParameter(SCESIMEDITOR_ID, scesimEditorId);
-        coverageDock.getPlaceRequest().addParameter(SCESIMEDITOR_ID, scesimEditorId);
     }
 
     public Optional<UberfireDock> getSettingsDock(PlaceRequest placeRequest) {
@@ -124,7 +102,4 @@ public class ScenarioSimulationDocksHandler
         return Objects.equals(cheatSheetDock.getPlaceRequest(), placeRequest) ? Optional.of(cheatSheetDock) : Optional.empty();
     }
 
-    public Optional<UberfireDock> getCoverageReportDock(PlaceRequest placeRequest) {
-        return Objects.equals(coverageDock.getPlaceRequest(), placeRequest) ? Optional.of(coverageDock) : Optional.empty();
-    }
 }
