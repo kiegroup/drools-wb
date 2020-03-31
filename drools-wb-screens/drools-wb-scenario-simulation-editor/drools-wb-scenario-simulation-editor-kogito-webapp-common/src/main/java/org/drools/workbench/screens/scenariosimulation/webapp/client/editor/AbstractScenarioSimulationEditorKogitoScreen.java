@@ -31,7 +31,9 @@ import org.uberfire.client.annotations.WorkbenchPartView;
 import org.uberfire.lifecycle.GetContent;
 import org.uberfire.lifecycle.IsDirty;
 import org.uberfire.lifecycle.OnMayClose;
+import org.uberfire.lifecycle.OnStartup;
 import org.uberfire.lifecycle.SetContent;
+import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.Menus;
 
 /**
@@ -39,11 +41,16 @@ import org.uberfire.workbench.model.menu.Menus;
  */
 public abstract class AbstractScenarioSimulationEditorKogitoScreen implements KogitoScreen {
 
-    public static final String IDENTIFIER = "ScenarioSimulationEditor";
+
     public static final String TITLE = "Scenario Simulation - Kogito";
 
     @Inject
     protected ScenarioSimulationEditorKogitoWrapper scenarioSimulationEditorKogitoWrapper;
+
+    @OnStartup
+    public void onStartup(final PlaceRequest place) {
+        scenarioSimulationEditorKogitoWrapper.onStartup(place);
+    }
 
     @OnMayClose
     public boolean mayClose() {

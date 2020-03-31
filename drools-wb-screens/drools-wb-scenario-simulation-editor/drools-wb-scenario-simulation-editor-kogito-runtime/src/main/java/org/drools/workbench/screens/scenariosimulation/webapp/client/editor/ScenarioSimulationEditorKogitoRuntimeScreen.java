@@ -21,7 +21,6 @@ import javax.inject.Inject;
 
 import org.uberfire.client.annotations.WorkbenchClientEditor;
 import org.uberfire.client.mvp.PlaceManager;
-import org.uberfire.lifecycle.OnStartup;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.mvp.impl.DefaultPlaceRequest;
 
@@ -30,13 +29,15 @@ import static org.drools.workbench.screens.scenariosimulation.webapp.client.edit
 /**
  * It represents the KogitoScreen implementation for Scenario Simulation runtime. In other words, this is the editor
  * entry point. Please note, the <code>IDENTIFIED</code> is the unique key to refer this editor. Please use the same
- * (eg in kogito-tooling project) to include it in external project or when calling .setContent method (refer to readme.md
+ * (eg in kogito-tooling project) to include it in external project or when calling .setContent method (refer to README.md
  * for further information */
 @ApplicationScoped
 @WorkbenchClientEditor(identifier = IDENTIFIER)
 public class ScenarioSimulationEditorKogitoRuntimeScreen extends AbstractScenarioSimulationEditorKogitoScreen {
 
-    protected static final PlaceRequest SCENARIO_SIMULATION_KOGITO_RUNTIME_SCREEN_DEFAULT_REQUEST = new DefaultPlaceRequest(IDENTIFIER);
+    protected static final String IDENTIFIER = "ScenarioSimulationEditor";
+    protected static final PlaceRequest SCENARIO_SIMULATION_KOGITO_RUNTIME_SCREEN_DEFAULT_REQUEST =
+            new DefaultPlaceRequest(IDENTIFIER);
 
     protected PlaceManager placeManager;
 
@@ -52,11 +53,6 @@ public class ScenarioSimulationEditorKogitoRuntimeScreen extends AbstractScenari
     @Override
     public PlaceRequest getPlaceRequest() {
         return SCENARIO_SIMULATION_KOGITO_RUNTIME_SCREEN_DEFAULT_REQUEST;
-    }
-
-    @OnStartup
-    public void onStartup(final PlaceRequest place) {
-        scenarioSimulationEditorKogitoWrapper.onStartup(place);
     }
 
 }
