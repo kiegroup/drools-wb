@@ -146,32 +146,45 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
 
     @Override
     public Promise setContent(String fullPath, String content) {
-        return promises.create((success, failure) -> {
-            try {
-                /* Retrieving file name and its relative path */
-                String finalName = NEW_FILE_NAME;
-                String pathString = "/";
-                if (fullPath != null && !fullPath.isEmpty()) {
-                    int idx = fullPath.replaceAll("\\\\", "/").lastIndexOf('/');
-                    finalName = idx >= 0 ? fullPath.substring(idx + 1) : fullPath;
-                    pathString = idx >= 0 ? fullPath.substring(0, idx + 1) : pathString;
-                }
-                final Path path = PathFactory.newPath(finalName, pathString);
+        return promises.create((success, failure) -> manageContent(fullPath, content, success, failure));
+    }
 
-                /* If given content is null, a new file has to be created. */
-                /* Otherwise, the content is un-marshalled and shown in the editor */
-                if (content == null || content.isEmpty()) {
-                    showScenarioSimulationCreationPopup(path);
-                } else {
-                    gotoPath(path);
-                    unmarshallContent(content);
-                }
-                success.onInvoke((Object) null);
-            } catch (Exception e) {
-                /* If any exception occurs, promise returns a failure */
-                failure.onInvoke(e.getMessage());
+    /**
+     * It manages the logic invoked in the Promise created during a <code>setContent()</code> call
+     * @param fullPath
+     * @param content
+     * @param success
+     * @param failure
+     */
+    protected void manageContent(String fullPath,
+                                 String content,
+                                 Promise.PromiseExecutorCallbackFn.ResolveCallbackFn<Object> success,
+                                 Promise.PromiseExecutorCallbackFn.RejectCallbackFn failure) {
+        try {
+            /* Retrieving file name and its relative path */
+            String finalName = NEW_FILE_NAME;
+            String pathString = "/";
+            if (fullPath != null && !fullPath.isEmpty()) {
+                int idx = fullPath.replaceAll("\\\\", "/").lastIndexOf('/');
+                finalName = idx >= 0 ? fullPath.substring(idx + 1) : fullPath;
+                pathString = idx >= 0 ? fullPath.substring(0, idx + 1) : pathString;
             }
-        });
+            final Path path = PathFactory.newPath(finalName, pathString);
+
+            /* If given content is null, a new file has to be created. */
+            /* Otherwise, the content is un-marshalled and shown in the editor */
+            if (content == null || content.isEmpty()) {
+                showScenarioSimulationCreationPopup(path);
+            } else {
+                gotoPath(path);
+                unmarshallContent(content);
+            }
+            success.onInvoke((Object) null);
+        } catch (Exception e) {
+            /* If any exception occurs, promise returns a failure */
+            scenarioSimulationEditorPresenter.sendNotification(e.getMessage(), NotificationEvent.NotificationType.ERROR);
+            failure.onInvoke(e.getMessage());
+        }
     }
 
     @Override
