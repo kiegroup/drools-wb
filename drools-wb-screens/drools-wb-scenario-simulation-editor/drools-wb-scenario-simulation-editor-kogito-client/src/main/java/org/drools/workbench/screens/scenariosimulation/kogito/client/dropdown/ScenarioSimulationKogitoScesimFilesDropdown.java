@@ -25,11 +25,11 @@ import org.kie.workbench.common.widgets.client.assets.dropdown.AbstractKieAssets
 public class ScenarioSimulationKogitoScesimFilesDropdown extends AbstractKieAssetsDropdown {
 
     @Inject
-    public ScenarioSimulationKogitoScesimFilesDropdown(ScenarioSimulationScesimFilesDropdownView view, ScenarioSimulationKogitoScesimFilesDropdownProviderKogitoImpl dataProvider) {
+    public ScenarioSimulationKogitoScesimFilesDropdown(ScenarioSimulationKogitoScesimFilesDropdownView view, ScenarioSimulationKogitoScesimFilesDropdownProviderKogitoImpl dataProvider) {
         super(view, dataProvider);
     }
 
     public IsWidget asWidget() {
-        return ((ScenarioSimulationScesimFilesDropdownView) view).asWidget();
+        return ((ScenarioSimulationKogitoScesimFilesDropdownView) view).asWidget();
     }
 }
