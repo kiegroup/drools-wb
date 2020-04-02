@@ -361,11 +361,11 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
             this.scesimContainer = scesim;
             final JSIScenarioSimulationModelType scenarioSimulationModelType = Js.uncheckedCast(JsUtils.getUnwrappedElement(scesim));
             final ScenarioSimulationModel scenarioSimulationModel = getScenarioSimulationModel(scenarioSimulationModelType);
-            getModelSuccessCallbackMethod(scenarioSimulationModel);
+            onModelSuccessCallbackMethod(scenarioSimulationModel);
         };
     }
 
-    protected void getModelSuccessCallbackMethod(ScenarioSimulationModel model) {
+    protected void onModelSuccessCallbackMethod(ScenarioSimulationModel model) {
         scenarioSimulationEditorPresenter.setPackageName(DEFAULT_PACKAGE);
         DataManagementStrategy dataManagementStrategy;
         if (ScenarioSimulationModel.Type.RULE.equals(model.getSettings().getType())) {
@@ -394,8 +394,8 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
 
     /**
      * It creates the command launched when a user wants to create a new Scenario Simulation file.
-     * @param path
-     * @return
+     * @param path The part where the scesim file is located
+     * @return A <code>Command</code> which will be launched pressing the 'Create' new scesim file button
      */
     protected Command createNewFileCommand(Path path) {
         return () -> {

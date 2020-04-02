@@ -26,7 +26,7 @@ VSCODE Integration
 1. clone https://github.com/kiegroup/kogito-tooling 
 2. Launch yarn run init on kogito-tooling directory
 3. Launch yarn run build:prod (yarn run build:fast to skip tests)
-4. Launch VSCode (you can find it in a path similar to: kogito-tooling/packages/vscode-extension-pack-kogito-kie-editors/.vscode-test/vscode-1.43.0/VSCode-linux-x64/bin/code )
+4. Launch VSCode (you can find it in a path similar to: `kogito-tooling/packages/vscode-extension-pack-kogito-kie-editors/.vscode-test/vscode-1.43.0/VSCode-linux-x64/bin/code` ) with `--enable-proposed-api kiegroup.vscode-extension-pack-kogito-kie-editors` parameter
 5. In VSCode, open kogito-tooling/packages/vscode-extension-pack-kogito-kie-editors/ folder
 6. Launch DEBUG MODE (F5)
 7. Try to open a SCESIM file or to create a new one
