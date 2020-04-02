@@ -32,8 +32,8 @@ import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGr
 import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.KogitoScenarioSimulationBuilder;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.strategies.KogitoDMNDataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.strategies.KogitoDMODataManagementStrategy;
-import org.drools.workbench.screens.scenariosimulation.kogito.client.oracle.KogitoAsyncPackageDataModelOracle;
-import org.drools.workbench.screens.scenariosimulation.kogito.client.popup.ScenarioSimulationCreationPopupPresenter;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.dmo.KogitoAsyncPackageDataModelOracle;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.popup.ScenarioSimulationKogitoCreationPopupPresenter;
 import org.gwtbootstrap3.client.ui.NavTabs;
 import org.gwtbootstrap3.client.ui.TabListItem;
 import org.jboss.errai.common.client.api.RemoteCallback;
@@ -118,7 +118,7 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
     @Mock
     private TabListItem backgroundItemMock;
     @Mock
-    private ScenarioSimulationCreationPopupPresenter scenarioSimulationCreationPopupPresenterMock;
+    private ScenarioSimulationKogitoCreationPopupPresenter scenarioSimulationKogitoCreationPopupPresenterMock;
     @Mock
     private KogitoScenarioSimulationBuilder kogitoScenarioSimulationBuilderMock;
     @Mock
@@ -155,7 +155,7 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
         when(multiPageEditorViewMock.getTabBar()).thenReturn(navBarsMock);
         when(navBarsMock.getWidget(1)).thenReturn(editorItemMock);
         when(navBarsMock.getWidget(2)).thenReturn(backgroundItemMock);
-        when(scenarioSimulationCreationPopupPresenterMock.getSelectedPath()).thenReturn("selected");
+        when(scenarioSimulationKogitoCreationPopupPresenterMock.getSelectedPath()).thenReturn("selected");
 
         when(translationServiceMock.getTranslation(KogitoClientConstants.KieEditorWrapperView_EditTabTitle)).thenReturn(KogitoClientConstants.KieEditorWrapperView_EditTabTitle);
         scenarioSimulationEditorKogitoWrapperSpy = spy(new ScenarioSimulationEditorKogitoWrapper() {
@@ -165,7 +165,7 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
                 this.promises = promisesMock;
                 this.kogitoOracle = kogitoAsyncPackageDataModelOracleMock;
                 this.translationService = translationServiceMock;
-                this.scenarioSimulationCreationPopupPresenter = scenarioSimulationCreationPopupPresenterMock;
+                this.scenarioSimulationKogitoCreationPopupPresenter = scenarioSimulationKogitoCreationPopupPresenterMock;
                 this.scenarioSimulationBuilder = kogitoScenarioSimulationBuilderMock;
             }
 
@@ -344,15 +344,15 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
     @Test
     public void showScenarioSimulationCreationPopup() {
         scenarioSimulationEditorKogitoWrapperSpy.showScenarioSimulationCreationPopup(path);
-        verify(scenarioSimulationCreationPopupPresenterMock, times(1)).show(eq(ScenarioSimulationEditorConstants.INSTANCE.addScenarioSimulation()),
-                                                                                                 isA(Command.class));
+        verify(scenarioSimulationKogitoCreationPopupPresenterMock, times(1)).show(eq(ScenarioSimulationEditorConstants.INSTANCE.addScenarioSimulation()),
+                                                                                  isA(Command.class));
     }
 
     @Test
     public void newFileEmptySelectedType() {
         Command command = scenarioSimulationEditorKogitoWrapperSpy.createNewFileCommand(path);
         command.execute();
-        verify(scenarioSimulationCreationPopupPresenterMock, times(1)).getSelectedType();
+        verify(scenarioSimulationKogitoCreationPopupPresenterMock, times(1)).getSelectedType();
         verify(scenarioSimulationEditorPresenterMock, times(1)).sendNotification(eq(ScenarioSimulationEditorConstants.INSTANCE.missingSelectedType()),
                                                                                                       eq(NotificationEvent.NotificationType.ERROR));
         verify(kogitoScenarioSimulationBuilderMock, never()).populateScenarioSimulationModel(any(), any(), any(), any());
@@ -360,11 +360,11 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
 
     @Test
     public void newFileEmptySelectedDMNPath() {
-        when(scenarioSimulationCreationPopupPresenterMock.getSelectedPath()).thenReturn(null);
-        when(scenarioSimulationCreationPopupPresenterMock.getSelectedType()).thenReturn(ScenarioSimulationModel.Type.DMN);
+        when(scenarioSimulationKogitoCreationPopupPresenterMock.getSelectedPath()).thenReturn(null);
+        when(scenarioSimulationKogitoCreationPopupPresenterMock.getSelectedType()).thenReturn(ScenarioSimulationModel.Type.DMN);
         Command command = scenarioSimulationEditorKogitoWrapperSpy.createNewFileCommand(path);
         command.execute();
-        verify(scenarioSimulationCreationPopupPresenterMock, times(1)).getSelectedType();
+        verify(scenarioSimulationKogitoCreationPopupPresenterMock, times(1)).getSelectedType();
         verify(scenarioSimulationEditorPresenterMock, times(1)).sendNotification(eq(ScenarioSimulationEditorConstants.INSTANCE.missingDmnPath()),
                                                                                                       eq(NotificationEvent.NotificationType.ERROR));
         verify(kogitoScenarioSimulationBuilderMock, never()).populateScenarioSimulationModel(any(), any(), any(), any());
@@ -372,10 +372,10 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
 
     @Test
     public void newFileRule() {
-        when(scenarioSimulationCreationPopupPresenterMock.getSelectedType()).thenReturn(ScenarioSimulationModel.Type.RULE);
+        when(scenarioSimulationKogitoCreationPopupPresenterMock.getSelectedType()).thenReturn(ScenarioSimulationModel.Type.RULE);
         Command command = scenarioSimulationEditorKogitoWrapperSpy.createNewFileCommand(path);
         command.execute();
-        verify(scenarioSimulationCreationPopupPresenterMock, times(1)).getSelectedType();
+        verify(scenarioSimulationKogitoCreationPopupPresenterMock, times(1)).getSelectedType();
         verify(kogitoScenarioSimulationBuilderMock, times(1)).populateScenarioSimulationModel(isA(ScenarioSimulationModel.class),
                                                                                                                    eq(ScenarioSimulationModel.Type.RULE),
                                                                                                                    eq(""),
@@ -387,10 +387,10 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
 
     @Test
     public void newFileDMN() {
-        when(scenarioSimulationCreationPopupPresenterMock.getSelectedType()).thenReturn(ScenarioSimulationModel.Type.DMN);
+        when(scenarioSimulationKogitoCreationPopupPresenterMock.getSelectedType()).thenReturn(ScenarioSimulationModel.Type.DMN);
         Command command = scenarioSimulationEditorKogitoWrapperSpy.createNewFileCommand(path);
         command.execute();
-        verify(scenarioSimulationCreationPopupPresenterMock, times(1)).getSelectedType();
+        verify(scenarioSimulationKogitoCreationPopupPresenterMock, times(1)).getSelectedType();
         verify(kogitoScenarioSimulationBuilderMock, times(1)).populateScenarioSimulationModel(isA(ScenarioSimulationModel.class),
                                                                                                                    eq(ScenarioSimulationModel.Type.DMN),
                                                                                                                    eq("selected"),

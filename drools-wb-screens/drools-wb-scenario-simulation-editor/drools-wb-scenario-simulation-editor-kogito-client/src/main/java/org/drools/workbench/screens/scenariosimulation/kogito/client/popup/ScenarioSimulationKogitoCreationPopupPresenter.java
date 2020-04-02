@@ -22,10 +22,10 @@ import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.uberfire.mvp.Command;
 
 @Dependent
-public class ScenarioSimulationCreationPopupPresenter implements ScenarioSimulationCreationPopup.Presenter {
+public class ScenarioSimulationKogitoCreationPopupPresenter implements ScenarioSimulationKogitoCreationPopup.Presenter {
 
     @Inject
-    protected ScenarioSimulationCreationPopupView scenarioscenarioSimulationCreationPopupView;
+    protected ScenarioSimulationKogitoCreationPopupView scenarioscenarioSimulationCreationPopupView;
 
     @Override
     public void show(String mainTitleText, Command okCommand) {

@@ -25,7 +25,7 @@ import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdown
 import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItemsProvider;
 
 @Dependent
-public class ScenarioSimulationScesimFilesDropdownProviderKogitoImpl implements KieAssetsDropdownItemsProvider {
+public class ScenarioSimulationKogitoScesimFilesDropdownProviderKogitoImpl implements KieAssetsDropdownItemsProvider {
 
     @Override
     public void getItems(Consumer<List<KieAssetsDropdownItem>> assetListConsumer) {

@@ -28,7 +28,7 @@ import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.client.popup.AbstractScenarioPopupView;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder;
-import org.drools.workbench.screens.scenariosimulation.kogito.client.dropdown.ScenarioSimulationCreationAssetsDropdown;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.dropdown.ScenarioSimulationKogitoCreationAssetsDropdown;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
@@ -37,7 +37,7 @@ import org.uberfire.mvp.Command;
 
 @Dependent
 @Templated
-public class ScenarioSimulationCreationPopupView extends AbstractScenarioPopupView implements ScenarioSimulationCreationPopup {
+public class ScenarioSimulationKogitoCreationPopupView extends AbstractScenarioPopupView implements ScenarioSimulationKogitoCreationPopup {
 
     @Inject
     @DataField("rule-button")
@@ -67,7 +67,7 @@ public class ScenarioSimulationCreationPopupView extends AbstractScenarioPopupVi
     protected String selectedPath = null;
 
     @Inject
-    protected ScenarioSimulationCreationAssetsDropdown scenarioSimulationCreationAssetsDropdown;
+    protected ScenarioSimulationKogitoCreationAssetsDropdown scenarioSimulationKogitoCreationAssetsDropdown;
 
     @Override
     public void show(String mainTitleText, Command okCommand) {
@@ -117,12 +117,12 @@ public class ScenarioSimulationCreationPopupView extends AbstractScenarioPopupVi
     }
 
     protected void initializeDropdown() {
-        dmnAssetsDivElement.appendChild(scenarioSimulationCreationAssetsDropdown.getElement());
-        scenarioSimulationCreationAssetsDropdown.clear();
-        scenarioSimulationCreationAssetsDropdown.init();
-        scenarioSimulationCreationAssetsDropdown.initializeDropdown();
-        scenarioSimulationCreationAssetsDropdown.registerOnChangeHandler(() -> {
-            final Optional<KieAssetsDropdownItem> value = scenarioSimulationCreationAssetsDropdown.getValue();
+        dmnAssetsDivElement.appendChild(scenarioSimulationKogitoCreationAssetsDropdown.getElement());
+        scenarioSimulationKogitoCreationAssetsDropdown.clear();
+        scenarioSimulationKogitoCreationAssetsDropdown.init();
+        scenarioSimulationKogitoCreationAssetsDropdown.initializeDropdown();
+        scenarioSimulationKogitoCreationAssetsDropdown.registerOnChangeHandler(() -> {
+            final Optional<KieAssetsDropdownItem> value = scenarioSimulationKogitoCreationAssetsDropdown.getValue();
             selectedPath = value.map(KieAssetsDropdownItem::getValue).orElse(null);
             enableCreateButtonForDMNScenario();
         });

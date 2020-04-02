@@ -22,10 +22,10 @@ import com.google.gwt.user.client.ui.IsWidget;
 import org.kie.workbench.common.widgets.client.assets.dropdown.AbstractKieAssetsDropdown;
 
 @Dependent
-public class ScenarioSimulationScesimFilesDropdown extends AbstractKieAssetsDropdown {
+public class ScenarioSimulationKogitoScesimFilesDropdown extends AbstractKieAssetsDropdown {
 
     @Inject
-    public ScenarioSimulationScesimFilesDropdown(ScenarioSimulationScesimFilesDropdownView view, ScenarioSimulationScesimFilesDropdownProviderKogitoImpl dataProvider) {
+    public ScenarioSimulationKogitoScesimFilesDropdown(ScenarioSimulationScesimFilesDropdownView view, ScenarioSimulationKogitoScesimFilesDropdownProviderKogitoImpl dataProvider) {
         super(view, dataProvider);
     }
 

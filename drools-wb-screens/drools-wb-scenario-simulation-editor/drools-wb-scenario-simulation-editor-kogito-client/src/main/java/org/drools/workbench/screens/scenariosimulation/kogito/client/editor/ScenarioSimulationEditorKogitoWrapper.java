@@ -53,8 +53,8 @@ import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.KogitoD
 import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.KogitoScenarioSimulationBuilder;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.strategies.KogitoDMNDataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.strategies.KogitoDMODataManagementStrategy;
-import org.drools.workbench.screens.scenariosimulation.kogito.client.oracle.KogitoAsyncPackageDataModelOracle;
-import org.drools.workbench.screens.scenariosimulation.kogito.client.popup.ScenarioSimulationCreationPopupPresenter;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.dmo.KogitoAsyncPackageDataModelOracle;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.popup.ScenarioSimulationKogitoCreationPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
 import org.gwtbootstrap3.client.ui.TabListItem;
 import org.jboss.errai.common.client.api.ErrorCallback;
@@ -101,7 +101,7 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     protected KogitoDMNService dmnTypeService;
     protected KogitoAsyncPackageDataModelOracle kogitoOracle;
     protected TranslationService translationService;
-    protected ScenarioSimulationCreationPopupPresenter scenarioSimulationCreationPopupPresenter;
+    protected ScenarioSimulationKogitoCreationPopupPresenter scenarioSimulationKogitoCreationPopupPresenter;
     protected KogitoScenarioSimulationBuilder scenarioSimulationBuilder;
 
     public ScenarioSimulationEditorKogitoWrapper() {
@@ -119,7 +119,7 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
             final KogitoDMNService dmnTypeService,
             final KogitoAsyncPackageDataModelOracle kogitoOracle,
             final TranslationService translationService,
-            final ScenarioSimulationCreationPopupPresenter scenarioSimulationCreationPopupPresenter,
+            final ScenarioSimulationKogitoCreationPopupPresenter scenarioSimulationKogitoCreationPopupPresenter,
             final KogitoScenarioSimulationBuilder scenarioSimulationBuilder) {
         super(scenarioSimulationEditorPresenter.getView(), placeManager, multiPageEditorContainerView);
         this.scenarioSimulationEditorPresenter = scenarioSimulationEditorPresenter;
@@ -130,7 +130,7 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
         this.kogitoOracle = kogitoOracle;
         this.translationService = translationService;
         this.scenarioSimulationBuilder = scenarioSimulationBuilder;
-        this.scenarioSimulationCreationPopupPresenter = scenarioSimulationCreationPopupPresenter;
+        this.scenarioSimulationKogitoCreationPopupPresenter = scenarioSimulationKogitoCreationPopupPresenter;
     }
 
     @Override
@@ -384,12 +384,12 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     }
 
     /**
-     * It shows the <code>ScenarioSimulationCreationPopup</code> given the file location, used
+     * It shows the <code>ScenarioSimulationKogitoCreationPopup</code> given the file location, used
      * @param path
      */
     protected void showScenarioSimulationCreationPopup(Path path) {
-        scenarioSimulationCreationPopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.addScenarioSimulation(),
-                                                      createNewFileCommand(path));
+        scenarioSimulationKogitoCreationPopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.addScenarioSimulation(),
+                                                            createNewFileCommand(path));
     }
 
     /**
@@ -399,7 +399,7 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
      */
     protected Command createNewFileCommand(Path path) {
         return () -> {
-            final ScenarioSimulationModel.Type selectedType = scenarioSimulationCreationPopupPresenter.getSelectedType();
+            final ScenarioSimulationModel.Type selectedType = scenarioSimulationKogitoCreationPopupPresenter.getSelectedType();
             if (selectedType == null) {
                 scenarioSimulationEditorPresenter.sendNotification(ScenarioSimulationEditorConstants.INSTANCE.missingSelectedType(),
                                                                    NotificationEvent.NotificationType.ERROR);
@@ -407,7 +407,7 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
             }
             String value = "";
             if (ScenarioSimulationModel.Type.DMN.equals(selectedType)) {
-                value = scenarioSimulationCreationPopupPresenter.getSelectedPath();
+                value = scenarioSimulationKogitoCreationPopupPresenter.getSelectedPath();
                 if (value == null || value.isEmpty()) {
                     scenarioSimulationEditorPresenter.sendNotification(ScenarioSimulationEditorConstants.INSTANCE.missingDmnPath(),
                                                                        NotificationEvent.NotificationType.ERROR);

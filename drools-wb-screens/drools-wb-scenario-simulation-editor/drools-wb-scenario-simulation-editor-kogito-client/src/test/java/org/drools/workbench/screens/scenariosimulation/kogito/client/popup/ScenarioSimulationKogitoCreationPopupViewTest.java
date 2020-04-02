@@ -24,7 +24,7 @@ import elemental2.dom.HTMLLabelElement;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder;
-import org.drools.workbench.screens.scenariosimulation.kogito.client.dropdown.ScenarioSimulationCreationAssetsDropdown;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.dropdown.ScenarioSimulationKogitoCreationAssetsDropdown;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,7 +44,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class ScenarioSimulationCreationPopupViewTest {
+public class ScenarioSimulationKogitoCreationPopupViewTest {
 
     @Mock
     private HTMLInputElement dmnButtonMock;
@@ -61,7 +61,7 @@ public class ScenarioSimulationCreationPopupViewTest {
     @Mock
     private ClickEvent clickEventMock;
     @Mock
-    private ScenarioSimulationCreationAssetsDropdown scenarioSimulationCreationAssetsDropdownMock;
+    private ScenarioSimulationKogitoCreationAssetsDropdown scenarioSimulationKogitoCreationAssetsDropdownMock;
     @Mock
     private Modal modalMock;
     @Mock
@@ -73,13 +73,13 @@ public class ScenarioSimulationCreationPopupViewTest {
     @Mock
     private HTMLLabelElement dmnAssetsLabelElementMock;
 
-    private ScenarioSimulationCreationPopupView scenarioSimulationCreationPopupViewSpy;
+    private ScenarioSimulationKogitoCreationPopupView scenarioSimulationCreationPopupViewSpy;
 
     @Before
     public void setup() {
-        scenarioSimulationCreationPopupViewSpy = spy(new ScenarioSimulationCreationPopupView() {
+        scenarioSimulationCreationPopupViewSpy = spy(new ScenarioSimulationKogitoCreationPopupView() {
             {
-                scenarioSimulationCreationAssetsDropdown = scenarioSimulationCreationAssetsDropdownMock;
+                scenarioSimulationKogitoCreationAssetsDropdown = scenarioSimulationKogitoCreationAssetsDropdownMock;
                 dmnButton = dmnButtonMock;
                 ruleButton = ruleButtonMock;
                 okButton = okButtonMock;
@@ -92,7 +92,7 @@ public class ScenarioSimulationCreationPopupViewTest {
                 selectedPath = "";
             }
         });
-        when(scenarioSimulationCreationAssetsDropdownMock.getElement()).thenReturn(htmlElementMock);
+        when(scenarioSimulationKogitoCreationAssetsDropdownMock.getElement()).thenReturn(htmlElementMock);
     }
 
     @Test
@@ -116,10 +116,10 @@ public class ScenarioSimulationCreationPopupViewTest {
     public void initializeDropdown() {
         scenarioSimulationCreationPopupViewSpy.initializeDropdown();
         verify(dmnAssetsDivElementMock, times(1)).appendChild(eq(htmlElementMock));
-        verify(scenarioSimulationCreationAssetsDropdownMock, times(1)).clear();
-        verify(scenarioSimulationCreationAssetsDropdownMock, times(1)).init();
-        verify(scenarioSimulationCreationAssetsDropdownMock, times(1)).initializeDropdown();
-        verify(scenarioSimulationCreationAssetsDropdownMock, times(1)).registerOnChangeHandler(isA(Command.class));
+        verify(scenarioSimulationKogitoCreationAssetsDropdownMock, times(1)).clear();
+        verify(scenarioSimulationKogitoCreationAssetsDropdownMock, times(1)).init();
+        verify(scenarioSimulationKogitoCreationAssetsDropdownMock, times(1)).initializeDropdown();
+        verify(scenarioSimulationKogitoCreationAssetsDropdownMock, times(1)).registerOnChangeHandler(isA(Command.class));
 
     }
 
