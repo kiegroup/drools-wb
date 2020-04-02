@@ -22,6 +22,7 @@ import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.FactMappingType;
+import org.drools.scenariosimulation.api.model.FactMappingValueType;
 import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScesimModelDescriptor;
@@ -134,6 +135,8 @@ public class JSInteropApiConverter {
             final FactMapping added = toPopulate.addFactMapping(getFactIdentifier(jsiFactMappingType.getFactIdentifier()), getExpressionIdentifier(jsiFactMappingType.getExpressionIdentifier()));
             added.setFactAlias(jsiFactMappingType.getFactAlias());
             added.setExpressionAlias(jsiFactMappingType.getExpressionAlias());
+            added.setColumnWidth(jsiFactMappingType.getColumnWidth());
+            added.setFactMappingValueType(FactMappingValueType.valueOf(jsiFactMappingType.getFactMappingValueType()));
             final JSIGenericTypes genericTypes = jsiFactMappingType.getGenericTypes();
             if (genericTypes != null && genericTypes.getString() != null) {
                 added.setGenericTypes(genericTypes.getString());
