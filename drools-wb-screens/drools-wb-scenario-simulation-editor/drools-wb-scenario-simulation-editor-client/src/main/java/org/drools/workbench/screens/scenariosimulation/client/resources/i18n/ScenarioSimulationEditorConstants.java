@@ -44,6 +44,8 @@ public interface ScenarioSimulationEditorConstants
 
     String remove();
 
+    String currentlyNotAvailable();
+
     String invalidDefinitionDisabled();
 
     String testTools();
@@ -264,6 +266,8 @@ public interface ScenarioSimulationEditorConstants
 
     String dmnPathErrorLabel(String dmnPath);
 
+    String dmnPathErrorDetailedLabel(String dmnPath);
+
     String coverageReport();
 
     String uploadWarning();
@@ -364,13 +368,17 @@ public interface ScenarioSimulationEditorConstants
 
     String commonCheatSheetBackground(String background, String model);
 
+    String createButton();
+
     String saveButton();
 
     String removeButton();
 
     String cancelButton();
 
-    String collectionEditorAddNewItem();
+    String addNewListItem();
+
+    String addNewMapItem();
 
     String createLabelList();
 
