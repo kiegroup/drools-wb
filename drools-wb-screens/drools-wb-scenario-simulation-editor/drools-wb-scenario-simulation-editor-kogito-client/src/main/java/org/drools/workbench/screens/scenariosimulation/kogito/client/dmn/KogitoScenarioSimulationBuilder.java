@@ -336,7 +336,13 @@ public class KogitoScenarioSimulationBuilder {
         return toReturn;
     }
 
-    protected static double getColumnWidth(String expressionIdentifierName) {
+    /**
+     * It defines the column width of a new column, based on its
+     * <code>FactMapping.expressionIdentifier.getName()</code> field
+     * @param expressionIdentifierName
+     * @return
+     */
+    protected double getColumnWidth(String expressionIdentifierName) {
         ExpressionIdentifier.NAME expressionName;
         try {
             expressionName = ExpressionIdentifier.NAME.valueOf(expressionIdentifierName);
