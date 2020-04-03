@@ -205,6 +205,17 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
         assertEquals("path/", pathArgumentCaptor.getValue().toURI());
     }
 
+
+    @Test
+    public void manageContentFileWithoutPath() {
+        scenarioSimulationEditorKogitoWrapperSpy.manageContent("file.scesim", "value", resolveCallbackFnMock, rejectCallbackFnMock);
+        verify(scenarioSimulationEditorKogitoWrapperSpy, never()).showScenarioSimulationCreationPopup(any());
+        verify(scenarioSimulationEditorKogitoWrapperSpy, times(1)).gotoPath(pathArgumentCaptor.capture());
+        verify(scenarioSimulationEditorKogitoWrapperSpy, times(1)).unmarshallContent(eq("value"));
+        assertEquals("file.scesim", pathArgumentCaptor.getValue().getFileName());
+        assertEquals("path/", pathArgumentCaptor.getValue().toURI());
+    }
+
     @Test
     public void manageContentNullPath() {
         scenarioSimulationEditorKogitoWrapperSpy.manageContent("", "value", resolveCallbackFnMock, rejectCallbackFnMock);
@@ -216,12 +227,22 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
     }
 
     @Test
-    public void manageContentNullContent() {
+    public void manageContentNullContentAndPath() {
         scenarioSimulationEditorKogitoWrapperSpy.manageContent(null, null, resolveCallbackFnMock, rejectCallbackFnMock);
         verify(scenarioSimulationEditorKogitoWrapperSpy, times(1)).showScenarioSimulationCreationPopup(pathArgumentCaptor.capture());
         verify(scenarioSimulationEditorKogitoWrapperSpy, never()).gotoPath(any());
         verify(scenarioSimulationEditorKogitoWrapperSpy, never()).unmarshallContent(any());
         assertEquals("new-file.scesim", pathArgumentCaptor.getValue().getFileName());
+        assertEquals("/", pathArgumentCaptor.getValue().toURI());
+    }
+
+    @Test
+    public void manageContentNullContent() {
+        scenarioSimulationEditorKogitoWrapperSpy.manageContent("path/file.scesim", null, resolveCallbackFnMock, rejectCallbackFnMock);
+        verify(scenarioSimulationEditorKogitoWrapperSpy, times(1)).showScenarioSimulationCreationPopup(pathArgumentCaptor.capture());
+        verify(scenarioSimulationEditorKogitoWrapperSpy, never()).gotoPath(any());
+        verify(scenarioSimulationEditorKogitoWrapperSpy, never()).unmarshallContent(any());
+        assertEquals("file.scesim", pathArgumentCaptor.getValue().getFileName());
         assertEquals("/", pathArgumentCaptor.getValue().toURI());
     }
 

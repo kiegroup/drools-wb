@@ -15,6 +15,9 @@
  */
 package org.drools.workbench.screens.scenariosimulation.kogito.client.popup;
 
+import java.util.Collections;
+import java.util.Optional;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import elemental2.dom.HTMLDivElement;
@@ -28,6 +31,9 @@ import org.drools.workbench.screens.scenariosimulation.kogito.client.dropdown.Sc
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.uberfire.client.views.pfly.widgets.Button;
 import org.uberfire.client.views.pfly.widgets.Modal;
@@ -72,6 +78,8 @@ public class ScenarioSimulationKogitoCreationPopupViewTest {
     private HTMLLabelElement sourceTypeLabelElementMock;
     @Mock
     private HTMLLabelElement dmnAssetsLabelElementMock;
+    @Captor
+    private ArgumentCaptor<Command> commandArgumentCaptor;
 
     private ScenarioSimulationKogitoCreationPopupView scenarioSimulationCreationPopupViewSpy;
 
@@ -114,13 +122,16 @@ public class ScenarioSimulationKogitoCreationPopupViewTest {
 
     @Test
     public void initializeDropdown() {
+        when(scenarioSimulationKogitoCreationAssetsDropdownMock.getValue()).thenReturn(Optional.of(new KieAssetsDropdownItem("text", "subtext", "path/file.dmn", Collections.emptyMap())));
         scenarioSimulationCreationPopupViewSpy.initializeDropdown();
         verify(dmnAssetsDivElementMock, times(1)).appendChild(eq(htmlElementMock));
         verify(scenarioSimulationKogitoCreationAssetsDropdownMock, times(1)).clear();
         verify(scenarioSimulationKogitoCreationAssetsDropdownMock, times(1)).init();
         verify(scenarioSimulationKogitoCreationAssetsDropdownMock, times(1)).initializeDropdown();
-        verify(scenarioSimulationKogitoCreationAssetsDropdownMock, times(1)).registerOnChangeHandler(isA(Command.class));
-
+        verify(scenarioSimulationKogitoCreationAssetsDropdownMock, times(1)).registerOnChangeHandler(commandArgumentCaptor.capture());
+        commandArgumentCaptor.getValue().execute();
+        verify(scenarioSimulationCreationPopupViewSpy, times(1)).enableCreateButtonForDMNScenario();
+        assertEquals("path/file.dmn", scenarioSimulationCreationPopupViewSpy.selectedPath);
     }
 
     @Test
