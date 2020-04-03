@@ -213,7 +213,7 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
         verify(scenarioSimulationEditorKogitoWrapperSpy, times(1)).gotoPath(pathArgumentCaptor.capture());
         verify(scenarioSimulationEditorKogitoWrapperSpy, times(1)).unmarshallContent(eq("value"));
         assertEquals("file.scesim", pathArgumentCaptor.getValue().getFileName());
-        assertEquals("path/", pathArgumentCaptor.getValue().toURI());
+        assertEquals("/", pathArgumentCaptor.getValue().toURI());
     }
 
     @Test
@@ -243,7 +243,7 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
         verify(scenarioSimulationEditorKogitoWrapperSpy, never()).gotoPath(any());
         verify(scenarioSimulationEditorKogitoWrapperSpy, never()).unmarshallContent(any());
         assertEquals("file.scesim", pathArgumentCaptor.getValue().getFileName());
-        assertEquals("/", pathArgumentCaptor.getValue().toURI());
+        assertEquals("path/", pathArgumentCaptor.getValue().toURI());
     }
 
     @Test
