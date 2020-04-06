@@ -342,7 +342,7 @@ public class KogitoScenarioSimulationBuilder {
      * @param expressionIdentifierName
      * @return
      */
-    protected double getColumnWidth(String expressionIdentifierName) {
+    protected static double getColumnWidth(String expressionIdentifierName) {
         ExpressionIdentifier.NAME expressionName;
         try {
             expressionName = ExpressionIdentifier.NAME.valueOf(expressionIdentifierName);
