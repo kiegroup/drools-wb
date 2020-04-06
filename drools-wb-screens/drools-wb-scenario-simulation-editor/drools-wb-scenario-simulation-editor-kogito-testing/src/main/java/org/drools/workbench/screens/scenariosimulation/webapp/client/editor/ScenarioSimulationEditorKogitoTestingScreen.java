@@ -17,6 +17,7 @@
 package org.drools.workbench.screens.scenariosimulation.webapp.client.editor;
 
 import java.util.Collections;
+import java.util.function.Consumer;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -31,12 +32,14 @@ import org.jboss.errai.common.client.api.ErrorCallback;
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.backend.vfs.PathFactory;
+import org.uberfire.client.annotations.WorkbenchMenu;
 import org.uberfire.client.annotations.WorkbenchScreen;
 import org.uberfire.client.promise.Promises;
 import org.uberfire.lifecycle.OnStartup;
 import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.mvp.impl.DefaultPlaceRequest;
+import org.uberfire.workbench.model.menu.Menus;
 
 import static org.drools.workbench.screens.scenariosimulation.webapp.client.editor.ScenarioSimulationEditorKogitoTestingScreen.IDENTIFIER;
 
@@ -96,6 +99,12 @@ public class ScenarioSimulationEditorKogitoTestingScreen extends AbstractScenari
         });
         addTestingMenus(scenarioSimulationEditorKogitoWrapper.getFileMenuBuilder());
         super.onStartup(place);
+    }
+
+    @WorkbenchMenu
+    //AppFormer does not generate menus when the @WorkbenchMenu annotation is on the super class
+    public void setMenus(final Consumer<Menus> menusConsumer) {
+        scenarioSimulationEditorKogitoWrapper.setMenus(menusConsumer);
     }
 
     protected void loadFile() {
