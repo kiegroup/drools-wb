@@ -17,35 +17,26 @@
 package org.drools.workbench.screens.scenariosimulation.webapp.client.editor;
 
 import java.util.Collections;
-import java.util.function.Consumer;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioMenuItem;
 import org.drools.workbench.screens.scenariosimulation.client.popup.FileUploadPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.webapp.client.popup.LoadScesimPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds.TestingVFSService;
 import org.gwtbootstrap3.client.ui.Popover;
 import org.jboss.errai.common.client.api.ErrorCallback;
-import org.kie.workbench.common.kogito.client.editor.MultiPageEditorContainerView;
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.backend.vfs.PathFactory;
-import org.uberfire.client.annotations.WorkbenchMenu;
-import org.uberfire.client.annotations.WorkbenchPartTitle;
-import org.uberfire.client.annotations.WorkbenchPartTitleDecoration;
-import org.uberfire.client.annotations.WorkbenchPartView;
 import org.uberfire.client.annotations.WorkbenchScreen;
 import org.uberfire.client.promise.Promises;
-import org.uberfire.lifecycle.OnMayClose;
 import org.uberfire.lifecycle.OnStartup;
 import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.mvp.impl.DefaultPlaceRequest;
-import org.uberfire.workbench.model.menu.Menus;
 
 import static org.drools.workbench.screens.scenariosimulation.webapp.client.editor.ScenarioSimulationEditorKogitoTestingScreen.IDENTIFIER;
 
@@ -62,16 +53,16 @@ public class ScenarioSimulationEditorKogitoTestingScreen extends AbstractScenari
     private static final PlaceRequest SCENARIO_SIMULATION_KOGITO_TESTING_SCREEN_DEFAULT_REQUEST = new DefaultPlaceRequest(IDENTIFIER);
 
     @Inject
-    private LoadScesimPopupPresenter loadScesimPopupPresenter;
+    protected LoadScesimPopupPresenter loadScesimPopupPresenter;
 
     @Inject
-    private FileUploadPopupPresenter fileUploadPopupPresenter;
+    protected FileUploadPopupPresenter fileUploadPopupPresenter;
 
     @Inject
-    private TestingVFSService testingVFSService;
+    protected TestingVFSService testingVFSService;
 
     @Inject
-    private Promises promises;
+    protected Promises promises;
 
     @Override
     public PlaceRequest getPlaceRequest() {
@@ -79,6 +70,7 @@ public class ScenarioSimulationEditorKogitoTestingScreen extends AbstractScenari
     }
 
     @OnStartup
+    @Override
     public void onStartup(final PlaceRequest place) {
         testingVFSService.getItemsByPath(SCESIM_PATH, response -> {
             // do nothing
@@ -103,32 +95,7 @@ public class ScenarioSimulationEditorKogitoTestingScreen extends AbstractScenari
             }
         });
         addTestingMenus(scenarioSimulationEditorKogitoWrapper.getFileMenuBuilder());
-        scenarioSimulationEditorKogitoWrapper.onStartup(place);
-    }
-
-    @OnMayClose
-    public boolean mayClose() {
-        return scenarioSimulationEditorKogitoWrapper.mayClose();
-    }
-
-    @WorkbenchPartTitle
-    public String getTitleText() {
-        return "Scenario Simulation Kogito Screen";
-    }
-
-    @WorkbenchPartTitleDecoration
-    public IsWidget getTitle() {
-        return scenarioSimulationEditorKogitoWrapper.getTitle();
-    }
-
-    @WorkbenchPartView
-    public MultiPageEditorContainerView getWidget() {
-        return scenarioSimulationEditorKogitoWrapper.getWidget();
-    }
-
-    @WorkbenchMenu
-    public void setMenus(final Consumer<Menus> menusConsumer) {
-        scenarioSimulationEditorKogitoWrapper.setMenus(menusConsumer);
+        super.onStartup(place);
     }
 
     protected void loadFile() {
