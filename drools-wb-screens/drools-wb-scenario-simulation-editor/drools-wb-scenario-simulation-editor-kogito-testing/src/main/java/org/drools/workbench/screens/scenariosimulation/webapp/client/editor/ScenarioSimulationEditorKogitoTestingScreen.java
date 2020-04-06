@@ -28,6 +28,7 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioMen
 import org.drools.workbench.screens.scenariosimulation.client.popup.FileUploadPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.webapp.client.popup.LoadScesimPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds.TestingVFSService;
+import org.gwtbootstrap3.client.ui.Popover;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.kie.workbench.common.kogito.client.editor.MultiPageEditorContainerView;
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
@@ -161,7 +162,6 @@ public class ScenarioSimulationEditorKogitoTestingScreen extends AbstractScenari
                                       okImportCommand);
     }
 
-    @Override
     protected void saveFile(final Path path, final String content) {
         testingVFSService.saveFile(path, content,
                                    item -> GWT.log("Saved " + item),
@@ -169,7 +169,7 @@ public class ScenarioSimulationEditorKogitoTestingScreen extends AbstractScenari
     }
 
     protected void addTestingMenus(FileMenuBuilder fileMenuBuilder) {
-        fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("New", () -> newFile(SCESIM_PATH)));
+        fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("New", () -> scenarioSimulationEditorKogitoWrapper.setContent(null, null)));
         fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("Load", this::loadFile));
         fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("Save", () -> scenarioSimulationEditorKogitoWrapper.getContent().then(xml -> {
             saveFile(scenarioSimulationEditorKogitoWrapper.getCurrentPath(), xml);
@@ -183,5 +183,9 @@ public class ScenarioSimulationEditorKogitoTestingScreen extends AbstractScenari
             GWT.log(prependMessage + ": " + message, throwable);
             return false;
         };
+    }
+
+    protected void showPopover(String title, String content) {
+        new Popover(title, content).show();
     }
 }

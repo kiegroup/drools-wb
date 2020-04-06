@@ -23,7 +23,7 @@ import javax.inject.Inject;
 import elemental2.dom.HTMLDivElement;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.client.popup.AbstractScenarioPopupView;
-import org.drools.workbench.screens.scenariosimulation.kogito.client.popup.ScenarioKogitoCreationPopup;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.popup.ScenarioSimulationKogitoCreationPopup;
 import org.drools.workbench.screens.scenariosimulation.webapp.client.dropdown.LoadScenarioSimulationDropdown;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
@@ -32,7 +32,7 @@ import org.uberfire.mvp.Command;
 
 @Dependent
 @Templated
-public class LoadScesimPopupView extends AbstractScenarioPopupView implements ScenarioKogitoCreationPopup {
+public class LoadScesimPopupView extends AbstractScenarioPopupView implements ScenarioSimulationKogitoCreationPopup {
 
     @Inject
     @DataField("assets")

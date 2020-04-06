@@ -25,7 +25,7 @@ import java.util.stream.Stream;
 
 import javax.enterprise.context.ApplicationScoped;
 
-import org.drools.workbench.screens.scenariosimulation.kogito.client.fakes.KogitoAsyncPackageDataModelOracle;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.dmo.KogitoAsyncPackageDataModelOracle;
 import org.kie.soup.project.datamodel.oracle.DataType;
 import org.kie.soup.project.datamodel.oracle.FieldAccessorsAndMutators;
 import org.kie.soup.project.datamodel.oracle.ModelField;

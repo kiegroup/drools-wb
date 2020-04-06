@@ -19,11 +19,11 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
-import org.drools.workbench.screens.scenariosimulation.kogito.client.popup.ScenarioKogitoCreationPopup;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.popup.ScenarioSimulationKogitoCreationPopup;
 import org.uberfire.mvp.Command;
 
 @Dependent
-public class LoadScesimPopupPresenter implements ScenarioKogitoCreationPopup.Presenter {
+public class LoadScesimPopupPresenter implements ScenarioSimulationKogitoCreationPopup.Presenter {
 
     @Inject
     protected LoadScesimPopupView loadScesimPopupView;
