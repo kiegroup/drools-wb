@@ -23,8 +23,9 @@ import javax.inject.Inject;
 import elemental2.dom.HTMLDivElement;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.client.popup.AbstractScenarioPopupView;
+import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.popup.ScenarioSimulationKogitoCreationPopup;
-import org.drools.workbench.screens.scenariosimulation.webapp.client.dropdown.LoadScenarioSimulationDropdown;
+import org.drools.workbench.screens.scenariosimulation.webapp.client.dropdown.ScenarioSimulationKogitoLoadingScesimDropdown;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
 import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
@@ -32,7 +33,7 @@ import org.uberfire.mvp.Command;
 
 @Dependent
 @Templated
-public class LoadScesimPopupView extends AbstractScenarioPopupView implements ScenarioSimulationKogitoCreationPopup {
+public class ScenarioSimulationKogitoLoadingScesimPopupView extends AbstractScenarioPopupView implements ScenarioSimulationKogitoCreationPopup {
 
     @Inject
     @DataField("assets")
@@ -43,20 +44,20 @@ public class LoadScesimPopupView extends AbstractScenarioPopupView implements Sc
     protected String selectedPath = null;
 
     @Inject
-    protected LoadScenarioSimulationDropdown loadScenarioSimulationDropdown;
+    protected ScenarioSimulationKogitoLoadingScesimDropdown scenarioSimulationKogitoLoadingScesimDropdown;
 
     @Override
     public void show(String mainTitleText, Command okCommand) {
-        cancelButton.setText("CANCEL");
-        divElement.appendChild(loadScenarioSimulationDropdown.getElement());
-        loadScenarioSimulationDropdown.clear();
-        loadScenarioSimulationDropdown.init();
-        loadScenarioSimulationDropdown.initializeDropdown();
-        loadScenarioSimulationDropdown.registerOnChangeHandler(() -> {
-            final Optional<KieAssetsDropdownItem> value = loadScenarioSimulationDropdown.getValue();
+        cancelButton.setText(ScenarioSimulationEditorConstants.INSTANCE.cancelButton());
+        divElement.appendChild(scenarioSimulationKogitoLoadingScesimDropdown.getElement());
+        scenarioSimulationKogitoLoadingScesimDropdown.clear();
+        scenarioSimulationKogitoLoadingScesimDropdown.init();
+        scenarioSimulationKogitoLoadingScesimDropdown.initializeDropdown();
+        scenarioSimulationKogitoLoadingScesimDropdown.registerOnChangeHandler(() -> {
+            final Optional<KieAssetsDropdownItem> value = scenarioSimulationKogitoLoadingScesimDropdown.getValue();
             selectedPath = value.map(KieAssetsDropdownItem::getValue).orElse(null);
         });
-        super.show(mainTitleText, "LOAD", okCommand);
+        super.show(mainTitleText, ScenarioSimulationEditorConstants.INSTANCE.importLabel(), okCommand);
     }
 
     @Override

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds;
+package org.drools.workbench.screens.scenariosimulation.webapp.client.services;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,8 +35,8 @@ import org.uberfire.commons.uuid.UUID;
 import org.uberfire.mocks.CallerMock;
 import org.uberfire.mvp.PlaceRequest;
 
-import static org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds.TestingVFSService.CONTENT_PARAMETER_NAME;
-import static org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds.TestingVFSService.FILE_NAME_PARAMETER_NAME;
+import static org.drools.workbench.screens.scenariosimulation.webapp.client.services.TestingVFSService.CONTENT_PARAMETER_NAME;
+import static org.drools.workbench.screens.scenariosimulation.webapp.client.services.TestingVFSService.FILE_NAME_PARAMETER_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;

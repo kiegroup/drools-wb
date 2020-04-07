@@ -25,7 +25,7 @@ import javax.inject.Inject;
 
 import com.google.gwt.core.client.GWT;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.dropdown.ScenarioSimulationKogitoCreationAssetsDropdownProvider;
-import org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds.TestingVFSService;
+import org.drools.workbench.screens.scenariosimulation.webapp.client.services.TestingVFSService;
 import org.jboss.errai.bus.client.api.messaging.Message;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
@@ -35,7 +35,7 @@ import org.uberfire.backend.vfs.Path;
 import static org.drools.workbench.screens.scenariosimulation.webapp.client.editor.ScenarioSimulationEditorKogitoTestingScreen.DMN_PATH;
 
 @Dependent
-public class KogitoTestingDmnAssetsDropdownProvider implements ScenarioSimulationKogitoCreationAssetsDropdownProvider {
+public class ScenarioSimulationKogitoTestingCreationAssetsDropdownProviderImpl implements ScenarioSimulationKogitoCreationAssetsDropdownProvider {
 
     private static final String FILE_SUFFIX = "dmn";
 

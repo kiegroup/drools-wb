@@ -25,8 +25,9 @@ import javax.inject.Inject;
 import com.google.gwt.core.client.GWT;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioMenuItem;
 import org.drools.workbench.screens.scenariosimulation.client.popup.FileUploadPopupPresenter;
-import org.drools.workbench.screens.scenariosimulation.webapp.client.popup.LoadScesimPopupPresenter;
-import org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds.TestingVFSService;
+import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
+import org.drools.workbench.screens.scenariosimulation.webapp.client.popup.ScenarioSimulationKogitoLoadingScesimPopupPresenter;
+import org.drools.workbench.screens.scenariosimulation.webapp.client.services.TestingVFSService;
 import org.gwtbootstrap3.client.ui.Popover;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
@@ -56,7 +57,7 @@ public class ScenarioSimulationEditorKogitoTestingScreen extends AbstractScenari
     private static final PlaceRequest SCENARIO_SIMULATION_KOGITO_TESTING_SCREEN_DEFAULT_REQUEST = new DefaultPlaceRequest(IDENTIFIER);
 
     @Inject
-    protected LoadScesimPopupPresenter loadScesimPopupPresenter;
+    protected ScenarioSimulationKogitoLoadingScesimPopupPresenter loadScesimPopupPresenter;
 
     @Inject
     protected FileUploadPopupPresenter fileUploadPopupPresenter;
@@ -75,33 +76,28 @@ public class ScenarioSimulationEditorKogitoTestingScreen extends AbstractScenari
     @OnStartup
     @Override
     public void onStartup(final PlaceRequest place) {
-        testingVFSService.getItemsByPath(SCESIM_PATH, response -> {
-            // do nothing
-        }, (message, throwable) -> {
-            if (throwable instanceof org.uberfire.java.nio.file.NotDirectoryException) {
-                testingVFSService.createDirectory(SCESIM_PATH);
-                return true;
-            } else {
-                GWT.log(message.toString(), throwable);
-                return false;
-            }
-        });
-        testingVFSService.getItemsByPath(DMN_PATH, response -> {
-            // do nothing
-        }, (message, throwable) -> {
-            if (throwable instanceof org.uberfire.java.nio.file.NotDirectoryException) {
-                testingVFSService.createDirectory(DMN_PATH);
-                return true;
-            } else {
-                GWT.log(message.toString(), throwable);
-                return false;
-            }
-        });
+        getItemsByPath(SCESIM_PATH);
+        getItemsByPath(DMN_PATH);
         addTestingMenus(scenarioSimulationEditorKogitoWrapper.getFileMenuBuilder());
         super.onStartup(place);
     }
 
+    protected void getItemsByPath(Path path) {
+        testingVFSService.getItemsByPath(path, response -> {
+            // do nothing
+        }, (message, throwable) -> {
+            if (throwable instanceof org.uberfire.java.nio.file.NotDirectoryException) {
+                testingVFSService.createDirectory(path);
+                return true;
+            } else {
+                GWT.log(message.toString(), throwable);
+                return false;
+            }
+        });
+    }
+
     @WorkbenchMenu
+    @Override
     //AppFormer does not generate menus when the @WorkbenchMenu annotation is on the super class
     public void setMenus(final Consumer<Menus> menusConsumer) {
         scenarioSimulationEditorKogitoWrapper.setMenus(menusConsumer);
@@ -121,6 +117,14 @@ public class ScenarioSimulationEditorKogitoTestingScreen extends AbstractScenari
     }
 
     protected void importDMN() {
+        createImportCommand("dmn", BASE_DMN_URI, "Choose a DMN file");
+    }
+
+    protected void importSCESIM() {
+        createImportCommand("scesim", BASE_SCESIM_URI, "Choose a SCESIM file");
+    }
+
+    protected void createImportCommand(String extension, String uri, String mainTitleText) {
         Command okImportCommand = () -> {
             String fileName = fileUploadPopupPresenter.getFileName();
             if (fileName == null || fileName.isEmpty()) {
@@ -129,12 +133,12 @@ public class ScenarioSimulationEditorKogitoTestingScreen extends AbstractScenari
             }
             fileName = fileName.replaceAll("\\s+", "_");
             String content = fileUploadPopupPresenter.getFileContents();
-            final Path path = PathFactory.newPath(fileName, BASE_DMN_URI + fileName);
+            final Path path = PathFactory.newPath(fileName, uri + fileName);
             saveFile(path, content);
         };
-        fileUploadPopupPresenter.show(Collections.singletonList("dmn"),
-                                      "Choose a DMN file",
-                                      "Import",
+        fileUploadPopupPresenter.show(Collections.singletonList(extension),
+                                      mainTitleText,
+                                      ScenarioSimulationEditorConstants.INSTANCE.importLabel(),
                                       okImportCommand);
     }
 
@@ -152,6 +156,7 @@ public class ScenarioSimulationEditorKogitoTestingScreen extends AbstractScenari
             return promises.resolve();
         })));
         fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("Import DMN", this::importDMN));
+        fileMenuBuilder.addNewTopLevelMenu(new ScenarioMenuItem("Import SCESIM", this::importSCESIM));
     }
 
     protected ErrorCallback<String> getErrorCallback(String prependMessage) {

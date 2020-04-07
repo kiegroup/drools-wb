@@ -23,10 +23,10 @@ import org.drools.workbench.screens.scenariosimulation.kogito.client.popup.Scena
 import org.uberfire.mvp.Command;
 
 @Dependent
-public class LoadScesimPopupPresenter implements ScenarioSimulationKogitoCreationPopup.Presenter {
+public class ScenarioSimulationKogitoLoadingScesimPopupPresenter implements ScenarioSimulationKogitoCreationPopup.Presenter {
 
     @Inject
-    protected LoadScesimPopupView loadScesimPopupView;
+    protected ScenarioSimulationKogitoLoadingScesimPopupView loadScesimPopupView;
 
     @Override
     public void show(String mainTitleText, Command okCommand) {
@@ -47,6 +47,5 @@ public class LoadScesimPopupPresenter implements ScenarioSimulationKogitoCreatio
     public String getSelectedPath() {
         return loadScesimPopupView.getSelectedPath();
     }
-
 
 }

@@ -20,7 +20,11 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
+
 import com.google.gwt.core.client.GWT;
+import org.drools.workbench.screens.scenariosimulation.webapp.client.services.TestingVFSService;
 import org.jboss.errai.bus.client.api.messaging.Message;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
@@ -28,16 +32,18 @@ import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdown
 import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItemsProvider;
 import org.uberfire.backend.vfs.Path;
 
-/**
- * Using this to specialize injected instance
- */
-public interface KogitoTestingScenarioSimulationAssetsDropdownProvider extends KieAssetsDropdownItemsProvider {
+import static org.drools.workbench.screens.scenariosimulation.webapp.client.editor.ScenarioSimulationEditorKogitoTestingScreen.SCESIM_PATH;
 
+@Dependent
+public class ScenarioSimulationKogitoLoadingScesimAssetsDropdownProviderImpl implements KieAssetsDropdownItemsProvider {
 
-    void getItems(final RemoteCallback<List<Path>> callback, final ErrorCallback<Message> errorCallback);
+    private static final String FILE_SUFFIX = "scesim";
+
+    @Inject
+    private TestingVFSService testingVFSService;
 
     @Override
-    default void getItems(Consumer<List<KieAssetsDropdownItem>> assetListConsumer) {
+    public void getItems(Consumer<List<KieAssetsDropdownItem>> assetListConsumer) {
         getItems(response -> {
             List<KieAssetsDropdownItem> toAccept = response.stream()
                     .map(this::getKieAssetsDropdownItem)
@@ -49,8 +55,11 @@ public interface KogitoTestingScenarioSimulationAssetsDropdownProvider extends K
         });
     }
 
-    default KieAssetsDropdownItem getKieAssetsDropdownItem(final Path asset) {
-        return new KieAssetsDropdownItem(asset.getFileName(), "", asset.toURI(), new HashMap<>());
+    public void getItems(final RemoteCallback<List<Path>> callback, final ErrorCallback<Message> errorCallback) {
+        testingVFSService.getItemsByPath(SCESIM_PATH, FILE_SUFFIX, callback, errorCallback);
     }
 
+    KieAssetsDropdownItem getKieAssetsDropdownItem(final Path asset) {
+        return new KieAssetsDropdownItem(asset.getFileName(), "", asset.toURI(), new HashMap<>());
+    }
 }

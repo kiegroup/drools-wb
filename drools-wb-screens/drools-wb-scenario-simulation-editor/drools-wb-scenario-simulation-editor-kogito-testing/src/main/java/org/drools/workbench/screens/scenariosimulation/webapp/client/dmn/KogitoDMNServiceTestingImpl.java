@@ -19,7 +19,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.AbstractKogitoDMNService;
-import org.drools.workbench.screens.scenariosimulation.webapp.client.workarounds.TestingVFSService;
+import org.drools.workbench.screens.scenariosimulation.webapp.client.services.TestingVFSService;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.uberfire.backend.vfs.Path;
