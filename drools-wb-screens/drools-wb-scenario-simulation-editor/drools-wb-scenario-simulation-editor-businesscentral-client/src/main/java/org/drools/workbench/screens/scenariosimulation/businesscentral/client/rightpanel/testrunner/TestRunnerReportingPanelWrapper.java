@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
+package org.drools.workbench.screens.scenariosimulation.businesscentral.client.rightpanel.testrunner;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import org.guvnor.common.services.shared.test.TestResultMessage;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.scenariosimulation.businesscentral.client.rightpanel;
+package org.drools.workbench.screens.scenariosimulation.businesscentral.client.rightpanel.testrunner;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -22,7 +22,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.IsWidget;
-import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestRunnerReportingPanelWrapper;
 import org.guvnor.common.services.shared.test.TestResultMessage;
 import org.kie.workbench.common.workbench.client.test.TestRunnerReportingPanel;
 
