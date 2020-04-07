@@ -46,6 +46,7 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.
 import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.events.ImportEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioNotificationEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.AbstractScenarioSimulationDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationHasBusyIndicatorDefaultErrorCallback;
@@ -81,6 +82,7 @@ import org.uberfire.client.workbench.docks.UberfireDocksInteractionEvent;
 import org.uberfire.ext.editor.commons.client.file.exports.TextFileExport;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.mvp.impl.PathPlaceRequest;
+import org.uberfire.workbench.events.NotificationEvent;
 
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.LOWER_CASE_VALUE;
 import static org.drools.workbench.screens.scenariosimulation.client.handlers.AbstractScenarioSimulationDocksHandler.SCESIMEDITOR_ID;
@@ -113,7 +115,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
     @Rule
     public ExpectedException exceptionRule = ExpectedException.none();
-    private ScenarioSimulationEditorPresenter presenterSpy;
     @Mock
     private ScenarioSimulationEditorWrapper scenarioSimulationEditorWrapperMock;
     @Mock
@@ -154,6 +155,10 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     private ConfirmPopupPresenter confirmPopupPresenterMock;
     @Captor
     private ArgumentCaptor<List<ScenarioWithIndex>> scenarioWithIndexCaptor;
+    @Captor
+    private ArgumentCaptor<ScenarioNotificationEvent> scenarioNotificationEventArgumentCaptor;
+
+    private ScenarioSimulationEditorPresenter presenterSpy;
 
     @Before
     public void setup() {
@@ -902,6 +907,15 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
             reset(presenterSpy);
         }
+    }
+
+    @Test
+    public void sendNotification() {
+        presenterSpy.sendNotification("message", NotificationEvent.NotificationType.ERROR);
+        verify(eventBusMock, times(1)).fireEvent(scenarioNotificationEventArgumentCaptor.capture());
+        assertEquals("message", scenarioNotificationEventArgumentCaptor.getValue().getMessage());
+        assertEquals(NotificationEvent.NotificationType.ERROR, scenarioNotificationEventArgumentCaptor.getValue().getNotificationType());
+
     }
 
     private SettingsPresenter getSettingsPresenterSpy() {
