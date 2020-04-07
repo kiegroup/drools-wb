@@ -135,8 +135,8 @@ public class JSInteropApiConverter {
             final FactMapping added = toPopulate.addFactMapping(getFactIdentifier(jsiFactMappingType.getFactIdentifier()), getExpressionIdentifier(jsiFactMappingType.getExpressionIdentifier()));
             added.setFactAlias(jsiFactMappingType.getFactAlias());
             added.setExpressionAlias(jsiFactMappingType.getExpressionAlias());
-            added.setColumnWidth(jsiFactMappingType.getColumnWidth());
             added.setFactMappingValueType(FactMappingValueType.valueOf(jsiFactMappingType.getFactMappingValueType()));
+            added.setColumnWidth(jsiFactMappingType.getColumnWidth());
             final JSIGenericTypes genericTypes = jsiFactMappingType.getGenericTypes();
             if (genericTypes != null && genericTypes.getString() != null) {
                 added.setGenericTypes(genericTypes.getString());
