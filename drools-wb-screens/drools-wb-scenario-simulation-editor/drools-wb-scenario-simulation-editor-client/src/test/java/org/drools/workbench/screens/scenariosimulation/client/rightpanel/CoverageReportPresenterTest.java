@@ -38,7 +38,7 @@ import org.mockito.Mock;
 import org.uberfire.mvp.Command;
 
 import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type;
-import static org.jgroups.util.Util.assertEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
@@ -217,11 +217,11 @@ public class CoverageReportPresenterTest {
         List<Map<String, Integer>> resultCounters = resultCounterCaptor.getAllValues();
         assertEquals(scenarioCounterLocal.size(), resultCounters.size());
         assertTrue(resultCounters.get(0).keySet().contains("d1"));
-        assertEquals(1, resultCounters.get(0).get("d1"));
+        assertEquals(1, (int) resultCounters.get(0).get("d1"));
         assertTrue(resultCounters.get(0).keySet().contains("d2"));
-        assertEquals(1, resultCounters.get(0).get("d2"));
+        assertEquals(1, (int) resultCounters.get(0).get("d2"));
         assertTrue(resultCounters.get(1).keySet().contains("d2"));
-        assertEquals(1, resultCounters.get(1).get("d2"));
+        assertEquals(1, (int) resultCounters.get(1).get("d2"));
     }
 
     @Test
