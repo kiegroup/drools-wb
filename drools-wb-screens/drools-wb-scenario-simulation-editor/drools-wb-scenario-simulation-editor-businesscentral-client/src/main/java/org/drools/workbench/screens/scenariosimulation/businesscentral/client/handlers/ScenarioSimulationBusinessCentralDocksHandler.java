@@ -16,15 +16,17 @@
 package org.drools.workbench.screens.scenariosimulation.businesscentral.client.handlers;
 
 import java.util.Collection;
-import java.util.Objects;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
 
+import org.drools.workbench.screens.scenariosimulation.businesscentral.client.rightpanel.coverage.CoverageReportPresenter;
+import org.drools.workbench.screens.scenariosimulation.businesscentral.client.rightpanel.coverage.CoverageReportView;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.AbstractScenarioSimulationDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
-import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CoverageReportPresenter;
 import org.kie.workbench.common.widgets.client.docks.DockPlaceHolderPlace;
+import org.uberfire.client.mvp.AbstractWorkbenchActivity;
+import org.uberfire.client.mvp.Activity;
 import org.uberfire.client.workbench.docks.UberfireDock;
 import org.uberfire.client.workbench.docks.UberfireDockPosition;
 import org.uberfire.mvp.PlaceRequest;
@@ -65,12 +67,19 @@ public class ScenarioSimulationBusinessCentralDocksHandler extends AbstractScena
         coverageDock.getPlaceRequest().addParameter(SCESIMEDITOR_ID, scesimEditorId);
     }
 
-    public Optional<UberfireDock> getReportDock(PlaceRequest placeRequest) {
-        return Objects.equals(reportDock.getPlaceRequest(), placeRequest) ? Optional.of(reportDock) : Optional.empty();
+    public Optional<CoverageReportView.Presenter> getCoverageReportPresenter() {
+        final Optional<CoverageReportView> coverageReportViewMap = getCoverageReportView(getCurrentRightDockPlaceRequest(CoverageReportPresenter.IDENTIFIER));
+        return coverageReportViewMap.map(CoverageReportView::getPresenter);
     }
 
-    public Optional<UberfireDock> getCoverageReportDock(PlaceRequest placeRequest) {
-        return Objects.equals(coverageDock.getPlaceRequest(), placeRequest) ? Optional.of(coverageDock) : Optional.empty();
+    protected Optional<CoverageReportView> getCoverageReportView(PlaceRequest placeRequest) {
+        final Activity activity = placeManager.getActivity(placeRequest);
+        if (activity != null) {
+            final AbstractWorkbenchActivity settingsActivity = (AbstractWorkbenchActivity) activity;
+            return Optional.of((CoverageReportView) settingsActivity.getWidget());
+        } else {
+            return Optional.empty();
+        }
     }
 
 }

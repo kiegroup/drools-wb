@@ -21,7 +21,6 @@ import javax.inject.Inject;
 
 import elemental2.dom.HTMLElement;
 import org.drools.workbench.screens.scenariosimulation.businesscentral.client.editor.ScenarioSimulationBusinessCentralViewsProvider;
-import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 
 @Dependent
 public class CoverageElementPresenter implements CoverageElementView.Presenter {

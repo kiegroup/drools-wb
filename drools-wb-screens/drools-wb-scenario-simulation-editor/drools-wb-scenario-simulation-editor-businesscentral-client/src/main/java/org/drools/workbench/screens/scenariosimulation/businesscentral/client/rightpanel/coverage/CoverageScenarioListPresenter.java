@@ -31,7 +31,6 @@ import org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
 import org.drools.workbench.screens.scenariosimulation.businesscentral.client.editor.ScenarioSimulationBusinessCentralViewsProvider;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
-import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 
 @Dependent
 public class CoverageScenarioListPresenter implements CoverageScenarioListView.Presenter {

@@ -30,7 +30,6 @@ import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioS
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridWidget;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
-import org.guvnor.common.services.shared.test.TestResultMessage;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
 
@@ -52,7 +51,7 @@ public interface ScenarioSimulationEditorWrapper {
 
     void validate(Simulation simulation, Settings settings, RemoteCallback<?> callback);
 
-    void onRefreshedModelContent(TestResultMessage testResultMessage);
+    void onRefreshedModelContent(SimulationRunResult testResult);
 
     void addBackgroundPage(ScenarioGridWidget scenarioGridWidget);
 
@@ -64,4 +63,8 @@ public interface ScenarioSimulationEditorWrapper {
         simulationPanel.synchronizeFactMappingsWidths();
         backgroundPanel.synchronizeFactMappingsWidths();
     }
+
+    void populateAdditionalDocks(String identifier);
+
+    void resetAdditionalDocks();
 }

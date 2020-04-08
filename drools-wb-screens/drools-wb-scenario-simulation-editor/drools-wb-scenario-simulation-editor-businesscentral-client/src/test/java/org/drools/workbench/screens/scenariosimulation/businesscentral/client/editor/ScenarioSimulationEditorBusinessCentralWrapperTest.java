@@ -171,7 +171,8 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
                                                                                                                null,
                                                                                                                new CallerMock<>(dmnTypeServiceMock),
                                                                                                                importExportCaller,
-                                                                                                               runnerReportServiceCaller) {
+                                                                                                               runnerReportServiceCaller,
+                                                                                                               null) {
             {
                 this.kieView = kieViewMock;
                 this.overviewWidget = overviewWidgetPresenterMock;

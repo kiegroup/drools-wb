@@ -16,16 +16,16 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
-import java.util.ArrayList;
+/*import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.IsWidget;*/
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import com.google.gwtmockito.WithClassesToStub;
-import org.drools.scenariosimulation.api.model.AbstractScesimModel;
+/*import org.drools.scenariosimulation.api.model.AbstractScesimModel;
 import org.drools.scenariosimulation.api.model.Background;
 import org.drools.scenariosimulation.api.model.BackgroundData;
 import org.drools.scenariosimulation.api.model.BackgroundDataWithIndex;
@@ -53,7 +53,6 @@ import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioS
 import org.drools.workbench.screens.scenariosimulation.client.popup.ConfirmPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.producers.ScenarioSimulationProducer;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetPresenter;
-import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CoverageReportPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
@@ -66,8 +65,9 @@ import org.jboss.errai.common.client.api.RemoteCallback;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.rules.ExpectedException;*/
 import org.junit.runner.RunWith;
+/*
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InOrder;
@@ -108,11 +108,12 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+*/
 
 @RunWith(GwtMockitoTestRunner.class)
 @WithClassesToStub(ScenarioMenuItem.class)
 public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimulationEditorTest {
-
+/*
     @Rule
     public ExpectedException exceptionRule = ExpectedException.none();
     @Mock
@@ -920,5 +921,5 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
     private SettingsPresenter getSettingsPresenterSpy() {
         return spy(new SettingsPresenter(mock(SettingsScenarioSimulationDropdown.class), MockProducer.getSettingsViewMock()));
-    }
+    }*/
 }

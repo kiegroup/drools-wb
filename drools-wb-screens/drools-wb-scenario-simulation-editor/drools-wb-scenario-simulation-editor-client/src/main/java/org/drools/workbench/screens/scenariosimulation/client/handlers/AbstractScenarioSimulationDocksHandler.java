@@ -18,17 +18,22 @@ package org.drools.workbench.screens.scenariosimulation.client.handlers;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import javax.inject.Inject;
 
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.kie.workbench.common.widgets.client.docks.AbstractWorkbenchDocksHandler;
 import org.kie.workbench.common.widgets.client.docks.AuthoringEditorDock;
+import org.uberfire.client.mvp.AbstractWorkbenchActivity;
+import org.uberfire.client.mvp.Activity;
+import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.workbench.docks.UberfireDock;
 import org.uberfire.client.workbench.docks.UberfireDockPosition;
 import org.uberfire.mvp.PlaceRequest;
@@ -44,10 +49,13 @@ public abstract class AbstractScenarioSimulationDocksHandler extends AbstractWor
 
     @Inject
     protected AuthoringEditorDock authoringWorkbenchDocks;
+    @Inject
+    protected PlaceManager placeManager;
 
     private UberfireDock settingsDock;
     private UberfireDock toolsDock;
     private UberfireDock cheatSheetDock;
+    private String currentScesimEditorId;
 
     @Override
     public Collection<UberfireDock> provideDocks(final String perspectiveIdentifier) {
@@ -85,21 +93,65 @@ public abstract class AbstractScenarioSimulationDocksHandler extends AbstractWor
     public abstract void expandTestResultsDock();
 
     public void setScesimEditorId(String scesimEditorId) {
+        currentScesimEditorId = scesimEditorId;
         settingsDock.getPlaceRequest().addParameter(SCESIMEDITOR_ID, scesimEditorId);
         toolsDock.getPlaceRequest().addParameter(SCESIMEDITOR_ID, scesimEditorId);
         cheatSheetDock.getPlaceRequest().addParameter(SCESIMEDITOR_ID, scesimEditorId);
     }
 
-    public Optional<UberfireDock> getSettingsDock(PlaceRequest placeRequest) {
-        return Objects.equals(settingsDock.getPlaceRequest(), placeRequest) ? Optional.of(settingsDock) : Optional.empty();
+    public Optional<CheatSheetView.Presenter> getCheatSheetPresenter() {
+        final Optional<CheatSheetView> cheatSheetView = getCheatSheetView(getCurrentRightDockPlaceRequest(CheatSheetPresenter.IDENTIFIER));
+        return cheatSheetView.map(CheatSheetView::getPresenter);
     }
 
-    public Optional<UberfireDock> getToolsDock(PlaceRequest placeRequest) {
-        return Objects.equals(toolsDock.getPlaceRequest(), placeRequest) ? Optional.of(toolsDock) : Optional.empty();
+    public Optional<TestToolsView.Presenter> getTestToolsPresenter() {
+        final Optional<TestToolsView> testToolsView = getTestToolsView(getCurrentRightDockPlaceRequest(TestToolsPresenter.IDENTIFIER));
+        return testToolsView.map(TestToolsView::getPresenter);
     }
 
-    public Optional<UberfireDock> getCheatSheetDock(PlaceRequest placeRequest) {
-        return Objects.equals(cheatSheetDock.getPlaceRequest(), placeRequest) ? Optional.of(cheatSheetDock) : Optional.empty();
+    public Optional<SettingsView.Presenter> getSettingsPresenter() {
+        final Optional<SettingsView> settingsView = getSettingsView(getCurrentRightDockPlaceRequest(SettingsPresenter.IDENTIFIER));
+        return settingsView.map(SettingsView::getPresenter);
     }
 
+    /**
+     * Returns a <code>PlaceRequest</code> for the <b>status</b> of the right dock with the given <b>identifier</b>
+     * relative to the current instance of <code>ScenarioSimulationEditorPresenter</code>
+     * @return
+     */
+    protected PlaceRequest getCurrentRightDockPlaceRequest(String identifier) {
+        PlaceRequest toReturn = new DefaultPlaceRequest(identifier);
+        toReturn.addParameter(SCESIMEDITOR_ID, String.valueOf(currentScesimEditorId));
+        return toReturn;
+    }
+
+    protected Optional<TestToolsView> getTestToolsView(PlaceRequest placeRequest) {
+        final Activity activity = placeManager.getActivity(placeRequest);
+        if (activity != null) {
+            final AbstractWorkbenchActivity testToolsActivity = (AbstractWorkbenchActivity) activity;
+            return Optional.of((TestToolsView) testToolsActivity.getWidget());
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    protected Optional<CheatSheetView> getCheatSheetView(PlaceRequest placeRequest) {
+        final Activity activity = placeManager.getActivity(placeRequest);
+        if (activity != null) {
+            final AbstractWorkbenchActivity cheatSheetActivity = (AbstractWorkbenchActivity) activity;
+            return Optional.of((CheatSheetView) cheatSheetActivity.getWidget());
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    protected Optional<SettingsView> getSettingsView(PlaceRequest placeRequest) {
+        final Activity activity = placeManager.getActivity(placeRequest);
+        if (activity != null) {
+            final AbstractWorkbenchActivity settingsActivity = (AbstractWorkbenchActivity) activity;
+            return Optional.of((SettingsView) settingsActivity.getWidget());
+        } else {
+            return Optional.empty();
+        }
+    }
 }

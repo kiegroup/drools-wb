@@ -15,10 +15,11 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
+/*
 import java.util.HashMap;
-import java.util.Map;
+import java.util.Map;*/
 
-import com.google.gwtmockito.GwtMockitoTestRunner;
+import com.google.gwtmockito.GwtMockitoTestRunner;/*
 import elemental2.dom.HTMLLIElement;
 import elemental2.dom.HTMLUListElement;
 import org.drools.scenariosimulation.api.model.Scenario;
@@ -27,21 +28,21 @@ import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.Test;*/
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
+//import org.mockito.Mock;
 
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+//import static org.mockito.Matchers.eq;
+//import static org.mockito.Matchers.isA;
+//import static org.mockito.Mockito.spy;
+//import static org.mockito.Mockito.times;
+//import static org.mockito.Mockito.verify;
+//import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
 public class CoverageScenarioListPresenterTest {
 
-    @Mock
+    /*@Mock
     private ViewsProvider viewsProviderMock;
 
     @Mock
@@ -97,5 +98,5 @@ public class CoverageScenarioListPresenterTest {
         verify(coverageScenarioListViewMock, times(1)).getScenarioElement();
         verify(coverageScenarioListViewMock, times(1)).setItemLabel(eq(expectedLabel));
         verify(scenarioElementMock, times(1)).appendChild(isA(HTMLUListElement.class));
-    }
+    }*/
 }
