@@ -139,7 +139,7 @@ public class KogitoScenarioSimulationBuilder {
         return jsiName;
     }
 
-    private Simulation createRULESimulation() {
+    protected Simulation createRULESimulation() {
         Simulation toReturn = new Simulation();
         ScesimModelDescriptor simulationDescriptor = toReturn.getScesimModelDescriptor();
         FactMapping indexFactMapping = simulationDescriptor.addFactMapping(FactIdentifier.INDEX.getName(), FactIdentifier.INDEX, ExpressionIdentifier.INDEX);
@@ -302,13 +302,13 @@ public class KogitoScenarioSimulationBuilder {
         return dmn12 -> {
             final JSITDefinitions jsitDefinitions = Js.uncheckedCast(JsUtils.getUnwrappedElement(dmn12));
             final FactModelTuple factModelTuple = dmnTypeService.getFactModelTuple(jsitDefinitions);
-            toPopulate.setSimulation(getDMNSimulation(factModelTuple));
+            toPopulate.setSimulation(createDMNSimulation(factModelTuple));
             toPopulate.setSettings(createDMNSettings(jsitDefinitions.getName(), jsitDefinitions.getNamespace(), dmnFilePath));
             convertScenarioSimulationModel(toPopulate, callback);
         };
     }
 
-    private Simulation getDMNSimulation(final FactModelTuple factModelTuple) {
+    protected Simulation createDMNSimulation(final FactModelTuple factModelTuple) {
         Simulation toReturn = new Simulation();
         ScesimModelDescriptor simulationDescriptor = toReturn.getScesimModelDescriptor();
         FactMapping indexFactMapping = simulationDescriptor.addFactMapping(FactIdentifier.INDEX.getName(), FactIdentifier.INDEX, ExpressionIdentifier.INDEX);
