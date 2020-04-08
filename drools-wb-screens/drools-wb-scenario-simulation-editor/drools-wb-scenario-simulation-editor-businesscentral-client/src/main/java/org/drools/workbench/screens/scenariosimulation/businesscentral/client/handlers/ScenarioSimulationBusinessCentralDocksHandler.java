@@ -63,7 +63,6 @@ public class ScenarioSimulationBusinessCentralDocksHandler extends AbstractScena
     @Override
     public void setScesimEditorId(String scesimEditorId) {
         super.setScesimEditorId(scesimEditorId);
-        reportDock.getPlaceRequest().addParameter(SCESIMEDITOR_ID, scesimEditorId);
         coverageDock.getPlaceRequest().addParameter(SCESIMEDITOR_ID, scesimEditorId);
     }
 
