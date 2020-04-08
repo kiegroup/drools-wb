@@ -61,8 +61,6 @@ import org.drools.workbench.screens.scenariosimulation.client.producers.Scenario
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetView;
-import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CoverageReportPresenter;
-import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CoverageReportView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SubDockView;

@@ -26,16 +26,14 @@ import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.e
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.editingbox.KeyValueEditingBox;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.MenuItemView;
 import org.drools.workbench.screens.scenariosimulation.client.popup.FileUploadPopup;
-import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CoverageElementView;
-import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CoverageScenarioListView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.FieldItemView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.ListGroupItemView;
 import org.jboss.errai.ioc.client.api.ManagedInstance;
 
-@ApplicationScoped
 /**
  * Class used as Provider for <i>Views</i> that has to be dynamically created
  */
+@ApplicationScoped
 public class ViewsProvider {
 
     @Inject
@@ -43,9 +41,6 @@ public class ViewsProvider {
 
     @Inject
     private ManagedInstance<FieldItemView> fieldItemViewInstance;
-
-    @Inject
-    private ManagedInstance<CoverageElementView> decisionElementViewInstance;
 
     @Inject
     private ManagedInstance<ListGroupItemView> listGroupItemViewInstance;
@@ -70,9 +65,6 @@ public class ViewsProvider {
 
     @Inject
     private ManagedInstance<FileUploadPopup> fileUploadPopupInstance;
-
-    @Inject
-    private ManagedInstance<CoverageScenarioListView> coverageScenarioListView;
 
     public MenuItemView getMenuItemView() {
         return menuItemViewInstance.get();
@@ -112,14 +104,6 @@ public class ViewsProvider {
 
     public FileUploadPopup getFileUploadPopup() {
         return fileUploadPopupInstance.get();
-    }
-
-    public CoverageElementView getCoverageElementView() {
-        return decisionElementViewInstance.get();
-    }
-
-    public CoverageScenarioListView getCoverageScenarioListView() {
-        return coverageScenarioListView.get();
     }
 
 }

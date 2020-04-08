@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
+package org.drools.workbench.screens.scenariosimulation.businesscentral.client.rightpanel.coverage;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import elemental2.dom.HTMLElement;
+import org.drools.workbench.screens.scenariosimulation.businesscentral.client.editor.ScenarioSimulationBusinessCentralViewsProvider;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 
 @Dependent
 public class CoverageElementPresenter implements CoverageElementView.Presenter {
 
     @Inject
-    protected ViewsProvider viewsProvider;
+    protected ScenarioSimulationBusinessCentralViewsProvider viewsProvider;
 
     private HTMLElement elementList;
 

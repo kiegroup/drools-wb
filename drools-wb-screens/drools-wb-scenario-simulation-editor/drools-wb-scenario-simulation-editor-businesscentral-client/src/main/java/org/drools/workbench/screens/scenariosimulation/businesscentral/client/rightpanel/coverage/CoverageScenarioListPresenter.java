@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
+package org.drools.workbench.screens.scenariosimulation.businesscentral.client.rightpanel.coverage;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -29,6 +29,7 @@ import elemental2.dom.HTMLLIElement;
 import elemental2.dom.HTMLUListElement;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.workbench.screens.scenariosimulation.businesscentral.client.editor.ScenarioSimulationBusinessCentralViewsProvider;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvider;
 
@@ -36,7 +37,7 @@ import org.drools.workbench.screens.scenariosimulation.client.utils.ViewsProvide
 public class CoverageScenarioListPresenter implements CoverageScenarioListView.Presenter {
 
     @Inject
-    protected ViewsProvider viewsProvider;
+    protected ScenarioSimulationBusinessCentralViewsProvider viewsProvider;
 
     private HTMLUListElement scenarioList;
 
