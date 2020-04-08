@@ -214,7 +214,18 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
 
     @Override
     public void onRefreshedModelContent(SimulationRunResult testResultMessage) {
-        //
+        /* No actions required after data refresh in Kogito */
+    }
+
+    @Override
+    public void populateAdditionalDocks(String identifier) {
+        /* No additional Docks are currently present on Kogito version */
+        throw new IllegalArgumentException("Invalid identifier");
+    }
+
+    @Override
+    public void resetAdditionalDocks() {
+        /* No additional Docks are currently present on Kogito version */
     }
 
     /**
@@ -264,16 +275,6 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
         if (item != null) {
             item.showTab(false);
         }
-    }
-
-    @Override
-    public void populateAdditionalDocks(String identifier) {
-        throw new IllegalArgumentException("Invalid identifier");
-    }
-
-    @Override
-    public void resetAdditionalDocks() {
-        // No additional docks
     }
 
     @Override
