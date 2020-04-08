@@ -55,6 +55,7 @@ import org.drools.workbench.screens.scenariosimulation.service.RunnerReportServi
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.guvnor.common.services.project.model.WorkspaceProject;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
+import org.guvnor.common.services.shared.test.TestResultMessage;
 import org.gwtbootstrap3.client.ui.TabListItem;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.ErrorCallback;
@@ -252,6 +253,11 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
                 callback,
                 scenarioSimulationEditorPresenter.getValidationFailedCallback())
                 .validate(simulation, settings, versionRecordManager.getCurrentPath());
+    }
+
+    @Override
+    public void onRefreshedModelContent(TestResultMessage testResultMessage) {
+        testRunnerReportingPanel.onTestRun(testResultMessage);
     }
 
     /**

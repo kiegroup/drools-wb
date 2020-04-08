@@ -381,8 +381,9 @@ public class ScenarioSimulationEditorPresenter {
             selectBackgroundTab();
         }
 
-        abstractScenarioSimulationDocksHandler.expandTestResultsDock();
         dataManagementStrategy.setModel(model);
+        abstractScenarioSimulationDocksHandler.expandTestResultsDock();
+        scenarioSimulationEditorWrapper.onRefreshedModelContent(newData.getTestResultMessage());
 
         this.lastRunResult = newData;
     }

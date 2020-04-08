@@ -25,7 +25,6 @@ import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.P
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.editingbox.ItemEditingBox;
 import org.drools.workbench.screens.scenariosimulation.client.collectioneditor.editingbox.KeyValueEditingBox;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.MenuItemView;
-import org.drools.workbench.screens.scenariosimulation.client.popover.ErrorReportPopoverView;
 import org.drools.workbench.screens.scenariosimulation.client.popup.FileUploadPopup;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CoverageElementView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CoverageScenarioListView;
@@ -74,9 +73,6 @@ public class ViewsProvider {
 
     @Inject
     private ManagedInstance<CoverageScenarioListView> coverageScenarioListView;
-
-    @Inject
-    private ManagedInstance<ErrorReportPopoverView> errorReportPopoverViewInstance;
 
     public MenuItemView getMenuItemView() {
         return menuItemViewInstance.get();

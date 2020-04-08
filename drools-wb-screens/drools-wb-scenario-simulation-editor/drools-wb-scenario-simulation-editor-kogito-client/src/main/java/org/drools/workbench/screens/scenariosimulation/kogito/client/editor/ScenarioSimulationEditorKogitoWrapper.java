@@ -56,6 +56,7 @@ import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.stra
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.strategies.KogitoDMODataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.popup.ScenarioSimulationKogitoCreationPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
+import org.guvnor.common.services.shared.test.TestResultMessage;
 import org.gwtbootstrap3.client.ui.TabListItem;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
@@ -209,6 +210,11 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
 
     @Override
     public void validate(Simulation simulation, Settings settings, RemoteCallback<?> callback) {
+        //
+    }
+
+    @Override
+    public void onRefreshedModelContent(TestResultMessage testResultMessage) {
         //
     }
 
