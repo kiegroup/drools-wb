@@ -24,19 +24,19 @@ import org.drools.workbench.screens.scenariosimulation.businesscentral.client.ri
 import org.jboss.errai.ioc.client.api.ManagedInstance;
 
 /**
- * Class used as Provider for <i>Views</i> that has to be dynamically created
+ * Class used as Provider for specific <i>Views</i> on Business Central module only, that has to be dynamically created
  */
 @ApplicationScoped
 public class ScenarioSimulationBusinessCentralViewsProvider {
 
     @Inject
-    private ManagedInstance<CoverageElementView> decisionElementViewInstance;
+    private ManagedInstance<CoverageElementView> coverageElementView;
 
     @Inject
     private ManagedInstance<CoverageScenarioListView> coverageScenarioListView;
 
     public CoverageElementView getCoverageElementView() {
-        return decisionElementViewInstance.get();
+        return coverageElementView.get();
     }
 
     public CoverageScenarioListView getCoverageScenarioListView() {
