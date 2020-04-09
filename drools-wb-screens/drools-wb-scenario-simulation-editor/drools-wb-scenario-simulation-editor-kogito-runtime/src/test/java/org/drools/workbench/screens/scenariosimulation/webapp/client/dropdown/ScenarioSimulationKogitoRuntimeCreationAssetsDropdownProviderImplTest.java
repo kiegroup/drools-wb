@@ -77,15 +77,15 @@ public class ScenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImplTe
     @Test
     public void getRemoteCallBack() {
         RemoteCallback<List<String>> remoteCallBack = scenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImplSpy.getRemoteCallback(assetConsumer);
-        remoteCallBack.callback(Arrays.asList("path/b", "a"));
+        remoteCallBack.callback(Arrays.asList("path/B", "a"));
         verify(assetConsumer, times(1)).accept(dropDownListCaptor.capture());
         assertTrue(dropDownListCaptor.getValue().size() == 2);
         assertEquals("a", dropDownListCaptor.getValue().get(0).getText());
         assertEquals("a", dropDownListCaptor.getValue().get(0).getSubText());
         assertEquals("a", dropDownListCaptor.getValue().get(0).getValue());
-        assertEquals("b", dropDownListCaptor.getValue().get(1).getText());
-        assertEquals("path/b", dropDownListCaptor.getValue().get(1).getSubText());
-        assertEquals("path/b", dropDownListCaptor.getValue().get(1).getValue());
+        assertEquals("B", dropDownListCaptor.getValue().get(1).getText());
+        assertEquals("path/B", dropDownListCaptor.getValue().get(1).getSubText());
+        assertEquals("path/B", dropDownListCaptor.getValue().get(1).getValue());
     }
 
     @Test
