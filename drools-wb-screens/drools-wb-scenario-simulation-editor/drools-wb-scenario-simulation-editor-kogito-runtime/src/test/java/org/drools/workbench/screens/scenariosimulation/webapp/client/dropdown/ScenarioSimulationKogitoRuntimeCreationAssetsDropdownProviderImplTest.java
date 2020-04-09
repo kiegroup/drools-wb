@@ -34,6 +34,7 @@ import org.uberfire.client.workbench.widgets.common.ErrorPopupPresenter;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
@@ -93,5 +94,63 @@ public class ScenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImplTe
         ErrorCallback<Object> errorCallback = scenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImplSpy.getErrorCallback();
         assertFalse(errorCallback.error("message", new Throwable("ex")));
         verify(errorPopupPresenterMock, times(1)).showMessage(eq("message: ex"));
+    }
+
+    @Test
+    public void getKieAssetsDropdownItemFileWithoutPath() {
+        String fullPath = "filename.etc";
+        KieAssetsDropdownItem item = scenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImplSpy.getKieAssetsDropdownItem(fullPath);
+        assertNotNull(item);
+        assertEquals(fullPath, item.getValue());
+        assertEquals(fullPath, item.getSubText());
+        assertEquals(fullPath, item.getText());
+    }
+
+    @Test
+    public void getKieAssetsDropdownItemFileWithPath() {
+        String path = "path/";
+        String fileName = "filename.etc";
+        String fullPath = path + fileName;
+        KieAssetsDropdownItem item = scenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImplSpy.getKieAssetsDropdownItem(fullPath);
+        assertNotNull(item);
+        assertEquals(fullPath, item.getValue());
+        assertEquals(fullPath, item.getSubText());
+        assertEquals(fileName, item.getText());
+    }
+
+    @Test
+    public void getKieAssetsDropdownItemFileWithLongPath() {
+        String path = "long/path/";
+        String fileName = "filename.etc";
+        String fullPath = path + fileName;
+        KieAssetsDropdownItem item = scenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImplSpy.getKieAssetsDropdownItem(fullPath);
+        assertNotNull(item);
+        assertEquals(fullPath, item.getValue());
+        assertEquals(fullPath, item.getSubText());
+        assertEquals(fileName, item.getText());
+    }
+
+    @Test
+    public void getKieAssetsDropdownItemFileWithPathWindows() {
+        String path = "path\\";
+        String fileName = "filename.etc";
+        String fullPath = path + fileName;
+        KieAssetsDropdownItem item = scenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImplSpy.getKieAssetsDropdownItem(fullPath);
+        assertNotNull(item);
+        assertEquals(fullPath, item.getValue());
+        assertEquals(fullPath, item.getSubText());
+        assertEquals(fileName, item.getText());
+    }
+
+    @Test
+    public void getKieAssetsDropdownItemFileWithLongPathWindows() {
+        String path = "long\\pat\\";
+        String fileName = "filename.etc";
+        String fullPath = path + fileName;
+        KieAssetsDropdownItem item = scenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImplSpy.getKieAssetsDropdownItem(fullPath);
+        assertNotNull(item);
+        assertEquals(fullPath, item.getValue());
+        assertEquals(fullPath, item.getSubText());
+        assertEquals(fileName, item.getText());
     }
 }

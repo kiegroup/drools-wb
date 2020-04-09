@@ -65,9 +65,9 @@ public class ScenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImpl i
         };
     }
 
-    protected KieAssetsDropdownItem getKieAssetsDropdownItem(final String asset) {
-        int idx = asset.replaceAll("\\\\", "/").lastIndexOf('/');
-        final String finalName = idx >= 0 ? asset.substring(idx + 1) : asset;
-        return new KieAssetsDropdownItem(finalName, asset, asset, new HashMap<>());
+    protected KieAssetsDropdownItem getKieAssetsDropdownItem(final String fullPath) {
+        int idx = fullPath.replaceAll("\\\\", "/").lastIndexOf('/');
+        final String fileName = idx >= 0 ? fullPath.substring(idx + 1) : fullPath;
+        return new KieAssetsDropdownItem(fileName, fullPath, fullPath, new HashMap<>());
     }
 }
