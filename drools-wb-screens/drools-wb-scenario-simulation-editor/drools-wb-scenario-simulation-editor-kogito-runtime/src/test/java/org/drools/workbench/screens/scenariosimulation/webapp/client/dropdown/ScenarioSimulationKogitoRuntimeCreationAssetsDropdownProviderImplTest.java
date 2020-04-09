@@ -16,8 +16,10 @@
 package org.drools.workbench.screens.scenariosimulation.webapp.client.dropdown;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.jboss.errai.common.client.api.ErrorCallback;
@@ -88,6 +90,18 @@ public class ScenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImplTe
         assertEquals("path/B", dropDownListCaptor.getValue().get(1).getSubText());
         assertEquals("path/B", dropDownListCaptor.getValue().get(1).getValue());
     }
+
+    @Test
+    public void remoteCallBackSortedIgnoreCase(){
+        RemoteCallback<List<String>> remoteCallBack = scenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImplSpy.getRemoteCallback(assetConsumer);
+        List<String> dmnFiles = Arrays.asList("AS", "Ap");
+        remoteCallBack.callback(dmnFiles);
+        verify(assetConsumer, times(1)).accept(dropDownListCaptor.capture());
+        Collections.sort(dmnFiles, String::compareToIgnoreCase);
+        assertEquals(dmnFiles,
+                     dropDownListCaptor.getValue().stream().map(KieAssetsDropdownItem::getValue).collect(Collectors.toList()));
+    }
+
 
     @Test
     public void getErrorCallback() {
