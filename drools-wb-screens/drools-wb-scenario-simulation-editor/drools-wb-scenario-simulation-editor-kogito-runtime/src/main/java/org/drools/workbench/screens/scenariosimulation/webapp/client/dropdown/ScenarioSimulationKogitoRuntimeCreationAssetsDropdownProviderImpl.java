@@ -15,6 +15,7 @@
  */
 package org.drools.workbench.screens.scenariosimulation.webapp.client.dropdown;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
@@ -33,7 +34,7 @@ import org.uberfire.client.workbench.widgets.common.ErrorPopupPresenter;
 @Dependent
 public class ScenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImpl implements ScenarioSimulationKogitoCreationAssetsDropdownProvider {
 
-    protected static final String DMN_FILE_EXTENSION = "*.dmn";
+    protected static final String DMN_FILE_EXTENSION = "**/*.dmn";
 
     @Inject
     protected KogitoResourceContentService resourceContentService;
@@ -51,6 +52,7 @@ public class ScenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImpl i
         return response -> {
             List<KieAssetsDropdownItem> toAccept = response.stream()
                     .map(this::getKieAssetsDropdownItem)
+                    .sorted(Comparator.comparing(KieAssetsDropdownItem::getText))
                     .collect(Collectors.toList());
             assetListConsumer.accept(toAccept);
         };
@@ -64,6 +66,8 @@ public class ScenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImpl i
     }
 
     protected KieAssetsDropdownItem getKieAssetsDropdownItem(final String asset) {
-        return new KieAssetsDropdownItem(asset, "", asset, new HashMap<>());
+        int idx = asset.replaceAll("\\\\", "/").lastIndexOf('/');
+        final String finalName = idx >= 0 ? asset.substring(idx + 1) : asset;
+        return new KieAssetsDropdownItem(finalName, asset, asset, new HashMap<>());
     }
 }
