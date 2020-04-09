@@ -21,6 +21,7 @@ import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMappingType;
+import org.drools.scenariosimulation.api.model.FactMappingValueType;
 import org.drools.scenariosimulation.api.model.ScesimModelDescriptor;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
@@ -60,20 +61,23 @@ public class KogitoScenarioSimulationBuilderTest {
         assertEquals(FactIdentifier.DESCRIPTION.getName(), modelDescriptor.getFactMappingByIndex(1).getFactAlias());
         assertEquals(FactIdentifier.DESCRIPTION, modelDescriptor.getFactMappingByIndex(1).getFactIdentifier());
         assertEquals(ExpressionIdentifier.DESCRIPTION, modelDescriptor.getFactMappingByIndex(1).getExpressionIdentifier());
+        assertEquals(FactMappingValueType.NOT_EXPRESSION, modelDescriptor.getFactMappingByIndex(1).getFactMappingValueType());
         //Third column
         assertEquals(114, modelDescriptor.getFactMappingByIndex(2).getColumnWidth(), 0);
         assertEquals("INSTANCE 1", modelDescriptor.getFactMappingByIndex(2).getFactAlias());
         assertEquals(FactIdentifier.EMPTY, modelDescriptor.getFactMappingByIndex(2).getFactIdentifier());
         assertEquals(ExpressionIdentifier.create("1|1", FactMappingType.GIVEN), modelDescriptor.getFactMappingByIndex(2).getExpressionIdentifier());
+        assertEquals(FactMappingValueType.NOT_EXPRESSION, modelDescriptor.getFactMappingByIndex(2).getFactMappingValueType());
         //Fourth column
         assertEquals(114, modelDescriptor.getFactMappingByIndex(3).getColumnWidth(), 0);
         assertEquals("INSTANCE 2", modelDescriptor.getFactMappingByIndex(3).getFactAlias());
         assertEquals(FactIdentifier.EMPTY, modelDescriptor.getFactMappingByIndex(3).getFactIdentifier());
         assertEquals(ExpressionIdentifier.create("1|2", FactMappingType.EXPECT), modelDescriptor.getFactMappingByIndex(3).getExpressionIdentifier());
+        assertEquals(FactMappingValueType.NOT_EXPRESSION, modelDescriptor.getFactMappingByIndex(3).getFactMappingValueType());
     }
 
     @Test
-    public void createRULESimulationEmptyFactModuleTuple() {
+    public void createDMNSimulationEmptyFactModuleTuple() {
         FactModelTuple factMappingTuple = new FactModelTuple(Collections.emptySortedMap(), Collections.emptySortedMap());
         Simulation simulation = kogitoScenarioSimulationBuilderSpy.createDMNSimulation(factMappingTuple);
         assertNotNull(simulation);
@@ -86,21 +90,25 @@ public class KogitoScenarioSimulationBuilderTest {
         assertEquals(FactIdentifier.INDEX.getName(), modelDescriptor.getFactMappingByIndex(0).getFactAlias());
         assertEquals(FactIdentifier.INDEX, modelDescriptor.getFactMappingByIndex(0).getFactIdentifier());
         assertEquals(ExpressionIdentifier.INDEX, modelDescriptor.getFactMappingByIndex(0).getExpressionIdentifier());
+        assertEquals(FactMappingValueType.NOT_EXPRESSION, modelDescriptor.getFactMappingByIndex(0).getFactMappingValueType());
         //Second column
         assertEquals(300, modelDescriptor.getFactMappingByIndex(1).getColumnWidth(), 0);
         assertEquals(FactIdentifier.DESCRIPTION.getName(), modelDescriptor.getFactMappingByIndex(1).getFactAlias());
         assertEquals(FactIdentifier.DESCRIPTION, modelDescriptor.getFactMappingByIndex(1).getFactIdentifier());
         assertEquals(ExpressionIdentifier.DESCRIPTION, modelDescriptor.getFactMappingByIndex(1).getExpressionIdentifier());
+        assertEquals(FactMappingValueType.NOT_EXPRESSION, modelDescriptor.getFactMappingByIndex(1).getFactMappingValueType());
         //Third column
         assertEquals(114, modelDescriptor.getFactMappingByIndex(2).getColumnWidth(), 0);
         assertEquals("INSTANCE 1", modelDescriptor.getFactMappingByIndex(2).getFactAlias());
         assertEquals(FactIdentifier.EMPTY, modelDescriptor.getFactMappingByIndex(2).getFactIdentifier());
         assertEquals(ExpressionIdentifier.create("1|1", FactMappingType.GIVEN), modelDescriptor.getFactMappingByIndex(2).getExpressionIdentifier());
+        assertEquals(FactMappingValueType.NOT_EXPRESSION, modelDescriptor.getFactMappingByIndex(2).getFactMappingValueType());
         //Fourth column
         assertEquals(114, modelDescriptor.getFactMappingByIndex(3).getColumnWidth(), 0);
         assertEquals("INSTANCE 2", modelDescriptor.getFactMappingByIndex(3).getFactAlias());
         assertEquals(FactIdentifier.EMPTY, modelDescriptor.getFactMappingByIndex(3).getFactIdentifier());
         assertEquals(ExpressionIdentifier.create("1|2", FactMappingType.EXPECT), modelDescriptor.getFactMappingByIndex(3).getExpressionIdentifier());
+        assertEquals(FactMappingValueType.NOT_EXPRESSION, modelDescriptor.getFactMappingByIndex(3).getFactMappingValueType());
     }
 
 
