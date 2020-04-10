@@ -70,8 +70,4 @@ public class ClientDMNType {
     public BuiltInType getFeelType() {
         return feelType;
     }
-
-    public void setIsComposite(final boolean isComposite) {
-        this.composite = isComposite;
-    }
 }
