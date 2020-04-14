@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
+package org.drools.workbench.screens.scenariosimulation.businesscentral.client.rightpanel.coverage;
 
-/*import java.util.HashMap;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;*/
+import java.util.Map;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
-/*import elemental2.dom.HTMLButtonElement;
+import elemental2.dom.HTMLButtonElement;
 import elemental2.dom.HTMLDivElement;
 import elemental2.dom.HTMLElement;
 import elemental2.dom.HTMLUListElement;
@@ -29,9 +29,9 @@ import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
 import org.drools.scenariosimulation.api.model.SimulationRunMetadata;
 import org.junit.Before;
-import org.junit.Test;*/
+import org.junit.Test;
 import org.junit.runner.RunWith;
-/*import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -49,11 +49,11 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;*/
+import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
 public class CoverageReportPresenterTest {
-/*
+
     @Mock
     protected CoverageReportDonutPresenter coverageReportDonutPresenterMock;
 
@@ -255,5 +255,5 @@ public class CoverageReportPresenterTest {
         presenterSpy.resetDownload();
         assertTrue(downloadReportButtonMock.disabled);
         assertNull(presenterSpy.downloadReportCommand);
-    }*/
+    }
 }
