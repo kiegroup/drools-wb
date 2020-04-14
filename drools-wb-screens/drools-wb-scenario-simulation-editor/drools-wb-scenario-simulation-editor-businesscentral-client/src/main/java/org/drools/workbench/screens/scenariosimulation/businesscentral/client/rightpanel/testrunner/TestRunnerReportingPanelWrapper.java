@@ -15,17 +15,39 @@
  */
 package org.drools.workbench.screens.scenariosimulation.businesscentral.client.rightpanel.testrunner;
 
+import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.guvnor.common.services.shared.test.TestResultMessage;
+import org.kie.workbench.common.workbench.client.test.TestRunnerReportingPanel;
 
-/**
- * <b>Wrapper</b> to be used to avoid importing <b>workbench</b> package inside the client <b>core</b> method
- */
-public interface TestRunnerReportingPanelWrapper {
+@Dependent
+public class TestRunnerReportingPanelWrapper {
 
-    void reset();
+    private final TestRunnerReportingPanel testRunnerReportingPanel;
 
-    void onTestRun(TestResultMessage testResultMessage);
+    @Inject
+    public TestRunnerReportingPanelWrapper(TestRunnerReportingPanel testRunnerReportingPanel) {
+        this.testRunnerReportingPanel = testRunnerReportingPanel;
+    }
 
-    IsWidget asWidget();
+    public void reset() {
+        testRunnerReportingPanel.reset();
+    }
+
+    public void onTestRun(TestResultMessage testResultMessage) {
+        testRunnerReportingPanel.onTestRun(testResultMessage);
+    }
+
+    public IsWidget asWidget() {
+        /* Here, a FlowPanel is added to align the padding with other DocksPanels */
+        FlowPanel flowPanel = GWT.create(FlowPanel.class);
+        flowPanel.getElement().getStyle().setPaddingTop(4, Style.Unit.PX);
+        flowPanel.add(testRunnerReportingPanel.asWidget());
+        return flowPanel;
+    }
 }
