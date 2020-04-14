@@ -15,27 +15,39 @@
  */
 package org.drools.workbench.screens.scenariosimulation.businesscentral.client.rightpanel.testrunner;
 
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import org.guvnor.common.services.shared.test.TestResultMessage;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.workbench.common.workbench.client.test.TestRunnerReportingPanel;
 import org.mockito.Mock;
 
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
 public class TestRunnerReportingPanelWrapperTest {
 
     @Mock
     private TestRunnerReportingPanel testRunnerReportingPanelMock;
+    @Mock
+    private TestResultMessage testResultMessageMock;
+    @Mock
+    private Widget widgetMock;
 
     private TestRunnerReportingPanelWrapper testRunnerReportingPanelWrapperSpy;
 
     @Before
     public void setup() {
         testRunnerReportingPanelWrapperSpy = new TestRunnerReportingPanelWrapper(testRunnerReportingPanelMock);
+        when(testRunnerReportingPanelMock.asWidget()).thenReturn(widgetMock);
     }
 
     @Test
@@ -44,7 +56,17 @@ public class TestRunnerReportingPanelWrapperTest {
         verify(testRunnerReportingPanelMock, times(1)).reset();
     }
 
-    //@Test
+    @Test
+    public void onTestRun() {
+        testRunnerReportingPanelWrapperSpy.onTestRun(testResultMessageMock);
+        verify(testRunnerReportingPanelMock, times(1)).onTestRun(eq(testResultMessageMock));
+    }
 
+    @Test
+    public void asWidget() {
+        IsWidget panel = testRunnerReportingPanelWrapperSpy.asWidget();
+        assertTrue(panel instanceof FlowPanel);
+        verify(testRunnerReportingPanelMock, times(1)).asWidget();
+    }
 
 }
