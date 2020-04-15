@@ -16,6 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.kogito.client.dmn;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -111,7 +112,9 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
             toReturn.put(jsitItemDefinition.getName(), getDMNType(indexed, jsitItemDefinition, nameSpace, toReturn));
         }
 
-        toReturn.values().forEach(v -> {
+        // To prevent ConcurrentModificationException we iterate through a copy.
+        final Collection<ClientDMNType> values = new ArrayList<>(toReturn.values());
+        values.forEach(v -> {
             // Default DMN types (number, date, etc.), are not indexed but present in toReturn
             if (indexed.containsKey(v.getName())) {
                 populateItemFields(indexed,
@@ -120,13 +123,14 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
                                    toReturn);
             }
         });
+
         return toReturn;
     }
 
-    protected ClientDMNType getOrCreateDMNType(final Map<String, JSITItemDefinition> allDefinitions,
-                                               final String requiredType,
-                                               final String namespace,
-                                               final Map<String, ClientDMNType> createdTypes) {
+    ClientDMNType getOrCreateDMNType(final Map<String, JSITItemDefinition> allDefinitions,
+                                     final String requiredType,
+                                     final String namespace,
+                                     final Map<String, ClientDMNType> createdTypes) {
 
         if (createdTypes.containsKey(requiredType)) {
             return createdTypes.get(requiredType);
@@ -140,7 +144,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
         return getDMNType(allDefinitions, value, namespace, createdTypes);
     }
 
-    protected Map<String, JSITItemDefinition> indexDefinitionsByName(final List<JSITItemDefinition> allDefinitions) {
+    Map<String, JSITItemDefinition> indexDefinitionsByName(final List<JSITItemDefinition> allDefinitions) {
         final HashMap<String, JSITItemDefinition> index = new HashMap<>();
         for (int i = 0; i < allDefinitions.size(); i++) {
             final JSITItemDefinition value = Js.uncheckedCast(allDefinitions.get(i));
@@ -151,8 +155,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
 
     /**
      * This method creates a <code>ClientDMNType</code> object of a given <code>JSITItemDefinition</code> object.
-     * To correctly work, it requires a sorted <code>dmnTypesMap</code>, in order to process items which don't refer to
-     * a "super items" BEFORE items with a refer to another items.
+     * It does not populate the fields of the type. To populate it, use {@link #populateItemFields(Map, JSITItemDefinition, String, Map)}.
      *
      * @param allDefinitions
      * @param itemDefinition
@@ -160,10 +163,10 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
      * @param dmnTypesMap
      * @return
      */
-    protected ClientDMNType getDMNType(final Map<String, JSITItemDefinition> allDefinitions,
-                                       final JSITItemDefinition itemDefinition,
-                                       final String namespace,
-                                       final Map<String, ClientDMNType> dmnTypesMap) {
+    ClientDMNType getDMNType(final Map<String, JSITItemDefinition> allDefinitions,
+                             final JSITItemDefinition itemDefinition,
+                             final String namespace,
+                             final Map<String, ClientDMNType> dmnTypesMap) {
         final Map<String, ClientDMNType> fields = new HashMap<>();
         boolean isCollection = itemDefinition.getIsCollection();
         boolean isComposite = itemDefinition.getItemComponent() != null && !itemDefinition.getItemComponent().isEmpty();
@@ -185,7 +188,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
             } else {
                 throw new IllegalStateException(
                         "Item: " + itemDefinition.getName() + " refers to typeRef: " + itemDefinition.getTypeRef()
-                                + " which can't be found. The item can be missing or required items sort is wrong");
+                                + " which can't be found.");
             }
         }
 
@@ -198,19 +201,19 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
                                  null);
     }
 
-    protected void populateItemFields(final Map<String, JSITItemDefinition> allDefinitions,
-                                      final JSITItemDefinition itemDefinition,
-                                      final String namespace,
-                                      final Map<String, ClientDMNType> dmnTypesMap) {
+    void populateItemFields(final Map<String, JSITItemDefinition> allDefinitions,
+                            final JSITItemDefinition itemDefinition,
+                            final String namespace,
+                            final Map<String, ClientDMNType> dmnTypesMap) {
         final ClientDMNType clientDMNType = dmnTypesMap.get(itemDefinition.getName());
         populateItemFields(allDefinitions, itemDefinition, namespace, dmnTypesMap, clientDMNType);
     }
 
-    protected void populateItemFields(final Map<String, JSITItemDefinition> allDefinitions,
-                                      final JSITItemDefinition itemDefinition,
-                                      final String namespace,
-                                      final Map<String, ClientDMNType> dmnTypesMap,
-                                      final ClientDMNType clientDMNType) {
+    void populateItemFields(final Map<String, JSITItemDefinition> allDefinitions,
+                            final JSITItemDefinition itemDefinition,
+                            final String namespace,
+                            final Map<String, ClientDMNType> dmnTypesMap,
+                            final ClientDMNType clientDMNType) {
         final List<JSITItemDefinition> jsitItemDefinitions = itemDefinition.getItemComponent();
         if (jsitItemDefinitions != null && !jsitItemDefinitions.isEmpty()) {
             for (int i = 0; i < jsitItemDefinitions.size(); i++) {
@@ -233,6 +236,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
 
     /**
      * Recursively visit a <i>composite</i> <code>DMNType</code> to eventually detect and add errors to given <code>ErrorHolder</code>
+     *
      * @param type
      * @param errorHolder
      * @param fullPropertyPath
@@ -280,6 +284,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
 
     /**
      * This method is the <b>entry point</b> for <code>FactModelTree</code>. It is the one to be called from the very top level <code>DMNType</code>
+     *
      * @param factName
      * @param type
      * @param hiddenFacts
@@ -297,6 +302,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
 
     /**
      * Return <code>true</code> if the given <code>DMNType</code> has to be managed as <b>collection</b>
+     *
      * @param type
      * @return <code>true</code> if <code>DMNType.isCollection() == true</code> <b>and</b> <code>BaseDMNTypeImpl.getFeelType() != BuiltInType.UNKNOWN</code>
      */
@@ -315,6 +321,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
 
     /**
      * Return <code>true</code> if the given <code>DMNType</code> has to be managed as <b>composite</b>
+     *
      * @param type
      * @return <code>true</code> if <code>DMNType.isCollection() == true</code> <b>and</b> <code>BaseDMNTypeImpl.getFeelType() != BuiltInType.UNKNOWN</code>
      */
@@ -332,6 +339,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
 
     /**
      * Creates a <code>FactModelTree</code> for <code>DMNType</code> where <code>DMNType.isCollection()</code> == <code>true</code>
+     *
      * @param genericTypeInfoMap
      * @param factName
      * @param type
@@ -364,6 +372,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
     /**
      * This method map the given <b>name</b> to <b>List.class.getCanonicalName()</b> inside <b>simpleFields</b>,
      * and map <b>name</b>  to a singleton list containing a newly generated <b>key</b> (path + "." + type) inside <b>genericTypeInfoMap</b>
+     *
      * @param genericTypeInfoMap
      * @param fullPropertyPath
      * @param type
@@ -379,6 +388,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
 
     /**
      * Creates a <code>FactModelTree</code> for <code>DMNType</code> where <code>DMNType.isCollection()</code> != <code>true</code>
+     *
      * @param genericTypeInfoMap
      * @param factName
      * @param propertyName
@@ -408,6 +418,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
 
     /**
      * Creates a <code>FactModelTree</code> for <code>DMNType</code>
+     *
      * @param genericTypeInfoMap
      * @param factName
      * @param propertyName
@@ -433,6 +444,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
     /**
      * Creates a <code>FactModelTree</code> for <code>DMNType</code> where <code>DMNType.isComposite()</code> != <code>true</code>.
      * Returned <code>FactModelTree</code> will have only one single property, whose name is <b>VALUE</b> and whose value is the given <b>propertyClass</b>
+     *
      * @param genericTypeInfoMap
      * @param factName
      * @param propertyClass
@@ -452,6 +464,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
 
     /**
      * Creates a <code>FactModelTree</code> for <code>DMNType</code> where <code>DMNType.isComposite()</code> == <code>true</code>
+     *
      * @param genericTypeInfoMap
      * @param name
      * @param fullPropertyPath
@@ -525,5 +538,4 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
             return multipleNestedCollection;
         }
     }
-
 }
