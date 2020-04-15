@@ -48,7 +48,8 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.
 import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationHasBusyIndicatorDefaultErrorCallback;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
-import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SubDockView;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridWidget;
@@ -336,20 +337,36 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     }
 
     @Override
-    public void populateAdditionalDocks(String identifier) {
-        if (CoverageReportPresenter.IDENTIFIER.equals(identifier)) {
-            scenarioSimulationBusinessCentralDocksHandler.getCoverageReportPresenter().ifPresent(presenter -> {
-                setCoverageReport(presenter);
-                presenter.setCurrentPath(scenarioSimulationEditorPresenter.getPath());
-            });
-        } else {
-            throw new IllegalArgumentException("Invalid identifier");
+    public void populateDocks(String identifier) {
+        switch (identifier) {
+            case SettingsPresenter.IDENTIFIER:
+                scenarioSimulationBusinessCentralDocksHandler.getSettingsPresenter().ifPresent(presenter -> {
+                    scenarioSimulationEditorPresenter.setSettings(presenter);
+                    presenter.setCurrentPath(scenarioSimulationEditorPresenter.getPath());
+                });
+                break;
+            case TestToolsPresenter.IDENTIFIER:
+                scenarioSimulationBusinessCentralDocksHandler.getTestToolsPresenter().ifPresent(
+                        presenter -> scenarioSimulationEditorPresenter.setTestTools(presenter));
+                break;
+            case CheatSheetPresenter.IDENTIFIER:
+                scenarioSimulationBusinessCentralDocksHandler.getCheatSheetPresenter().ifPresent(
+                        presenter -> {
+                            if (!presenter.isCurrentlyShow(scenarioSimulationEditorPresenter.getPath())) {
+                                scenarioSimulationEditorPresenter.setCheatSheet(presenter);
+                                presenter.setCurrentPath(scenarioSimulationEditorPresenter.getPath());
+                            }
+                        });
+                break;
+            case CoverageReportPresenter.IDENTIFIER:
+                scenarioSimulationBusinessCentralDocksHandler.getCoverageReportPresenter().ifPresent(presenter -> {
+                    setCoverageReport(presenter);
+                    presenter.setCurrentPath(scenarioSimulationEditorPresenter.getPath());
+                });
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid identifier");
         }
-    }
-
-    @Override
-    public void resetAdditionalDocks() {
-        scenarioSimulationBusinessCentralDocksHandler.getCoverageReportPresenter().ifPresent(SubDockView.Presenter::reset);
     }
 
     protected void registerTestToolsCallback() {
@@ -371,9 +388,9 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     protected Promise<Void> makeMenuBar() {
         scenarioSimulationEditorPresenter.makeMenuBar(fileMenuBuilder);
         if (workbenchContext.getActiveWorkspaceProject().isPresent()) {
-            final WorkspaceProject activeProject = workbenchContext.getActiveWorkspaceProject().get();
+            final WorkspaceProject activeProject = workbenchContext.getActiveWorkspaceProject().orElseThrow(IllegalStateException::new);
             return projectController.canUpdateProject(activeProject).then(canUpdateProject -> {
-                if (canUpdateProject) {
+                if (Boolean.TRUE.equals(canUpdateProject)) {
                     addSave(fileMenuBuilder);
                     addCopy(fileMenuBuilder);
                     addRename(fileMenuBuilder);

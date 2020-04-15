@@ -24,6 +24,7 @@ import org.drools.workbench.screens.scenariosimulation.businesscentral.client.ri
 import org.drools.workbench.screens.scenariosimulation.businesscentral.client.rightpanel.coverage.CoverageReportView;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.AbstractScenarioSimulationDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SubDockView;
 import org.kie.workbench.common.widgets.client.docks.DockPlaceHolderPlace;
 import org.uberfire.client.mvp.AbstractWorkbenchActivity;
 import org.uberfire.client.mvp.Activity;
@@ -58,6 +59,12 @@ public class ScenarioSimulationBusinessCentralDocksHandler extends AbstractScena
 
     public void expandTestResultsDock() {
         authoringWorkbenchDocks.expandAuthoringDock(reportDock);
+    }
+
+    @Override
+    public void resetDocks() {
+        super.resetDocks();
+        getCoverageReportPresenter().ifPresent(SubDockView.Presenter::reset);
     }
 
     @Override

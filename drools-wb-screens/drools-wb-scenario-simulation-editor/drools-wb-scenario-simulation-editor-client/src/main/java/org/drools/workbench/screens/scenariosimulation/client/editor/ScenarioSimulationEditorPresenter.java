@@ -56,11 +56,9 @@ import org.drools.workbench.screens.scenariosimulation.client.popup.ConfirmPopup
 import org.drools.workbench.screens.scenariosimulation.client.popup.CustomBusyPopup;
 import org.drools.workbench.screens.scenariosimulation.client.producers.ScenarioSimulationProducer;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
-import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsView;
-import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SubDockView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
@@ -320,10 +318,7 @@ public class ScenarioSimulationEditorPresenter {
      * marked as ApplicationScoped, this method should be call everytime ScenarioSimulationEditor is opened (or closed)
      */
     protected void resetDocks() {
-        abstractScenarioSimulationDocksHandler.getSettingsPresenter().ifPresent(SubDockView.Presenter::reset);
-        abstractScenarioSimulationDocksHandler.getCheatSheetPresenter().ifPresent(SubDockView.Presenter::reset);
-        abstractScenarioSimulationDocksHandler.getTestToolsPresenter().ifPresent(SubDockView.Presenter::reset);
-        scenarioSimulationEditorWrapper.resetAdditionalDocks();
+        abstractScenarioSimulationDocksHandler.resetDocks();
     }
 
     /**
@@ -578,30 +573,7 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     public void populateRightDocks(String identifier) {
-        if (dataManagementStrategy != null) {
-            switch (identifier) {
-                case SettingsPresenter.IDENTIFIER:
-                    abstractScenarioSimulationDocksHandler.getSettingsPresenter().ifPresent(presenter -> {
-                        setSettings(presenter);
-                        presenter.setCurrentPath(path);
-                    });
-                    break;
-                case TestToolsPresenter.IDENTIFIER:
-                    abstractScenarioSimulationDocksHandler.getTestToolsPresenter().ifPresent(this::setTestTools);
-                    break;
-                case CheatSheetPresenter.IDENTIFIER:
-                    abstractScenarioSimulationDocksHandler.getCheatSheetPresenter().ifPresent(
-                        presenter -> {
-                            if (!presenter.isCurrentlyShow(path)) {
-                                setCheatSheet(presenter);
-                                presenter.setCurrentPath(path);
-                            }
-                        });
-                    break;
-                default:
-                    scenarioSimulationEditorWrapper.populateAdditionalDocks(identifier);
-            }
-        }
+        scenarioSimulationEditorWrapper.populateDocks(identifier);
     }
 
     public void getModelSuccessCallbackMethod(DataManagementStrategy dataManagementStrategy, ScenarioSimulationModel model) {
@@ -627,7 +599,7 @@ public class ScenarioSimulationEditorPresenter {
         return type;
     }
 
-    protected void setTestTools(TestToolsView.Presenter presenter) {
+    public void setTestTools(TestToolsView.Presenter presenter) {
         context.setTestToolsPresenter(presenter);
         presenter.setEventBus(eventBus);
         GridWidget gridWidget = scenarioBackgroundGridWidget.isSelected() ? GridWidget.BACKGROUND : GridWidget.SIMULATION;
@@ -638,12 +610,12 @@ public class ScenarioSimulationEditorPresenter {
         abstractScenarioSimulationDocksHandler.getTestToolsPresenter().ifPresent(TestToolsView.Presenter::onClearStatus);
     }
 
-    protected void setCheatSheet(CheatSheetView.Presenter presenter) {
+    public void setCheatSheet(CheatSheetView.Presenter presenter) {
         Type modelType = dataManagementStrategy instanceof AbstractDMODataManagementStrategy ? Type.RULE : Type.DMN;
         presenter.initCheatSheet(modelType);
     }
 
-    protected void setSettings(SettingsView.Presenter presenter) {
+    public void setSettings(SettingsView.Presenter presenter) {
         Type modelType = dataManagementStrategy instanceof AbstractDMODataManagementStrategy ? Type.RULE : Type.DMN;
         presenter.setEventBus(eventBus);
         presenter.setScenarioType(modelType, context.getSettings(), path.getFileName());

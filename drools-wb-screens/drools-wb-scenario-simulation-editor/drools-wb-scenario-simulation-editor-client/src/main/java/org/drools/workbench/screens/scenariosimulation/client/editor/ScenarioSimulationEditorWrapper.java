@@ -53,10 +53,6 @@ public interface ScenarioSimulationEditorWrapper {
 
     void onRefreshedModelContent(SimulationRunResult testResult);
 
-    void populateAdditionalDocks(String identifier);
-
-    void resetAdditionalDocks();
-
     void addBackgroundPage(ScenarioGridWidget scenarioGridWidget);
 
     void selectSimulationTab();
@@ -67,4 +63,6 @@ public interface ScenarioSimulationEditorWrapper {
         simulationPanel.synchronizeFactMappingsWidths();
         backgroundPanel.synchronizeFactMappingsWidths();
     }
+
+    void populateDocks(String identifier);
 }

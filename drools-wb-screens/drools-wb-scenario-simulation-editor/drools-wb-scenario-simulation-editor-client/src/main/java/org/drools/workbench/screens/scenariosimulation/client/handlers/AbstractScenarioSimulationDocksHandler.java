@@ -27,6 +27,7 @@ import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSh
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsView;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SubDockView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.kie.workbench.common.widgets.client.docks.AbstractWorkbenchDocksHandler;
@@ -91,6 +92,12 @@ public abstract class AbstractScenarioSimulationDocksHandler extends AbstractWor
     }
 
     public abstract void expandTestResultsDock();
+
+    public void resetDocks() {
+        getSettingsPresenter().ifPresent(SubDockView.Presenter::reset);
+        getCheatSheetPresenter().ifPresent(SubDockView.Presenter::reset);
+        getTestToolsPresenter().ifPresent(SubDockView.Presenter::reset);
+    }
 
     public void setScesimEditorId(String scesimEditorId) {
         currentScesimEditorId = scesimEditorId;
