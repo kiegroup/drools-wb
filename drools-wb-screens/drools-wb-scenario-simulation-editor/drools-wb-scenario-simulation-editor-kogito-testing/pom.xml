@@ -484,7 +484,7 @@
       <groupId>org.kie</groupId>
       <artifactId>lienzo-core</artifactId>
     </dependency>
-        <dependency>
+    <dependency>
       <groupId>org.drools</groupId>
       <artifactId>drools-scenario-simulation-api</artifactId>
     </dependency>
