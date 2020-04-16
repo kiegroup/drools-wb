@@ -123,7 +123,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
             dmnTypeMap.put(jsitItemDefinition.getName(), getDMNType(itemDefinitionMap, jsitItemDefinition, nameSpace, dmnTypeMap));
         }
 
-        /* Evaluating not primitive types defined into DMN file as ItemDefinitions objects */
+        /* Managing all item definitions fields and subfields */
         for (int i = 0; i < jsitItemDefinitions.size(); i++) {
             final JSITItemDefinition jsitItemDefinition = Js.uncheckedCast(jsitItemDefinitions.get(i));
             populateItemFields(itemDefinitionMap,
@@ -216,11 +216,21 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
                                  null);
     }
 
-    void populateItemFields(final Map<String, JSITItemDefinition> allItemDefinitions,
-                            final JSITItemDefinition itemDefinition,
-                            final String namespace,
-                            final Map<String, ClientDMNType> dmnTypesMap,
-                            final ClientDMNType clientDMNType) {
+    /**
+     * This method aim is to populate all fields and subfields present in a given <code>JSITItemDefinitionItem</code>
+     * Considering any field can contains fields, this method is *recursive*. Be sure an exit condition is correctly
+     * set. Currently, the methods exits if there are not fields inside the given itemDefinition.
+     * @param allItemDefinitions
+     * @param itemDefinition
+     * @param namespace
+     * @param dmnTypesMap
+     * @param clientDMNType
+     */
+    protected void populateItemFields(final Map<String, JSITItemDefinition> allItemDefinitions,
+                                      final JSITItemDefinition itemDefinition,
+                                      final String namespace,
+                                      final Map<String, ClientDMNType> dmnTypesMap,
+                                      final ClientDMNType clientDMNType) {
         final List<JSITItemDefinition> jsitItemDefinitionFields = itemDefinition.getItemComponent();
         if (jsitItemDefinitionFields != null && !jsitItemDefinitionFields.isEmpty()) {
 
@@ -229,8 +239,8 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
                 final String typeRef = jsitItemDefinitionField.getTypeRef();
                 ClientDMNType jsitItemDefinitionFieldDMNType;
                 /* Retrieving field ClientDMNType */
-                if (!dmnTypesMap.containsKey(typeRef)) {
-                    /* Current typeRef is not present in dmnTypesMap, therefore it creates and adds it */
+                if (typeRef == null || !dmnTypesMap.containsKey(typeRef)) {
+                    /* Current typeRef is null or not present in dmnTypesMap, therefore it creates and adds it */
                     jsitItemDefinitionFieldDMNType = getDMNType(allItemDefinitions, jsitItemDefinitionField, namespace, dmnTypesMap);
                     dmnTypesMap.put(jsitItemDefinitionFieldDMNType.getName(), jsitItemDefinitionFieldDMNType);
                 } else {
