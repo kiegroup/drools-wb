@@ -120,13 +120,12 @@ public class ItemElementPresenter extends ElementPresenter<ItemElementView> impl
         final ItemElementView itemElementView = viewsProvider.getListEditorElementView();
         itemElementView.init(this);
         final UListElement innerItemContainer = itemElementView.getInnerItemContainer();
-        final String expandablePropertyIdentifier = containerItemElementView.getItemId() + "." + expandablePropertyName;
         itemElementView.getEditItemButton().removeFromParent();
         itemElementView.getDeleteItemButton().removeFromParent();
         itemElementView.getSaveChange().removeFromParent();
-        itemElementView.setItemId(expandablePropertyIdentifier);
+        itemElementView.setItemId(expandablePropertyName);
         propertiesMap.forEach((propertyName, propertyValue) ->
-                                            innerItemContainer.appendChild(propertyPresenter.getPropertyFields(expandablePropertyIdentifier, propertyName, propertyValue)));
+                                            innerItemContainer.appendChild(propertyPresenter.getPropertyFields(expandablePropertyName, propertyName, propertyValue)));
         containerItemElementView.getInnerItemContainer().insertBefore(itemElementView.getItemContainer(), containerItemElementView.getSaveChange());
     }
 }
