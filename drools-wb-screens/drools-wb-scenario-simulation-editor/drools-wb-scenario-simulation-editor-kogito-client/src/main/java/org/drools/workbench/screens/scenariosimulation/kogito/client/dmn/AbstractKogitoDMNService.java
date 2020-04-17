@@ -128,7 +128,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
             populateItemFields(itemDefinitionMap,
                                jsitItemDefinition,
                                nameSpace,
-                               dmnTypeMap,
+                               Collections.unmodifiableMap(dmnTypeMap),
                                dmnTypeMap.get(jsitItemDefinition.getName()));
         }
 
@@ -238,23 +238,24 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
                 final String typeRef = jsitItemDefinitionField.getTypeRef();
                 ClientDMNType jsitItemDefinitionFieldDMNType;
                 /* Retrieving field ClientDMNType */
-                if (typeRef == null || !dmnTypesMap.containsKey(typeRef)) {
+                if (typeRef == null) {
                     /* Current typeRef is null or not present in dmnTypesMap, therefore it creates and adds it */
                     jsitItemDefinitionFieldDMNType = getDMNType(allItemDefinitions, jsitItemDefinitionField, namespace, dmnTypesMap);
-                    dmnTypesMap.put(jsitItemDefinitionFieldDMNType.getName(), jsitItemDefinitionFieldDMNType);
                 } else {
                     jsitItemDefinitionFieldDMNType = dmnTypesMap.get(typeRef);
 
                     /* If DMNType is simple (BuiltInType feelType is present) and the current field is a collection,
                        a new DMNType of simple type with isCollection true is created */
-                    if (jsitItemDefinitionFieldDMNType.getFeelType() != null && jsitItemDefinitionField.getIsCollection()) {
-                        jsitItemDefinitionFieldDMNType = new ClientDMNType(URI_FEEL, jsitItemDefinitionFieldDMNType.getName(), null, true, false, null, jsitItemDefinitionFieldDMNType.getFeelType());
+                    if (!jsitItemDefinitionFieldDMNType.isCollection() && jsitItemDefinitionField.getIsCollection()) {
+                        jsitItemDefinitionFieldDMNType = jsitItemDefinitionFieldDMNType.copyAsCollection();
+                        populateItemFields(allItemDefinitions, Js.uncheckedCast(allItemDefinitions.get(typeRef)), namespace, dmnTypesMap, jsitItemDefinitionFieldDMNType);
                     }
                 }
 
                 /* Managing subfields of the current field in recursive way */
-                populateItemFields(allItemDefinitions, jsitItemDefinitionField, namespace, dmnTypesMap, jsitItemDefinitionFieldDMNType);
-
+                if (!jsitItemDefinitionFieldDMNType.isCollection() && jsitItemDefinitionFieldDMNType.isComposite()) {
+                    populateItemFields(allItemDefinitions, jsitItemDefinitionField, namespace, dmnTypesMap, jsitItemDefinitionFieldDMNType);
+                }
                 clientDMNType.getFields().put(jsitItemDefinitionField.getName(), jsitItemDefinitionFieldDMNType);
             }
         }

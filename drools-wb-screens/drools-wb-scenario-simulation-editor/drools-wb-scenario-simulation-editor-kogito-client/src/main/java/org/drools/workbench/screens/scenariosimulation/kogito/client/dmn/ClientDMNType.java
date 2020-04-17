@@ -15,6 +15,7 @@
  */
 package org.drools.workbench.screens.scenariosimulation.kogito.client.dmn;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.feel.BuiltInType;
@@ -41,6 +42,10 @@ public class ClientDMNType {
         this(namespace, name, id, isCollection, feelType);
         this.fields = fields;
         this.composite = isComposite;
+    }
+
+    public ClientDMNType copyAsCollection() {
+        return new ClientDMNType(namespace, name, id, true, composite, new HashMap<>(fields), feelType);
     }
 
     public String getNamespace() {
@@ -70,4 +75,4 @@ public class ClientDMNType {
     public BuiltInType getFeelType() {
         return feelType;
     }
-z}
+}
