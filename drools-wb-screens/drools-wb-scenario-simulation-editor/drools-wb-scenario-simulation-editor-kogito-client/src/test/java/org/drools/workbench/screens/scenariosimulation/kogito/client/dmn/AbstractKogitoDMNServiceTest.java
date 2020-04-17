@@ -143,6 +143,20 @@ public class AbstractKogitoDMNServiceTest {
         assertEquals(definition3, index.get(name3));
     }
 
+    @Test(expected = UnsupportedOperationException.class)
+    public void testIndexDefinitionsUnmodifiable() {
+        final JSITItemDefinition definition1 = mock(JSITItemDefinition.class);
+
+        final String name1 = "name1";
+        final List<JSITItemDefinition> list = Arrays.asList(definition1);
+
+        when(definition1.getName()).thenReturn(name1);
+
+        final Map<String, JSITItemDefinition> index = abstractKogitoDMNServiceSpy.indexDefinitionsByName(list);
+
+        index.put("name2", mock(JSITItemDefinition.class));
+    }
+
     @Test
     public void testGetOrCreateDMNType() {
 

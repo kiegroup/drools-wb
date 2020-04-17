@@ -16,7 +16,6 @@
 package org.drools.workbench.screens.scenariosimulation.kogito.client.dmn;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -90,10 +89,20 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
         return dmnTypesMap.get(typeRef);
     }
 
+    /**
+     * This method retrieves all DMN Types from provided list of <codeJSITItemDefinition</code> object, retrieved
+     * from given DMN File.
+     * @param jsitItemDefinitions
+     * @param nameSpace
+     * @return
+     */
     protected Map<String, ClientDMNType> getDMNTypesMap(final List<JSITItemDefinition> jsitItemDefinitions,
                                                         final String nameSpace) {
-        Map<String, ClientDMNType> toReturn = new HashMap<>();
+        Map<String, ClientDMNType> dmnTypeMap = new HashMap<>();
+
+        /* Adding primitive feel types */
         for (BuiltInType type : BuiltInType.values()) {
+
             for (String name : type.getNames()) {
                 ClientDMNType feelPrimitiveType;
                 /* CONTEXT is a particular case of primitive type */
@@ -102,29 +111,28 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
                 } else {
                     feelPrimitiveType = new ClientDMNType(URI_FEEL, name, null, false, false, null, type);
                 }
-                toReturn.put(name, feelPrimitiveType);
+                dmnTypeMap.put(name, feelPrimitiveType);
             }
         }
-        /* Evaluating not primitive types defined into DMN file */
-        final Map<String, JSITItemDefinition> indexed = indexDefinitionsByName(jsitItemDefinitions);
+
+        final Map<String, JSITItemDefinition> itemDefinitionMap = indexDefinitionsByName(jsitItemDefinitions);
+        /* Evaluating not primitive types defined into DMN file as ItemDefinitions objects */
         for (int i = 0; i < jsitItemDefinitions.size(); i++) {
             final JSITItemDefinition jsitItemDefinition = Js.uncheckedCast(jsitItemDefinitions.get(i));
-            toReturn.put(jsitItemDefinition.getName(), getDMNType(indexed, jsitItemDefinition, nameSpace, toReturn));
+            dmnTypeMap.put(jsitItemDefinition.getName(), getDMNType(itemDefinitionMap, jsitItemDefinition, nameSpace, dmnTypeMap));
         }
 
-        // To prevent ConcurrentModificationException we iterate through a copy.
-        final Collection<ClientDMNType> values = new ArrayList<>(toReturn.values());
-        values.forEach((v) -> {
-            // Default DMN types (number, date, etc.), are not indexed but present in toReturn
-            if (indexed.containsKey(v.getName())) {
-                populateItemFields(indexed,
-                                   Js.uncheckedCast(indexed.get(v.getName())),
-                                   nameSpace,
-                                   toReturn);
-            }
-        });
+        /* Managing all item definitions fields and subfields */
+        for (int i = 0; i < jsitItemDefinitions.size(); i++) {
+            final JSITItemDefinition jsitItemDefinition = Js.uncheckedCast(jsitItemDefinitions.get(i));
+            populateItemFields(itemDefinitionMap,
+                               jsitItemDefinition,
+                               nameSpace,
+                               dmnTypeMap,
+                               dmnTypeMap.get(jsitItemDefinition.getName()));
+        }
 
-        return toReturn;
+        return dmnTypeMap;
     }
 
     ClientDMNType getOrCreateDMNType(final Map<String, JSITItemDefinition> allDefinitions,
@@ -144,18 +152,23 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
         return getDMNType(allDefinitions, value, namespace, createdTypes);
     }
 
+    /**
+     * It creates an *unmodifiable* map of JSITItemDefinition object, with its name as a key
+     * @param allDefinitions
+     * @return
+     */
     Map<String, JSITItemDefinition> indexDefinitionsByName(final List<JSITItemDefinition> allDefinitions) {
         final HashMap<String, JSITItemDefinition> index = new HashMap<>();
         for (int i = 0; i < allDefinitions.size(); i++) {
             final JSITItemDefinition value = Js.uncheckedCast(allDefinitions.get(i));
             index.put(value.getName(), value);
         }
-        return index;
+        return Collections.unmodifiableMap(index);
     }
 
     /**
      * This method creates a <code>ClientDMNType</code> object of a given <code>JSITItemDefinition</code> object.
-     * It does not populate the fields of the type. To populate it, use {@link #populateItemFields(Map, JSITItemDefinition, String, Map)}.
+     * It does not populate the fields of the type. To populate it, use {@link #populateItemFields(Map, JSITItemDefinition, String, Map, ClientDMNType)}.
      *
      * @param allDefinitions
      * @param itemDefinition
@@ -169,11 +182,13 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
                              final Map<String, ClientDMNType> dmnTypesMap) {
         final Map<String, ClientDMNType> fields = new HashMap<>();
         boolean isCollection = itemDefinition.getIsCollection();
-        /* First Step: inheriting fields defined from item's typeRef, which represent its "super item".
-         *  This is required when a typeRef is defined for current itemDefinition */
-        if (itemDefinition.getTypeRef() != null) {
+        boolean isComposite = itemDefinition.getItemComponent() != null && !itemDefinition.getItemComponent().isEmpty();
+        /* Inheriting fields defined from item's typeRef, which represent its "super item".
+         * This is required when a typeRef is defined for current itemDefinition */
+        String typeRef = itemDefinition.getTypeRef();
+        if (typeRef != null) {
             final ClientDMNType clientDmnType = getOrCreateDMNType(allDefinitions,
-                                                                   itemDefinition.getTypeRef(),
+                                                                   typeRef,
                                                                    namespace,
                                                                    dmnTypesMap);
             if (clientDmnType != null) {
@@ -181,8 +196,9 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
                 if (clientDmnType.isComposite()) {
                     fields.putAll(clientDmnType.getFields());
                 }
-                /* If "super item" is a collection, current item must inherit this property */
+                /* Current clientDmnType item must inherits these properties from its super type */
                 isCollection = clientDmnType.isCollection() || isCollection;
+                isComposite = clientDmnType.isComposite() || isComposite;
             } else {
                 throw new IllegalStateException(
                         "Item: " + itemDefinition.getName() + " refers to typeRef: " + itemDefinition.getTypeRef()
@@ -190,40 +206,56 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
             }
         }
 
-        final List<JSITItemDefinition> itemComponent = itemDefinition.getItemComponent();
         return new ClientDMNType(namespace,
                                  itemDefinition.getName(),
                                  itemDefinition.getId(),
                                  isCollection,
-                                 itemComponent != null && !itemComponent.isEmpty(),
+                                 isComposite,
                                  fields,
                                  null);
     }
 
-    void populateItemFields(final Map<String, JSITItemDefinition> allDefinitions,
-                            final JSITItemDefinition itemDefinition,
-                            final String namespace,
-                            final Map<String, ClientDMNType> dmnTypesMap) {
-        final ClientDMNType clientDMNType = dmnTypesMap.get(itemDefinition.getName());
-        populateItemFields(allDefinitions, itemDefinition, namespace, dmnTypesMap, clientDMNType);
-    }
+    /**
+     * This method aim is to populate all fields and subfields present in a given <code>JSITItemDefinitionItem</code>
+     * Considering any field can contains fields, this method is *recursive*. Be sure an exit condition is correctly
+     * set. Currently, the methods exits if there are not fields inside the given itemDefinition.
+     * @param allItemDefinitions
+     * @param itemDefinition
+     * @param namespace
+     * @param dmnTypesMap
+     * @param clientDMNType
+     */
+    protected void populateItemFields(final Map<String, JSITItemDefinition> allItemDefinitions,
+                                      final JSITItemDefinition itemDefinition,
+                                      final String namespace,
+                                      final Map<String, ClientDMNType> dmnTypesMap,
+                                      final ClientDMNType clientDMNType) {
+        final List<JSITItemDefinition> jsitItemDefinitionFields = itemDefinition.getItemComponent();
+        if (jsitItemDefinitionFields != null && !jsitItemDefinitionFields.isEmpty()) {
 
-    void populateItemFields(final Map<String, JSITItemDefinition> allDefinitions,
-                            final JSITItemDefinition itemDefinition,
-                            final String namespace,
-                            final Map<String, ClientDMNType> dmnTypesMap,
-                            final ClientDMNType clientDMNType) {
-        final List<JSITItemDefinition> jsitItemDefinitions = itemDefinition.getItemComponent();
-        if (jsitItemDefinitions != null && !jsitItemDefinitions.isEmpty()) {
-            clientDMNType.setIsComposite(true);
-            for (int i = 0; i < jsitItemDefinitions.size(); i++) {
-                final JSITItemDefinition jsitItemDefinition = Js.uncheckedCast(jsitItemDefinitions.get(i));
-                final String typeRef = jsitItemDefinition.getTypeRef();
-                if (!dmnTypesMap.containsKey(typeRef)) {
-                    ClientDMNType nestedClientDMNType = getDMNType(allDefinitions, jsitItemDefinition, namespace, dmnTypesMap);
-                    dmnTypesMap.put(typeRef, nestedClientDMNType);
+            for (int i = 0; i < jsitItemDefinitionFields.size(); i++) {
+                final JSITItemDefinition jsitItemDefinitionField = Js.uncheckedCast(jsitItemDefinitionFields.get(i));
+                final String typeRef = jsitItemDefinitionField.getTypeRef();
+                ClientDMNType jsitItemDefinitionFieldDMNType;
+                /* Retrieving field ClientDMNType */
+                if (typeRef == null || !dmnTypesMap.containsKey(typeRef)) {
+                    /* Current typeRef is null or not present in dmnTypesMap, therefore it creates and adds it */
+                    jsitItemDefinitionFieldDMNType = getDMNType(allItemDefinitions, jsitItemDefinitionField, namespace, dmnTypesMap);
+                    dmnTypesMap.put(jsitItemDefinitionFieldDMNType.getName(), jsitItemDefinitionFieldDMNType);
+                } else {
+                    jsitItemDefinitionFieldDMNType = dmnTypesMap.get(typeRef);
+
+                    /* If DMNType is simple (BuiltInType feelType is present) and the current field is a collection,
+                       a new DMNType of simple type with isCollection true is created */
+                    if (jsitItemDefinitionFieldDMNType.getFeelType() != null && jsitItemDefinitionField.getIsCollection()) {
+                        jsitItemDefinitionFieldDMNType = new ClientDMNType(URI_FEEL, jsitItemDefinitionFieldDMNType.getName(), null, true, false, null, jsitItemDefinitionFieldDMNType.getFeelType());
+                    }
                 }
-                clientDMNType.getFields().put(jsitItemDefinition.getName(), dmnTypesMap.get(typeRef));
+
+                /* Managing subfields of the current field in recursive way */
+                populateItemFields(allItemDefinitions, jsitItemDefinitionField, namespace, dmnTypesMap, jsitItemDefinitionFieldDMNType);
+
+                clientDMNType.getFields().put(jsitItemDefinitionField.getName(), jsitItemDefinitionFieldDMNType);
             }
         }
     }
