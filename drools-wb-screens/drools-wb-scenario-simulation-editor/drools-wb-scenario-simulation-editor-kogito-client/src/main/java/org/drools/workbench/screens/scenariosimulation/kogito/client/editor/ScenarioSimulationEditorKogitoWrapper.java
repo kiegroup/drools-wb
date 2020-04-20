@@ -293,13 +293,14 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
         authoringWorkbenchDocks.setup("AuthoringPerspective", place);
         SCESIMMainJs.initializeJsInteropConstructors(SCESIMMainJs.getConstructorsMap());
         MainJs.initializeJsInteropConstructors(MainJs.getConstructorsMap());
+        scenarioSimulationEditorPresenter.setWrapper(this);
     }
 
     public void gotoPath(Path path) {
         resetEditorPages();
         kogitoOracle.init(path);
         currentPath = path;
-        scenarioSimulationEditorPresenter.init(this, new ObservablePathImpl().wrap(path));
+        scenarioSimulationEditorPresenter.setPath(new ObservablePathImpl().wrap(path));
     }
 
     public Path getCurrentPath() {

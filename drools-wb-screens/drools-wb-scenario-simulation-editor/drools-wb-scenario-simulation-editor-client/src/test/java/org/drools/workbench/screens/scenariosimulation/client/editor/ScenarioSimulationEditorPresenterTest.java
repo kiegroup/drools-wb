@@ -133,8 +133,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Mock
     private PathPlaceRequest placeRequestMock;
     @Mock
-    private IsWidget testRunnerReportingPanelWidgetMock;
-    @Mock
     private AbstractScenarioSimulationDocksHandler abstractScenarioSimulationDocksHandlerMock;
     @Mock
     private ScenarioMenuItem runScenarioMenuItemMock;
@@ -282,7 +280,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     public void showDocks_PlaceStatusOpen() {
         presenterSpy.init(scenarioSimulationEditorWrapperMock, observablePathMock);
         presenterSpy.showDocks(PlaceStatus.OPEN);
-        //verify(scenarioSimulationEditorWrapperMock, times(1)).wrappedRegisterDock(eq(AbstractScenarioSimulationDocksHandler.TEST_RUNNER_REPORTING_PANEL), eq(testRunnerReportingPanelWidgetMock));
         verify(abstractScenarioSimulationDocksHandlerMock, times(1)).addDocks();
         verify(abstractScenarioSimulationDocksHandlerMock, times(1)).setScesimEditorId(eq(String.valueOf(presenterSpy.scenarioPresenterId)));
         verify(presenterSpy, never()).expandToolsDock();
@@ -295,7 +292,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     public void showDocks_PlaceStatusClose() {
         presenterSpy.init(scenarioSimulationEditorWrapperMock, observablePathMock);
         presenterSpy.showDocks(PlaceStatus.CLOSE);
-//        verify(scenarioSimulationEditorWrapperMock, times(1)).wrappedRegisterDock(eq(AbstractScenarioSimulationDocksHandler.TEST_RUNNER_REPORTING_PANEL), eq(testRunnerReportingPanelWidgetMock));
         verify(abstractScenarioSimulationDocksHandlerMock, times(1)).addDocks();
         verify(abstractScenarioSimulationDocksHandlerMock, times(1)).setScesimEditorId(eq(String.valueOf(presenterSpy.scenarioPresenterId)));
         verify(presenterSpy, times(1)).expandToolsDock();

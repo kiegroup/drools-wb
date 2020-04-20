@@ -28,8 +28,13 @@ import org.drools.scenariosimulation.api.model.AuditLog;
 import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
+import org.drools.scenariosimulation.api.model.SimulationRunMetadata;
+import org.drools.workbench.screens.scenariosimulation.businesscentral.client.handlers.ScenarioSimulationBusinessCentralDocksHandler;
+import org.drools.workbench.screens.scenariosimulation.businesscentral.client.rightpanel.coverage.CoverageReportView;
+import org.drools.workbench.screens.scenariosimulation.businesscentral.client.rightpanel.testrunner.TestRunnerReportingPanelWrapper;
 import org.drools.workbench.screens.scenariosimulation.client.TestProperties;
 import org.drools.workbench.screens.scenariosimulation.client.editor.AbstractScenarioSimulationEditorTest;
+import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.AbstractDMODataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationHasBusyIndicatorDefaultErrorCallback;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
@@ -43,6 +48,7 @@ import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulatio
 import org.guvnor.common.services.project.client.security.ProjectController;
 import org.guvnor.common.services.project.model.WorkspaceProject;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
+import org.guvnor.common.services.shared.test.TestResultMessage;
 import org.guvnor.messageconsole.client.console.widget.button.AlertsButtonMenuItemBuilder;
 import org.gwtbootstrap3.client.ui.NavTabs;
 import org.gwtbootstrap3.client.ui.TabListItem;
@@ -58,6 +64,8 @@ import org.kie.workbench.common.widgets.configresource.client.widget.bound.Impor
 import org.kie.workbench.common.widgets.metadata.client.KieEditorWrapperView;
 import org.kie.workbench.common.widgets.metadata.client.validation.AssetUpdateValidator;
 import org.kie.workbench.common.widgets.metadata.client.widget.OverviewWidgetPresenter;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.uberfire.client.mvp.PerspectiveManager;
 import org.uberfire.client.mvp.PlaceManager;
@@ -80,7 +88,9 @@ import org.uberfire.workbench.model.menu.MenuItem;
 
 import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type.DMN;
 import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type.RULE;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
@@ -90,6 +100,7 @@ import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -147,6 +158,22 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     private TabListItem simulationTabListItemMock;
     @Mock
     private TabListItem backgroundTabListItemMock;
+    @Mock
+    private ScenarioSimulationBusinessCentralDocksHandler scenarioSimulationBusinessCentralDocksHandlerMock;
+    @Mock
+    private TestRunnerReportingPanelWrapper testRunnerReportingPanelWrapperMock;
+    @Mock
+    private IsWidget testRunnerReportingPanelWidgetMock;
+    @Mock
+    private SimulationRunResult simulationRunResultMock;
+    @Mock
+    private TestResultMessage testResultMessageMock;
+    @Mock
+    private SimulationRunMetadata simulationRunMetadataMock;
+    @Mock
+    private RemoteCallback<Object> exportCallBackMock;
+    @Captor
+    private ArgumentCaptor<Command> commandArgumentCaptor;
 
     private CallerMock<ScenarioSimulationService> scenarioSimulationCaller;
     private CallerMock<ImportExportService> importExportCaller;
@@ -171,7 +198,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
                                                                                                                new CallerMock<>(dmnTypeServiceMock),
                                                                                                                importExportCaller,
                                                                                                                runnerReportServiceCaller,
-                                                                                                               null) {
+                                                                                                               scenarioSimulationBusinessCentralDocksHandlerMock) {
             {
                 this.kieView = kieViewMock;
                 this.overviewWidget = overviewWidgetPresenterMock;
@@ -198,6 +225,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         when(scenarioSimulationEditorPresenterMock.getView()).thenReturn(scenarioSimulationViewMock);
         when(scenarioSimulationEditorPresenterMock.getModel()).thenReturn(scenarioSimulationModelMock);
         when(scenarioSimulationEditorPresenterMock.getContext()).thenReturn(scenarioSimulationContextLocal);
+        when(scenarioSimulationEditorPresenterMock.getExportCallBack()).thenReturn(exportCallBackMock);
         when(alertsButtonMenuItemBuilderMock.build()).thenReturn(alertsButtonMenuItemMock);
         when(versionRecordManagerMock.buildMenu()).thenReturn(versionRecordMenuItemMock);
         when(scenarioGridWidgetSpy.getScenarioSimulationContext()).thenReturn(scenarioSimulationContextLocal);
@@ -208,12 +236,17 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         when(multiPageEditorViewMock.getPageIndex(ScenarioSimulationEditorConstants.INSTANCE.backgroundTabTitle())).thenReturn(BACKGROUND_TAB_INDEX);
         when(navTabsMock.getWidget(SIMULATION_TAB_INDEX)).thenReturn(simulationTabListItemMock);
         when(navTabsMock.getWidget(BACKGROUND_TAB_INDEX)).thenReturn(backgroundTabListItemMock);
+        when(scenarioSimulationBusinessCentralDocksHandlerMock.getTestRunnerReportingPanel()).thenReturn(testRunnerReportingPanelWrapperMock);
+        when(testRunnerReportingPanelWrapperMock.asWidget()).thenReturn(testRunnerReportingPanelWidgetMock);
+        when(simulationRunResultMock.getTestResultMessage()).thenReturn(testResultMessageMock);
+        when(simulationRunResultMock.getSimulationRunMetadata()).thenReturn(simulationRunMetadataMock);
     }
 
     @Test
     public void onStartup() {
         scenarioSimulationEditorBusinessClientWrapper.onStartup(observablePathMock, placeRequestMock);
-        verify(scenarioSimulationEditorPresenterMock, times(1)).init(eq(scenarioSimulationEditorBusinessClientWrapper), eq(observablePathMock));
+        verify(scenarioSimulationEditorPresenterMock, times(1)).setWrapper(eq(scenarioSimulationEditorBusinessClientWrapper));
+        verify(scenarioSimulationEditorPresenterMock, times(1)).setPath(eq(observablePathMock));
     }
 
     @Test
@@ -235,6 +268,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         final DefaultPlaceRequest placeRequest = new DefaultPlaceRequest(TestToolsPresenter.IDENTIFIER);
         when(placeManagerMock.getStatus(eq(placeRequest))).thenReturn(placeStatusMock);
         scenarioSimulationEditorBusinessClientWrapper.showDocks();
+        verify(scenarioSimulationEditorBusinessClientWrapper, times(1)).wrappedRegisterDock(eq(ScenarioSimulationBusinessCentralDocksHandler.TEST_RUNNER_REPORTING_PANEL), eq(testRunnerReportingPanelWidgetMock));
         verify(scenarioSimulationEditorPresenterMock, times(1)).showDocks(same(placeStatusMock));
     }
 
@@ -289,6 +323,14 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     public void addDownloadMenuItem() {
         scenarioSimulationEditorBusinessClientWrapper.addDownloadMenuItem(fileMenuBuilderMock);
         verify(scenarioSimulationEditorPresenterMock, times(1)).addDownloadMenuItem(eq(fileMenuBuilderMock), isA(Supplier.class));
+    }
+
+    @Test
+    public void onRefreshedModelContent() {
+        assertNull(scenarioSimulationEditorBusinessClientWrapper.lastRunResult);
+        scenarioSimulationEditorBusinessClientWrapper.onRefreshedModelContent(simulationRunResultMock);
+        assertEquals(simulationRunResultMock, scenarioSimulationEditorBusinessClientWrapper.lastRunResult);
+        verify(testRunnerReportingPanelWrapperMock, times(1)).onTestRun(eq(testResultMessageMock));
     }
 
     @Test
@@ -433,6 +475,18 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     }
 
     @Test
+    public void getScenarioSimulationDocksHandler() {
+        assertEquals(scenarioSimulationBusinessCentralDocksHandlerMock,
+                     scenarioSimulationEditorBusinessClientWrapper.getScenarioSimulationDocksHandler());
+    }
+
+    @Test
+    public void getScenarioSimulationEditorPresenter() {
+        assertEquals(scenarioSimulationEditorPresenterMock,
+                     scenarioSimulationEditorBusinessClientWrapper.getScenarioSimulationEditorPresenter());
+    }
+
+    @Test
     public void getModelSuccessCallBackMethod_Rule() {
         modelLocal.setSimulation(getSimulation());
         modelLocal.getSettings().setType(RULE);
@@ -462,5 +516,53 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         verify(scenarioSimulationViewMock, times(1)).hideBusyIndicator();
         verify(scenarioSimulationEditorPresenterMock, times(1)).getJsonModel(eq(modelLocal));
         verify(scenarioSimulationEditorPresenterMock, times(1)).getModelSuccessCallbackMethod(isA(DataManagementStrategy.class), eq(modelLocal));
+    }
+
+    @Test
+    public void setCoverageReport() {
+        AuditLog auditLogMock = mock(AuditLog.class);
+        CoverageReportView.Presenter presenterSpy = spy(CoverageReportView.Presenter.class);
+        scenarioSimulationEditorBusinessClientWrapper.setCoverageReport(presenterSpy);
+        verify(presenterSpy, times(1)).populateCoverageReport(eq(DMN), eq(null));
+        //
+        reset(presenterSpy, simulationRunMetadataMock, scenarioSimulationEditorBusinessClientWrapper);
+        scenarioSimulationEditorBusinessClientWrapper.lastRunResult = simulationRunResultMock;
+        scenarioSimulationEditorBusinessClientWrapper.setCoverageReport(presenterSpy);
+        verify(presenterSpy, times(1)).populateCoverageReport(eq(DMN), eq(simulationRunMetadataMock));
+        verify(presenterSpy, never()).setDownloadReportCommand(any());
+        //
+        reset(presenterSpy, simulationRunMetadataMock, scenarioSimulationEditorBusinessClientWrapper);
+        when(simulationRunMetadataMock.getAuditLog()).thenReturn(auditLogMock);
+        scenarioSimulationEditorBusinessClientWrapper.lastRunResult = simulationRunResultMock;
+        scenarioSimulationEditorBusinessClientWrapper.setCoverageReport(presenterSpy);
+        verify(presenterSpy, times(1)).populateCoverageReport(eq(DMN), eq(simulationRunMetadataMock));
+        verify(presenterSpy, times(1)).setDownloadReportCommand(commandArgumentCaptor.capture());
+        commandArgumentCaptor.getValue().execute();
+        verify(scenarioSimulationEditorBusinessClientWrapper, times(1)).onDownloadReportToCsv(eq(exportCallBackMock),
+                                                                                                                   isA(ScenarioSimulationHasBusyIndicatorDefaultErrorCallback.class),
+                                                                                                                   eq(auditLogMock));
+        //
+        reset(presenterSpy, simulationRunMetadataMock, scenarioSimulationEditorBusinessClientWrapper);
+        scenarioSimulationEditorBusinessClientWrapper.lastRunResult = null;
+        when(scenarioSimulationEditorPresenterMock.getDataManagementStrategy()).thenReturn(mock(AbstractDMODataManagementStrategy.class));
+        scenarioSimulationEditorBusinessClientWrapper.setCoverageReport(presenterSpy);
+        verify(presenterSpy, times(1)).populateCoverageReport(eq(RULE), eq(null));
+        //
+        reset(presenterSpy, simulationRunMetadataMock, scenarioSimulationEditorBusinessClientWrapper);
+        scenarioSimulationEditorBusinessClientWrapper.lastRunResult = simulationRunResultMock;
+        scenarioSimulationEditorBusinessClientWrapper.setCoverageReport(presenterSpy);
+        verify(presenterSpy, times(1)).populateCoverageReport(eq(RULE), eq(simulationRunMetadataMock));
+        verify(presenterSpy, never()).setDownloadReportCommand(any());
+        //
+        reset(presenterSpy, simulationRunMetadataMock, scenarioSimulationEditorBusinessClientWrapper);
+        when(simulationRunMetadataMock.getAuditLog()).thenReturn(auditLogMock);
+        scenarioSimulationEditorBusinessClientWrapper.lastRunResult = simulationRunResultMock;
+        scenarioSimulationEditorBusinessClientWrapper.setCoverageReport(presenterSpy);
+        verify(presenterSpy, times(1)).populateCoverageReport(eq(RULE), eq(simulationRunMetadataMock));
+        verify(presenterSpy, times(1)).setDownloadReportCommand(commandArgumentCaptor.capture());
+        commandArgumentCaptor.getValue().execute();
+        verify(scenarioSimulationEditorBusinessClientWrapper, times(1)).onDownloadReportToCsv(eq(exportCallBackMock),
+                                                                                             isA(ScenarioSimulationHasBusyIndicatorDefaultErrorCallback.class),
+                                                                                             eq(auditLogMock));
     }
 }

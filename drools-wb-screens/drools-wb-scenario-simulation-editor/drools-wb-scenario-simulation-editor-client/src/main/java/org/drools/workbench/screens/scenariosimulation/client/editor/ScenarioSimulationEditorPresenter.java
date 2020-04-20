@@ -148,9 +148,8 @@ public class ScenarioSimulationEditorPresenter {
         context = scenarioSimulationProducer.getScenarioSimulationContext();
     }
 
-    public void init(ScenarioSimulationEditorWrapper scenarioSimulationEditorWrapper, ObservablePath path) {
+    public void setWrapper(ScenarioSimulationEditorWrapper scenarioSimulationEditorWrapper) {
         this.scenarioSimulationEditorWrapper = scenarioSimulationEditorWrapper;
-        this.path = path;
     }
 
     private void initMenuItems() {
@@ -159,6 +158,10 @@ public class ScenarioSimulationEditorPresenter {
         runScenarioMenuItem = ScenarioMenuItemFactory.getRunScenarioMenuItem(this::onRunScenario);
         exportToCSVMenuItem = ScenarioMenuItemFactory.getExportToCsvMenuItem(this::onExportToCsv);
         importMenuItem = ScenarioMenuItemFactory.getImportMenuItem(this::showImportDialog);
+    }
+
+    public void setPath(ObservablePath path) {
+        this.path = path;
     }
 
     public ObservablePath getPath() {
@@ -540,7 +543,7 @@ public class ScenarioSimulationEditorPresenter {
         };
     }
 
-    public ErrorCallback<?> getValidationFailedCallback() {
+    public ErrorCallback<Boolean> getValidationFailedCallback() {
         return (message, exception) -> {
             CustomBusyPopup.close();
             BusyPopup.close();

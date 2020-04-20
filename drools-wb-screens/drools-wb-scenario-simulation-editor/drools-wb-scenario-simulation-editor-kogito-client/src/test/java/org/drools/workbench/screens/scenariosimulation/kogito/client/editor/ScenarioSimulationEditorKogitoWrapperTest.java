@@ -57,6 +57,7 @@ import org.uberfire.client.views.pfly.multipage.MultiPageEditorViewImpl;
 import org.uberfire.client.workbench.widgets.multipage.MultiPageEditor;
 import org.uberfire.client.workbench.widgets.multipage.Page;
 import org.uberfire.mvp.Command;
+import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.events.NotificationEvent;
 import org.uberfire.workbench.model.menu.MenuItem;
 import org.uberfire.workbench.model.menu.Menus;
@@ -127,6 +128,8 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
     private Promise.PromiseExecutorCallbackFn.ResolveCallbackFn<Object> resolveCallbackFnMock;
     @Mock
     private Promise.PromiseExecutorCallbackFn.RejectCallbackFn rejectCallbackFnMock;
+    @Mock
+    private PlaceRequest placeRequestMock;
     @Captor
     private ArgumentCaptor<DataManagementStrategy> dataManagementStrategyCaptor;
     @Captor
@@ -204,7 +207,6 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
         assertEquals("file.scesim", pathArgumentCaptor.getValue().getFileName());
         assertEquals("path/", pathArgumentCaptor.getValue().toURI());
     }
-
 
     @Test
     public void manageContentFileWithoutPath() {
@@ -293,12 +295,17 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
         verify(scenarioSimulationEditorPresenterMock, times(1)).makeMenuBar(eq(fileMenuBuilderMock));
     }
 
+   /* @Test
+    public void onStartup() {
+        scenarioSimulationEditorKogitoWrapperSpy.onStartup(placeRequestMock);
+        verify(scenarioSimulationEditorPresenterMock, times(1)).setWrapper(eq(scenarioSimulationEditorKogitoWrapperSpy));
+    }*/
+
     @Test
     public void gotoPath() {
         scenarioSimulationEditorKogitoWrapperSpy.gotoPath(path);
         verify(kogitoAsyncPackageDataModelOracleMock, times(1)).init(eq(path));
-        verify(scenarioSimulationEditorPresenterMock, times(1)).init(eq(scenarioSimulationEditorKogitoWrapperSpy),
-                                                                                          isA(ObservablePath.class));
+        verify(scenarioSimulationEditorPresenterMock, times(1)).setPath(isA(ObservablePath.class));
         assertEquals(path, scenarioSimulationEditorKogitoWrapperSpy.getCurrentPath());
     }
 

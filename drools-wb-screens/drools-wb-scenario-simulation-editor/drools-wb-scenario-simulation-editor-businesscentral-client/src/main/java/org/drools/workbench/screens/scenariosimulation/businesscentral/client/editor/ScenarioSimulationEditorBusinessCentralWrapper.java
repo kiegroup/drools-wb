@@ -143,7 +143,8 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     public void onStartup(final ObservablePath path,
                           final PlaceRequest place) {
         super.init(path, place, type);
-        scenarioSimulationEditorPresenter.init(this, (ObservablePath) place.getPath());
+        scenarioSimulationEditorPresenter.setWrapper(this);
+        scenarioSimulationEditorPresenter.setPath(path);
     }
 
     @OnClose
