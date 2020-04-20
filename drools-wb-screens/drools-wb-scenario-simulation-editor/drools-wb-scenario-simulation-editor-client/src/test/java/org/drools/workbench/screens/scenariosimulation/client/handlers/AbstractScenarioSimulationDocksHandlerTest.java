@@ -39,7 +39,6 @@ public class AbstractScenarioSimulationDocksHandlerTest {
     @InjectMocks
     private AbstractScenarioSimulationDocksHandler abstractScenarioSimulationDocksHandler;
 
-
     private enum MANAGED_DOCKS {
         SETTINGS,
         TOOLS,

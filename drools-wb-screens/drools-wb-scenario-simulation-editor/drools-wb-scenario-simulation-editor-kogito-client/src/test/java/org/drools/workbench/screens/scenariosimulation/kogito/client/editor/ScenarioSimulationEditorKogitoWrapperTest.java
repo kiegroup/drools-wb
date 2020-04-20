@@ -33,6 +33,7 @@ import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.KogitoS
 import org.drools.workbench.screens.scenariosimulation.kogito.client.dmo.KogitoAsyncPackageDataModelOracle;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.strategies.KogitoDMNDataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.strategies.KogitoDMODataManagementStrategy;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.handlers.ScenarioSimulationKogitoDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.popup.ScenarioSimulationKogitoCreationPopupPresenter;
 import org.gwtbootstrap3.client.ui.NavTabs;
 import org.gwtbootstrap3.client.ui.TabListItem;
@@ -42,12 +43,16 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.workbench.common.kogito.client.editor.BaseKogitoEditor;
+import org.kie.workbench.common.kogito.client.editor.MultiPageEditorContainerPresenter;
 import org.kie.workbench.common.kogito.client.editor.MultiPageEditorContainerView;
 import org.kie.workbench.common.kogito.client.resources.i18n.KogitoClientConstants;
+import org.kie.workbench.common.widgets.client.docks.AuthoringEditorDock;
 import org.kie.workbench.common.widgets.client.menu.FileMenuBuilder;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
+import org.mockito.internal.util.reflection.FieldSetter;
+import org.mockito.internal.util.reflection.Whitebox;
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.backend.vfs.PathFactory;
@@ -130,6 +135,10 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
     private Promise.PromiseExecutorCallbackFn.RejectCallbackFn rejectCallbackFnMock;
     @Mock
     private PlaceRequest placeRequestMock;
+    @Mock
+    private ScenarioSimulationKogitoDocksHandler scenarioSimulationKogitoDocksHandlerMock;
+    @Mock
+    private AuthoringEditorDock authoringEditorDockMock;
     @Captor
     private ArgumentCaptor<DataManagementStrategy> dataManagementStrategyCaptor;
     @Captor
@@ -159,7 +168,6 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
         when(navBarsMock.getWidget(1)).thenReturn(editorItemMock);
         when(navBarsMock.getWidget(2)).thenReturn(backgroundItemMock);
         when(scenarioSimulationKogitoCreationPopupPresenterMock.getSelectedPath()).thenReturn("selected");
-
         when(translationServiceMock.getTranslation(KogitoClientConstants.KieEditorWrapperView_EditTabTitle)).thenReturn(KogitoClientConstants.KieEditorWrapperView_EditTabTitle);
         scenarioSimulationEditorKogitoWrapperSpy = spy(new ScenarioSimulationEditorKogitoWrapper() {
             {
@@ -170,6 +178,8 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
                 this.translationService = translationServiceMock;
                 this.scenarioSimulationKogitoCreationPopupPresenter = scenarioSimulationKogitoCreationPopupPresenterMock;
                 this.scenarioSimulationBuilder = kogitoScenarioSimulationBuilderMock;
+                this.authoringWorkbenchDocks = authoringEditorDockMock;
+                this.scenarioSimulationKogitoDocksHandler = scenarioSimulationKogitoDocksHandlerMock;
             }
 
             @Override
@@ -295,11 +305,13 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
         verify(scenarioSimulationEditorPresenterMock, times(1)).makeMenuBar(eq(fileMenuBuilderMock));
     }
 
-   /* @Test
+    @Test
     public void onStartup() {
+        Whitebox.setInternalState(scenarioSimulationEditorKogitoWrapperSpy, "multiPageEditorContainerView", multiPageEditorContainerViewMock);
         scenarioSimulationEditorKogitoWrapperSpy.onStartup(placeRequestMock);
+        verify(authoringEditorDockMock, times(1)).setup(eq("AuthoringPerspective"), eq(placeRequestMock));
         verify(scenarioSimulationEditorPresenterMock, times(1)).setWrapper(eq(scenarioSimulationEditorKogitoWrapperSpy));
-    }*/
+    }
 
     @Test
     public void gotoPath() {
@@ -426,5 +438,17 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
         remoteCallbackArgumentCaptor.getValue().callback("");
         verify(scenarioSimulationEditorKogitoWrapperSpy, times(1)).gotoPath(eq(path));
         verify(scenarioSimulationEditorKogitoWrapperSpy, times(1)).unmarshallContent(isA(String.class));
+    }
+
+    @Test
+    public void getScenarioSimulationDocksHandler() {
+        assertEquals(scenarioSimulationKogitoDocksHandlerMock,
+                     scenarioSimulationEditorKogitoWrapperSpy.getScenarioSimulationDocksHandler());
+    }
+
+    @Test
+    public void getScenarioSimulationEditorPresenter() {
+        assertEquals(scenarioSimulationEditorPresenterMock,
+                     scenarioSimulationEditorKogitoWrapperSpy.getScenarioSimulationEditorPresenter());
     }
 }
