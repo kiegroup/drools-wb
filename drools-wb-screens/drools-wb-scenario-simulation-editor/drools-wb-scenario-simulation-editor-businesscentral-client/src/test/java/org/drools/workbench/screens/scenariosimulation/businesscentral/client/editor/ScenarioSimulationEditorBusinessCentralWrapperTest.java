@@ -30,6 +30,7 @@ import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
 import org.drools.scenariosimulation.api.model.SimulationRunMetadata;
 import org.drools.workbench.screens.scenariosimulation.businesscentral.client.handlers.ScenarioSimulationBusinessCentralDocksHandler;
+import org.drools.workbench.screens.scenariosimulation.businesscentral.client.rightpanel.coverage.CoverageReportPresenter;
 import org.drools.workbench.screens.scenariosimulation.businesscentral.client.rightpanel.coverage.CoverageReportView;
 import org.drools.workbench.screens.scenariosimulation.businesscentral.client.rightpanel.testrunner.TestRunnerReportingPanelWrapper;
 import org.drools.workbench.screens.scenariosimulation.client.TestProperties;
@@ -38,6 +39,8 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationHasBusyIndicatorDefaultErrorCallback;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
@@ -67,6 +70,7 @@ import org.kie.workbench.common.widgets.metadata.client.widget.OverviewWidgetPre
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
+import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.client.mvp.PerspectiveManager;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.mvp.PlaceStatus;
@@ -94,6 +98,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Matchers.same;
@@ -172,6 +177,10 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     private SimulationRunMetadata simulationRunMetadataMock;
     @Mock
     private RemoteCallback<Object> exportCallBackMock;
+    @Mock
+    private CoverageReportPresenter coverageReportPresenterMock;
+    @Mock
+    private ObservablePath pathMock;
     @Captor
     private ArgumentCaptor<Command> commandArgumentCaptor;
 
@@ -226,6 +235,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         when(scenarioSimulationEditorPresenterMock.getModel()).thenReturn(scenarioSimulationModelMock);
         when(scenarioSimulationEditorPresenterMock.getContext()).thenReturn(scenarioSimulationContextLocal);
         when(scenarioSimulationEditorPresenterMock.getExportCallBack()).thenReturn(exportCallBackMock);
+        when(scenarioSimulationEditorPresenterMock.getPath()).thenReturn(pathMock);
         when(alertsButtonMenuItemBuilderMock.build()).thenReturn(alertsButtonMenuItemMock);
         when(versionRecordManagerMock.buildMenu()).thenReturn(versionRecordMenuItemMock);
         when(scenarioGridWidgetSpy.getScenarioSimulationContext()).thenReturn(scenarioSimulationContextLocal);
@@ -237,6 +247,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         when(navTabsMock.getWidget(SIMULATION_TAB_INDEX)).thenReturn(simulationTabListItemMock);
         when(navTabsMock.getWidget(BACKGROUND_TAB_INDEX)).thenReturn(backgroundTabListItemMock);
         when(scenarioSimulationBusinessCentralDocksHandlerMock.getTestRunnerReportingPanel()).thenReturn(testRunnerReportingPanelWrapperMock);
+        when(scenarioSimulationBusinessCentralDocksHandlerMock.getCoverageReportPresenter()).thenReturn(Optional.ofNullable(coverageReportPresenterMock));
         when(testRunnerReportingPanelWrapperMock.asWidget()).thenReturn(testRunnerReportingPanelWidgetMock);
         when(simulationRunResultMock.getTestResultMessage()).thenReturn(testResultMessageMock);
         when(simulationRunResultMock.getSimulationRunMetadata()).thenReturn(simulationRunMetadataMock);
@@ -470,6 +481,70 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     public void getScenarioSimulationEditorPresenter() {
         assertEquals(scenarioSimulationEditorPresenterMock,
                      scenarioSimulationEditorBusinessClientWrapper.getScenarioSimulationEditorPresenter());
+    }
+
+    @Test
+    public void populateRightDocks_Settings() {
+        doReturn(Optional.of(settingsPresenterMock)).when(scenarioSimulationBusinessCentralDocksHandlerMock).getSettingsPresenter();
+        scenarioSimulationEditorBusinessClientWrapper.populateDocks(SettingsPresenter.IDENTIFIER);
+        verify(scenarioSimulationEditorPresenterMock, times(1)).setSettings(eq(settingsPresenterMock));
+        verify(settingsPresenterMock, times(1)).setCurrentPath(eq(pathMock));
+        verify(scenarioSimulationEditorPresenterMock, never()).setTestTools(any());
+        verify(scenarioSimulationEditorBusinessClientWrapper, never()).setCoverageReport(any());
+        verify(coverageReportPresenterMock, never()).setCurrentPath(any());
+    }
+
+    @Test
+    public void populateRightDocks_TestTools() {
+        doReturn(Optional.of(testToolsPresenterMock)).when(scenarioSimulationBusinessCentralDocksHandlerMock).getTestToolsPresenter();
+        scenarioSimulationEditorBusinessClientWrapper.populateDocks(TestToolsPresenter.IDENTIFIER);
+        verify(scenarioSimulationEditorPresenterMock, never()).setSettings(any());
+        verify(settingsPresenterMock, never()).setCurrentPath(any());
+        verify(scenarioSimulationEditorPresenterMock, times(1)).setTestTools(eq(testToolsPresenterMock));
+        verify(cheatSheetPresenterMock, never()).setCurrentPath(any());
+        verify(scenarioSimulationEditorPresenterMock, never()).setCheatSheet(any());
+        verify(scenarioSimulationEditorBusinessClientWrapper, never()).setCoverageReport(any());
+        verify(coverageReportPresenterMock, never()).setCurrentPath(any());
+    }
+
+    @Test
+    public void populateRightDocks_CheatSheetPresenter_NotShown() {
+        when(cheatSheetPresenterMock.isCurrentlyShow(pathMock)).thenReturn(false);
+        doReturn(Optional.of(cheatSheetPresenterMock)).when(scenarioSimulationBusinessCentralDocksHandlerMock).getCheatSheetPresenter();
+        scenarioSimulationEditorBusinessClientWrapper.populateDocks(CheatSheetPresenter.IDENTIFIER);
+        verify(scenarioSimulationEditorPresenterMock, never()).setSettings(any());
+        verify(settingsPresenterMock, never()).setCurrentPath(any());
+        verify(scenarioSimulationEditorPresenterMock, never()).setTestTools(any());
+        verify(cheatSheetPresenterMock, times(1)).setCurrentPath(pathMock);
+        verify(scenarioSimulationEditorPresenterMock, times(1)).setCheatSheet(eq(cheatSheetPresenterMock));
+        verify(scenarioSimulationEditorBusinessClientWrapper, never()).setCoverageReport(any());
+        verify(coverageReportPresenterMock, never()).setCurrentPath(any());
+    }
+
+    @Test
+    public void populateRightDocks_CheatSheetPresenter_IsShown() {
+        when(cheatSheetPresenterMock.isCurrentlyShow(pathMock)).thenReturn(true);
+        doReturn(Optional.of(cheatSheetPresenterMock)).when(scenarioSimulationBusinessCentralDocksHandlerMock).getCheatSheetPresenter();
+        scenarioSimulationEditorBusinessClientWrapper.populateDocks(CheatSheetPresenter.IDENTIFIER);
+        verify(scenarioSimulationEditorPresenterMock, never()).setSettings(any());
+        verify(settingsPresenterMock, never()).setCurrentPath(any());
+        verify(scenarioSimulationEditorPresenterMock, never()).setTestTools(any());
+        verify(cheatSheetPresenterMock, never()).setCurrentPath(any());
+        verify(scenarioSimulationEditorPresenterMock, never()).setCheatSheet(any());
+        verify(scenarioSimulationEditorBusinessClientWrapper, never()).setCoverageReport(any());
+        verify(coverageReportPresenterMock, never()).setCurrentPath(any());
+    }
+
+    @Test
+    public void populateRightDocks_CoverageReportPresenter() {
+        scenarioSimulationEditorBusinessClientWrapper.populateDocks(CoverageReportPresenter.IDENTIFIER);
+        verify(scenarioSimulationEditorPresenterMock, never()).setSettings(any());
+        verify(settingsPresenterMock, never()).setCurrentPath(any());
+        verify(scenarioSimulationEditorPresenterMock, never()).setTestTools(any());
+        verify(cheatSheetPresenterMock, never()).setCurrentPath(any());
+        verify(scenarioSimulationEditorPresenterMock, never()).setCheatSheet(any());
+        verify(scenarioSimulationEditorBusinessClientWrapper, times(1)).setCoverageReport(eq(coverageReportPresenterMock));
+        verify(coverageReportPresenterMock, times(1)).setCurrentPath(eq(pathMock));
     }
 
     @Test
