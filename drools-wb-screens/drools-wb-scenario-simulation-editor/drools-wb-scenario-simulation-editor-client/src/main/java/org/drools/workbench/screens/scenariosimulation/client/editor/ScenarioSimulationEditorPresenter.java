@@ -103,7 +103,6 @@ public class ScenarioSimulationEditorPresenter {
     protected ScenarioSimulationContext context;
     protected ScenarioSimulationModel model;
     protected long scenarioPresenterId;
-    protected boolean saveEnabled = true;
     protected MenuItem undoMenuItem;
     protected MenuItem redoMenuItem;
     protected MenuItem runScenarioMenuItem;
@@ -168,10 +167,6 @@ public class ScenarioSimulationEditorPresenter {
         return path;
     }
 
-    public void setSaveEnabled(boolean toSet) {
-        saveEnabled = toSet;
-    }
-
     public void setPackageName(String packageName) {
         this.packageName = packageName;
     }
@@ -230,7 +225,7 @@ public class ScenarioSimulationEditorPresenter {
      * @param disable set this to <code>true</code> to <b>also</b> disable the panel
      */
     public void reloadTestTools(boolean disable) {
-        populateTestToolsCommand.execute();
+        populateRightDocks(TestToolsPresenter.IDENTIFIER);
         if (disable) {
             abstractScenarioSimulationDocksHandler.getTestToolsPresenter().ifPresent(TestToolsView.Presenter::onDisableEditorTab);
         }

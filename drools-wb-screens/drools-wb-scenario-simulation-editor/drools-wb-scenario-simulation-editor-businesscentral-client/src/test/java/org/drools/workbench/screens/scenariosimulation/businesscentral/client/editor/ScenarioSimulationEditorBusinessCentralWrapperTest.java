@@ -353,24 +353,11 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     }
 
     @Test
-    public void setSaveEnabledTrue() {
-        scenarioSimulationEditorBusinessClientWrapper.setSaveEnabled(true);
-        verify(scenarioSimulationEditorPresenterMock, times(1)).setSaveEnabled(eq(true));
-    }
-
-    @Test
-    public void setSaveEnabledFalse() {
-        scenarioSimulationEditorBusinessClientWrapper.setSaveEnabled(false);
-        verify(scenarioSimulationEditorPresenterMock, times(1)).setSaveEnabled(eq(false));
-    }
-
-    @Test
     public void makeMenuBarCanUpdateProjectTrue() {
         doReturn(Optional.of(mock(WorkspaceProject.class))).when(workbenchContextMock).getActiveWorkspaceProject();
         doReturn(promises.resolve(true)).when(projectControllerMock).canUpdateProject(any());
         scenarioSimulationEditorBusinessClientWrapper.makeMenuBar();
         verify(scenarioSimulationEditorPresenterMock, times(1)).makeMenuBar(same(fileMenuBuilderMock));
-        verify(scenarioSimulationEditorBusinessClientWrapper, times(1)).setSaveEnabled(eq(true));
     }
 
     @Test
@@ -379,7 +366,6 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         doReturn(promises.resolve(false)).when(projectControllerMock).canUpdateProject(any());
         scenarioSimulationEditorBusinessClientWrapper.makeMenuBar();
         verify(scenarioSimulationEditorPresenterMock, times(1)).makeMenuBar(same(fileMenuBuilderMock));
-        verify(scenarioSimulationEditorBusinessClientWrapper, times(1)).setSaveEnabled(eq(false));
     }
 
     @Test

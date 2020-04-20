@@ -18,10 +18,10 @@ package org.drools.workbench.screens.scenariosimulation.client.handlers;
 import java.util.Collection;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.workbench.common.widgets.client.docks.AuthoringEditorDock;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.uberfire.client.workbench.docks.UberfireDock;
 
@@ -29,62 +29,64 @@ import static org.drools.workbench.screens.scenariosimulation.client.handlers.Ab
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 @RunWith(GwtMockitoTestRunner.class)
 public class AbstractScenarioSimulationDocksHandlerTest {
 
     @Mock
-    private AuthoringEditorDock authoringWorkbenchDocks;
-    @InjectMocks
-    private AbstractScenarioSimulationDocksHandler abstractScenarioSimulationDocksHandler;
+    private AuthoringEditorDock authoringWorkbenchDocksMock;
+
+    private AbstractScenarioSimulationDocksHandler abstractScenarioSimulationDocksHandlerSpy;
 
     private enum MANAGED_DOCKS {
         SETTINGS,
         TOOLS,
-        CHEATSHEET,
-        REPORT,
-        COVERAGE;
+        CHEATSHEET
+    }
+
+    @Before
+    public void setup() {
+        abstractScenarioSimulationDocksHandlerSpy = spy(new AbstractScenarioSimulationDocksHandler() {
+
+            {
+                this.authoringWorkbenchDocks = authoringWorkbenchDocksMock;
+            }
+
+            @Override
+            public void expandTestResultsDock() {
+                //Do nothing
+            }
+        });
     }
 
     @Test
     public void correctAmountOfItems() {
-        assertEquals(MANAGED_DOCKS.values().length, abstractScenarioSimulationDocksHandler.provideDocks("identifier").size());
+        assertEquals(MANAGED_DOCKS.values().length, abstractScenarioSimulationDocksHandlerSpy.provideDocks("identifier").size());
     }
 
     @Test
     public void expandToolsDock() {
-        final Collection<UberfireDock> docks = abstractScenarioSimulationDocksHandler.provideDocks("id");
+        final Collection<UberfireDock> docks = abstractScenarioSimulationDocksHandlerSpy.provideDocks("id");
         final UberfireDock toolsDock = (UberfireDock) docks.toArray()[MANAGED_DOCKS.TOOLS.ordinal()];
 
-        abstractScenarioSimulationDocksHandler.expandToolsDock();
+        abstractScenarioSimulationDocksHandlerSpy.expandToolsDock();
 
-        verify(authoringWorkbenchDocks).expandAuthoringDock(eq(toolsDock));
-    }
-
-    @Test
-    public void expandTestResultsDock() {
-        final Collection<UberfireDock> docks = abstractScenarioSimulationDocksHandler.provideDocks("id");
-        final UberfireDock reportDock = (UberfireDock) docks.toArray()[MANAGED_DOCKS.REPORT.ordinal()];
-
-        abstractScenarioSimulationDocksHandler.expandTestResultsDock();
-
-        verify(authoringWorkbenchDocks).expandAuthoringDock(eq(reportDock));
+        verify(authoringWorkbenchDocksMock).expandAuthoringDock(eq(toolsDock));
     }
 
     @Test
     public void setScesimPath() {
-        final Collection<UberfireDock> docks = abstractScenarioSimulationDocksHandler.provideDocks("id");
+        final Collection<UberfireDock> docks = abstractScenarioSimulationDocksHandlerSpy.provideDocks("id");
         final UberfireDock settingsDock = (UberfireDock) docks.toArray()[MANAGED_DOCKS.SETTINGS.ordinal()];
         final UberfireDock toolsDock = (UberfireDock) docks.toArray()[MANAGED_DOCKS.TOOLS.ordinal()];
         final UberfireDock cheatSheetDock = (UberfireDock) docks.toArray()[MANAGED_DOCKS.CHEATSHEET.ordinal()];
         String TEST_PATH = "TEST_PATH";
-        abstractScenarioSimulationDocksHandler.setScesimEditorId(TEST_PATH);
+        abstractScenarioSimulationDocksHandlerSpy.setScesimEditorId(TEST_PATH);
         assertTrue(settingsDock.getPlaceRequest().getParameters().containsKey(SCESIMEDITOR_ID));
         assertEquals(TEST_PATH, settingsDock.getPlaceRequest().getParameter(SCESIMEDITOR_ID, "null"));
         assertTrue(toolsDock.getPlaceRequest().getParameters().containsKey(SCESIMEDITOR_ID));
         assertEquals(TEST_PATH, toolsDock.getPlaceRequest().getParameter(SCESIMEDITOR_ID, "null"));
-        assertTrue(cheatSheetDock.getPlaceRequest().getParameters().containsKey(SCESIMEDITOR_ID));
-        assertEquals(TEST_PATH, cheatSheetDock.getPlaceRequest().getParameter(SCESIMEDITOR_ID, "null"));
     }
 }

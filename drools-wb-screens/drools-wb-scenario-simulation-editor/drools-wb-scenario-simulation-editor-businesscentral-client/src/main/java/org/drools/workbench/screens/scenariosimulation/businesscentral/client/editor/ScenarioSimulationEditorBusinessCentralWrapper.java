@@ -361,10 +361,6 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
         placeManager.getOnOpenCallbacks(new DefaultPlaceRequest(TestToolsPresenter.IDENTIFIER)).remove(scenarioSimulationEditorPresenter.getPopulateTestToolsCommand());
     }
 
-    protected void setSaveEnabled(boolean toSet) {
-        scenarioSimulationEditorPresenter.setSaveEnabled(toSet);
-    }
-
     /**
      * If you want to customize the menu override this method.
      */
@@ -382,7 +378,6 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
                 }
                 addDownloadMenuItem(fileMenuBuilder);
                 addCommonActions(fileMenuBuilder);
-                setSaveEnabled(canUpdateProject);
                 return promises.resolve();
             });
         }
