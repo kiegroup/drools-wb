@@ -46,11 +46,9 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSim
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorWrapper;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.AbstractScenarioSimulationDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationHasBusyIndicatorDefaultErrorCallback;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
-import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetPresenter;
-import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter;
-import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridWidget;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.KogitoDMNService;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.KogitoScenarioSimulationBuilder;
@@ -225,33 +223,6 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
         /* No actions required after data refresh in Kogito */
     }
 
-    @Override
-    public void populateDocks(String identifier) {
-        switch (identifier) {
-            case SettingsPresenter.IDENTIFIER:
-                scenarioSimulationKogitoDocksHandler.getSettingsPresenter().ifPresent(presenter -> {
-                    scenarioSimulationEditorPresenter.setSettings(presenter);
-                    presenter.setCurrentPath(scenarioSimulationEditorPresenter.getPath());
-                });
-                break;
-            case TestToolsPresenter.IDENTIFIER:
-                scenarioSimulationKogitoDocksHandler.getTestToolsPresenter().ifPresent(
-                        presenter -> scenarioSimulationEditorPresenter.setTestTools(presenter));
-                break;
-            case CheatSheetPresenter.IDENTIFIER:
-                scenarioSimulationKogitoDocksHandler.getCheatSheetPresenter().ifPresent(
-                        presenter -> {
-                            if (!presenter.isCurrentlyShow(scenarioSimulationEditorPresenter.getPath())) {
-                                scenarioSimulationEditorPresenter.setCheatSheet(presenter);
-                                presenter.setCurrentPath(scenarioSimulationEditorPresenter.getPath());
-                            }
-                        });
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid identifier");
-        }
-    }
-
     /**
      * This method is called when the main grid tab (Model) is focused
      */
@@ -299,6 +270,16 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
         if (item != null) {
             item.showTab(false);
         }
+    }
+
+    @Override
+    public AbstractScenarioSimulationDocksHandler getScenarioSimulationDocksHandler() {
+        return scenarioSimulationKogitoDocksHandler;
+    }
+
+    @Override
+    public ScenarioSimulationEditorPresenter getScenarioSimulationEditorPresenter() {
+        return scenarioSimulationEditorPresenter;
     }
 
     @Override

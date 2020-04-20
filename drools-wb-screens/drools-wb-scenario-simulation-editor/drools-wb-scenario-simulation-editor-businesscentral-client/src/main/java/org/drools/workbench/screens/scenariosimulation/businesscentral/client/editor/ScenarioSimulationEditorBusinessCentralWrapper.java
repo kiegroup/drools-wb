@@ -40,16 +40,14 @@ import org.drools.workbench.screens.scenariosimulation.businesscentral.client.ed
 import org.drools.workbench.screens.scenariosimulation.businesscentral.client.handlers.ScenarioSimulationBusinessCentralDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.businesscentral.client.rightpanel.coverage.CoverageReportPresenter;
 import org.drools.workbench.screens.scenariosimulation.businesscentral.client.rightpanel.coverage.CoverageReportView;
-import org.drools.workbench.screens.scenariosimulation.businesscentral.client.rightpanel.testrunner.TestRunnerReportingPanelWrapper;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorWrapper;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.AbstractDMODataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.AbstractScenarioSimulationDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationHasBusyIndicatorDefaultErrorCallback;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
-import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetPresenter;
-import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridWidget;
@@ -112,7 +110,6 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     private Caller<ImportExportService> importExportService;
     private Caller<RunnerReportService> runnerReportService;
     private ScenarioSimulationBusinessCentralDocksHandler scenarioSimulationBusinessCentralDocksHandler;
-    protected TestRunnerReportingPanelWrapper testRunnerReportingPanel;
     protected SimulationRunResult lastRunResult;
 
     public ScenarioSimulationEditorBusinessCentralWrapper() {
@@ -125,7 +122,6 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
                                                           final ImportsWidgetPresenter importsWidget,
                                                           final AsyncPackageDataModelOracleFactory oracleFactory,
                                                           final PlaceManager placeManager,
-                                                          final TestRunnerReportingPanelWrapper testRunnerReportingPanel,
                                                           final Caller<DMNTypeService> dmnTypeService,
                                                           final Caller<ImportExportService> importExportService,
                                                           final Caller<RunnerReportService> runnerReportService,
@@ -140,7 +136,6 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
         this.oracleFactory = oracleFactory;
         this.placeManager = placeManager;
         this.type = scenarioSimulationEditorPresenter.getType();
-        this.testRunnerReportingPanel = testRunnerReportingPanel;
         this.scenarioSimulationBusinessCentralDocksHandler = scenarioSimulationBusinessCentralDocksHandler;
     }
 
@@ -148,7 +143,6 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     public void onStartup(final ObservablePath path,
                           final PlaceRequest place) {
         super.init(path, place, type);
-        testRunnerReportingPanel.reset();
         scenarioSimulationEditorPresenter.init(this, (ObservablePath) place.getPath());
     }
 
@@ -194,8 +188,8 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
         super.showDocks();
         final DefaultPlaceRequest placeRequest = new DefaultPlaceRequest(TestToolsPresenter.IDENTIFIER);
         scenarioSimulationEditorPresenter.showDocks(placeManager.getStatus(placeRequest));
-        testRunnerReportingPanel.reset();
-        wrappedRegisterDock(ScenarioSimulationBusinessCentralDocksHandler.TEST_RUNNER_REPORTING_PANEL, testRunnerReportingPanel.asWidget());
+        wrappedRegisterDock(ScenarioSimulationBusinessCentralDocksHandler.TEST_RUNNER_REPORTING_PANEL,
+                            scenarioSimulationBusinessCentralDocksHandler.getTestRunnerReportingPanel().asWidget());
         registerTestToolsCallback();
     }
 
@@ -267,7 +261,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     @Override
     public void onRefreshedModelContent(SimulationRunResult testResult) {
         this.lastRunResult = testResult;
-        testRunnerReportingPanel.onTestRun(testResult.getTestResultMessage());
+        scenarioSimulationBusinessCentralDocksHandler.getTestRunnerReportingPanel().onTestRun(testResult.getTestResultMessage());
     }
 
     /**
@@ -337,35 +331,24 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     }
 
     @Override
+    public AbstractScenarioSimulationDocksHandler getScenarioSimulationDocksHandler() {
+        return scenarioSimulationBusinessCentralDocksHandler;
+    }
+
+    @Override
+    public ScenarioSimulationEditorPresenter getScenarioSimulationEditorPresenter() {
+        return scenarioSimulationEditorPresenter;
+    }
+
+    @Override
     public void populateDocks(String identifier) {
-        switch (identifier) {
-            case SettingsPresenter.IDENTIFIER:
-                scenarioSimulationBusinessCentralDocksHandler.getSettingsPresenter().ifPresent(presenter -> {
-                    scenarioSimulationEditorPresenter.setSettings(presenter);
-                    presenter.setCurrentPath(scenarioSimulationEditorPresenter.getPath());
-                });
-                break;
-            case TestToolsPresenter.IDENTIFIER:
-                scenarioSimulationBusinessCentralDocksHandler.getTestToolsPresenter().ifPresent(
-                        presenter -> scenarioSimulationEditorPresenter.setTestTools(presenter));
-                break;
-            case CheatSheetPresenter.IDENTIFIER:
-                scenarioSimulationBusinessCentralDocksHandler.getCheatSheetPresenter().ifPresent(
-                        presenter -> {
-                            if (!presenter.isCurrentlyShow(scenarioSimulationEditorPresenter.getPath())) {
-                                scenarioSimulationEditorPresenter.setCheatSheet(presenter);
-                                presenter.setCurrentPath(scenarioSimulationEditorPresenter.getPath());
-                            }
-                        });
-                break;
-            case CoverageReportPresenter.IDENTIFIER:
-                scenarioSimulationBusinessCentralDocksHandler.getCoverageReportPresenter().ifPresent(presenter -> {
-                    setCoverageReport(presenter);
-                    presenter.setCurrentPath(scenarioSimulationEditorPresenter.getPath());
-                });
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid identifier");
+        if (CoverageReportPresenter.IDENTIFIER.equals(identifier)) {
+            scenarioSimulationBusinessCentralDocksHandler.getCoverageReportPresenter().ifPresent(presenter -> {
+                setCoverageReport(presenter);
+                presenter.setCurrentPath(scenarioSimulationEditorPresenter.getPath());
+            });
+        } else {
+            ScenarioSimulationEditorWrapper.super.populateDocks(identifier);
         }
     }
 

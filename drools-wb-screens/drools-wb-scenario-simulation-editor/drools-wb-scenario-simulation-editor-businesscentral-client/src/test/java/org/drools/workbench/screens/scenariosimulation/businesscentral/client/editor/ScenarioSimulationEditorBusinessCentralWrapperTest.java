@@ -168,7 +168,6 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
                                                                                                                importsWidgetPresenterMock,
                                                                                                                oracleFactoryMock,
                                                                                                                placeManagerMock,
-                                                                                                               null,
                                                                                                                new CallerMock<>(dmnTypeServiceMock),
                                                                                                                importExportCaller,
                                                                                                                runnerReportServiceCaller,

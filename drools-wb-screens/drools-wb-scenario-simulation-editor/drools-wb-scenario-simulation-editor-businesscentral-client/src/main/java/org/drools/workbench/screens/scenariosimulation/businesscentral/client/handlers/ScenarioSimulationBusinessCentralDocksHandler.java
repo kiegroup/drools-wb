@@ -19,9 +19,11 @@ import java.util.Collection;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
 import org.drools.workbench.screens.scenariosimulation.businesscentral.client.rightpanel.coverage.CoverageReportPresenter;
 import org.drools.workbench.screens.scenariosimulation.businesscentral.client.rightpanel.coverage.CoverageReportView;
+import org.drools.workbench.screens.scenariosimulation.businesscentral.client.rightpanel.testrunner.TestRunnerReportingPanelWrapper;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.AbstractScenarioSimulationDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SubDockView;
@@ -38,17 +40,20 @@ public class ScenarioSimulationBusinessCentralDocksHandler extends AbstractScena
 
     public static final String TEST_RUNNER_REPORTING_PANEL = "testRunnerReportingPanel";
 
-    private UberfireDock reportDock;
+    @Inject
+    private TestRunnerReportingPanelWrapper testRunnerReportingPanelWrapper;
+
+    private UberfireDock testRunnedDock;
     private UberfireDock coverageDock;
 
     @Override
     public Collection<UberfireDock> provideDocks(String perspectiveIdentifier) {
         Collection<UberfireDock> result = super.provideDocks(perspectiveIdentifier);
-        reportDock = new UberfireDock(UberfireDockPosition.EAST,
-                                      "PLAY_CIRCLE",
-                                      new DockPlaceHolderPlace(TEST_RUNNER_REPORTING_PANEL),
-                                      perspectiveIdentifier);
-        result.add(reportDock.withSize(450).withLabel(ScenarioSimulationEditorConstants.INSTANCE.testReport()));
+        testRunnedDock = new UberfireDock(UberfireDockPosition.EAST,
+                                          "PLAY_CIRCLE",
+                                          new DockPlaceHolderPlace(TEST_RUNNER_REPORTING_PANEL),
+                                          perspectiveIdentifier);
+        result.add(testRunnedDock.withSize(450).withLabel(ScenarioSimulationEditorConstants.INSTANCE.testReport()));
         coverageDock = new UberfireDock(UberfireDockPosition.EAST,
                                         "BAR_CHART",
                                         new DefaultPlaceRequest(CoverageReportPresenter.IDENTIFIER),
@@ -58,13 +63,15 @@ public class ScenarioSimulationBusinessCentralDocksHandler extends AbstractScena
     }
 
     public void expandTestResultsDock() {
-        authoringWorkbenchDocks.expandAuthoringDock(reportDock);
+        authoringWorkbenchDocks.expandAuthoringDock(testRunnedDock);
     }
+
 
     @Override
     public void resetDocks() {
         super.resetDocks();
         getCoverageReportPresenter().ifPresent(SubDockView.Presenter::reset);
+        testRunnerReportingPanelWrapper.reset();
     }
 
     @Override
@@ -88,4 +95,7 @@ public class ScenarioSimulationBusinessCentralDocksHandler extends AbstractScena
         }
     }
 
+    public TestRunnerReportingPanelWrapper getTestRunnerReportingPanel() {
+        return testRunnerReportingPanelWrapper;
+    }
 }

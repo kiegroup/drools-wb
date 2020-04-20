@@ -26,7 +26,11 @@ import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
 import org.drools.scenariosimulation.api.model.ScesimModelDescriptor;
 import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.AbstractScenarioSimulationDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationHasBusyIndicatorDefaultErrorCallback;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridPanel;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridWidget;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
@@ -59,10 +63,38 @@ public interface ScenarioSimulationEditorWrapper {
 
     void selectBackgroundTab();
 
+    AbstractScenarioSimulationDocksHandler getScenarioSimulationDocksHandler();
+
+    ScenarioSimulationEditorPresenter getScenarioSimulationEditorPresenter();
+
     default void synchronizeColumnsDimension(ScenarioGridPanel simulationPanel, ScenarioGridPanel backgroundPanel) {
         simulationPanel.synchronizeFactMappingsWidths();
         backgroundPanel.synchronizeFactMappingsWidths();
     }
 
-    void populateDocks(String identifier);
+    default void populateDocks(String identifier) {
+        switch (identifier) {
+            case SettingsPresenter.IDENTIFIER:
+                getScenarioSimulationDocksHandler().getSettingsPresenter().ifPresent(presenter -> {
+                    getScenarioSimulationEditorPresenter().setSettings(presenter);
+                    presenter.setCurrentPath(getScenarioSimulationEditorPresenter().getPath());
+                });
+                break;
+            case TestToolsPresenter.IDENTIFIER:
+                getScenarioSimulationDocksHandler().getTestToolsPresenter().ifPresent(
+                        presenter -> getScenarioSimulationEditorPresenter().setTestTools(presenter));
+                break;
+            case CheatSheetPresenter.IDENTIFIER:
+                getScenarioSimulationDocksHandler().getCheatSheetPresenter().ifPresent(
+                        presenter -> {
+                            if (!presenter.isCurrentlyShow(getScenarioSimulationEditorPresenter().getPath())) {
+                                getScenarioSimulationEditorPresenter().setCheatSheet(presenter);
+                                presenter.setCurrentPath(getScenarioSimulationEditorPresenter().getPath());
+                            }
+                        });
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid identifier");
+        }
+    }
 }
