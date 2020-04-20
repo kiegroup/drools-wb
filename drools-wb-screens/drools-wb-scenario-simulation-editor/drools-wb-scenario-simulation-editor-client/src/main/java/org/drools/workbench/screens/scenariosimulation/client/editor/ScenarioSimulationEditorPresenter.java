@@ -576,7 +576,9 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     public void populateRightDocks(String identifier) {
-        scenarioSimulationEditorWrapper.populateDocks(identifier);
+        if (dataManagementStrategy != null) {
+            scenarioSimulationEditorWrapper.populateDocks(identifier);
+        }
     }
 
     public void getModelSuccessCallbackMethod(DataManagementStrategy dataManagementStrategy, ScenarioSimulationModel model) {
