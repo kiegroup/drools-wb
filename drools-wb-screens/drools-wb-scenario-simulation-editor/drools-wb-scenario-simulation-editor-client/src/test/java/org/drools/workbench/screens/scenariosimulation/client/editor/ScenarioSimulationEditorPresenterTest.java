@@ -16,104 +16,107 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.editor;
 
-/*import java.util.ArrayList;
+//import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Supplier;
+/*import java.util.Optional;
+import java.util.function.Supplier;*/
 
-import com.google.gwt.user.client.ui.IsWidget;*/
+//import com.google.gwt.user.client.ui.IsWidget;
+
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import com.google.gwtmockito.WithClassesToStub;
-/*import org.drools.scenariosimulation.api.model.AbstractScesimModel;
-import org.drools.scenariosimulation.api.model.Background;
-import org.drools.scenariosimulation.api.model.BackgroundData;
-import org.drools.scenariosimulation.api.model.BackgroundDataWithIndex;
-import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
-import org.drools.scenariosimulation.api.model.FactIdentifier;
-import org.drools.scenariosimulation.api.model.FactMapping;
-import org.drools.scenariosimulation.api.model.FactMappingType;
-import org.drools.scenariosimulation.api.model.FactMappingValue;
+//import org.drools.scenariosimulation.api.model.AbstractScesimModel;
+//import org.drools.scenariosimulation.api.model.Background;
+//import org.drools.scenariosimulation.api.model.BackgroundData;
+//import org.drools.scenariosimulation.api.model.BackgroundDataWithIndex;
+//import org.drools.scenariosimulation.api.model.ExpressionIdentifier;
+//import org.drools.scenariosimulation.api.model.FactIdentifier;
+//import org.drools.scenariosimulation.api.model.FactMapping;
+//import org.drools.scenariosimulation.api.model.FactMappingType;
+//import org.drools.scenariosimulation.api.model.FactMappingValue;
 import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
-import org.drools.scenariosimulation.api.model.ScesimModelDescriptor;
-import org.drools.scenariosimulation.api.model.Simulation;
-import org.drools.scenariosimulation.api.model.SimulationRunMetadata;
-import org.drools.workbench.screens.scenariosimulation.client.MockProducer;
-import org.drools.workbench.screens.scenariosimulation.client.dropdown.SettingsScenarioSimulationDropdown;
+//import org.drools.scenariosimulation.api.model.ScesimModelDescriptor;
+//import org.drools.scenariosimulation.api.model.Simulation;
+//import org.drools.scenariosimulation.api.model.SimulationRunMetadata;
+//import org.drools.workbench.screens.scenariosimulation.client.MockProducer;
+//import org.drools.workbench.screens.scenariosimulation.client.dropdown.SettingsScenarioSimulationDropdown;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.DataManagementStrategy;
-import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
-import org.drools.workbench.screens.scenariosimulation.client.events.ImportEvent;
-import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
+//import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
+//import org.drools.workbench.screens.scenariosimulation.client.events.ImportEvent;
+//import org.drools.workbench.screens.scenariosimulation.client.events.RedoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioNotificationEvent;
-import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
+//import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.AbstractScenarioSimulationDocksHandler;
-import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationHasBusyIndicatorDefaultErrorCallback;
+//import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationHasBusyIndicatorDefaultErrorCallback;
 import org.drools.workbench.screens.scenariosimulation.client.popup.ConfirmPopupPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.producers.ScenarioSimulationProducer;
-import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetPresenter;
-import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter;
-import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
+//import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetPresenter;
+//import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter;
+//import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
-import org.drools.workbench.screens.scenariosimulation.model.FactMappingValidationError;
-import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
-import org.guvnor.common.services.shared.test.TestResultMessage;
-import org.jboss.errai.common.client.api.ErrorCallback;
-import org.jboss.errai.common.client.api.RemoteCallback;
+//import org.drools.workbench.screens.scenariosimulation.model.FactMappingValidationError;
+//import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
+//import org.guvnor.common.services.shared.test.TestResultMessage;
+//import org.jboss.errai.common.client.api.ErrorCallback;
+//import org.jboss.errai.common.client.api.RemoteCallback;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;*/
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-/*
+
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.InOrder;
+//import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.uberfire.backend.vfs.ObservablePath;
-import org.uberfire.backend.vfs.Path;
+//import org.uberfire.backend.vfs.Path;
 import org.uberfire.client.mvp.AbstractWorkbenchActivity;
 import org.uberfire.client.mvp.PlaceManager;
-import org.uberfire.client.mvp.PlaceStatus;
-import org.uberfire.client.workbench.docks.UberfireDock;
-import org.uberfire.client.workbench.docks.UberfireDocksInteractionEvent;
+//import org.uberfire.client.mvp.PlaceStatus;
+//import org.uberfire.client.workbench.docks.UberfireDock;
+//import org.uberfire.client.workbench.docks.UberfireDocksInteractionEvent;
 import org.uberfire.ext.editor.commons.client.file.exports.TextFileExport;
-import org.uberfire.mvp.PlaceRequest;
+//import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.mvp.impl.PathPlaceRequest;
-import org.uberfire.workbench.events.NotificationEvent;
+//import org.uberfire.workbench.events.NotificationEvent;
 
-import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.LOWER_CASE_VALUE;
-import static org.drools.workbench.screens.scenariosimulation.client.handlers.AbstractScenarioSimulationDocksHandler.SCESIMEDITOR_ID;
-import static org.junit.Assert.assertEquals;
+//import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.LOWER_CASE_VALUE;
+//import static org.drools.workbench.screens.scenariosimulation.client.handlers.AbstractScenarioSimulationDocksHandler.SCESIMEDITOR_ID;
+//import static org.junit.Assert.assertEquals;
+
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+//import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.contains;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Matchers.same;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.inOrder;
+//import static org.mockito.Matchers.any;
+//import static org.mockito.Matchers.anyInt;
+//import static org.mockito.Matchers.anyString;
+//import static org.mockito.Matchers.contains;
+//import static org.mockito.Matchers.eq;
+//import static org.mockito.Matchers.isA;
+//import static org.mockito.Matchers.same;
+//import static org.mockito.Mockito.atLeastOnce;
+//import static org.mockito.Mockito.doReturn;
+//import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.reset;
+//import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-*/
+
 
 @RunWith(GwtMockitoTestRunner.class)
 @WithClassesToStub(ScenarioMenuItem.class)
 public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimulationEditorTest {
-/*
+
     @Rule
     public ExpectedException exceptionRule = ExpectedException.none();
     @Mock
@@ -208,17 +211,20 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
                 return "";
             }
         });
-
-        doReturn(Optional.of(cheatSheetPresenterMock)).when(presenterSpy).getCheatSheetPresenter(eq(placeRequestMock));
-        doReturn(Optional.of(testToolsPresenterMock)).when(presenterSpy).getTestToolsPresenter(eq(placeRequestMock));
-        doReturn(Optional.of(settingsPresenterMock)).when(presenterSpy).getSettingsPresenter(eq(placeRequestMock));
-        doReturn(Optional.of(coverageReportPresenterMock)).when(presenterSpy).getCoverageReportPresenter(eq(placeRequestMock));
-        when(presenterSpy.getCurrentRightDockPlaceRequest(anyString())).thenReturn(placeRequestMock);
     }
 
     @Test
-    public void init() {
-        presenterSpy.init(scenarioSimulationEditorWrapperMock, observablePathMock);
+    public void setWrapper() {
+        assertNull(presenterSpy.scenarioSimulationEditorWrapper);
+        presenterSpy.setWrapper(scenarioSimulationEditorWrapperMock);
+        assertSame(scenarioSimulationEditorWrapperMock, presenterSpy.scenarioSimulationEditorWrapper);
+    }
+
+    @Test
+    public void setPath() {
+        assertNull(presenterSpy.path);
+        presenterSpy.setPath(observablePathMock);
+        assertSame(observablePathMock, presenterSpy.path);
     }
 
     @Test
@@ -232,7 +238,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         presenterSpy.setSaveEnabled(false);
         assertFalse(presenterSpy.saveEnabled);
     }
-
+/*
     @Test
     public void setSaveEnabledPopulateSettingsCombinedTrue() {
         SettingsPresenter settingsPresenterSpy = getSettingsPresenterSpy();
@@ -267,7 +273,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         presenterSpy.populateRightDocks(SettingsPresenter.IDENTIFIER);
         presenterSpy.setSaveEnabled(false);
         assertFalse(presenterSpy.saveEnabled);
-    }
+    }*/
 
     @Test
     public void onClose() {
@@ -275,7 +281,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(scenarioGridWidgetSpy, times(1)).unregister();
         verify(backgroundGridWidgetSpy, times(1)).unregister();
     }
-
+/*
     @Test
     public void showDocks_PlaceStatusOpen() {
         presenterSpy.init(scenarioSimulationEditorWrapperMock, observablePathMock);
@@ -299,7 +305,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(presenterSpy, times(1)).resetDocks();
         verify(presenterSpy, times(1)).populateRightDocks(eq(TestToolsPresenter.IDENTIFIER));
     }
-
+*/
     @Test
     public void hideDocks() {
         presenterSpy.hideDocks();
@@ -319,15 +325,15 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Test
     public void reloadTestTools_NotDisable() {
         presenterSpy.reloadTestTools(false);
-        verify(presenterSpy, never()).getTestToolsPresenter(any());
+        verify(abstractScenarioSimulationDocksHandlerMock, never()).getTestToolsPresenter();
     }
 
     @Test
     public void reloadTestTools_Disable() {
         presenterSpy.reloadTestTools(true);
-        verify(presenterSpy, times(1)).getTestToolsPresenter(eq(placeRequestMock));
+        verify(abstractScenarioSimulationDocksHandlerMock, times(1)).getTestToolsPresenter();
     }
-
+/*
     @Test
     public void onRunTest() {
         presenterSpy.init(scenarioSimulationEditorWrapperMock, observablePathMock);
@@ -912,7 +918,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         verify(eventBusMock, times(1)).fireEvent(scenarioNotificationEventArgumentCaptor.capture());
         assertEquals("message", scenarioNotificationEventArgumentCaptor.getValue().getMessage());
         assertEquals(NotificationEvent.NotificationType.ERROR, scenarioNotificationEventArgumentCaptor.getValue().getNotificationType());
-
     }
 
     private SettingsPresenter getSettingsPresenterSpy() {
