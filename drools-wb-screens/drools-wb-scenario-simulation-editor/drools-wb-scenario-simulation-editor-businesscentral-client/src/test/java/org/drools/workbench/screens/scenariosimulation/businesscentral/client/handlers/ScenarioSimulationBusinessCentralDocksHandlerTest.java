@@ -29,7 +29,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.workbench.common.widgets.client.docks.AuthoringEditorDock;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.uberfire.client.workbench.docks.UberfireDock;
 import org.uberfire.client.workbench.docks.UberfireDockPosition;
@@ -50,7 +49,7 @@ public class ScenarioSimulationBusinessCentralDocksHandlerTest {
 
     @Mock
     private AuthoringEditorDock authoringWorkbenchDocksMock;
-    @InjectMocks
+    @Mock
     private TestRunnerReportingPanelWrapper testRunnerReportingPanelWrapperMock;
 
     private ScenarioSimulationBusinessCentralDocksHandler scenarioSimulationBusinessCentralDocksHandlerSpy;
@@ -69,6 +68,7 @@ public class ScenarioSimulationBusinessCentralDocksHandlerTest {
 
             {
                 this.authoringWorkbenchDocks = authoringWorkbenchDocksMock;
+                this.testRunnerReportingPanelWrapper = testRunnerReportingPanelWrapperMock;
             }
 
         });
@@ -146,7 +146,7 @@ public class ScenarioSimulationBusinessCentralDocksHandlerTest {
         //todo other docks
     }
 
-
+    @Test
     public void getTestRunnerReportingPanel() {
         TestRunnerReportingPanelWrapper panel = scenarioSimulationBusinessCentralDocksHandlerSpy.getTestRunnerReportingPanel();
         assertSame(testRunnerReportingPanelWrapperMock, panel);

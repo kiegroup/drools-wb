@@ -41,7 +41,7 @@ public class ScenarioSimulationBusinessCentralDocksHandler extends AbstractScena
     public static final String TEST_RUNNER_REPORTING_PANEL = "testRunnerReportingPanel";
 
     @Inject
-    private TestRunnerReportingPanelWrapper testRunnerReportingPanelWrapper;
+    protected TestRunnerReportingPanelWrapper testRunnerReportingPanelWrapper;
 
     private UberfireDock testRunnedDock;
     private UberfireDock coverageDock;
