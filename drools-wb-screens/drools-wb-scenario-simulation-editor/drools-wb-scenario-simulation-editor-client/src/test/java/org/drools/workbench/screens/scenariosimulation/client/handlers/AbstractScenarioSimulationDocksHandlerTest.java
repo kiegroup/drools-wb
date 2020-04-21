@@ -26,6 +26,7 @@ import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToo
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.kie.workbench.common.widgets.client.docks.AbstractWorkbenchDocksHandler;
 import org.kie.workbench.common.widgets.client.docks.AuthoringEditorDock;
 import org.mockito.Mock;
 import org.uberfire.client.workbench.docks.UberfireDock;

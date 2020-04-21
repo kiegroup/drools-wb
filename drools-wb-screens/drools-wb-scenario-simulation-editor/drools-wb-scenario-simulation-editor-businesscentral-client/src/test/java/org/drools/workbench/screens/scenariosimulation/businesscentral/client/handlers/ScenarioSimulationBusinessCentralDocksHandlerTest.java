@@ -125,7 +125,6 @@ public class ScenarioSimulationBusinessCentralDocksHandlerTest {
         assertEquals("INFO_CIRCLE", testToolsDock.getIconType());
     }
 
-
     @Test
     public void expandTestResultsDock() {
         final Collection<UberfireDock> docks = scenarioSimulationBusinessCentralDocksHandlerSpy.provideDocks("id");
@@ -169,5 +168,4 @@ public class ScenarioSimulationBusinessCentralDocksHandlerTest {
         TestRunnerReportingPanelWrapper panel = scenarioSimulationBusinessCentralDocksHandlerSpy.getTestRunnerReportingPanel();
         assertSame(testRunnerReportingPanelWrapperMock, panel);
     }
-
 }

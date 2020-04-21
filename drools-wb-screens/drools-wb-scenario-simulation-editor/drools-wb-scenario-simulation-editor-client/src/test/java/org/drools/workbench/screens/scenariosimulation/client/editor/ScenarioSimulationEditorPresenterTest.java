@@ -22,8 +22,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-//import com.google.gwt.user.client.ui.IsWidget;
-
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import com.google.gwtmockito.WithClassesToStub;
 import org.drools.scenariosimulation.api.model.AbstractScesimModel;
@@ -38,8 +36,6 @@ import org.drools.scenariosimulation.api.model.FactMappingValue;
 import org.drools.scenariosimulation.api.model.Scenario;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
-//import org.drools.workbench.screens.scenariosimulation.client.MockProducer;
-//import org.drools.workbench.screens.scenariosimulation.client.dropdown.SettingsScenarioSimulationDropdown;
 import org.drools.scenariosimulation.api.model.ScesimModelDescriptor;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.scenariosimulation.api.model.SimulationRunMetadata;
@@ -67,7 +63,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InOrder;
