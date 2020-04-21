@@ -87,8 +87,8 @@ public class ScenarioSimulationBusinessCentralDocksHandler extends AbstractScena
     protected Optional<CoverageReportView> getCoverageReportView(PlaceRequest placeRequest) {
         final Activity activity = placeManager.getActivity(placeRequest);
         if (activity != null) {
-            final AbstractWorkbenchActivity settingsActivity = (AbstractWorkbenchActivity) activity;
-            return Optional.of((CoverageReportView) settingsActivity.getWidget());
+            final AbstractWorkbenchActivity coverageActivity = (AbstractWorkbenchActivity) activity;
+            return Optional.of((CoverageReportView) coverageActivity.getWidget());
         } else {
             return Optional.empty();
         }

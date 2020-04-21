@@ -16,6 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
 import java.util.Collection;
+import java.util.Optional;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
@@ -35,7 +36,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(GwtMockitoTestRunner.class)
@@ -43,6 +46,12 @@ public class AbstractScenarioSimulationDocksHandlerTest {
 
     @Mock
     private AuthoringEditorDock authoringWorkbenchDocksMock;
+    @Mock
+    private CheatSheetPresenter cheatSheetPresenterMock;
+    @Mock
+    private TestToolsPresenter testToolsPresenterMock;
+    @Mock
+    private SettingsPresenter settingsPresenterMock;
 
     private AbstractScenarioSimulationDocksHandler abstractScenarioSimulationDocksHandlerSpy;
 
@@ -65,6 +74,10 @@ public class AbstractScenarioSimulationDocksHandlerTest {
                 //Do nothing
             }
         });
+
+        doReturn(Optional.of(cheatSheetPresenterMock)).when(abstractScenarioSimulationDocksHandlerSpy).getCheatSheetPresenter();
+        doReturn(Optional.of(testToolsPresenterMock)).when(abstractScenarioSimulationDocksHandlerSpy).getTestToolsPresenter();
+        doReturn(Optional.of(settingsPresenterMock)).when(abstractScenarioSimulationDocksHandlerSpy).getSettingsPresenter();
     }
 
     @Test
@@ -114,5 +127,13 @@ public class AbstractScenarioSimulationDocksHandlerTest {
         assertEquals(TEST_PATH, toolsDock.getPlaceRequest().getParameter(SCESIMEDITOR_ID, "null"));
         assertTrue(cheatSheetDock.getPlaceRequest().getParameters().containsKey(SCESIMEDITOR_ID));
         assertEquals(TEST_PATH, cheatSheetDock.getPlaceRequest().getParameter(SCESIMEDITOR_ID, "null"));
+    }
+
+    @Test
+    public void resetDocks() {
+        abstractScenarioSimulationDocksHandlerSpy.resetDocks();
+        verify(testToolsPresenterMock, times(1)).reset();
+        verify(settingsPresenterMock, times(1)).reset();
+        verify(cheatSheetPresenterMock, times(1)).reset();
     }
 }

@@ -17,6 +17,7 @@
 package org.drools.workbench.screens.scenariosimulation.businesscentral.client.handlers;
 
 import java.util.Collection;
+import java.util.Optional;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.businesscentral.client.rightpanel.coverage.CoverageReportPresenter;
@@ -40,6 +41,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -51,6 +53,14 @@ public class ScenarioSimulationBusinessCentralDocksHandlerTest {
     private AuthoringEditorDock authoringWorkbenchDocksMock;
     @Mock
     private TestRunnerReportingPanelWrapper testRunnerReportingPanelWrapperMock;
+    @Mock
+    private CheatSheetPresenter cheatSheetPresenterMock;
+    @Mock
+    private TestToolsPresenter testToolsPresenterMock;
+    @Mock
+    private SettingsPresenter settingsPresenterMock;
+    @Mock
+    private CoverageReportPresenter coverageReportPresenterMock;
 
     private ScenarioSimulationBusinessCentralDocksHandler scenarioSimulationBusinessCentralDocksHandlerSpy;
 
@@ -72,6 +82,11 @@ public class ScenarioSimulationBusinessCentralDocksHandlerTest {
             }
 
         });
+
+        doReturn(Optional.of(cheatSheetPresenterMock)).when(scenarioSimulationBusinessCentralDocksHandlerSpy).getCheatSheetPresenter();
+        doReturn(Optional.of(testToolsPresenterMock)).when(scenarioSimulationBusinessCentralDocksHandlerSpy).getTestToolsPresenter();
+        doReturn(Optional.of(settingsPresenterMock)).when(scenarioSimulationBusinessCentralDocksHandlerSpy).getSettingsPresenter();
+        doReturn(Optional.of(coverageReportPresenterMock)).when(scenarioSimulationBusinessCentralDocksHandlerSpy).getCoverageReportPresenter();
     }
 
     @Test
@@ -139,11 +154,14 @@ public class ScenarioSimulationBusinessCentralDocksHandlerTest {
         assertEquals(TEST_PATH, coverageDock.getPlaceRequest().getParameter(SCESIMEDITOR_ID, "null"));
     }
 
-
+    @Test
     public void resetDocks() {
         scenarioSimulationBusinessCentralDocksHandlerSpy.resetDocks();
         verify(testRunnerReportingPanelWrapperMock, times(1)).reset();
-        //todo other docks
+        verify(coverageReportPresenterMock, times(1)).reset();
+        verify(testToolsPresenterMock, times(1)).reset();
+        verify(settingsPresenterMock, times(1)).reset();
+        verify(cheatSheetPresenterMock, times(1)).reset();
     }
 
     @Test
