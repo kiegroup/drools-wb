@@ -18,15 +18,21 @@ package org.drools.workbench.screens.scenariosimulation.client.handlers;
 import java.util.Collection;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter;
+import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.workbench.common.widgets.client.docks.AuthoringEditorDock;
 import org.mockito.Mock;
 import org.uberfire.client.workbench.docks.UberfireDock;
+import org.uberfire.client.workbench.docks.UberfireDockPosition;
 
 import static org.drools.workbench.screens.scenariosimulation.client.handlers.AbstractScenarioSimulationDocksHandler.SCESIMEDITOR_ID;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.spy;
@@ -62,9 +68,27 @@ public class AbstractScenarioSimulationDocksHandlerTest {
     }
 
     @Test
-    public void correctAmountOfItems() {
-        assertEquals(MANAGED_DOCKS.values().length, abstractScenarioSimulationDocksHandlerSpy.provideDocks("identifier").size());
-    }
+    public void provideDocks() {
+        final Collection<UberfireDock> docks = abstractScenarioSimulationDocksHandlerSpy.provideDocks("id");
+        assertEquals(MANAGED_DOCKS.values().length, docks.size());
+        final UberfireDock cheetSheetDock = (UberfireDock) docks.toArray()[MANAGED_DOCKS.CHEATSHEET.ordinal()];
+        assertNotNull(cheetSheetDock);
+        assertEquals(CheatSheetPresenter.IDENTIFIER, cheetSheetDock.getPlaceRequest().getIdentifier());
+        assertEquals(ScenarioSimulationEditorConstants.INSTANCE.scenarioCheatSheet(), cheetSheetDock.getLabel());
+        assertEquals(UberfireDockPosition.EAST, cheetSheetDock.getDockPosition());
+        assertEquals("FILE_TEXT", cheetSheetDock.getIconType());
+        final UberfireDock settingsDock = (UberfireDock) docks.toArray()[MANAGED_DOCKS.SETTINGS.ordinal()];
+        assertNotNull(settingsDock);
+        assertEquals(SettingsPresenter.IDENTIFIER, settingsDock.getPlaceRequest().getIdentifier());
+        assertEquals(ScenarioSimulationEditorConstants.INSTANCE.settings(), settingsDock.getLabel());
+        assertEquals(UberfireDockPosition.EAST, settingsDock.getDockPosition());
+        assertEquals("SLIDERS", settingsDock.getIconType());
+        final UberfireDock testToolsDock = (UberfireDock) docks.toArray()[MANAGED_DOCKS.TOOLS.ordinal()];
+        assertNotNull(testToolsDock);
+        assertEquals(TestToolsPresenter.IDENTIFIER, testToolsDock.getPlaceRequest().getIdentifier());
+        assertEquals(ScenarioSimulationEditorConstants.INSTANCE.testTools(), testToolsDock.getLabel());
+        assertEquals(UberfireDockPosition.EAST, testToolsDock.getDockPosition());
+        assertEquals("INFO_CIRCLE", testToolsDock.getIconType());    }
 
     @Test
     public void expandToolsDock() {
@@ -88,5 +112,7 @@ public class AbstractScenarioSimulationDocksHandlerTest {
         assertEquals(TEST_PATH, settingsDock.getPlaceRequest().getParameter(SCESIMEDITOR_ID, "null"));
         assertTrue(toolsDock.getPlaceRequest().getParameters().containsKey(SCESIMEDITOR_ID));
         assertEquals(TEST_PATH, toolsDock.getPlaceRequest().getParameter(SCESIMEDITOR_ID, "null"));
+        assertTrue(cheatSheetDock.getPlaceRequest().getParameters().containsKey(SCESIMEDITOR_ID));
+        assertEquals(TEST_PATH, cheatSheetDock.getPlaceRequest().getParameter(SCESIMEDITOR_ID, "null"));
     }
 }

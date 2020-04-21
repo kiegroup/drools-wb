@@ -392,15 +392,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     public void resetDocks() {
         presenterSpy.resetDocks();
         verify(abstractScenarioSimulationDocksHandlerMock, times(1)).resetDocks();
-        //TODO to move
-        /*verify(presenterSpy, times(1)).getCheatSheetPresenter(eq(placeRequestMock));
-        verify(cheatSheetPresenterMock, times(1)).reset();
-        verify(presenterSpy, times(1)).getTestToolsPresenter(eq(placeRequestMock));
-        verify(testToolsPresenterMock, times(1)).reset();
-        verify(presenterSpy, times(1)).getSettingsPresenter(eq(placeRequestMock));
-        verify(settingsPresenterMock, times(1)).reset();
-        verify(presenterSpy, times(1)).getCoverageReportPresenter(eq(placeRequestMock));
-        verify(coverageReportPresenterMock, times(1)).reset();*/
     }
 
     /*

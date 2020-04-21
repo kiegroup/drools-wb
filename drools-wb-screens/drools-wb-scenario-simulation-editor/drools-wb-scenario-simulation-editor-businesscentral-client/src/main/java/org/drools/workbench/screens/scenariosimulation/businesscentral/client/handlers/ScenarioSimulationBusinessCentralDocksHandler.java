@@ -66,7 +66,6 @@ public class ScenarioSimulationBusinessCentralDocksHandler extends AbstractScena
         authoringWorkbenchDocks.expandAuthoringDock(testRunnedDock);
     }
 
-
     @Override
     public void resetDocks() {
         super.resetDocks();
