@@ -74,6 +74,12 @@ public class ScenarioSimulationBusinessCentralDocksHandler extends AbstractScena
     }
 
     @Override
+    /* Indirection for Tests */
+    protected PlaceRequest getCurrentRightDockPlaceRequest(String identifier) {
+        return super.getCurrentRightDockPlaceRequest(identifier);
+    }
+
+    @Override
     public void setScesimEditorId(String scesimEditorId) {
         super.setScesimEditorId(scesimEditorId);
         coverageDock.getPlaceRequest().addParameter(SCESIMEDITOR_ID, scesimEditorId);

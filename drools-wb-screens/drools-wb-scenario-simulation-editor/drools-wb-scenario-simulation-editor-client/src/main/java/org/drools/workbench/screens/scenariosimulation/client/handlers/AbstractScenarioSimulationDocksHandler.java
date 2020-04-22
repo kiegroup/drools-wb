@@ -87,6 +87,12 @@ public abstract class AbstractScenarioSimulationDocksHandler extends AbstractWor
         refreshDocks(true, true);
     }
 
+    /* Indirection for tests */
+    @Override
+    protected void refreshDocks(boolean shouldRefresh, boolean shouldDisable) {
+        super.refreshDocks(shouldRefresh, shouldDisable);
+    }
+
     public void expandToolsDock() {
         authoringWorkbenchDocks.expandAuthoringDock(toolsDock);
     }
