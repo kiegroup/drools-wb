@@ -130,7 +130,7 @@ public abstract class AbstractScenarioSimulationDocksHandler extends AbstractWor
     /**
      * Returns a <code>PlaceRequest</code> for the <b>status</b> of the right dock with the given <b>identifier</b>
      * relative to the current instance of <code>ScenarioSimulationEditorPresenter</code>
-     * @return
+     * @return A <code>PlaceRequest</code> for the <b>status</b> of the requested right dock
      */
     protected PlaceRequest getCurrentRightDockPlaceRequest(String identifier) {
         PlaceRequest toReturn = new DefaultPlaceRequest(identifier);
