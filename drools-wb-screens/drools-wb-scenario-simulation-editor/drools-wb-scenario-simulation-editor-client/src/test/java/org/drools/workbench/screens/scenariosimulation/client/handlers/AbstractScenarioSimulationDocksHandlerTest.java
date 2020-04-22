@@ -162,6 +162,14 @@ public class AbstractScenarioSimulationDocksHandlerTest {
     }
 
     @Test
+    public void getCurrentRightDockPlaceRequest() {
+        PlaceRequest placeRequest = abstractScenarioSimulationDocksHandlerSpy.getCurrentRightDockPlaceRequest("identifier");
+        assertNotNull(placeRequest);
+        assertEquals("identifier", placeRequest.getIdentifier());
+        assertNotNull(placeRequest.getParameter(SCESIMEDITOR_ID, ""));
+    }
+
+    @Test
     public void getTestToolsView() {
         TestToolsView testToolsViewMock = mock(TestToolsView.class);
         AbstractWorkbenchActivity activityMock = mock(AbstractWorkbenchActivity.class);
