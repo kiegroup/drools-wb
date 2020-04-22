@@ -43,6 +43,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -182,23 +183,23 @@ public class AbstractScenarioSimulationDocksHandlerTest {
 
     @Test
     public void getCheatSheetView() {
-        CheatSheetView cheatSheetView = mock(CheatSheetView.class);
+        CheatSheetView cheatSheetViewMock = mock(CheatSheetView.class);
         AbstractWorkbenchActivity activityMock = mock(AbstractWorkbenchActivity.class);
-        when(activityMock.getWidget()).thenReturn(cheatSheetView);
+        when(activityMock.getWidget()).thenReturn(cheatSheetViewMock);
         PlaceRequest placeRequest = abstractScenarioSimulationDocksHandlerSpy.getCurrentRightDockPlaceRequest(CheatSheetPresenter.IDENTIFIER);
         when(placeManagerMock.getActivity(eq(placeRequest))).thenReturn(activityMock);
         Optional<CheatSheetView> optional = abstractScenarioSimulationDocksHandlerSpy.getCheatSheetView(placeRequest);
-        assertSame(cheatSheetView, optional.get());
+        assertSame(cheatSheetViewMock, optional.get());
     }
 
     @Test
     public void getSettingsView() {
-        SettingsView settingsView = mock(SettingsView.class);
+        SettingsView settingsViewMock = mock(SettingsView.class);
         AbstractWorkbenchActivity activityMock = mock(AbstractWorkbenchActivity.class);
-        when(activityMock.getWidget()).thenReturn(settingsView);
+        when(activityMock.getWidget()).thenReturn(settingsViewMock);
         PlaceRequest placeRequest = abstractScenarioSimulationDocksHandlerSpy.getCurrentRightDockPlaceRequest(SettingsPresenter.IDENTIFIER);
         when(placeManagerMock.getActivity(eq(placeRequest))).thenReturn(activityMock);
         Optional<SettingsView> optional = abstractScenarioSimulationDocksHandlerSpy.getSettingsView(placeRequest);
-        assertSame(settingsView, optional.get());
+        assertSame(settingsViewMock, optional.get());
     }
 }

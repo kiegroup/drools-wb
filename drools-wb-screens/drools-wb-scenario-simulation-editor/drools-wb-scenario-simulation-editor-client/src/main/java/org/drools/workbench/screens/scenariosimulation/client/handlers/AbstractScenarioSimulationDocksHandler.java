@@ -140,31 +140,31 @@ public abstract class AbstractScenarioSimulationDocksHandler extends AbstractWor
 
     protected Optional<TestToolsView> getTestToolsView(PlaceRequest placeRequest) {
         final Activity activity = placeManager.getActivity(placeRequest);
-        if (activity != null) {
+        if (activity == null) {
+            return Optional.empty();
+        } else {
             final AbstractWorkbenchActivity testToolsActivity = (AbstractWorkbenchActivity) activity;
             return Optional.of((TestToolsView) testToolsActivity.getWidget());
-        } else {
-            return Optional.empty();
         }
     }
 
     protected Optional<CheatSheetView> getCheatSheetView(PlaceRequest placeRequest) {
         final Activity activity = placeManager.getActivity(placeRequest);
-        if (activity != null) {
+        if (activity == null) {
+            return Optional.empty();
+        } else {
             final AbstractWorkbenchActivity cheatSheetActivity = (AbstractWorkbenchActivity) activity;
             return Optional.of((CheatSheetView) cheatSheetActivity.getWidget());
-        } else {
-            return Optional.empty();
         }
     }
 
     protected Optional<SettingsView> getSettingsView(PlaceRequest placeRequest) {
         final Activity activity = placeManager.getActivity(placeRequest);
-        if (activity != null) {
+        if (activity == null) {
+            return Optional.empty();
+        } else {
             final AbstractWorkbenchActivity settingsActivity = (AbstractWorkbenchActivity) activity;
             return Optional.of((SettingsView) settingsActivity.getWidget());
-        } else {
-            return Optional.empty();
         }
     }
 }

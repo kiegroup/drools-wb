@@ -62,6 +62,7 @@ public class ScenarioSimulationBusinessCentralDocksHandler extends AbstractScena
         return result;
     }
 
+    @Override
     public void expandTestResultsDock() {
         authoringWorkbenchDocks.expandAuthoringDock(testRunnedDock);
     }
@@ -92,11 +93,11 @@ public class ScenarioSimulationBusinessCentralDocksHandler extends AbstractScena
 
     protected Optional<CoverageReportView> getCoverageReportView(PlaceRequest placeRequest) {
         final Activity activity = placeManager.getActivity(placeRequest);
-        if (activity != null) {
+        if (activity == null) {
+            return Optional.empty();
+        } else {
             final AbstractWorkbenchActivity coverageActivity = (AbstractWorkbenchActivity) activity;
             return Optional.of((CoverageReportView) coverageActivity.getWidget());
-        } else {
-            return Optional.empty();
         }
     }
 
