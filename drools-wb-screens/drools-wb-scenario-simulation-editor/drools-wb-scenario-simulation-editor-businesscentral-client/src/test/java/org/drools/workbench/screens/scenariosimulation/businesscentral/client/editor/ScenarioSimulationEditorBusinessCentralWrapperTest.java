@@ -503,7 +503,6 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         verify(coverageReportPresenterMock, never()).setCurrentPath(any());
         verify(cheatSheetPresenterMock, never()).setCurrentPath(any());
         verify(scenarioSimulationEditorPresenterMock, never()).setCheatSheet(any());
-
     }
 
     @Test
