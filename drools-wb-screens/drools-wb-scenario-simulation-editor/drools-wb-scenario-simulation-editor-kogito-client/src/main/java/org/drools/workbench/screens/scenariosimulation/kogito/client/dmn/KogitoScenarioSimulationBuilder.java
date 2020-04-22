@@ -359,7 +359,7 @@ public class KogitoScenarioSimulationBuilder {
         }
     }
 
-    private void addFactMapping(final FactMappingExtractor factMappingExtractor,
+    protected void addFactMapping(final FactMappingExtractor factMappingExtractor,
                                 final FactModelTree factModelTree,
                                 final List<String> previousSteps,
                                 final Map<String, FactModelTree> hiddenValues) {
@@ -416,7 +416,7 @@ public class KogitoScenarioSimulationBuilder {
         }
     }
 
-    private static class FactMappingExtractor {
+    protected static class FactMappingExtractor {
 
         private final FactIdentifier factIdentifier;
         private final int row;
