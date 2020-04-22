@@ -489,7 +489,6 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         verify(coverageReportPresenterMock, never()).setCurrentPath(any());
         verify(scenarioSimulationEditorPresenterMock, never()).setSettings(any());
         verify(settingsPresenterMock, never()).setCurrentPath(any());
-        verify(scenarioSimulationEditorPresenterMock, never()).setTestTools(any());
         verify(cheatSheetPresenterMock, never()).setCurrentPath(any());
         verify(scenarioSimulationEditorPresenterMock, never()).setCheatSheet(any());
     }
@@ -502,7 +501,6 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         verify(settingsPresenterMock, times(1)).setCurrentPath(eq(pathMock));
         verify(scenarioSimulationEditorPresenterMock, never()).setTestTools(any());
         verify(coverageReportPresenterMock, never()).setCurrentPath(any());
-        verify(scenarioSimulationEditorPresenterMock, never()).setTestTools(any());
         verify(cheatSheetPresenterMock, never()).setCurrentPath(any());
         verify(scenarioSimulationEditorPresenterMock, never()).setCheatSheet(any());
 
@@ -516,7 +514,6 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         verify(coverageReportPresenterMock, never()).setCurrentPath(any());
         verify(scenarioSimulationEditorPresenterMock, never()).setSettings(any());
         verify(settingsPresenterMock, never()).setCurrentPath(any());
-        verify(scenarioSimulationEditorPresenterMock, never()).setTestTools(any());
         verify(cheatSheetPresenterMock, never()).setCurrentPath(any());
         verify(scenarioSimulationEditorPresenterMock, never()).setCheatSheet(any());
     }
