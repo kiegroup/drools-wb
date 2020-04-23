@@ -189,9 +189,14 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
         super.showDocks();
         final DefaultPlaceRequest placeRequest = new DefaultPlaceRequest(TestToolsPresenter.IDENTIFIER);
         scenarioSimulationEditorPresenter.showDocks(placeManager.getStatus(placeRequest));
+        registerTestToolsCallback();
+        /* Managing TestRunner Report */
         wrappedRegisterDock(ScenarioSimulationBusinessCentralDocksHandler.TEST_RUNNER_REPORTING_PANEL,
                             scenarioSimulationBusinessCentralDocksHandler.getTestRunnerReportingPanel().asWidget());
-        registerTestToolsCallback();
+        /* It Loads last run info, it exits */
+        if (lastRunResult != null) {
+            scenarioSimulationBusinessCentralDocksHandler.getTestRunnerReportingPanel().onTestRun(lastRunResult.getTestResultMessage());
+        }
     }
 
     @Override
