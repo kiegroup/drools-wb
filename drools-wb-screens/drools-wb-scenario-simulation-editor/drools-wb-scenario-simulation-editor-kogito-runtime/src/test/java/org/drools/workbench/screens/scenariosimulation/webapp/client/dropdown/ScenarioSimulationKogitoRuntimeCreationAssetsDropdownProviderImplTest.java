@@ -103,7 +103,7 @@ public class ScenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImplTe
     }
 
     @Test
-    public void getRemoteCallBackFilterTargetClassesDirectory() {
+    public void getRemoteCallBackFilterTargetDirectory() {
         RemoteCallback<List<String>> remoteCallBack = scenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImplSpy.getRemoteCallback(assetConsumer);
         remoteCallBack.callback(Arrays.asList("/test/project/target/classes/file1", "path/B", "target/file1", "a", "C:\\test\\project\\target\\classes\\file1"));
         verify(assetConsumer, times(1)).accept(dropDownListCaptor.capture());
