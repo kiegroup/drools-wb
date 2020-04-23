@@ -20,7 +20,7 @@
     <gwt.helper.includes>Client,Marshaller,KogitoEditor,WebappBase</gwt.helper.includes>
     <gwt.helper.rootDirectories>${project.parent.basedir}/</gwt.helper.rootDirectories>
     <!-- Excluding the entire webapp and workarounds folders from coverage statistics. -->
-    <sonar.coverage.exclusions>webapp/**/*, ,**/workarounds/**.java</sonar.coverage.exclusions>
+    <sonar.coverage.exclusions>webapp/**/*, workarounds/**.java</sonar.coverage.exclusions>
   </properties>
 
   <dependencies>
