@@ -192,10 +192,10 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
         registerTestToolsCallback();
         /* Managing TestRunner Report */
         wrappedRegisterDock(ScenarioSimulationBusinessCentralDocksHandler.TEST_RUNNER_REPORTING_PANEL,
-                            scenarioSimulationBusinessCentralDocksHandler.getTestRunnerReportingPanel().asWidget());
+                            scenarioSimulationBusinessCentralDocksHandler.getTestRunnerReportingPanelWidget());
         /* It Loads last run info, it exits */
         if (lastRunResult != null) {
-            scenarioSimulationBusinessCentralDocksHandler.getTestRunnerReportingPanel().onTestRun(lastRunResult.getTestResultMessage());
+            scenarioSimulationBusinessCentralDocksHandler.updateTestRunnerReportingPanelResult(lastRunResult.getTestResultMessage());
         }
     }
 
@@ -267,7 +267,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     @Override
     public void onRefreshedModelContent(SimulationRunResult testResult) {
         this.lastRunResult = testResult;
-        scenarioSimulationBusinessCentralDocksHandler.getTestRunnerReportingPanel().onTestRun(testResult.getTestResultMessage());
+        scenarioSimulationBusinessCentralDocksHandler.updateTestRunnerReportingPanelResult(testResult.getTestResultMessage());
     }
 
     /**

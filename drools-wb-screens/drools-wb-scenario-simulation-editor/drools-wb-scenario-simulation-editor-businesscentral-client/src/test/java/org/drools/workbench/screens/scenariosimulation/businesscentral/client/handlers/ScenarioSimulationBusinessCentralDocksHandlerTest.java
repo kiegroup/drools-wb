@@ -19,6 +19,7 @@ package org.drools.workbench.screens.scenariosimulation.businesscentral.client.h
 import java.util.Collection;
 import java.util.Optional;
 
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.businesscentral.client.rightpanel.coverage.CoverageReportPresenter;
 import org.drools.workbench.screens.scenariosimulation.businesscentral.client.rightpanel.coverage.CoverageReportView;
@@ -27,6 +28,7 @@ import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.Sce
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
+import org.guvnor.common.services.shared.test.TestResultMessage;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -69,6 +71,8 @@ public class ScenarioSimulationBusinessCentralDocksHandlerTest {
     private CoverageReportPresenter coverageReportPresenterMock;
     @Mock
     private PlaceManager placeManagerMock;
+    @Mock
+    private IsWidget testRunnerReportingPanelWidgetMock;
 
     private ScenarioSimulationBusinessCentralDocksHandler scenarioSimulationBusinessCentralDocksHandlerSpy;
 
@@ -91,7 +95,7 @@ public class ScenarioSimulationBusinessCentralDocksHandlerTest {
             }
 
         });
-
+        when(testRunnerReportingPanelWrapperMock.asWidget()).thenReturn(testRunnerReportingPanelWidgetMock);
         doReturn(Optional.of(cheatSheetPresenterMock)).when(scenarioSimulationBusinessCentralDocksHandlerSpy).getCheatSheetPresenter();
         doReturn(Optional.of(testToolsPresenterMock)).when(scenarioSimulationBusinessCentralDocksHandlerSpy).getTestToolsPresenter();
         doReturn(Optional.of(settingsPresenterMock)).when(scenarioSimulationBusinessCentralDocksHandlerSpy).getSettingsPresenter();
@@ -174,8 +178,15 @@ public class ScenarioSimulationBusinessCentralDocksHandlerTest {
 
     @Test
     public void getTestRunnerReportingPanel() {
-        TestRunnerReportingPanelWrapper panel = scenarioSimulationBusinessCentralDocksHandlerSpy.getTestRunnerReportingPanel();
-        assertSame(testRunnerReportingPanelWrapperMock, panel);
+        IsWidget panel = scenarioSimulationBusinessCentralDocksHandlerSpy.getTestRunnerReportingPanelWidget();
+        assertSame(testRunnerReportingPanelWidgetMock, panel);
+    }
+
+    @Test
+    public void updateTestRunnerReportingPanelResult() {
+        TestResultMessage testResultMessageMock = mock(TestResultMessage.class);
+        scenarioSimulationBusinessCentralDocksHandlerSpy.updateTestRunnerReportingPanelResult(testResultMessageMock);
+        verify(testRunnerReportingPanelWrapperMock, times(1)).onTestRun(eq(testResultMessageMock));
     }
 
     @Test

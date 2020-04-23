@@ -21,12 +21,14 @@ import java.util.Optional;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
+import com.google.gwt.user.client.ui.IsWidget;
 import org.drools.workbench.screens.scenariosimulation.businesscentral.client.rightpanel.coverage.CoverageReportPresenter;
 import org.drools.workbench.screens.scenariosimulation.businesscentral.client.rightpanel.coverage.CoverageReportView;
 import org.drools.workbench.screens.scenariosimulation.businesscentral.client.rightpanel.testrunner.TestRunnerReportingPanelWrapper;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.AbstractScenarioSimulationDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SubDockView;
+import org.guvnor.common.services.shared.test.TestResultMessage;
 import org.kie.workbench.common.widgets.client.docks.DockPlaceHolderPlace;
 import org.uberfire.client.mvp.AbstractWorkbenchActivity;
 import org.uberfire.client.mvp.Activity;
@@ -101,7 +103,11 @@ public class ScenarioSimulationBusinessCentralDocksHandler extends AbstractScena
         }
     }
 
-    public TestRunnerReportingPanelWrapper getTestRunnerReportingPanel() {
-        return testRunnerReportingPanelWrapper;
+    public void updateTestRunnerReportingPanelResult(TestResultMessage testResultMessage) {
+        testRunnerReportingPanelWrapper.onTestRun(testResultMessage);
+    }
+
+    public IsWidget getTestRunnerReportingPanelWidget() {
+        return testRunnerReportingPanelWrapper.asWidget();
     }
 }

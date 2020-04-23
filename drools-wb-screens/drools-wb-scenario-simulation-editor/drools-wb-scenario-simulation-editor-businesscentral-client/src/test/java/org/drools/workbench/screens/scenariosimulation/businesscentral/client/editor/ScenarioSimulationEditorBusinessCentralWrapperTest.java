@@ -32,7 +32,6 @@ import org.drools.scenariosimulation.api.model.SimulationRunMetadata;
 import org.drools.workbench.screens.scenariosimulation.businesscentral.client.handlers.ScenarioSimulationBusinessCentralDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.businesscentral.client.rightpanel.coverage.CoverageReportPresenter;
 import org.drools.workbench.screens.scenariosimulation.businesscentral.client.rightpanel.coverage.CoverageReportView;
-import org.drools.workbench.screens.scenariosimulation.businesscentral.client.rightpanel.testrunner.TestRunnerReportingPanelWrapper;
 import org.drools.workbench.screens.scenariosimulation.client.TestProperties;
 import org.drools.workbench.screens.scenariosimulation.client.editor.AbstractScenarioSimulationEditorTest;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.AbstractDMODataManagementStrategy;
@@ -165,8 +164,6 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     @Mock
     private ScenarioSimulationBusinessCentralDocksHandler scenarioSimulationBusinessCentralDocksHandlerMock;
     @Mock
-    private TestRunnerReportingPanelWrapper testRunnerReportingPanelWrapperMock;
-    @Mock
     private IsWidget testRunnerReportingPanelWidgetMock;
     @Mock
     private SimulationRunResult simulationRunResultMock;
@@ -245,9 +242,8 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         when(multiPageEditorViewMock.getPageIndex(ScenarioSimulationEditorConstants.INSTANCE.backgroundTabTitle())).thenReturn(BACKGROUND_TAB_INDEX);
         when(navTabsMock.getWidget(SIMULATION_TAB_INDEX)).thenReturn(simulationTabListItemMock);
         when(navTabsMock.getWidget(BACKGROUND_TAB_INDEX)).thenReturn(backgroundTabListItemMock);
-        when(scenarioSimulationBusinessCentralDocksHandlerMock.getTestRunnerReportingPanel()).thenReturn(testRunnerReportingPanelWrapperMock);
         when(scenarioSimulationBusinessCentralDocksHandlerMock.getCoverageReportPresenter()).thenReturn(Optional.ofNullable(coverageReportPresenterMock));
-        when(testRunnerReportingPanelWrapperMock.asWidget()).thenReturn(testRunnerReportingPanelWidgetMock);
+        when(scenarioSimulationBusinessCentralDocksHandlerMock.getTestRunnerReportingPanelWidget()).thenReturn(testRunnerReportingPanelWidgetMock);
         when(simulationRunResultMock.getTestResultMessage()).thenReturn(testResultMessageMock);
         when(simulationRunResultMock.getSimulationRunMetadata()).thenReturn(simulationRunMetadataMock);
     }
@@ -280,6 +276,19 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         scenarioSimulationEditorBusinessClientWrapper.showDocks();
         verify(scenarioSimulationEditorBusinessClientWrapper, times(1)).wrappedRegisterDock(eq(ScenarioSimulationBusinessCentralDocksHandler.TEST_RUNNER_REPORTING_PANEL), eq(testRunnerReportingPanelWidgetMock));
         verify(scenarioSimulationEditorPresenterMock, times(1)).showDocks(same(placeStatusMock));
+        verify(scenarioSimulationBusinessCentralDocksHandlerMock, never()).updateTestRunnerReportingPanelResult(any());
+    }
+
+    @Test
+    public void showDocks_WithLastRun() {
+        PlaceStatus placeStatusMock = mock(PlaceStatus.class);
+        final DefaultPlaceRequest placeRequest = new DefaultPlaceRequest(TestToolsPresenter.IDENTIFIER);
+        when(placeManagerMock.getStatus(eq(placeRequest))).thenReturn(placeStatusMock);
+        scenarioSimulationEditorBusinessClientWrapper.lastRunResult = simulationRunResultMock;
+        scenarioSimulationEditorBusinessClientWrapper.showDocks();
+        verify(scenarioSimulationEditorBusinessClientWrapper, times(1)).wrappedRegisterDock(eq(ScenarioSimulationBusinessCentralDocksHandler.TEST_RUNNER_REPORTING_PANEL), eq(testRunnerReportingPanelWidgetMock));
+        verify(scenarioSimulationEditorPresenterMock, times(1)).showDocks(same(placeStatusMock));
+        verify(scenarioSimulationBusinessCentralDocksHandlerMock, times(1)).updateTestRunnerReportingPanelResult(eq(testResultMessageMock));
     }
 
     @Test
@@ -340,7 +349,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         assertNull(scenarioSimulationEditorBusinessClientWrapper.lastRunResult);
         scenarioSimulationEditorBusinessClientWrapper.onRefreshedModelContent(simulationRunResultMock);
         assertEquals(simulationRunResultMock, scenarioSimulationEditorBusinessClientWrapper.lastRunResult);
-        verify(testRunnerReportingPanelWrapperMock, times(1)).onTestRun(eq(testResultMessageMock));
+        verify(scenarioSimulationBusinessCentralDocksHandlerMock, times(1)).updateTestRunnerReportingPanelResult(eq(testResultMessageMock));
     }
 
     @Test
