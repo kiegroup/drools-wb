@@ -52,10 +52,18 @@ public class ScenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImpl i
         return response -> {
             List<KieAssetsDropdownItem> toAccept = response.stream()
                     .map(this::getKieAssetsDropdownItem)
+                    .filter(this::filterTargetDirectory)
                     .sorted(Comparator.comparing(KieAssetsDropdownItem::getText, String.CASE_INSENSITIVE_ORDER))
                     .collect(Collectors.toList());
             assetListConsumer.accept(toAccept);
         };
+    }
+
+    protected boolean filterTargetDirectory(KieAssetsDropdownItem kieAssetsDropdownItem) {
+        String fullPath = kieAssetsDropdownItem.getValue().replaceAll("\\\\", "/");
+        int idx = fullPath.lastIndexOf('/');
+        final String pathString = idx >= 0 ? fullPath.substring(0, idx + 1) : "";
+        return !pathString.contains("target/");
     }
 
     protected ErrorCallback<Object> getErrorCallback() {
