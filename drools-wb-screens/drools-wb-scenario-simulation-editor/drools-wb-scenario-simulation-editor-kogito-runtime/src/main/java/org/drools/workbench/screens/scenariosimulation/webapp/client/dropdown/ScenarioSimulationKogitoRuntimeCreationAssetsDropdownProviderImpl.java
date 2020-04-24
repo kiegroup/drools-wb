@@ -34,7 +34,7 @@ import org.uberfire.client.workbench.widgets.common.ErrorPopupPresenter;
 @Dependent
 public class ScenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImpl implements ScenarioSimulationKogitoCreationAssetsDropdownProvider {
 
-    protected static final String DMN_FILE_EXTENSION = "src/**/*.*dmn";
+    protected static final String DMN_FILE_EXTENSION = "src/**/*.dmn";
 
     @Inject
     protected KogitoResourceContentService resourceContentService;
