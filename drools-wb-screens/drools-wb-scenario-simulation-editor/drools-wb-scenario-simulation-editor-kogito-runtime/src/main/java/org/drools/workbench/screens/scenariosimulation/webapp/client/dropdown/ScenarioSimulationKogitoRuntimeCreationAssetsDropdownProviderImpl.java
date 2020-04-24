@@ -34,7 +34,7 @@ import org.uberfire.client.workbench.widgets.common.ErrorPopupPresenter;
 @Dependent
 public class ScenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImpl implements ScenarioSimulationKogitoCreationAssetsDropdownProvider {
 
-    protected static final String DMN_FILE_EXTENSION = "**/*.dmn";
+    protected static final String DMN_FILE_EXTENSION = "src/**/*.*dmn";
 
     @Inject
     protected KogitoResourceContentService resourceContentService;
@@ -52,18 +52,10 @@ public class ScenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImpl i
         return response -> {
             List<KieAssetsDropdownItem> toAccept = response.stream()
                     .map(this::getKieAssetsDropdownItem)
-                    .filter(this::filterTargetDirectory)
                     .sorted(Comparator.comparing(KieAssetsDropdownItem::getText, String.CASE_INSENSITIVE_ORDER))
                     .collect(Collectors.toList());
             assetListConsumer.accept(toAccept);
         };
-    }
-
-    protected boolean filterTargetDirectory(KieAssetsDropdownItem kieAssetsDropdownItem) {
-        String fullPath = kieAssetsDropdownItem.getValue().replaceAll("\\\\", "/");
-        int idx = fullPath.lastIndexOf('/');
-        final String pathString = idx >= 0 ? fullPath.substring(0, idx + 1) : "";
-        return !pathString.contains("target/");
     }
 
     protected ErrorCallback<Object> getErrorCallback() {

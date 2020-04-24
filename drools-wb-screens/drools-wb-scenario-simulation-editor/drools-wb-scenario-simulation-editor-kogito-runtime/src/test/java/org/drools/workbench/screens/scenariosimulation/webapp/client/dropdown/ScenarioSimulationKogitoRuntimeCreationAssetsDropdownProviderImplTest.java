@@ -103,20 +103,6 @@ public class ScenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImplTe
     }
 
     @Test
-    public void getRemoteCallBackFilterTargetDirectory() {
-        RemoteCallback<List<String>> remoteCallBack = scenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImplSpy.getRemoteCallback(assetConsumer);
-        remoteCallBack.callback(Arrays.asList("/test/project/target/classes/file1", "path/B", "target/file1", "a", "C:\\test\\project\\target\\classes\\file1"));
-        verify(assetConsumer, times(1)).accept(dropDownListCaptor.capture());
-        assertEquals(2, dropDownListCaptor.getValue().size());
-        assertEquals("a", dropDownListCaptor.getValue().get(0).getText());
-        assertEquals("a", dropDownListCaptor.getValue().get(0).getSubText());
-        assertEquals("a", dropDownListCaptor.getValue().get(0).getValue());
-        assertEquals("B", dropDownListCaptor.getValue().get(1).getText());
-        assertEquals("path/B", dropDownListCaptor.getValue().get(1).getSubText());
-        assertEquals("path/B", dropDownListCaptor.getValue().get(1).getValue());
-    }
-
-    @Test
     public void getErrorCallback() {
         ErrorCallback<Object> errorCallback = scenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImplSpy.getErrorCallback();
         assertFalse(errorCallback.error("message", new Throwable("ex")));
@@ -180,75 +166,4 @@ public class ScenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImplTe
         assertEquals(fullPath, item.getSubText());
         assertEquals(fileName, item.getText());
     }
-
-    @Test
-    public void filterTargetDirectoryFileWithoutPath() {
-        String fullPath = "filename.etc";
-        KieAssetsDropdownItem item = scenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImplSpy.getKieAssetsDropdownItem(fullPath);
-        assertTrue(scenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImplSpy.filterTargetDirectory(item));
-    }
-
-    @Test
-    public void filterTargetDirectoryFileWithLongPath() {
-        String path = "long/path/";
-        String fileName = "filename.etc";
-        String fullPath = path + fileName;
-        KieAssetsDropdownItem item = scenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImplSpy.getKieAssetsDropdownItem(fullPath);
-        assertTrue(scenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImplSpy.filterTargetDirectory(item));
-    }
-
-    @Test
-    public void filterTargetDirectoryFileInTargetDirectory() {
-        String path = "target/";
-        String fileName = "filename.etc";
-        String fullPath = path + fileName;
-        KieAssetsDropdownItem item = scenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImplSpy.getKieAssetsDropdownItem(fullPath);
-        assertFalse(scenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImplSpy.filterTargetDirectory(item));
-    }
-
-    @Test
-    public void filterTargetDirectoryFileInTargetClassesDirectory() {
-        String path = "target/classes/";
-        String fileName = "filename.etc";
-        String fullPath = path + fileName;
-        KieAssetsDropdownItem item = scenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImplSpy.getKieAssetsDropdownItem(fullPath);
-        assertFalse(scenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImplSpy.filterTargetDirectory(item));
-    }
-
-    @Test
-    public void filterTargetDirectoryFileInTargetClassesSubDirectory() {
-        String path = "target/classes/folder/";
-        String fileName = "filename.etc";
-        String fullPath = path + fileName;
-        KieAssetsDropdownItem item = scenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImplSpy.getKieAssetsDropdownItem(fullPath);
-        assertFalse(scenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImplSpy.filterTargetDirectory(item));
-    }
-
-    @Test
-    public void filterTargetDirectoryFileInTargetDirectoryWindows() {
-        String path = "C:\\target\\";
-        String fileName = "filename.etc";
-        String fullPath = path + fileName;
-        KieAssetsDropdownItem item = scenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImplSpy.getKieAssetsDropdownItem(fullPath);
-        assertFalse(scenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImplSpy.filterTargetDirectory(item));
-    }
-
-    @Test
-    public void filterTargetDirectoryFileInTargetClassesDirectoryWindows() {
-        String path = "C:\\target\\classes\\";
-        String fileName = "filename.etc";
-        String fullPath = path + fileName;
-        KieAssetsDropdownItem item = scenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImplSpy.getKieAssetsDropdownItem(fullPath);
-        assertFalse(scenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImplSpy.filterTargetDirectory(item));
-    }
-
-    @Test
-    public void filterTargetDirectoryFileInTargetClassesSubDirectoryWindows() {
-        String path = "C:\\target\\classes\\folder\\";
-        String fileName = "filename.etc";
-        String fullPath = path + fileName;
-        KieAssetsDropdownItem item = scenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImplSpy.getKieAssetsDropdownItem(fullPath);
-        assertFalse(scenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImplSpy.filterTargetDirectory(item));
-    }
-
 }
