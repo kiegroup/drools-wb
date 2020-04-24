@@ -43,6 +43,7 @@ import org.uberfire.mvp.PlaceRequest;
 import static org.drools.workbench.screens.scenariosimulation.businesscentral.client.handlers.ScenarioSimulationBusinessCentralDocksHandler.TEST_RUNNER_REPORTING_PANEL;
 import static org.drools.workbench.screens.scenariosimulation.client.handlers.AbstractScenarioSimulationDocksHandler.SCESIMEDITOR_ID;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -190,7 +191,7 @@ public class ScenarioSimulationBusinessCentralDocksHandlerTest {
     }
 
     @Test
-    public void getSettingsView() {
+    public void getCoverageView() {
         CoverageReportView coverageReportView = mock(CoverageReportView.class);
         AbstractWorkbenchActivity activityMock = mock(AbstractWorkbenchActivity.class);
         when(activityMock.getWidget()).thenReturn(coverageReportView);
@@ -198,5 +199,13 @@ public class ScenarioSimulationBusinessCentralDocksHandlerTest {
         when(placeManagerMock.getActivity(eq(placeRequest))).thenReturn(activityMock);
         Optional<CoverageReportView> optional = scenarioSimulationBusinessCentralDocksHandlerSpy.getCoverageReportView(placeRequest);
         assertSame(coverageReportView, optional.get());
+    }
+
+    @Test
+    public void getCoverageView_NullActivity() {
+        PlaceRequest placeRequest = scenarioSimulationBusinessCentralDocksHandlerSpy.getCurrentRightDockPlaceRequest(CoverageReportPresenter.IDENTIFIER);
+        when(placeManagerMock.getActivity(eq(placeRequest))).thenReturn(null);
+        Optional<CoverageReportView> optional = scenarioSimulationBusinessCentralDocksHandlerSpy.getCoverageReportView(placeRequest);
+        assertFalse(optional.isPresent());
     }
 }
