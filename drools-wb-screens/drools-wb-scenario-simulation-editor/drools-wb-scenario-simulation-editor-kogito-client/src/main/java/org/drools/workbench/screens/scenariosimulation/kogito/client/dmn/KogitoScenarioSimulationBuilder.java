@@ -360,9 +360,9 @@ public class KogitoScenarioSimulationBuilder {
     }
 
     protected void addFactMapping(final FactMappingExtractor factMappingExtractor,
-                                final FactModelTree factModelTree,
-                                final List<String> previousSteps,
-                                final Map<String, FactModelTree> hiddenValues) {
+                                  final FactModelTree factModelTree,
+                                  final List<String> previousSteps,
+                                  final Map<String, FactModelTree> hiddenValues) {
         internalAddToScenario(factMappingExtractor,
                               factModelTree,
                               previousSteps,
