@@ -449,11 +449,11 @@ public class AbstractKogitoDMNServiceTest {
                                                                              jsitItemDefinitionMock,
                                                                              NAMESPACE,
                                                                              new HashMap<>());
-        abstractKogitoDMNServiceSpy.populateItemFields(allDefinitions,
-                                                       jsitItemDefinitionMock,
-                                                       NAMESPACE,
-                                                       new HashMap<>(),
-                                                       clientDmnType);
+        abstractKogitoDMNServiceSpy.populateItemDefinitionFields(allDefinitions,
+                                                                 jsitItemDefinitionMock,
+                                                                 NAMESPACE,
+                                                                 new HashMap<>(),
+                                                                 clientDmnType);
         assertEquals(NAMESPACE, clientDmnType.getNamespace());
         assertEquals(TYPE_NAME, clientDmnType.getName());
         assertFalse(clientDmnType.isCollection());
@@ -471,11 +471,11 @@ public class AbstractKogitoDMNServiceTest {
                                                                              jsitItemDefinitionMock,
                                                                              NAMESPACE,
                                                                              new HashMap<>());
-        abstractKogitoDMNServiceSpy.populateItemFields(allDefinitions,
-                                                       jsitItemDefinitionMock,
-                                                       NAMESPACE,
-                                                       new HashMap<>(),
-                                                       clientDmnType);
+        abstractKogitoDMNServiceSpy.populateItemDefinitionFields(allDefinitions,
+                                                                 jsitItemDefinitionMock,
+                                                                 NAMESPACE,
+                                                                 new HashMap<>(),
+                                                                 clientDmnType);
         assertEquals(NAMESPACE, clientDmnType.getNamespace());
         assertEquals(TYPE_NAME, clientDmnType.getName());
         assertTrue(clientDmnType.isCollection());
@@ -507,11 +507,11 @@ public class AbstractKogitoDMNServiceTest {
                                                                                 jSITItemDefinitionSubItem,
                                                                                 NAMESPACE,
                                                                                 dmnTypes);
-        abstractKogitoDMNServiceSpy.populateItemFields(allDefinitions,
-                                                       jSITItemDefinitionSubItem,
-                                                       NAMESPACE,
-                                                       dmnTypes,
-                                                       clientDmnTypeSub);
+        abstractKogitoDMNServiceSpy.populateItemDefinitionFields(allDefinitions,
+                                                                 jSITItemDefinitionSubItem,
+                                                                 NAMESPACE,
+                                                                 dmnTypes,
+                                                                 clientDmnTypeSub);
         assertEquals(NAMESPACE, clientDmnTypeSub.getNamespace());
         assertEquals("tSub", clientDmnTypeSub.getName());
         assertFalse(clientDmnTypeSub.isCollection());
@@ -527,11 +527,11 @@ public class AbstractKogitoDMNServiceTest {
                                                                                    jSITItemDefinitionSubSubItem,
                                                                                    NAMESPACE,
                                                                                    dmnTypes);
-        abstractKogitoDMNServiceSpy.populateItemFields(allDefinitions,
-                                                       jSITItemDefinitionSubSubItem,
-                                                       NAMESPACE,
-                                                       dmnTypes,
-                                                       clientDmnTypeSubSub);
+        abstractKogitoDMNServiceSpy.populateItemDefinitionFields(allDefinitions,
+                                                                 jSITItemDefinitionSubSubItem,
+                                                                 NAMESPACE,
+                                                                 dmnTypes,
+                                                                 clientDmnTypeSubSub);
 
         assertEquals(NAMESPACE, clientDmnTypeSubSub.getNamespace());
         assertEquals("tSubSub", clientDmnTypeSubSub.getName());
@@ -563,11 +563,11 @@ public class AbstractKogitoDMNServiceTest {
                                                                                 jSITItemDefinitionSubItem,
                                                                                 NAMESPACE,
                                                                                 dmnTypes);
-        abstractKogitoDMNServiceSpy.populateItemFields(allDefinitions,
-                                                       jSITItemDefinitionSubItem,
-                                                       NAMESPACE,
-                                                       dmnTypes,
-                                                       clientDmnTypeSub);
+        abstractKogitoDMNServiceSpy.populateItemDefinitionFields(allDefinitions,
+                                                                 jSITItemDefinitionSubItem,
+                                                                 NAMESPACE,
+                                                                 dmnTypes,
+                                                                 clientDmnTypeSub);
 
         assertEquals(NAMESPACE, clientDmnTypeSub.getNamespace());
         assertEquals("tSub", clientDmnTypeSub.getName());
@@ -583,11 +583,11 @@ public class AbstractKogitoDMNServiceTest {
                                                                                    jSITItemDefinitionSubSubItem,
                                                                                    NAMESPACE,
                                                                                    dmnTypes);
-        abstractKogitoDMNServiceSpy.populateItemFields(allDefinitions,
-                                                       jSITItemDefinitionSubItem,
-                                                       NAMESPACE,
-                                                       dmnTypes,
-                                                       clientDmnTypeSubSub);
+        abstractKogitoDMNServiceSpy.populateItemDefinitionFields(allDefinitions,
+                                                                 jSITItemDefinitionSubItem,
+                                                                 NAMESPACE,
+                                                                 dmnTypes,
+                                                                 clientDmnTypeSubSub);
 
         assertEquals(NAMESPACE, clientDmnTypeSubSub.getNamespace());
         assertEquals("tSubSub", clientDmnTypeSubSub.getName());
@@ -623,11 +623,11 @@ public class AbstractKogitoDMNServiceTest {
                                                                                 jSITItemDefinitionSubItem,
                                                                                 NAMESPACE,
                                                                                 dmnTypes);
-        abstractKogitoDMNServiceSpy.populateItemFields(allDefinitions,
-                                                       jSITItemDefinitionSubItem,
-                                                       NAMESPACE,
-                                                       dmnTypes,
-                                                       clientDmnTypeSub);
+        abstractKogitoDMNServiceSpy.populateItemDefinitionFields(allDefinitions,
+                                                                 jSITItemDefinitionSubItem,
+                                                                 NAMESPACE,
+                                                                 dmnTypes,
+                                                                 clientDmnTypeSub);
 
         assertEquals(NAMESPACE, clientDmnTypeSub.getNamespace());
         assertEquals("tSub", clientDmnTypeSub.getName());
@@ -644,11 +644,11 @@ public class AbstractKogitoDMNServiceTest {
                                                                                    jSITItemDefinitionSubSubItem,
                                                                                    NAMESPACE,
                                                                                    dmnTypes);
-        abstractKogitoDMNServiceSpy.populateItemFields(allDefinitions,
-                                                       jSITItemDefinitionSubSubItem,
-                                                       NAMESPACE,
-                                                       dmnTypes,
-                                                       clientDmnTypeSubSub);
+        abstractKogitoDMNServiceSpy.populateItemDefinitionFields(allDefinitions,
+                                                                 jSITItemDefinitionSubSubItem,
+                                                                 NAMESPACE,
+                                                                 dmnTypes,
+                                                                 clientDmnTypeSubSub);
 
         assertEquals(NAMESPACE, clientDmnTypeSubSub.getNamespace());
         assertEquals("tSubSub", clientDmnTypeSubSub.getName());

@@ -92,7 +92,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
     /**
      * This method retrieves all DMN Types are composed by
      * - Primitive FEEL types, listed inside <code>BuiltInType</code> enum
-     * - User defined Types, which are available inside inside <code>jsitItemDefinitions</code> list
+     * - User defined types, which are available inside <code>jsitItemDefinitions</code> list
      * @param jsitItemDefinitions
      * @param nameSpace
      * @return
@@ -101,7 +101,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
                                                         final String nameSpace) {
         Map<String, ClientDMNType> dmnTypesMap = new HashMap<>();
 
-        /* Adding primitive FEEL types - no collection types */
+        /* Adding primitive FEEL types */
         for (BuiltInType type : BuiltInType.values()) {
 
             for (String name : type.getNames()) {
@@ -117,20 +117,23 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
         }
 
         final Map<String, JSITItemDefinition> itemDefinitionMap = indexDefinitionsByName(jsitItemDefinitions);
-        /* Adding user defined types, extracting from itemDefinitionMap, skipping their own itemFields */
+        /* Adding user defined types, extracting from itemDefinitionMap, skipping their own fields */
         for (int i = 0; i < jsitItemDefinitions.size(); i++) {
             final JSITItemDefinition jsitItemDefinition = Js.uncheckedCast(jsitItemDefinitions.get(i));
             dmnTypesMap.put(jsitItemDefinition.getName(), getDMNType(itemDefinitionMap, jsitItemDefinition, nameSpace, dmnTypesMap));
         }
 
+        /* Here, dmnTypesMap contains both Primitive and User defined types - can't be modify anymore */
+        dmnTypesMap = Collections.unmodifiableMap(dmnTypesMap);
+
         /* Managing all item definitions fields and subfields */
         for (int i = 0; i < jsitItemDefinitions.size(); i++) {
             final JSITItemDefinition jsitItemDefinition = Js.uncheckedCast(jsitItemDefinitions.get(i));
-            populateItemFields(itemDefinitionMap,
-                               jsitItemDefinition,
-                               nameSpace,
-                               Collections.unmodifiableMap(dmnTypesMap),
-                               dmnTypesMap.get(jsitItemDefinition.getName()));
+            populateItemDefinitionFields(itemDefinitionMap,
+                                         jsitItemDefinition,
+                                         nameSpace,
+                                         dmnTypesMap,
+                                         dmnTypesMap.get(jsitItemDefinition.getName()));
         }
 
         return dmnTypesMap;
@@ -154,7 +157,8 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
     }
 
     /**
-     * It creates an *unmodifiable* map of JSITItemDefinition object, with its name as a key
+     * It creates an *unmodifiable* map of JSITItemDefinition object, with its name as a key. These are the first
+     * level user defined types.
      * @param allDefinitions
      * @return
      */
@@ -169,7 +173,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
 
     /**
      * This method creates a <code>ClientDMNType</code> object of a given <code>JSITItemDefinition</code> object.
-     * It does not populate the fields of the type. To populate it, use {@link #populateItemFields(Map, JSITItemDefinition, String, Map, ClientDMNType)}.
+     * It does not populate the fields of the type. To populate it, use {@link #populateItemDefinitionFields(Map, JSITItemDefinition, String, Map, ClientDMNType)}.
      *
      * @param allDefinitions
      * @param itemDefinition
@@ -218,20 +222,21 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
 
     /**
      * This method aim is to populate all fields and subfields present in a given <code>JSITItemDefinitionItem</code>
-     * Considering any field can contains fields, this method is *recursive*. Be sure an exit condition is correctly
-     * set. Currently, the methods exits if there are not fields inside the given itemDefinition.
+     * Considering a field can contains subfields, this method is *recursive*. Be sure an exit condition is correctly set.
+     * Currently, the methods exits if there are not fields inside the given itemDefinition.
      * @param allItemDefinitions
      * @param itemDefinition
      * @param namespace
      * @param dmnTypesMap
      * @param clientDMNType
      */
-    protected void populateItemFields(final Map<String, JSITItemDefinition> allItemDefinitions,
-                                      final JSITItemDefinition itemDefinition,
-                                      final String namespace,
-                                      final Map<String, ClientDMNType> dmnTypesMap,
-                                      final ClientDMNType clientDMNType) {
+    protected void populateItemDefinitionFields(final Map<String, JSITItemDefinition> allItemDefinitions,
+                                                final JSITItemDefinition itemDefinition,
+                                                final String namespace,
+                                                final Map<String, ClientDMNType> dmnTypesMap,
+                                                final ClientDMNType clientDMNType) {
         final List<JSITItemDefinition> jsitItemDefinitionFields = itemDefinition.getItemComponent();
+        /* Exit condition: if current itemDefinition hasn't fields, it returns */
         if (jsitItemDefinitionFields != null && !jsitItemDefinitionFields.isEmpty()) {
 
             for (int i = 0; i < jsitItemDefinitionFields.size(); i++) {
@@ -239,26 +244,32 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
                 final String typeRef = jsitItemDefinitionField.getTypeRef();
                 final List<JSITItemDefinition> subfields = jsitItemDefinitionField.getItemComponent();
                 final boolean hasSubFields = subfields != null && !subfields.isEmpty();
-                ClientDMNType jsitItemDefinitionFieldDMNType;
+                ClientDMNType fieldDMNType;
                 /* Retrieving field ClientDMNType */
                 if (typeRef != null && !hasSubFields) {
-                    jsitItemDefinitionFieldDMNType = dmnTypesMap.get(typeRef);
+                    /* The field refers to a DMType which must be present in dmnTypesMap */
+                    fieldDMNType = dmnTypesMap.get(typeRef);
                 } else if (typeRef == null && hasSubFields) {
-                    jsitItemDefinitionFieldDMNType = getDMNType(allItemDefinitions, jsitItemDefinitionField, namespace, dmnTypesMap);
-
-                    /* Managing subfields of the current field in recursive way */
-                    populateItemFields(allItemDefinitions, jsitItemDefinitionField, namespace, dmnTypesMap, jsitItemDefinitionFieldDMNType);
+                    /* In this case we are handling a Structure type not define in allItemDefinition list.
+                     * Therefore, a new DMNType must be created and then it manages its defined subfields in recursive way */
+                    fieldDMNType = getDMNType(allItemDefinitions, jsitItemDefinitionField, namespace, dmnTypesMap);
+                    populateItemDefinitionFields(allItemDefinitions, jsitItemDefinitionField, namespace, dmnTypesMap, fieldDMNType);
                 } else {
+                    /* The following case are not managed, because invalid:
+                       - typeRef is null and no subfields;
+                       - typeRef is null and at least one subfield;
+                     */
                     continue;
                 }
 
-                    /* If DMNType is simple (BuiltInType feelType is present) and the current field is a collection,
-                       a new DMNType of simple type with isCollection true is created */
-                    if (!jsitItemDefinitionFieldDMNType.isCollection() && jsitItemDefinitionField.getIsCollection()) {
-                        jsitItemDefinitionFieldDMNType = jsitItemDefinitionFieldDMNType.copyAsCollection();
-                    }
+                /* Managing the case where the field in analysis is set as collection where its retrieved DMNType is not
+                 * This can happen when the DMNType is declared as notCollection and a field referring to it is declared
+                 * as collection. In this case, a new DMNType is *copied* with set collection true. */
+                if (jsitItemDefinitionField.getIsCollection() && !fieldDMNType.isCollection()) {
+                    fieldDMNType = fieldDMNType.copyAsCollection();
+                }
 
-                clientDMNType.getFields().put(jsitItemDefinitionField.getName(), jsitItemDefinitionFieldDMNType);
+                clientDMNType.getFields().put(jsitItemDefinitionField.getName(), fieldDMNType);
             }
         }
     }

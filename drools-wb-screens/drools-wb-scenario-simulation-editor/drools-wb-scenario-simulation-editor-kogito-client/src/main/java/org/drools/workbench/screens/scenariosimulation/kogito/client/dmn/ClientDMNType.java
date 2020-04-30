@@ -44,10 +44,10 @@ public class ClientDMNType {
     }
 
     /**
-     * It copies the current ClientDMNType, setting it as Collection, with isCollection = true.
-     * Please note, fields parameter reference should be the same for both object, the current one
+     * It *copies* the current ClientDMNType, setting it as Collection, with isCollection = true.
+     * Please note, fields parameter reference should be the same for both object, the original one
      * and the copied one.
-     * @return
+     * @return A new instance of ClientDMNType with the *same* fields value of the current one but isCollection set true
      */
     public ClientDMNType copyAsCollection() {
         return new ClientDMNType(namespace, name, id, true, composite, fields, feelType);
