@@ -237,25 +237,27 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
             for (int i = 0; i < jsitItemDefinitionFields.size(); i++) {
                 final JSITItemDefinition jsitItemDefinitionField = Js.uncheckedCast(jsitItemDefinitionFields.get(i));
                 final String typeRef = jsitItemDefinitionField.getTypeRef();
+                final List<JSITItemDefinition> subfields = jsitItemDefinitionField.getItemComponent();
+                final boolean hasSubFields = subfields != null && !subfields.isEmpty();
                 ClientDMNType jsitItemDefinitionFieldDMNType;
                 /* Retrieving field ClientDMNType */
-                if (typeRef == null) {
-                    /* Current typeRef is null or not present in dmnTypesMap, therefore it creates and adds it */
-                    jsitItemDefinitionFieldDMNType = getDMNType(allItemDefinitions, jsitItemDefinitionField, namespace, dmnTypesMap);
-                } else {
+                if (typeRef != null && !hasSubFields) {
                     jsitItemDefinitionFieldDMNType = dmnTypesMap.get(typeRef);
+                } else if (typeRef == null && hasSubFields) {
+                    jsitItemDefinitionFieldDMNType = getDMNType(allItemDefinitions, jsitItemDefinitionField, namespace, dmnTypesMap);
+
+                    /* Managing subfields of the current field in recursive way */
+                    populateItemFields(allItemDefinitions, jsitItemDefinitionField, namespace, dmnTypesMap, jsitItemDefinitionFieldDMNType);
+                } else {
+                    continue;
+                }
 
                     /* If DMNType is simple (BuiltInType feelType is present) and the current field is a collection,
                        a new DMNType of simple type with isCollection true is created */
                     if (!jsitItemDefinitionFieldDMNType.isCollection() && jsitItemDefinitionField.getIsCollection()) {
                         jsitItemDefinitionFieldDMNType = jsitItemDefinitionFieldDMNType.copyAsCollection();
                     }
-                }
 
-                /* Managing subfields of the current field in recursive way */
-                if (jsitItemDefinitionFieldDMNType.isComposite()) {
-                    populateItemFields(allItemDefinitions, jsitItemDefinitionField, namespace, dmnTypesMap, jsitItemDefinitionFieldDMNType);
-                }
                 clientDMNType.getFields().put(jsitItemDefinitionField.getName(), jsitItemDefinitionFieldDMNType);
             }
         }

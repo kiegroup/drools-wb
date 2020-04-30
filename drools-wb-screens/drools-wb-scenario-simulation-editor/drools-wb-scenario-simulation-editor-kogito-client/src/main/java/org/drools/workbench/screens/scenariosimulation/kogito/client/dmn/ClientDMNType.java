@@ -15,7 +15,6 @@
  */
 package org.drools.workbench.screens.scenariosimulation.kogito.client.dmn;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.feel.BuiltInType;
@@ -44,8 +43,14 @@ public class ClientDMNType {
         this.composite = isComposite;
     }
 
+    /**
+     * It copies the current ClientDMNType, setting it as Collection, with isCollection = true.
+     * Please note, fields parameter reference should be the same for both object, the current one
+     * and the copied one.
+     * @return
+     */
     public ClientDMNType copyAsCollection() {
-        return new ClientDMNType(namespace, name, id, true, composite, new HashMap<>(fields), feelType);
+        return new ClientDMNType(namespace, name, id, true, composite, fields, feelType);
     }
 
     public String getNamespace() {
