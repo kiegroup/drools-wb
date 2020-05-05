@@ -15,6 +15,7 @@
  */
 package org.drools.workbench.screens.scenariosimulation.kogito.client.dmn;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.feel.BuiltInType;
@@ -24,10 +25,16 @@ public class ClientDMNType {
     private String namespace;
     private String name;
     private String id;
-    private boolean collection;
-    private boolean composite;
-    private Map<String, ClientDMNType> fields;
+    private boolean collection = false;
+    private boolean composite = false;
+    private Map<String, ClientDMNType> fields = new HashMap<>();
     private BuiltInType feelType;
+
+    public ClientDMNType(String namespace, String name, String id) {
+        this.namespace = namespace;
+        this.name = name;
+        this.id = id;
+    }
 
     public ClientDMNType(String namespace, String name, String id, boolean isCollection, BuiltInType feelType) {
         this.namespace = namespace;
@@ -79,5 +86,17 @@ public class ClientDMNType {
 
     public BuiltInType getFeelType() {
         return feelType;
+    }
+
+    public void addFields(Map<String, ClientDMNType> fields) {
+        this.fields = fields;
+    }
+
+    public void setIsComposite(final boolean isComposite) {
+        this.composite = isComposite;
+    }
+
+    public void setCollection(final boolean collection) {
+        this.collection = collection;
     }
 }
