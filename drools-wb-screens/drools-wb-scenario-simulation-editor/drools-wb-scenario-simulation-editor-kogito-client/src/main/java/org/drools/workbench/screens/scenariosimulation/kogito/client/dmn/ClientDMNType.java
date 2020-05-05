@@ -30,18 +30,20 @@ public class ClientDMNType {
     private Map<String, ClientDMNType> fields = new HashMap<>();
     private BuiltInType feelType;
 
-    public ClientDMNType(String namespace, String name, String id) {
-        this.namespace = namespace;
-        this.name = name;
-        this.id = id;
-    }
-
     public ClientDMNType(String namespace, String name, String id, boolean isCollection, BuiltInType feelType) {
         this.namespace = namespace;
         this.name = name;
         this.id = id;
         this.collection = isCollection;
         this.feelType = feelType;
+    }
+
+    public ClientDMNType(String namespace, String name, String id, boolean isCollection, boolean isComposite) {
+        this.namespace = namespace;
+        this.name = name;
+        this.id = id;
+        this.collection = isCollection;
+        this.composite = isComposite;
     }
 
     public ClientDMNType(String namespace, String name, String id, boolean isCollection, boolean isComposite, Map<String, ClientDMNType> fields, BuiltInType feelType) {

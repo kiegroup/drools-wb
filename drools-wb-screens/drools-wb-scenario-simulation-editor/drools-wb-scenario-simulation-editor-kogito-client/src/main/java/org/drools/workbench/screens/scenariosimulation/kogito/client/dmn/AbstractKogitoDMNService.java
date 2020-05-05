@@ -96,9 +96,9 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
      * This method retrieves all DMN Data Types are composed by
      * - DEFAULT types, listed inside <code>BuiltInType</code> enum
      * - CUSTOM types, which are available inside <code>jsitItemDefinitions</code> list
-     * @param jsitItemDefinitions
-     * @param nameSpace
-     * @return
+     * @param jsitItemDefinitions List of CUSTOM Data Type in raw format
+     * @param nameSpace namespace
+     * @return An UNMODIFIABLE map containing all DEFAULT and CUSTOM Data Types.
      */
     protected Map<String, ClientDMNType> getDMNDataTypesMap(final List<JSITItemDefinition> jsitItemDefinitions,
                                                             final String nameSpace) {
@@ -109,7 +109,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
 
             for (String name : type.getNames()) {
                 ClientDMNType feelPrimitiveType;
-                /* CONTEXT is a particular case of primitive type */
+                /* CONTEXT is a particular case of DEFAULT type */
                 if (type == BuiltInType.CONTEXT) {
                     feelPrimitiveType = new ClientDMNType(URI_FEEL, name, null, false, true, Collections.emptyMap(), type);
                 } else {
@@ -120,26 +120,13 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
         }
 
         final Map<String, JSITItemDefinition> itemDefinitionMap = indexDefinitionsByName(jsitItemDefinitions);
-        /* Adding Custom Types, extracted from itemDefinitionMap, skipping their own fields */
+        /* Adding CUSTOM Types, extracted from jsitItemDefinitions map */
         for (int i = 0; i < jsitItemDefinitions.size(); i++) {
             final JSITItemDefinition jsitItemDefinition = Js.uncheckedCast(jsitItemDefinitions.get(i));
             createDMNType(itemDefinitionMap, jsitItemDefinition, nameSpace, dmnDataTypesMap);
         }
 
-        /* Here, dmnTypesMap contains both Primitive and User defined types - can't be modify anymore */
-        /*dmnDataTypesMap = Collections.unmodifiableMap(dmnDataTypesMap);
-
-        /* Managing all item definitions fields and subfields
-        for (int i = 0; i < jsitItemDefinitions.size(); i++) {
-            final JSITItemDefinition jsitItemDefinition = Js.uncheckedCast(jsitItemDefinitions.get(i));
-            populateItemDefinitionFields(itemDefinitionMap,
-                                         jsitItemDefinition,
-                                         nameSpace,
-                                         dmnDataTypesMap,
-                                         dmnDataTypesMap.get(jsitItemDefinition.getName()));
-        }*/
-
-        return dmnDataTypesMap;
+        return Collections.unmodifiableMap(dmnDataTypesMap);
     }
 
     ClientDMNType getOrCreateDMNType(final Map<String, JSITItemDefinition> allDefinitions,
@@ -161,7 +148,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
 
     /**
      * It creates an *unmodifiable* map of JSITItemDefinition object, with its name as a key. These are the first
-     * level user defined types.
+     * level user defined types (CUSTOM Data Type)
      * @param allDefinitions
      * @return
      */
@@ -175,9 +162,8 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
     }
 
     /**
-     * This method creates a <code>ClientDMNType</code> object of a given <code>JSITItemDefinition</code> object.
-     * It does not populate the fields of the type. To populate it, use {@link #populateItemDefinitionFields(Map, JSITItemDefinition, String, Map, ClientDMNType)}.
-     *
+     * This method creates a <code>ClientDMNType</code> object of a given <code>JSITItemDefinition</code> object or
+     * a <code>JSITItemComponent</code> as well.
      * @param allDefinitions
      * @param itemDefinition
      * @param namespace
@@ -188,16 +174,20 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
                                           final JSITItemDefinition itemDefinition,
                                           final String namespace,
                                           final Map<String, ClientDMNType> dmnTypesDataMap) {
+        /* It initializes a ClientDMNType which represents the given itemDefinition */
         ClientDMNType itemDefinitionDMNType = new ClientDMNType(namespace,
                                                                 itemDefinition.getName(),
-                                                                itemDefinition.getId());
+                                                                itemDefinition.getId(),
+                                                                itemDefinition.getIsCollection(),
+                                                                itemDefinition.getItemComponent() != null &&
+                                                                        !itemDefinition.getItemComponent().isEmpty());
+        /* It adds the created ClientDMNType into dmnTypesDataMap ONLY if is a CUSTOM data type, and not a ItemComponent (a field) */
         if (allDefinitions.containsKey(itemDefinition.getName())) {
             dmnTypesDataMap.put(itemDefinition.getName(), itemDefinitionDMNType);
         }
-        boolean isCollection = itemDefinition.getIsCollection();
-        boolean isComposite = itemDefinition.getItemComponent() != null && !itemDefinition.getItemComponent().isEmpty();
-        /* Inheriting fields defined from item's typeRef, which represent its "super item".
-         * This is required when a typeRef is defined for current itemDefinition */
+
+        /* Inheriting fields defined from item's typeRef, which represent its "super item" */
+        /* This is required to define DMNType fields and isCollection / isComposite fields */
         String typeRef = itemDefinition.getTypeRef();
         if (typeRef != null) {
             final ClientDMNType superDmnType = getOrCreateDMNType(allDefinitions,
@@ -207,8 +197,8 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
             if (superDmnType != null) {
                 /* Current clientDmnType item must inherits these properties from its super type */
                 itemDefinitionDMNType.addFields(superDmnType.getFields());
-                isCollection = superDmnType.isCollection() || isCollection;
-                isComposite = superDmnType.isComposite() || isComposite;
+                itemDefinitionDMNType.setCollection(superDmnType.isCollection() || itemDefinitionDMNType.isCollection());
+                itemDefinitionDMNType.setIsComposite(superDmnType.isComposite() || itemDefinitionDMNType.isComposite());
             } else {
                 throw new IllegalStateException(
                         "Item: " + itemDefinition.getName() + " refers to typeRef: " + itemDefinition.getTypeRef()
@@ -221,8 +211,6 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
                                          dmnTypesDataMap,
                                          itemDefinitionDMNType);
         }
-        itemDefinitionDMNType.setIsComposite(isComposite);
-        itemDefinitionDMNType.setCollection(isCollection);
 
         return itemDefinitionDMNType;
    }
