@@ -189,20 +189,20 @@ public class AbstractKogitoDMNServiceTest {
                                                                                namespace,
                                                                                createdTypes);
 
-        final ClientDMNType actualDmnTypeOne = abstractKogitoDMNServiceSpy.getOrCreateDMNType(indexed,
-                                                                                              typeOneName,
-                                                                                              namespace,
-                                                                                              createdTypes);
+        final ClientDMNType actualDmnTypeOne = abstractKogitoDMNServiceSpy.ensureDMNTypeIsCreated(indexed,
+                                                                                                  typeOneName,
+                                                                                                  namespace,
+                                                                                                  createdTypes);
 
-        final ClientDMNType actualDmnTypeTwo = abstractKogitoDMNServiceSpy.getOrCreateDMNType(indexed,
-                                                                                              typeTwoName,
-                                                                                              namespace,
-                                                                                              createdTypes);
+        final ClientDMNType actualDmnTypeTwo = abstractKogitoDMNServiceSpy.ensureDMNTypeIsCreated(indexed,
+                                                                                                  typeTwoName,
+                                                                                                  namespace,
+                                                                                                  createdTypes);
 
-        final ClientDMNType actualDmnTypeThree = abstractKogitoDMNServiceSpy.getOrCreateDMNType(indexed,
-                                                                                                typeThreeName,
-                                                                                                namespace,
-                                                                                                createdTypes);
+        final ClientDMNType actualDmnTypeThree = abstractKogitoDMNServiceSpy.ensureDMNTypeIsCreated(indexed,
+                                                                                                    typeThreeName,
+                                                                                                    namespace,
+                                                                                                    createdTypes);
 
         assertEquals(dmnTypeOne, actualDmnTypeOne);
         assertEquals(dmnTypeTwo, actualDmnTypeTwo);
@@ -220,10 +220,10 @@ public class AbstractKogitoDMNServiceTest {
         final Map<String, ClientDMNType> createdTypes = new HashMap<>();
         createdTypes.put(typeOneName, dmnTypeOne);
 
-        final ClientDMNType actualDmnTypeOne = abstractKogitoDMNServiceSpy.getOrCreateDMNType(indexed,
-                                                                                              typeOneName,
-                                                                                              namespace,
-                                                                                              createdTypes);
+        final ClientDMNType actualDmnTypeOne = abstractKogitoDMNServiceSpy.ensureDMNTypeIsCreated(indexed,
+                                                                                                  typeOneName,
+                                                                                                  namespace,
+                                                                                                  createdTypes);
 
         verify(abstractKogitoDMNServiceSpy, never()).createDMNType(indexed,
                                                                    definition1,
@@ -239,10 +239,10 @@ public class AbstractKogitoDMNServiceTest {
         final Map<String, JSITItemDefinition> indexed = new HashMap<>();
         final Map<String, ClientDMNType> createdTypes = new HashMap<>();
 
-        abstractKogitoDMNServiceSpy.getOrCreateDMNType(indexed,
-                                                       "unknownType",
-                                                       namespace,
-                                                       createdTypes);
+        abstractKogitoDMNServiceSpy.ensureDMNTypeIsCreated(indexed,
+                                                           "unknownType",
+                                                           namespace,
+                                                           createdTypes);
     }
 
     private JSITItemDefinition createJSITItemDefinitionMock(final String name) {
@@ -442,7 +442,8 @@ public class AbstractKogitoDMNServiceTest {
         assertNull(clientDmnType.getFeelType());
     }
 
-   /* @Test
+    /*
+    @Test
     public void getDMNTypeItems() {
         when(jsitItemDefinitionMock.getItemComponent()).thenReturn(Arrays.asList(jsitItemDefinitionNestedMock));
 
