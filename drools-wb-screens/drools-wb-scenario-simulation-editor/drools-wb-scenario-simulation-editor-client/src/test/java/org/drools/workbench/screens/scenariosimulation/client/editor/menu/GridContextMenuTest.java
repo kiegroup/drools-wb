@@ -17,15 +17,11 @@ package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
 import com.google.gwt.dom.client.LIElement;
 import com.google.gwtmockito.GwtMockitoTestRunner;
-import com.google.web.bindery.event.shared.Event;
 import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.events.DeleteRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DuplicateRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.InsertRowEvent;
-import org.drools.workbench.screens.scenariosimulation.client.events.RunSingleScenarioEvent;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
-import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
@@ -34,142 +30,48 @@ import static org.drools.workbench.screens.scenariosimulation.client.editor.menu
 import static org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridContextMenu.GRIDCONTEXTMENU_GRID_TITLE;
 import static org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridContextMenu.GRIDCONTEXTMENU_INSERT_ROW_ABOVE;
 import static org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridContextMenu.GRIDCONTEXTMENU_INSERT_ROW_BELOW;
-import static org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridContextMenu.GRIDCONTEXTMENU_RUN_SINGLE_SCENARIO;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-@RunWith(GwtMockitoTestRunner.class)
-public class GridContextMenuTest {
+public abstract class GridContextMenuTest {
 
     @Mock
-    private LIElement insertRowAboveLIElementMock;
+    protected LIElement insertRowAboveLIElementMock;
     @Mock
-    private LIElement insertRowBelowLIElementMock;
+    protected LIElement insertRowBelowLIElementMock;
     @Mock
-    private LIElement duplicateRowLIElementMock;
+    protected LIElement duplicateRowLIElementMock;
     @Mock
-    private LIElement deleteRowLIElementMock;
+    protected LIElement deleteRowLIElementMock;
     @Mock
-    private LIElement runSingleScenarioElementMock;
-    @Mock
-    private LIElement createdElementMock;
-    @Mock
-    private LIElement gridTitleElementMock;
+    protected LIElement gridTitleElementMock;
 
-    private GridContextMenu gridContextMenuSpy;
-
-    @Before
-    public void setup() {
-        gridContextMenuSpy = spy(new GridContextMenu() {
-
-            {
-                this.insertRowAboveLIElement = insertRowAboveLIElementMock;
-                this.insertRowBelowLIElement= insertRowBelowLIElementMock;
-                this.duplicateRowLIElement = duplicateRowLIElementMock;
-                this.deleteRowLIElement = deleteRowLIElementMock;
-                this.runSingleScenarioElement = runSingleScenarioElementMock;
-                this.gridTitleElement = gridTitleElementMock;
-            }
-
-            @Override
-            public LIElement addExecutableMenuItem(String id, String label, String i18n) {
-                return createdElementMock;
-            }
-
-            @Override
-            public void mapEvent(LIElement executableMenuItem, Event toBeMapped) {
-                //Do nothing
-            }
-
-            @Override
-            protected void updateExecutableMenuItemAttributes(LIElement toUpdate, String id, String label, String i18n) {
-                //Do nothing
-            }
-
-            @Override
-            public LIElement addMenuItem(String id, String label, String i18n) {
-                return createdElementMock;
-            }
-
-            @Override
-            public void removeMenuItem(LIElement toRemove) {
-                //Do nothing
-            }
-
-            @Override
-            public void show(GridWidget gridWidget, int mx, int my) {
-                //Do nothing
-            }
-        });
+    protected void initMenu(GridContextMenu gridContextMenu) {
+        gridContextMenu.initMenu();
+        verify(gridContextMenu, times(1)).addExecutableMenuItem(eq(GRIDCONTEXTMENU_INSERT_ROW_ABOVE), eq(ScenarioSimulationEditorConstants.INSTANCE.insertRowAbove()), eq("insertRowAbove"));
+        verify(gridContextMenu, times(1)).addExecutableMenuItem(eq(GRIDCONTEXTMENU_INSERT_ROW_BELOW), eq(ScenarioSimulationEditorConstants.INSTANCE.insertRowBelow()), eq("insertRowBelow"));
+        verify(gridContextMenu, times(1)).addExecutableMenuItem(eq(GRIDCONTEXTMENU_DUPLICATE_ROW), eq(ScenarioSimulationEditorConstants.INSTANCE.duplicateRow()), eq("duplicateRow"));
+        verify(gridContextMenu, times(1)).addExecutableMenuItem(eq(GRIDCONTEXTMENU_DELETE_ROW), eq(ScenarioSimulationEditorConstants.INSTANCE.deleteRow()), eq("deleteRow"));
     }
 
-    @Test
-    public void initMenu() {
-        gridContextMenuSpy.initMenu();
-        verify(gridContextMenuSpy, times(1)).addExecutableMenuItem(eq(GRIDCONTEXTMENU_INSERT_ROW_ABOVE), eq(ScenarioSimulationEditorConstants.INSTANCE.insertRowAbove()), eq("insertRowAbove"));
-        verify(gridContextMenuSpy, times(1)).addExecutableMenuItem(eq(GRIDCONTEXTMENU_INSERT_ROW_BELOW), eq(ScenarioSimulationEditorConstants.INSTANCE.insertRowBelow()), eq("insertRowBelow"));
-        verify(gridContextMenuSpy, times(1)).addExecutableMenuItem(eq(GRIDCONTEXTMENU_DUPLICATE_ROW), eq(ScenarioSimulationEditorConstants.INSTANCE.duplicateRow()), eq("duplicateRow"));
-        verify(gridContextMenuSpy, times(1)).addExecutableMenuItem(eq(GRIDCONTEXTMENU_DELETE_ROW), eq(ScenarioSimulationEditorConstants.INSTANCE.deleteRow()), eq("deleteRow"));
-        verify(gridContextMenuSpy, times(1)).addExecutableMenuItem(eq(GRIDCONTEXTMENU_RUN_SINGLE_SCENARIO), eq(ScenarioSimulationEditorConstants.INSTANCE.runSingleScenario()), eq("runSingleScenario"));
-    }
-
-    @Test
-    public void show_Simulation_NullRunScenarioElement() {
-        gridContextMenuSpy.runSingleScenarioElement = null;
-        gridContextMenuSpy.show(GridWidget.SIMULATION, 0, 0, 1);
-        verify(gridContextMenuSpy, times(1)).show(eq(GridWidget.SIMULATION), eq(0), eq(0));
-        verify(gridContextMenuSpy, times(1)).mapEvent(eq(insertRowAboveLIElementMock), isA(InsertRowEvent.class));
-        verify(gridContextMenuSpy, times(1)).mapEvent(eq(insertRowBelowLIElementMock), isA(InsertRowEvent.class));
-        verify(gridContextMenuSpy, times(1)).mapEvent(eq(duplicateRowLIElementMock), isA(DuplicateRowEvent.class));
-        verify(gridContextMenuSpy, times(1)).mapEvent(eq(deleteRowLIElementMock), isA(DeleteRowEvent.class));
-        verify(gridContextMenuSpy, times(1)).addExecutableMenuItem(eq(GRIDCONTEXTMENU_RUN_SINGLE_SCENARIO),eq(ScenarioSimulationEditorConstants.INSTANCE.runSingleScenario()), eq("runSingleScenario"));
-        verify(gridContextMenuSpy, times(1)).mapEvent(eq(createdElementMock), isA(RunSingleScenarioEvent.class));
-        verify(gridContextMenuSpy, times(1)).updateMenuItemAttributes(eq(gridTitleElementMock), eq(GRIDCONTEXTMENU_GRID_TITLE), eq(ScenarioSimulationEditorConstants.INSTANCE.scenario()), eq("scenario"));
-    }
-
-    @Test
-    public void show_Simulation_NotNullRunScenarioElement() {
-        gridContextMenuSpy.show(GridWidget.SIMULATION, 0, 0, 1);
-        verify(gridContextMenuSpy, times(1)).show(eq(GridWidget.SIMULATION), eq(0), eq(0));
-        verify(gridContextMenuSpy, times(1)).mapEvent(eq(insertRowAboveLIElementMock), isA(InsertRowEvent.class));
-        verify(gridContextMenuSpy, times(1)).mapEvent(eq(insertRowBelowLIElementMock), isA(InsertRowEvent.class));
-        verify(gridContextMenuSpy, times(1)).mapEvent(eq(duplicateRowLIElementMock), isA(DuplicateRowEvent.class));
-        verify(gridContextMenuSpy, times(1)).mapEvent(eq(deleteRowLIElementMock), isA(DeleteRowEvent.class));
-        verify(gridContextMenuSpy, never()).addExecutableMenuItem(eq(GRIDCONTEXTMENU_RUN_SINGLE_SCENARIO),eq(ScenarioSimulationEditorConstants.INSTANCE.runSingleScenario()), eq("runSingleScenario"));
-        verify(gridContextMenuSpy, times(1)).mapEvent(eq(runSingleScenarioElementMock), isA(RunSingleScenarioEvent.class));
-        verify(gridContextMenuSpy, times(1)).updateMenuItemAttributes(eq(gridTitleElementMock), eq(GRIDCONTEXTMENU_GRID_TITLE), eq(ScenarioSimulationEditorConstants.INSTANCE.scenario()), eq("scenario"));
-    }
-
-    @Test
-    public void show_Background_NullRunScenarioElement() {
-        gridContextMenuSpy.runSingleScenarioElement = null;
-        gridContextMenuSpy.show(GridWidget.BACKGROUND, 0, 0, 1);
-        verify(gridContextMenuSpy, times(1)).show(eq(GridWidget.BACKGROUND), eq(0), eq(0));
-        verify(gridContextMenuSpy, times(1)).mapEvent(eq(insertRowAboveLIElementMock), isA(InsertRowEvent.class));
-        verify(gridContextMenuSpy, times(1)).mapEvent(eq(insertRowBelowLIElementMock), isA(InsertRowEvent.class));
-        verify(gridContextMenuSpy, times(1)).mapEvent(eq(duplicateRowLIElementMock), isA(DuplicateRowEvent.class));
-        verify(gridContextMenuSpy, times(1)).mapEvent(eq(deleteRowLIElementMock), isA(DeleteRowEvent.class));
-        verify(gridContextMenuSpy, never()).addExecutableMenuItem(eq(GRIDCONTEXTMENU_RUN_SINGLE_SCENARIO), eq(ScenarioSimulationEditorConstants.INSTANCE.runSingleScenario()), eq("runSingleScenario"));
-        verify(gridContextMenuSpy, never()).mapEvent(eq(createdElementMock), isA(RunSingleScenarioEvent.class));
-        verify(gridContextMenuSpy, never()).updateMenuItemAttributes(any(), anyString(), anyString(), anyString());
-    }
-
-    @Test
-    public void show_Background_NotNullRunScenarioElement() {
-        gridContextMenuSpy.show(GridWidget.BACKGROUND, 0, 0, 1);
-        verify(gridContextMenuSpy, times(1)).show(eq(GridWidget.BACKGROUND), eq(0), eq(0));
-        verify(gridContextMenuSpy, times(1)).mapEvent(eq(insertRowAboveLIElementMock), isA(InsertRowEvent.class));
-        verify(gridContextMenuSpy, times(1)).mapEvent(eq(insertRowBelowLIElementMock), isA(InsertRowEvent.class));
-        verify(gridContextMenuSpy, times(1)).mapEvent(eq(duplicateRowLIElementMock), isA(DuplicateRowEvent.class));
-        verify(gridContextMenuSpy, times(1)).mapEvent(eq(deleteRowLIElementMock), isA(DeleteRowEvent.class));
-        verify(gridContextMenuSpy, never()).addExecutableMenuItem(eq(GRIDCONTEXTMENU_RUN_SINGLE_SCENARIO), eq(ScenarioSimulationEditorConstants.INSTANCE.runSingleScenario()), eq("runSingleScenario"));
-        verify(gridContextMenuSpy, never()).mapEvent(eq(createdElementMock), isA(RunSingleScenarioEvent.class));
-        verify(gridContextMenuSpy, times(1)).updateMenuItemAttributes(eq(gridTitleElementMock), eq(GRIDCONTEXTMENU_GRID_TITLE), eq(ScenarioSimulationEditorConstants.INSTANCE.background()), eq("background"));
+    protected void show(GridContextMenu gridContextMenu, GridWidget gridWidget, int mx, int my, int rowIndex) {
+        String expectedLabel;
+        String expectedI18n;
+        if (GridWidget.BACKGROUND.equals(gridWidget)) {
+            expectedLabel = ScenarioSimulationEditorConstants.INSTANCE.background();
+            expectedI18n = "background";
+        } else {
+            expectedLabel = ScenarioSimulationEditorConstants.INSTANCE.scenario();
+            expectedI18n = "scenario";
+        }
+        gridContextMenu.show(gridWidget, mx, my, rowIndex);
+        verify(gridContextMenu, times(1)).show(eq(gridWidget), eq(0), eq(0));
+        verify(gridContextMenu, times(1)).mapEvent(eq(insertRowAboveLIElementMock), isA(InsertRowEvent.class));
+        verify(gridContextMenu, times(1)).mapEvent(eq(insertRowBelowLIElementMock), isA(InsertRowEvent.class));
+        verify(gridContextMenu, times(1)).mapEvent(eq(duplicateRowLIElementMock), isA(DuplicateRowEvent.class));
+        verify(gridContextMenu, times(1)).mapEvent(eq(deleteRowLIElementMock), isA(DeleteRowEvent.class));
+        verify(gridContextMenu, times(1)).updateMenuItemAttributes(eq(gridTitleElementMock), eq(GRIDCONTEXTMENU_GRID_TITLE), eq(expectedLabel), eq(expectedI18n));
     }
 }
