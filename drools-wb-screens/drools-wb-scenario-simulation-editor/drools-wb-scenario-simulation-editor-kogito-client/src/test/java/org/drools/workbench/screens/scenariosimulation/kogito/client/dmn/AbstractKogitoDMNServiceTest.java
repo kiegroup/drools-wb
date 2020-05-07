@@ -17,6 +17,7 @@ package org.drools.workbench.screens.scenariosimulation.kogito.client.dmn;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,8 +81,6 @@ public class AbstractKogitoDMNServiceTest {
     private JSITInformationItem jsiITInformationItemInputMock;
     @Mock
     private JSITInformationItem jsiITInformationItemDecisionMock;
-    @Mock
-    private Map<String, JSITItemDefinition> allDefinitions;
 
     private AbstractKogitoDMNService abstractKogitoDMNServiceSpy;
     private List<JSITItemDefinition> jstiItemDefinitions;
@@ -89,6 +88,7 @@ public class AbstractKogitoDMNServiceTest {
     private List<JSITDRGElement> drgElements;
     private Map<QName, String> attributesMapInput;
     private Map<QName, String> attributesMapDecision;
+    private Map<String, JSITItemDefinition> allDefinitions;
 
     @Before
     public void setup() {
@@ -97,6 +97,7 @@ public class AbstractKogitoDMNServiceTest {
         drgElements = new ArrayList<>();
         attributesMapInput = new HashMap<>();
         attributesMapDecision = new HashMap<>();
+        allDefinitions = new HashMap<>();
         abstractKogitoDMNServiceSpy = spy(new AbstractKogitoDMNService() {
             @Override
             public void getDMNContent(Path path, RemoteCallback<String> remoteCallback, ErrorCallback<Object> errorCallback) {
@@ -558,60 +559,99 @@ public class AbstractKogitoDMNServiceTest {
         }
     }
 
-    /*
     @Test
-    public void createDMNTypeEmptyItems() {
+    public void createDMNTypeSimpleCustomNoFields() {
+        Map<String, ClientDMNType> defaultTypesMap = new HashMap<>(abstractKogitoDMNServiceSpy.getDMNDataTypesMap(Collections.emptyList(), NAMESPACE));
+        allDefinitions = abstractKogitoDMNServiceSpy.indexDefinitionsByName(Arrays.asList(jsitItemDefinitionMock));
         when(jsitItemDefinitionMock.getItemComponent()).thenReturn(new ArrayList<>());
+        when(jsitItemDefinitionMock.getTypeRef()).thenReturn(BuiltInType.STRING.getName());
         ClientDMNType clientDmnType = abstractKogitoDMNServiceSpy.createDMNType(allDefinitions,
                                                                                 jsitItemDefinitionMock,
                                                                                 NAMESPACE,
-                                                                                new HashMap<>());
+                                                                                defaultTypesMap);
         assertEquals(NAMESPACE, clientDmnType.getNamespace());
         assertEquals(TYPE_NAME, clientDmnType.getName());
         assertFalse(clientDmnType.isCollection());
         assertFalse(clientDmnType.isComposite());
         assertTrue(clientDmnType.getFields().isEmpty());
         assertNull(clientDmnType.getFeelType());
+        assertTrue(defaultTypesMap.containsKey(TYPE_NAME));
+        assertTrue(defaultTypesMap.containsValue(clientDmnType));
     }
 
     @Test
-    public void createDMNTypeItems() {
-        when(jsitItemDefinitionMock.getItemComponent()).thenReturn(Arrays.asList(jsitItemDefinitionNestedMock));
+    public void createDMNTypeSimpleItemComponentNoFields() {
+        Map<String, ClientDMNType> defaultTypesMap = new HashMap<>(abstractKogitoDMNServiceSpy.getDMNDataTypesMap(Collections.emptyList(), NAMESPACE));
+        when(jsitItemDefinitionMock.getItemComponent()).thenReturn(new ArrayList<>());
+        when(jsitItemDefinitionMock.getTypeRef()).thenReturn(BuiltInType.STRING.getName());
         ClientDMNType clientDmnType = abstractKogitoDMNServiceSpy.createDMNType(allDefinitions,
                                                                                 jsitItemDefinitionMock,
                                                                                 NAMESPACE,
-                                                                                new HashMap<>());
+                                                                                defaultTypesMap);
+        assertEquals(NAMESPACE, clientDmnType.getNamespace());
+        assertEquals(TYPE_NAME, clientDmnType.getName());
+        assertFalse(clientDmnType.isCollection());
+        assertFalse(clientDmnType.isComposite());
+        assertTrue(clientDmnType.getFields().isEmpty());
+        assertNull(clientDmnType.getFeelType());
+        assertFalse(defaultTypesMap.containsKey(TYPE_NAME));
+        assertFalse(defaultTypesMap.containsValue(clientDmnType));
+    }
+
+    @Test
+    public void createDMNTypeSimpleCustomWithField() {
+        Map<String, ClientDMNType> defaultTypesMap = new HashMap<>(abstractKogitoDMNServiceSpy.getDMNDataTypesMap(Collections.emptyList(), NAMESPACE));
+        when(jsitItemDefinitionMock.getItemComponent()).thenReturn(Arrays.asList(jsitItemDefinitionNestedMock));
+        when(jsitItemDefinitionNestedMock.getName()).thenReturn("tNested");
+        when(jsitItemDefinitionNestedMock.getId()).thenReturn(ID);
+        when(jsitItemDefinitionNestedMock.getTypeRef()).thenReturn(BuiltInType.STRING.getName());
+        allDefinitions = abstractKogitoDMNServiceSpy.indexDefinitionsByName(Arrays.asList(jsitItemDefinitionMock));
+        ClientDMNType clientDmnType = abstractKogitoDMNServiceSpy.createDMNType(allDefinitions,
+                                                                                jsitItemDefinitionMock,
+                                                                                NAMESPACE,
+                                                                                defaultTypesMap);
         assertEquals(NAMESPACE, clientDmnType.getNamespace());
         assertEquals(TYPE_NAME, clientDmnType.getName());
         assertFalse(clientDmnType.isCollection());
         assertTrue(clientDmnType.isComposite());
         assertNotNull(clientDmnType.getFields());
         assertTrue(clientDmnType.getFields().size() == 1);
+        assertEquals(BuiltInType.STRING, clientDmnType.getFields().get("tNested").getFeelType());
+        assertFalse(clientDmnType.getFields().get("tNested").isCollection());
+        assertFalse(clientDmnType.getFields().get("tNested").isComposite());
         assertNull(clientDmnType.getFeelType());
+        assertTrue(defaultTypesMap.containsKey(TYPE_NAME));
+        assertTrue(defaultTypesMap.containsValue(clientDmnType));
     }
 
-        @Test
-        public void getDMNTypeItemsIsCollection() {
-            when(jsitItemDefinitionMock.getIsCollection()).thenReturn(true);
-            when(jsitItemDefinitionMock.getItemComponent()).thenReturn(Arrays.asList(jsitItemDefinitionNestedMock));
-            ClientDMNType clientDmnType = abstractKogitoDMNServiceSpy.getDMNType(allDefinitions,
-                                                                                 jsitItemDefinitionMock,
-                                                                                 NAMESPACE,
-                                                                                 new HashMap<>());
-            abstractKogitoDMNServiceSpy.populateItemDefinitionFields(allDefinitions,
-                                                                     jsitItemDefinitionMock,
-                                                                     NAMESPACE,
-                                                                     new HashMap<>(),
-                                                                     clientDmnType);
-            assertEquals(NAMESPACE, clientDmnType.getNamespace());
-            assertEquals(TYPE_NAME, clientDmnType.getName());
-            assertTrue(clientDmnType.isCollection());
-            assertTrue(clientDmnType.isComposite());
-            assertNotNull(clientDmnType.getFields());
-            assertEquals(1, clientDmnType.getFields().size());
-            assertNull(clientDmnType.getFeelType());
-        }
+    @Test
+    public void createDMNTypeSimpleCustomWithCollectionField() {
+        Map<String, ClientDMNType> defaultTypesMap = new HashMap<>(abstractKogitoDMNServiceSpy.getDMNDataTypesMap(Collections.emptyList(), NAMESPACE));
+        when(jsitItemDefinitionMock.getItemComponent()).thenReturn(Arrays.asList(jsitItemDefinitionNestedMock));
+        when(jsitItemDefinitionNestedMock.getName()).thenReturn("tNested");
+        when(jsitItemDefinitionNestedMock.getId()).thenReturn(ID);
+        when(jsitItemDefinitionNestedMock.getTypeRef()).thenReturn(BuiltInType.STRING.getName());
+        when(jsitItemDefinitionNestedMock.getIsCollection()).thenReturn(true);
+        allDefinitions = abstractKogitoDMNServiceSpy.indexDefinitionsByName(Arrays.asList(jsitItemDefinitionMock));
+        ClientDMNType clientDmnType = abstractKogitoDMNServiceSpy.createDMNType(allDefinitions,
+                                                                                jsitItemDefinitionMock,
+                                                                                NAMESPACE,
+                                                                                defaultTypesMap);
+        assertEquals(NAMESPACE, clientDmnType.getNamespace());
+        assertEquals(TYPE_NAME, clientDmnType.getName());
+        assertFalse(clientDmnType.isCollection());
+        assertTrue(clientDmnType.isComposite());
+        assertNotNull(clientDmnType.getFields());
+        assertTrue(clientDmnType.getFields().size() == 1);
+        assertEquals(BuiltInType.STRING, clientDmnType.getFields().get("tNested").getFeelType());
+        assertTrue(clientDmnType.getFields().get("tNested").isCollection());
+        assertFalse(clientDmnType.getFields().get("tNested").isComposite());
+        assertNull(clientDmnType.getFeelType());
+        assertTrue(defaultTypesMap.containsKey(TYPE_NAME));
+        assertTrue(defaultTypesMap.containsValue(clientDmnType));
+    }
 
+/*
         @Test
         public void getDMNTypeItemsInheritedFields() {
             JSITItemDefinition jSITItemDefinitionSubItem = mock(JSITItemDefinition.class);
