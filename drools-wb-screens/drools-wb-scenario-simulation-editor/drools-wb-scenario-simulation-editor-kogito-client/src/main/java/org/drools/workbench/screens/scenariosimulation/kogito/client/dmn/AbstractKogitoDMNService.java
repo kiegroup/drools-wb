@@ -83,6 +83,13 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
         return toReturn;
     }
 
+    /**
+     * It retrieves the <code>ClientDMNType</code> of the current typeRef source (Decision or Input Data).
+     * If the source has an empty typeRef, the default value <code>BuiltInType.ANY</code> is assigned.
+     * @param dmnTypesMap
+     * @param source
+     * @return
+     */
     protected ClientDMNType getDMNTypeFromMaps(final Map<String, ClientDMNType> dmnTypesMap,
                                                final Map<QName, String> source) {
         String typeRef = source.get(TYPEREF_QNAME);
@@ -123,21 +130,31 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
         /* Adding CUSTOM Types, extracted from jsitItemDefinitions map */
         for (int i = 0; i < jsitItemDefinitions.size(); i++) {
             final JSITItemDefinition jsitItemDefinition = Js.uncheckedCast(jsitItemDefinitions.get(i));
-            ensureDMNTypeIsCreated(itemDefinitionMap, jsitItemDefinition.getName(), nameSpace, dmnDataTypesMap);
+            getOrCreateDMNType(itemDefinitionMap, jsitItemDefinition.getName(), nameSpace, dmnDataTypesMap);
         }
 
         return Collections.unmodifiableMap(dmnDataTypesMap);
     }
 
-    ClientDMNType ensureDMNTypeIsCreated(final Map<String, JSITItemDefinition> allDefinitions,
-                                         final String requiredType,
-                                         final String namespace,
-                                         final Map<String, ClientDMNType> createdTypes) {
+    /**
+     * It checks if the given *requiredType*'s <code>ClientDMNType</code> is already present into given createdTypes
+     * map If yes, it return it. It creates it otherwise.
+     * @param allDefinitions
+     * @param requiredType
+     * @param namespace
+     * @param createdTypes
+     * @return *requiredType*'s <code>ClientDMNType</code>
+     */
+    ClientDMNType getOrCreateDMNType(final Map<String, JSITItemDefinition> allDefinitions,
+                                     final String requiredType,
+                                     final String namespace,
+                                     final Map<String, ClientDMNType> createdTypes) {
 
         if (createdTypes.containsKey(requiredType)) {
             return createdTypes.get(requiredType);
         }
 
+        /* This method can handle ONLY CUSTOM types (DEFAULT must be already present into createdTypes map) */
         if (!allDefinitions.containsKey(requiredType)) {
             throw new IllegalStateException("Type '" + requiredType + "' not found.");
         }
@@ -190,10 +207,10 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
         /* This is required to define DMNType fields and isCollection / isComposite fields */
         String typeRef = itemDefinition.getTypeRef();
         if (typeRef != null) {
-            final ClientDMNType superDmnType = ensureDMNTypeIsCreated(allDefinitions,
-                                                                      typeRef,
-                                                                      namespace,
-                                                                      dmnTypesDataMap);
+            final ClientDMNType superDmnType = getOrCreateDMNType(allDefinitions,
+                                                                  typeRef,
+                                                                  namespace,
+                                                                  dmnTypesDataMap);
             if (superDmnType != null) {
                 /* Current clientDmnType item must inherits these properties from its super type */
                 itemDefinitionDMNType.addFields(superDmnType.getFields());
@@ -243,7 +260,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
                 /* Retrieving field ClientDMNType */
                 if (typeRef != null && !hasSubFields) {
                     /* The field refers to a DMType which must be present in dmnTypesMap */
-                    fieldDMNType = ensureDMNTypeIsCreated(allItemDefinitions, typeRef, namespace, dmnTypesMap);
+                    fieldDMNType = getOrCreateDMNType(allItemDefinitions, typeRef, namespace, dmnTypesMap);
                 } else if (typeRef == null && hasSubFields) {
                     /* In this case we are handling a Structure type not defined in allItemDefinition list.
                      * Therefore, a new DMNType must be created and then it manages its defined subfields in recursive way */
