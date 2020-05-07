@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2020 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,23 +21,16 @@ import com.google.web.bindery.event.shared.Event;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridContextMenuTest;
 import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 
 import static org.mockito.Mockito.spy;
 
 @RunWith(GwtMockitoTestRunner.class)
 public class KogitoGridContextMenuTest extends GridContextMenuTest {
 
-    @Mock
-    private LIElement createdElementMock;
-
-    private KogitoGridContextMenu kogitoGridContextMenuSpy;
-
     @Before
     public void setup() {
-        kogitoGridContextMenuSpy = spy(new KogitoGridContextMenu() {
+        gridContextMenuSpy = spy(new KogitoGridContextMenu() {
 
             {
                 this.insertRowAboveLIElement = insertRowAboveLIElementMock;
@@ -79,18 +72,4 @@ public class KogitoGridContextMenuTest extends GridContextMenuTest {
         });
     }
 
-    @Test
-    public void initMenu() {
-        super.initMenu(kogitoGridContextMenuSpy);
-    }
-
-    @Test
-    public void show_Simulation() {
-        super.show(kogitoGridContextMenuSpy, GridWidget.SIMULATION, 0, 0, 1);
-    }
-
-    @Test
-    public void show_Background() {
-        super.show(kogitoGridContextMenuSpy, GridWidget.BACKGROUND, 0, 0, 1);
-    }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2020 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,16 @@
 package org.drools.workbench.screens.scenariosimulation.client.editor.menu;
 
 import com.google.gwt.dom.client.LIElement;
+import com.google.gwtmockito.GwtMockitoTestRunner;
+import com.google.web.bindery.event.shared.Event;
 import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.events.DeleteRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.DuplicateRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.InsertRowEvent;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 import static org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridContextMenu.GRIDCONTEXTMENU_DELETE_ROW;
@@ -30,10 +35,12 @@ import static org.drools.workbench.screens.scenariosimulation.client.editor.menu
 import static org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridContextMenu.GRIDCONTEXTMENU_INSERT_ROW_BELOW;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public abstract class GridContextMenuTest {
+@RunWith(GwtMockitoTestRunner.class)
+public class GridContextMenuTest {
 
     @Mock
     protected LIElement insertRowAboveLIElementMock;
@@ -44,7 +51,70 @@ public abstract class GridContextMenuTest {
     @Mock
     protected LIElement deleteRowLIElementMock;
     @Mock
+    protected LIElement createdElementMock;
+    @Mock
     protected LIElement gridTitleElementMock;
+
+    protected GridContextMenu gridContextMenuSpy;
+
+    @Before
+    public void setup() {
+        gridContextMenuSpy = spy(new GridContextMenu() {
+
+            {
+                this.insertRowAboveLIElement = insertRowAboveLIElementMock;
+                this.insertRowBelowLIElement= insertRowBelowLIElementMock;
+                this.duplicateRowLIElement = duplicateRowLIElementMock;
+                this.deleteRowLIElement = deleteRowLIElementMock;
+                this.gridTitleElement = gridTitleElementMock;
+            }
+
+            @Override
+            public LIElement addExecutableMenuItem(String id, String label, String i18n) {
+                return createdElementMock;
+            }
+
+            @Override
+            public void mapEvent(LIElement executableMenuItem, Event toBeMapped) {
+                //Do nothing
+            }
+
+            @Override
+            protected void updateExecutableMenuItemAttributes(LIElement toUpdate, String id, String label, String i18n) {
+                //Do nothing
+            }
+
+            @Override
+            public LIElement addMenuItem(String id, String label, String i18n) {
+                return createdElementMock;
+            }
+
+            @Override
+            public void removeMenuItem(LIElement toRemove) {
+                //Do nothing
+            }
+
+            @Override
+            public void show(GridWidget gridWidget, int mx, int my) {
+                //Do nothing
+            }
+        });
+    }
+
+    @Test
+    public void initMenu() {
+        initMenu(gridContextMenuSpy);
+    }
+
+    @Test
+    public void show_Simulation() {
+        show(gridContextMenuSpy, GridWidget.SIMULATION, 0, 0, 1);
+    }
+
+    @Test
+    public void show_Background() {
+        show(gridContextMenuSpy, GridWidget.BACKGROUND, 0, 0, 1);
+    }
 
     protected void initMenu(GridContextMenu gridContextMenu) {
         gridContextMenu.initMenu();
