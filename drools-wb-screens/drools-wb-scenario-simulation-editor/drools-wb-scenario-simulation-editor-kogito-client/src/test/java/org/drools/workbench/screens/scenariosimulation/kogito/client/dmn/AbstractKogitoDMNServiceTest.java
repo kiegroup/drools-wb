@@ -48,6 +48,7 @@ import static org.drools.scenariosimulation.api.utils.ConstantsHolder.VALUE;
 import static org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.AbstractKogitoDMNService.TYPEREF_QNAME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
@@ -262,7 +263,37 @@ public class AbstractKogitoDMNServiceTest {
         when(mock.getName()).thenReturn(name);
         return mock;
     }
-/*
+
+    @Test
+    public void getDMNTypesMapEmptyItemDefinitions() {
+        Map<String, ClientDMNType> dmnTypesMap = abstractKogitoDMNServiceSpy.getDMNDataTypesMap(jstiItemDefinitions, NAMESPACE);
+        // It must contains all elements defined in BuiltInType ENUM
+        assertTrue(dmnTypesMap.size() == 14);
+        for (Map.Entry<String, ClientDMNType> entry : dmnTypesMap.entrySet()) {
+            assertNotNull(entry.getValue().getFeelType());
+            assertTrue(Arrays.stream(entry.getValue().getFeelType().getNames()).anyMatch(entry.getKey()::equals));
+        }
+        for (BuiltInType builtInType : BuiltInType.values()) {
+            Arrays.stream(builtInType.getNames()).forEach(name -> assertNotNull(dmnTypesMap.get(name)));
+        }
+    }
+
+    @Test
+    public void getDMNTypesMapWithItemDefinitions() {
+        jstiItemDefinitions.add(jsitItemDefinitionMock);
+        Map<String, ClientDMNType> dmnTypesMap = abstractKogitoDMNServiceSpy.getDMNDataTypesMap(jstiItemDefinitions, NAMESPACE);
+        // It must contains all elements defined in BuiltInType ENUM + one defined jstiItemDefinitionMock item
+        assertTrue(dmnTypesMap.size() == 15);
+        for (BuiltInType builtInType : BuiltInType.values()) {
+            Arrays.stream(builtInType.getNames()).forEach(name -> assertNotNull(dmnTypesMap.get(name)));
+        }
+        assertNotNull(dmnTypesMap.get(TYPE_NAME));
+        assertNull(dmnTypesMap.get(TYPE_NAME).getFeelType());
+        assertEquals(TYPE_NAME, dmnTypesMap.get(TYPE_NAME).getName());
+        assertEquals(NAMESPACE, dmnTypesMap.get(TYPE_NAME).getNamespace());
+        assertFalse(dmnTypesMap.get(TYPE_NAME).isCollection());
+    }
+
     @Test
     public void testGetRecursiveDMNTypes() {
         // tAddress contains tCountry which contains tPeople which contains tAddress:
@@ -308,78 +339,233 @@ public class AbstractKogitoDMNServiceTest {
 
         final List<JSITItemDefinition> definitions = Arrays.asList(tPeople, tAddress, tCountry);
 
-        final Map<String, ClientDMNType> map = abstractKogitoDMNServiceSpy.getDMNDataTypesMap(definitions, "namespace");
+        final Map<String, ClientDMNType> dmnTypesMap = abstractKogitoDMNServiceSpy.getDMNDataTypesMap(definitions, "namespace");
 
-        assertTrue(map.containsKey(tPeopleType));
-        assertTrue(map.containsKey(tAddressType));
-        assertTrue(map.containsKey(tCountryType));
+        assertTrue(dmnTypesMap.containsKey(tPeopleType));
+        assertTrue(dmnTypesMap.containsKey(tAddressType));
+        assertTrue(dmnTypesMap.containsKey(tCountryType));
 
-        final ClientDMNType dmnPeopleType = map.get(tPeopleType);
-        final ClientDMNType dmnAddressType = map.get(tAddressType);
-        final ClientDMNType dmnCountryType = map.get(tCountryType);
+        final ClientDMNType dmnPeopleType = dmnTypesMap.get(tPeopleType);
+        final ClientDMNType dmnAddressType = dmnTypesMap.get(tAddressType);
+        final ClientDMNType dmnCountryType = dmnTypesMap.get(tCountryType);
 
         assertEquals(1, dmnPeopleType.getFields().size());
         assertTrue(dmnPeopleType.getFields().containsKey(addressFieldName));
         assertEquals(dmnAddressType, dmnPeopleType.getFields().get(addressFieldName));
+        assertFalse(dmnPeopleType.isCollection());
+        assertTrue(dmnPeopleType.isComposite());
 
         assertEquals(1, dmnAddressType.getFields().size());
         assertTrue(dmnAddressType.getFields().containsKey(countryFieldName));
         assertEquals(dmnCountryType, dmnAddressType.getFields().get(countryFieldName));
+        assertFalse(dmnAddressType.isCollection());
+        assertTrue(dmnAddressType.isComposite());
 
         assertEquals(1, dmnCountryType.getFields().size());
         assertTrue(dmnCountryType.getFields().containsKey(peopleFieldName));
         assertEquals(dmnPeopleType, dmnCountryType.getFields().get(peopleFieldName));
-    }
+        assertFalse(dmnCountryType.isCollection());
+        assertTrue(dmnCountryType.isComposite());
 
-    @Test
-    public void getDMNTypesMapEmptyItemDefinitions() {
-        Map<String, ClientDMNType> dmnTypesMap = abstractKogitoDMNServiceSpy.getDMNDataTypesMap(jstiItemDefinitions, NAMESPACE);
-        // It must contains all elements defined in BuiltInType ENUM without ANY
-        assertTrue(dmnTypesMap.size() == 14);
-        for (Map.Entry<String, ClientDMNType> entry : dmnTypesMap.entrySet()) {
-            assertNotNull(entry.getValue().getFeelType());
-            assertTrue(Arrays.stream(entry.getValue().getFeelType().getNames()).anyMatch(entry.getKey()::equals));
-        }
+        // It must contains all elements defined in BuiltInType ENUM
+        assertTrue(dmnTypesMap.size() == 17);
         for (BuiltInType builtInType : BuiltInType.values()) {
             Arrays.stream(builtInType.getNames()).forEach(name -> assertNotNull(dmnTypesMap.get(name)));
         }
     }
 
     @Test
-    public void getDMNTypesMapWithItemDefinitions() {
-        jstiItemDefinitions.add(jsitItemDefinitionMock);
-        Map<String, ClientDMNType> dmnTypesMap = abstractKogitoDMNServiceSpy.getDMNDataTypesMap(jstiItemDefinitions, NAMESPACE);
-        // It must contains all elements defined in BuiltInType ENUM + one defined jstiItemDefinitionMock item
-        assertTrue(dmnTypesMap.size() == 15);
+    public void testGetRecursiveAndDataTypeCollectionDMNTypes() {
+        // tAddress contains tCountry which contains tPeople which contains tAddress:
+        // tPeople[structure] isCollection TRUE
+        //    address[tAddress]
+        // tAddress[structure]
+        //     country[tCountry]
+        // tCountry[structure]
+        //     president[tPeople]
+
+        final JSITItemDefinition tPeople = mock(JSITItemDefinition.class);
+        final JSITItemDefinition tAddress = mock(JSITItemDefinition.class);
+        final JSITItemDefinition tCountry = mock(JSITItemDefinition.class);
+        final String tPeopleType = "tPeopleType";
+        final String tAddressType = "tAddressType";
+        final String tCountryType = "tCountryType";
+        final String addressFieldName = "address";
+        final String countryFieldName = "president";
+        final String peopleFieldName = "people";
+
+        when(tPeople.getName()).thenReturn(tPeopleType);
+        when(tAddress.getName()).thenReturn(tAddressType);
+        when(tCountry.getName()).thenReturn(tCountryType);
+        when(tPeople.getIsCollection()).thenReturn(true);
+
+        final JSITItemDefinition address = mock(JSITItemDefinition.class);
+        when(address.getTypeRef()).thenReturn(tAddressType);
+        when(address.getName()).thenReturn(addressFieldName);
+        final List<JSITItemDefinition> tPeopleFields = Arrays.asList(address);
+
+        final JSITItemDefinition country = mock(JSITItemDefinition.class);
+        when(country.getName()).thenReturn(countryFieldName);
+        when(country.getTypeRef()).thenReturn(tCountryType);
+        final List<JSITItemDefinition> tAddressFields = Arrays.asList(country);
+
+        final JSITItemDefinition people = mock(JSITItemDefinition.class);
+        when(people.getTypeRef()).thenReturn(tPeopleType);
+        when(people.getName()).thenReturn(peopleFieldName);
+        final List<JSITItemDefinition> tCountryFields = Arrays.asList(people);
+
+        when(tPeople.getItemComponent()).thenReturn(tPeopleFields);
+        when(tAddress.getItemComponent()).thenReturn(tAddressFields);
+        when(tCountry.getItemComponent()).thenReturn(tCountryFields);
+
+        final List<JSITItemDefinition> definitions = Arrays.asList(tPeople, tAddress, tCountry);
+
+        final Map<String, ClientDMNType> dmnTypesMap = abstractKogitoDMNServiceSpy.getDMNDataTypesMap(definitions, "namespace");
+
+        assertTrue(dmnTypesMap.containsKey(tPeopleType));
+        assertTrue(dmnTypesMap.containsKey(tAddressType));
+        assertTrue(dmnTypesMap.containsKey(tCountryType));
+
+        final ClientDMNType dmnPeopleType = dmnTypesMap.get(tPeopleType);
+        final ClientDMNType dmnAddressType = dmnTypesMap.get(tAddressType);
+        final ClientDMNType dmnCountryType = dmnTypesMap.get(tCountryType);
+
+        assertEquals(1, dmnPeopleType.getFields().size());
+        assertTrue(dmnPeopleType.getFields().containsKey(addressFieldName));
+        assertEquals(dmnAddressType, dmnPeopleType.getFields().get(addressFieldName));
+        assertTrue(dmnPeopleType.isCollection());
+        assertTrue(dmnPeopleType.isComposite());
+
+        assertEquals(1, dmnAddressType.getFields().size());
+        assertTrue(dmnAddressType.getFields().containsKey(countryFieldName));
+        assertEquals(dmnCountryType, dmnAddressType.getFields().get(countryFieldName));
+        assertFalse(dmnAddressType.isCollection());
+        assertTrue(dmnAddressType.isComposite());
+
+        assertEquals(1, dmnCountryType.getFields().size());
+        assertTrue(dmnCountryType.getFields().containsKey(peopleFieldName));
+        assertEquals(dmnPeopleType, dmnCountryType.getFields().get(peopleFieldName));
+        assertFalse(dmnCountryType.isCollection());
+        assertTrue(dmnCountryType.isComposite());
+
+        // It must contains all elements defined in BuiltInType ENUM
+        assertTrue(dmnTypesMap.size() == 17);
         for (BuiltInType builtInType : BuiltInType.values()) {
             Arrays.stream(builtInType.getNames()).forEach(name -> assertNotNull(dmnTypesMap.get(name)));
         }
-        assertNotNull(dmnTypesMap.get(TYPE_NAME));
-        assertNull(dmnTypesMap.get(TYPE_NAME).getFeelType());
-        assertEquals(TYPE_NAME, dmnTypesMap.get(TYPE_NAME).getName());
-        assertEquals(NAMESPACE, dmnTypesMap.get(TYPE_NAME).getNamespace());
-        assertFalse(dmnTypesMap.get(TYPE_NAME).isCollection());
     }
 
     @Test
-    public void getDMNTypeNullItems() {
-        ClientDMNType clientDmnType = abstractKogitoDMNServiceSpy.createDMNType(allDefinitions,
-                                                                                jsitItemDefinitionMock,
-                                                                                NAMESPACE,
-                                                                                abstractKogitoDMNServiceSpy.getDMNDataTypesMap(jstiItemDefinitions, NAMESPACE));
-        assertEquals(NAMESPACE, clientDmnType.getNamespace());
-        assertEquals(TYPE_NAME, clientDmnType.getName());
-        assertFalse(clientDmnType.isCollection());
-        assertNull(clientDmnType.getFeelType());
+    public void testGetRecursiveAndFieldCollectionsDMNTypes() {
+        // tAddress contains tCountry which contains tPeople which contains tAddress:
+        // tPeople[structure]
+        //    address[tAddress]
+        // tAddress[structure]
+        //     country[tCountry]
+        // tCountry[structure]
+        //     president[tPeople] isCollection TRUE
+        //     regions[string] isCollection TRUE
+        //     name[string]
+
+        final JSITItemDefinition tPeople = mock(JSITItemDefinition.class);
+        final JSITItemDefinition tAddress = mock(JSITItemDefinition.class);
+        final JSITItemDefinition tCountry = mock(JSITItemDefinition.class);
+        final String tPeopleType = "tPeopleType";
+        final String tAddressType = "tAddressType";
+        final String tCountryType = "tCountryType";
+        final String addressFieldName = "address";
+        final String countryFieldName = "president";
+        final String peopleFieldName = "people";
+        final String regionsName = "regions";
+        final String nameLabel = "name";
+
+        when(tPeople.getName()).thenReturn(tPeopleType);
+        when(tAddress.getName()).thenReturn(tAddressType);
+        when(tCountry.getName()).thenReturn(tCountryType);
+
+        final JSITItemDefinition address = mock(JSITItemDefinition.class);
+        when(address.getTypeRef()).thenReturn(tAddressType);
+        when(address.getName()).thenReturn(addressFieldName);
+        final List<JSITItemDefinition> tPeopleFields = Arrays.asList(address);
+
+        final JSITItemDefinition country = mock(JSITItemDefinition.class);
+        when(country.getName()).thenReturn(countryFieldName);
+        when(country.getTypeRef()).thenReturn(tCountryType);
+        final List<JSITItemDefinition> tAddressFields = Arrays.asList(country);
+
+        final JSITItemDefinition people = mock(JSITItemDefinition.class);
+        when(people.getTypeRef()).thenReturn(tPeopleType);
+        when(people.getName()).thenReturn(peopleFieldName);
+        when(people.getIsCollection()).thenReturn(true);
+        final JSITItemDefinition regions = mock(JSITItemDefinition.class);
+        when(regions.getTypeRef()).thenReturn(BuiltInType.STRING.getName());
+        when(regions.getName()).thenReturn(regionsName);
+        when(regions.getIsCollection()).thenReturn(true);
+        final JSITItemDefinition nameField = mock(JSITItemDefinition.class);
+        when(nameField.getTypeRef()).thenReturn(BuiltInType.STRING.getName());
+        when(nameField.getName()).thenReturn(nameLabel);
+        final List<JSITItemDefinition> tCountryFields = Arrays.asList(people, regions, nameField);
+
+        when(tPeople.getItemComponent()).thenReturn(tPeopleFields);
+        when(tAddress.getItemComponent()).thenReturn(tAddressFields);
+        when(tCountry.getItemComponent()).thenReturn(tCountryFields);
+
+        final List<JSITItemDefinition> definitions = Arrays.asList(tPeople, tAddress, tCountry);
+
+        final Map<String, ClientDMNType> dmnTypesMap = abstractKogitoDMNServiceSpy.getDMNDataTypesMap(definitions, "namespace");
+
+        assertTrue(dmnTypesMap.containsKey(tPeopleType));
+        assertTrue(dmnTypesMap.containsKey(tAddressType));
+        assertTrue(dmnTypesMap.containsKey(tCountryType));
+
+        final ClientDMNType dmnPeopleType = dmnTypesMap.get(tPeopleType);
+        final ClientDMNType dmnAddressType = dmnTypesMap.get(tAddressType);
+        final ClientDMNType dmnCountryType = dmnTypesMap.get(tCountryType);
+        final ClientDMNType stringType = dmnTypesMap.get(BuiltInType.STRING.getName());
+
+        assertEquals(1, dmnPeopleType.getFields().size());
+        assertTrue(dmnPeopleType.getFields().containsKey(addressFieldName));
+        assertEquals(dmnAddressType, dmnPeopleType.getFields().get(addressFieldName));
+        assertFalse(dmnPeopleType.isCollection());
+        assertTrue(dmnPeopleType.isComposite());
+
+        assertEquals(1, dmnAddressType.getFields().size());
+        assertTrue(dmnAddressType.getFields().containsKey(countryFieldName));
+        assertEquals(dmnCountryType, dmnAddressType.getFields().get(countryFieldName));
+        assertFalse(dmnAddressType.isCollection());
+        assertTrue(dmnAddressType.isComposite());
+
+        assertEquals(3, dmnCountryType.getFields().size());
+        assertTrue(dmnCountryType.getFields().containsKey(peopleFieldName));
+        assertNotEquals(dmnPeopleType, dmnCountryType.getFields().get(peopleFieldName));
+        assertTrue(dmnCountryType.getFields().get(peopleFieldName).isCollection());
+        assertTrue(dmnCountryType.getFields().get(peopleFieldName).isComposite());
+        assertEquals(tPeopleType, dmnCountryType.getFields().get(peopleFieldName).getName());
+        assertTrue(dmnCountryType.getFields().containsKey(regionsName));
+        assertNotEquals(stringType, dmnCountryType.getFields().get(regionsName));
+        assertTrue(dmnCountryType.getFields().get(regionsName).isCollection());
+        assertFalse(dmnCountryType.getFields().get(regionsName).isComposite());
+        assertEquals(BuiltInType.STRING.getName(), dmnCountryType.getFields().get(regionsName).getName());
+        assertTrue(dmnCountryType.getFields().containsKey(nameLabel));
+        assertEquals(stringType, dmnCountryType.getFields().get(nameLabel));
+        assertFalse(stringType.isCollection());
+        assertFalse(stringType.isComposite());
+
+        // It must contains all elements defined in BuiltInType ENUM
+        assertTrue(dmnTypesMap.size() == 17);
+        for (BuiltInType builtInType : BuiltInType.values()) {
+            Arrays.stream(builtInType.getNames()).forEach(name -> assertNotNull(dmnTypesMap.get(name)));
+        }
     }
 
+    /*
     @Test
-    public void getDMNTypeEmptyItems() {
+    public void createDMNTypeEmptyItems() {
         when(jsitItemDefinitionMock.getItemComponent()).thenReturn(new ArrayList<>());
         ClientDMNType clientDmnType = abstractKogitoDMNServiceSpy.createDMNType(allDefinitions,
                                                                                 jsitItemDefinitionMock,
                                                                                 NAMESPACE,
-                                                                                abstractKogitoDMNServiceSpy.getDMNDataTypesMap(jstiItemDefinitions, NAMESPACE));
+                                                                                new HashMap<>());
         assertEquals(NAMESPACE, clientDmnType.getNamespace());
         assertEquals(TYPE_NAME, clientDmnType.getName());
         assertFalse(clientDmnType.isCollection());
@@ -388,20 +574,13 @@ public class AbstractKogitoDMNServiceTest {
         assertNull(clientDmnType.getFeelType());
     }
 
-    /*
     @Test
-    public void getDMNTypeItems() {
+    public void createDMNTypeItems() {
         when(jsitItemDefinitionMock.getItemComponent()).thenReturn(Arrays.asList(jsitItemDefinitionNestedMock));
-
-        ClientDMNType clientDmnType = abstractKogitoDMNServiceSpy.getDMNType(allDefinitions,
-                                                                             jsitItemDefinitionMock,
-                                                                             NAMESPACE,
-                                                                             new HashMap<>());
-        abstractKogitoDMNServiceSpy.populateItemDefinitionFields(allDefinitions,
-                                                                 jsitItemDefinitionMock,
-                                                                 NAMESPACE,
-                                                                 new HashMap<>(),
-                                                                 clientDmnType);
+        ClientDMNType clientDmnType = abstractKogitoDMNServiceSpy.createDMNType(allDefinitions,
+                                                                                jsitItemDefinitionMock,
+                                                                                NAMESPACE,
+                                                                                new HashMap<>());
         assertEquals(NAMESPACE, clientDmnType.getNamespace());
         assertEquals(TYPE_NAME, clientDmnType.getName());
         assertFalse(clientDmnType.isCollection());
@@ -411,202 +590,202 @@ public class AbstractKogitoDMNServiceTest {
         assertNull(clientDmnType.getFeelType());
     }
 
-    @Test
-    public void getDMNTypeItemsIsCollection() {
-        when(jsitItemDefinitionMock.getIsCollection()).thenReturn(true);
-        when(jsitItemDefinitionMock.getItemComponent()).thenReturn(Arrays.asList(jsitItemDefinitionNestedMock));
-        ClientDMNType clientDmnType = abstractKogitoDMNServiceSpy.getDMNType(allDefinitions,
-                                                                             jsitItemDefinitionMock,
-                                                                             NAMESPACE,
-                                                                             new HashMap<>());
-        abstractKogitoDMNServiceSpy.populateItemDefinitionFields(allDefinitions,
-                                                                 jsitItemDefinitionMock,
-                                                                 NAMESPACE,
-                                                                 new HashMap<>(),
-                                                                 clientDmnType);
-        assertEquals(NAMESPACE, clientDmnType.getNamespace());
-        assertEquals(TYPE_NAME, clientDmnType.getName());
-        assertTrue(clientDmnType.isCollection());
-        assertTrue(clientDmnType.isComposite());
-        assertNotNull(clientDmnType.getFields());
-        assertEquals(1, clientDmnType.getFields().size());
-        assertNull(clientDmnType.getFeelType());
-    }
+        @Test
+        public void getDMNTypeItemsIsCollection() {
+            when(jsitItemDefinitionMock.getIsCollection()).thenReturn(true);
+            when(jsitItemDefinitionMock.getItemComponent()).thenReturn(Arrays.asList(jsitItemDefinitionNestedMock));
+            ClientDMNType clientDmnType = abstractKogitoDMNServiceSpy.getDMNType(allDefinitions,
+                                                                                 jsitItemDefinitionMock,
+                                                                                 NAMESPACE,
+                                                                                 new HashMap<>());
+            abstractKogitoDMNServiceSpy.populateItemDefinitionFields(allDefinitions,
+                                                                     jsitItemDefinitionMock,
+                                                                     NAMESPACE,
+                                                                     new HashMap<>(),
+                                                                     clientDmnType);
+            assertEquals(NAMESPACE, clientDmnType.getNamespace());
+            assertEquals(TYPE_NAME, clientDmnType.getName());
+            assertTrue(clientDmnType.isCollection());
+            assertTrue(clientDmnType.isComposite());
+            assertNotNull(clientDmnType.getFields());
+            assertEquals(1, clientDmnType.getFields().size());
+            assertNull(clientDmnType.getFeelType());
+        }
 
-    @Test
-    public void getDMNTypeItemsInheritedFields() {
-        JSITItemDefinition jSITItemDefinitionSubItem = mock(JSITItemDefinition.class);
-        JSITItemDefinition jSITItemDefinitionSubSubItem = mock(JSITItemDefinition.class);
-        JSITItemDefinition jSITItemDefinitionNestedSubItem = mock(JSITItemDefinition.class);
-        JSITItemDefinition jSITItemDefinitionNestedSubSubItem = mock(JSITItemDefinition.class);
+        @Test
+        public void getDMNTypeItemsInheritedFields() {
+            JSITItemDefinition jSITItemDefinitionSubItem = mock(JSITItemDefinition.class);
+            JSITItemDefinition jSITItemDefinitionSubSubItem = mock(JSITItemDefinition.class);
+            JSITItemDefinition jSITItemDefinitionNestedSubItem = mock(JSITItemDefinition.class);
+            JSITItemDefinition jSITItemDefinitionNestedSubSubItem = mock(JSITItemDefinition.class);
 
-        when(jSITItemDefinitionSubItem.getName()).thenReturn("tSub");
-        when(jSITItemDefinitionSubItem.getTypeRef()).thenReturn("number");
-        when(jSITItemDefinitionSubSubItem.getName()).thenReturn("tSubSub");
-        when(jSITItemDefinitionSubSubItem.getTypeRef()).thenReturn("tSub");
+            when(jSITItemDefinitionSubItem.getName()).thenReturn("tSub");
+            when(jSITItemDefinitionSubItem.getTypeRef()).thenReturn("number");
+            when(jSITItemDefinitionSubSubItem.getName()).thenReturn("tSubSub");
+            when(jSITItemDefinitionSubSubItem.getTypeRef()).thenReturn("tSub");
 
-        when(jSITItemDefinitionNestedSubItem.getName()).thenReturn("subField");
-        when(jSITItemDefinitionNestedSubSubItem.getName()).thenReturn("subSubField");
+            when(jSITItemDefinitionNestedSubItem.getName()).thenReturn("subField");
+            when(jSITItemDefinitionNestedSubSubItem.getName()).thenReturn("subSubField");
 
-        Map<String, ClientDMNType> dmnTypes = abstractKogitoDMNServiceSpy.getDMNTypesMap(jstiItemDefinitions, NAMESPACE);
+            Map<String, ClientDMNType> dmnTypes = abstractKogitoDMNServiceSpy.getDMNTypesMap(jstiItemDefinitions, NAMESPACE);
 
-        when(jSITItemDefinitionSubItem.getItemComponent()).thenReturn(Arrays.asList(jSITItemDefinitionNestedSubItem));
-        ClientDMNType clientDmnTypeSub = abstractKogitoDMNServiceSpy.getDMNType(allDefinitions,
-                                                                                jSITItemDefinitionSubItem,
-                                                                                NAMESPACE,
-                                                                                dmnTypes);
-        abstractKogitoDMNServiceSpy.populateItemDefinitionFields(allDefinitions,
-                                                                 jSITItemDefinitionSubItem,
-                                                                 NAMESPACE,
-                                                                 dmnTypes,
-                                                                 clientDmnTypeSub);
-        assertEquals(NAMESPACE, clientDmnTypeSub.getNamespace());
-        assertEquals("tSub", clientDmnTypeSub.getName());
-        assertFalse(clientDmnTypeSub.isCollection());
-        assertTrue(clientDmnTypeSub.isComposite());
-        assertNotNull(clientDmnTypeSub.getFields());
-        assertTrue(clientDmnTypeSub.getFields().size() == 1);
-        assertNull(clientDmnTypeSub.getFeelType());
+            when(jSITItemDefinitionSubItem.getItemComponent()).thenReturn(Arrays.asList(jSITItemDefinitionNestedSubItem));
+            ClientDMNType clientDmnTypeSub = abstractKogitoDMNServiceSpy.getDMNType(allDefinitions,
+                                                                                    jSITItemDefinitionSubItem,
+                                                                                    NAMESPACE,
+                                                                                    dmnTypes);
+            abstractKogitoDMNServiceSpy.populateItemDefinitionFields(allDefinitions,
+                                                                     jSITItemDefinitionSubItem,
+                                                                     NAMESPACE,
+                                                                     dmnTypes,
+                                                                     clientDmnTypeSub);
+            assertEquals(NAMESPACE, clientDmnTypeSub.getNamespace());
+            assertEquals("tSub", clientDmnTypeSub.getName());
+            assertFalse(clientDmnTypeSub.isCollection());
+            assertTrue(clientDmnTypeSub.isComposite());
+            assertNotNull(clientDmnTypeSub.getFields());
+            assertTrue(clientDmnTypeSub.getFields().size() == 1);
+            assertNull(clientDmnTypeSub.getFeelType());
 
-        dmnTypes.put("tSub", clientDmnTypeSub);
+            dmnTypes.put("tSub", clientDmnTypeSub);
 
-        when(jSITItemDefinitionSubSubItem.getItemComponent()).thenReturn(Arrays.asList(jSITItemDefinitionNestedSubSubItem));
-        ClientDMNType clientDmnTypeSubSub = abstractKogitoDMNServiceSpy.getDMNType(allDefinitions,
-                                                                                   jSITItemDefinitionSubSubItem,
-                                                                                   NAMESPACE,
-                                                                                   dmnTypes);
-        abstractKogitoDMNServiceSpy.populateItemDefinitionFields(allDefinitions,
-                                                                 jSITItemDefinitionSubSubItem,
-                                                                 NAMESPACE,
-                                                                 dmnTypes,
-                                                                 clientDmnTypeSubSub);
+            when(jSITItemDefinitionSubSubItem.getItemComponent()).thenReturn(Arrays.asList(jSITItemDefinitionNestedSubSubItem));
+            ClientDMNType clientDmnTypeSubSub = abstractKogitoDMNServiceSpy.getDMNType(allDefinitions,
+                                                                                       jSITItemDefinitionSubSubItem,
+                                                                                       NAMESPACE,
+                                                                                       dmnTypes);
+            abstractKogitoDMNServiceSpy.populateItemDefinitionFields(allDefinitions,
+                                                                     jSITItemDefinitionSubSubItem,
+                                                                     NAMESPACE,
+                                                                     dmnTypes,
+                                                                     clientDmnTypeSubSub);
 
-        assertEquals(NAMESPACE, clientDmnTypeSubSub.getNamespace());
-        assertEquals("tSubSub", clientDmnTypeSubSub.getName());
-        assertFalse(clientDmnTypeSubSub.isCollection());
-        assertTrue(clientDmnTypeSubSub.isComposite());
-        assertNotNull(clientDmnTypeSubSub.getFields());
-        assertTrue(clientDmnTypeSubSub.getFields().size() == 2);
-        assertNull(clientDmnTypeSubSub.getFeelType());
-        assertTrue(clientDmnTypeSubSub.getFields().keySet().containsAll(clientDmnTypeSub.getFields().keySet()));
-    }
+            assertEquals(NAMESPACE, clientDmnTypeSubSub.getNamespace());
+            assertEquals("tSubSub", clientDmnTypeSubSub.getName());
+            assertFalse(clientDmnTypeSubSub.isCollection());
+            assertTrue(clientDmnTypeSubSub.isComposite());
+            assertNotNull(clientDmnTypeSubSub.getFields());
+            assertTrue(clientDmnTypeSubSub.getFields().size() == 2);
+            assertNull(clientDmnTypeSubSub.getFeelType());
+            assertTrue(clientDmnTypeSubSub.getFields().keySet().containsAll(clientDmnTypeSub.getFields().keySet()));
+        }
 
-    @Test
-    public void getDMNTypeItemsInheritedOnly() {
-        JSITItemDefinition jSITItemDefinitionSubItem = mock(JSITItemDefinition.class);
-        JSITItemDefinition jSITItemDefinitionSubSubItem = mock(JSITItemDefinition.class);
-        JSITItemDefinition jSITItemDefinitionNestedSubItem = mock(JSITItemDefinition.class);
+        @Test
+        public void getDMNTypeItemsInheritedOnly() {
+            JSITItemDefinition jSITItemDefinitionSubItem = mock(JSITItemDefinition.class);
+            JSITItemDefinition jSITItemDefinitionSubSubItem = mock(JSITItemDefinition.class);
+            JSITItemDefinition jSITItemDefinitionNestedSubItem = mock(JSITItemDefinition.class);
 
-        when(jSITItemDefinitionSubItem.getName()).thenReturn("tSub");
-        when(jSITItemDefinitionSubItem.getTypeRef()).thenReturn("number");
-        when(jSITItemDefinitionSubSubItem.getName()).thenReturn("tSubSub");
-        when(jSITItemDefinitionSubSubItem.getTypeRef()).thenReturn("tSub");
+            when(jSITItemDefinitionSubItem.getName()).thenReturn("tSub");
+            when(jSITItemDefinitionSubItem.getTypeRef()).thenReturn("number");
+            when(jSITItemDefinitionSubSubItem.getName()).thenReturn("tSubSub");
+            when(jSITItemDefinitionSubSubItem.getTypeRef()).thenReturn("tSub");
 
-        when(jSITItemDefinitionNestedSubItem.getName()).thenReturn("subField");
+            when(jSITItemDefinitionNestedSubItem.getName()).thenReturn("subField");
 
-        Map<String, ClientDMNType> dmnTypes = abstractKogitoDMNServiceSpy.getDMNTypesMap(jstiItemDefinitions, NAMESPACE);
+            Map<String, ClientDMNType> dmnTypes = abstractKogitoDMNServiceSpy.getDMNTypesMap(jstiItemDefinitions, NAMESPACE);
 
-        when(jSITItemDefinitionSubItem.getItemComponent()).thenReturn(Arrays.asList(jSITItemDefinitionNestedSubItem));
-        ClientDMNType clientDmnTypeSub = abstractKogitoDMNServiceSpy.getDMNType(allDefinitions,
-                                                                                jSITItemDefinitionSubItem,
-                                                                                NAMESPACE,
-                                                                                dmnTypes);
-        abstractKogitoDMNServiceSpy.populateItemDefinitionFields(allDefinitions,
-                                                                 jSITItemDefinitionSubItem,
-                                                                 NAMESPACE,
-                                                                 dmnTypes,
-                                                                 clientDmnTypeSub);
+            when(jSITItemDefinitionSubItem.getItemComponent()).thenReturn(Arrays.asList(jSITItemDefinitionNestedSubItem));
+            ClientDMNType clientDmnTypeSub = abstractKogitoDMNServiceSpy.getDMNType(allDefinitions,
+                                                                                    jSITItemDefinitionSubItem,
+                                                                                    NAMESPACE,
+                                                                                    dmnTypes);
+            abstractKogitoDMNServiceSpy.populateItemDefinitionFields(allDefinitions,
+                                                                     jSITItemDefinitionSubItem,
+                                                                     NAMESPACE,
+                                                                     dmnTypes,
+                                                                     clientDmnTypeSub);
 
-        assertEquals(NAMESPACE, clientDmnTypeSub.getNamespace());
-        assertEquals("tSub", clientDmnTypeSub.getName());
-        assertFalse(clientDmnTypeSub.isCollection());
-        assertTrue(clientDmnTypeSub.isComposite());
-        assertNotNull(clientDmnTypeSub.getFields());
-        assertTrue(clientDmnTypeSub.getFields().size() == 1);
-        assertNull(clientDmnTypeSub.getFeelType());
+            assertEquals(NAMESPACE, clientDmnTypeSub.getNamespace());
+            assertEquals("tSub", clientDmnTypeSub.getName());
+            assertFalse(clientDmnTypeSub.isCollection());
+            assertTrue(clientDmnTypeSub.isComposite());
+            assertNotNull(clientDmnTypeSub.getFields());
+            assertTrue(clientDmnTypeSub.getFields().size() == 1);
+            assertNull(clientDmnTypeSub.getFeelType());
 
-        dmnTypes.put("tSub", clientDmnTypeSub);
+            dmnTypes.put("tSub", clientDmnTypeSub);
 
-        ClientDMNType clientDmnTypeSubSub = abstractKogitoDMNServiceSpy.getDMNType(allDefinitions,
-                                                                                   jSITItemDefinitionSubSubItem,
-                                                                                   NAMESPACE,
-                                                                                   dmnTypes);
-        abstractKogitoDMNServiceSpy.populateItemDefinitionFields(allDefinitions,
-                                                                 jSITItemDefinitionSubItem,
-                                                                 NAMESPACE,
-                                                                 dmnTypes,
-                                                                 clientDmnTypeSubSub);
+            ClientDMNType clientDmnTypeSubSub = abstractKogitoDMNServiceSpy.getDMNType(allDefinitions,
+                                                                                       jSITItemDefinitionSubSubItem,
+                                                                                       NAMESPACE,
+                                                                                       dmnTypes);
+            abstractKogitoDMNServiceSpy.populateItemDefinitionFields(allDefinitions,
+                                                                     jSITItemDefinitionSubItem,
+                                                                     NAMESPACE,
+                                                                     dmnTypes,
+                                                                     clientDmnTypeSubSub);
 
-        assertEquals(NAMESPACE, clientDmnTypeSubSub.getNamespace());
-        assertEquals("tSubSub", clientDmnTypeSubSub.getName());
-        assertFalse(clientDmnTypeSubSub.isCollection());
-        assertTrue(clientDmnTypeSubSub.isComposite());
-        assertNotNull(clientDmnTypeSubSub.getFields());
-        assertTrue(clientDmnTypeSubSub.getFields().size() == 1);
-        assertNull(clientDmnTypeSubSub.getFeelType());
-        assertEquals(clientDmnTypeSub.getFields().keySet(), clientDmnTypeSubSub.getFields().keySet());
-    }
+            assertEquals(NAMESPACE, clientDmnTypeSubSub.getNamespace());
+            assertEquals("tSubSub", clientDmnTypeSubSub.getName());
+            assertFalse(clientDmnTypeSubSub.isCollection());
+            assertTrue(clientDmnTypeSubSub.isComposite());
+            assertNotNull(clientDmnTypeSubSub.getFields());
+            assertTrue(clientDmnTypeSubSub.getFields().size() == 1);
+            assertNull(clientDmnTypeSubSub.getFeelType());
+            assertEquals(clientDmnTypeSub.getFields().keySet(), clientDmnTypeSubSub.getFields().keySet());
+        }
 
-    @Test
-    public void getDMNTypeItemsInheritedCollections() {
-        JSITItemDefinition jSITItemDefinitionSubItem = mock(JSITItemDefinition.class);
-        JSITItemDefinition jSITItemDefinitionSubSubItem = mock(JSITItemDefinition.class);
-        JSITItemDefinition jSITItemDefinitionNestedSubItem = mock(JSITItemDefinition.class);
-        JSITItemDefinition jSITItemDefinitionNestedSubSubItem = mock(JSITItemDefinition.class);
+        @Test
+        public void getDMNTypeItemsInheritedCollections() {
+            JSITItemDefinition jSITItemDefinitionSubItem = mock(JSITItemDefinition.class);
+            JSITItemDefinition jSITItemDefinitionSubSubItem = mock(JSITItemDefinition.class);
+            JSITItemDefinition jSITItemDefinitionNestedSubItem = mock(JSITItemDefinition.class);
+            JSITItemDefinition jSITItemDefinitionNestedSubSubItem = mock(JSITItemDefinition.class);
 
-        when(jSITItemDefinitionSubItem.getName()).thenReturn("tSub");
-        when(jSITItemDefinitionSubItem.getTypeRef()).thenReturn("number");
-        when(jSITItemDefinitionSubItem.getIsCollection()).thenReturn(true);
-        when(jSITItemDefinitionSubSubItem.getName()).thenReturn("tSubSub");
-        when(jSITItemDefinitionSubSubItem.getTypeRef()).thenReturn("tSub");
-        when(jSITItemDefinitionSubSubItem.getIsCollection()).thenReturn(false);
+            when(jSITItemDefinitionSubItem.getName()).thenReturn("tSub");
+            when(jSITItemDefinitionSubItem.getTypeRef()).thenReturn("number");
+            when(jSITItemDefinitionSubItem.getIsCollection()).thenReturn(true);
+            when(jSITItemDefinitionSubSubItem.getName()).thenReturn("tSubSub");
+            when(jSITItemDefinitionSubSubItem.getTypeRef()).thenReturn("tSub");
+            when(jSITItemDefinitionSubSubItem.getIsCollection()).thenReturn(false);
 
-        when(jSITItemDefinitionNestedSubItem.getName()).thenReturn("subField");
-        when(jSITItemDefinitionNestedSubSubItem.getName()).thenReturn("subSubField");
+            when(jSITItemDefinitionNestedSubItem.getName()).thenReturn("subField");
+            when(jSITItemDefinitionNestedSubSubItem.getName()).thenReturn("subSubField");
 
-        Map<String, ClientDMNType> dmnTypes = abstractKogitoDMNServiceSpy.getDMNTypesMap(jstiItemDefinitions, NAMESPACE);
+            Map<String, ClientDMNType> dmnTypes = abstractKogitoDMNServiceSpy.getDMNTypesMap(jstiItemDefinitions, NAMESPACE);
 
-        when(jSITItemDefinitionSubItem.getItemComponent()).thenReturn(Arrays.asList(jSITItemDefinitionNestedSubItem));
-        ClientDMNType clientDmnTypeSub = abstractKogitoDMNServiceSpy.getDMNType(allDefinitions,
-                                                                                jSITItemDefinitionSubItem,
-                                                                                NAMESPACE,
-                                                                                dmnTypes);
-        abstractKogitoDMNServiceSpy.populateItemDefinitionFields(allDefinitions,
-                                                                 jSITItemDefinitionSubItem,
-                                                                 NAMESPACE,
-                                                                 dmnTypes,
-                                                                 clientDmnTypeSub);
+            when(jSITItemDefinitionSubItem.getItemComponent()).thenReturn(Arrays.asList(jSITItemDefinitionNestedSubItem));
+            ClientDMNType clientDmnTypeSub = abstractKogitoDMNServiceSpy.getDMNType(allDefinitions,
+                                                                                    jSITItemDefinitionSubItem,
+                                                                                    NAMESPACE,
+                                                                                    dmnTypes);
+            abstractKogitoDMNServiceSpy.populateItemDefinitionFields(allDefinitions,
+                                                                     jSITItemDefinitionSubItem,
+                                                                     NAMESPACE,
+                                                                     dmnTypes,
+                                                                     clientDmnTypeSub);
 
-        assertEquals(NAMESPACE, clientDmnTypeSub.getNamespace());
-        assertEquals("tSub", clientDmnTypeSub.getName());
-        assertTrue(clientDmnTypeSub.isCollection());
-        assertTrue(clientDmnTypeSub.isComposite());
-        assertNotNull(clientDmnTypeSub.getFields());
-        assertTrue(clientDmnTypeSub.getFields().size() == 1);
-        assertNull(clientDmnTypeSub.getFeelType());
+            assertEquals(NAMESPACE, clientDmnTypeSub.getNamespace());
+            assertEquals("tSub", clientDmnTypeSub.getName());
+            assertTrue(clientDmnTypeSub.isCollection());
+            assertTrue(clientDmnTypeSub.isComposite());
+            assertNotNull(clientDmnTypeSub.getFields());
+            assertTrue(clientDmnTypeSub.getFields().size() == 1);
+            assertNull(clientDmnTypeSub.getFeelType());
 
-        dmnTypes.put("tSub", clientDmnTypeSub);
+            dmnTypes.put("tSub", clientDmnTypeSub);
 
-        when(jSITItemDefinitionSubSubItem.getItemComponent()).thenReturn(Arrays.asList(jSITItemDefinitionNestedSubSubItem));
-        ClientDMNType clientDmnTypeSubSub = abstractKogitoDMNServiceSpy.getDMNType(allDefinitions,
-                                                                                   jSITItemDefinitionSubSubItem,
-                                                                                   NAMESPACE,
-                                                                                   dmnTypes);
-        abstractKogitoDMNServiceSpy.populateItemDefinitionFields(allDefinitions,
-                                                                 jSITItemDefinitionSubSubItem,
-                                                                 NAMESPACE,
-                                                                 dmnTypes,
-                                                                 clientDmnTypeSubSub);
+            when(jSITItemDefinitionSubSubItem.getItemComponent()).thenReturn(Arrays.asList(jSITItemDefinitionNestedSubSubItem));
+            ClientDMNType clientDmnTypeSubSub = abstractKogitoDMNServiceSpy.getDMNType(allDefinitions,
+                                                                                       jSITItemDefinitionSubSubItem,
+                                                                                       NAMESPACE,
+                                                                                       dmnTypes);
+            abstractKogitoDMNServiceSpy.populateItemDefinitionFields(allDefinitions,
+                                                                     jSITItemDefinitionSubSubItem,
+                                                                     NAMESPACE,
+                                                                     dmnTypes,
+                                                                     clientDmnTypeSubSub);
 
-        assertEquals(NAMESPACE, clientDmnTypeSubSub.getNamespace());
-        assertEquals("tSubSub", clientDmnTypeSubSub.getName());
-        assertTrue(clientDmnTypeSubSub.isCollection()); // It must inherit the value from its "super item"
-        assertTrue(clientDmnTypeSubSub.isComposite());
-        assertNotNull(clientDmnTypeSubSub.getFields());
-        assertEquals(2, clientDmnTypeSubSub.getFields().size());
-        assertNull(clientDmnTypeSubSub.getFeelType());
-    }
-*/
+            assertEquals(NAMESPACE, clientDmnTypeSubSub.getNamespace());
+            assertEquals("tSubSub", clientDmnTypeSubSub.getName());
+            assertTrue(clientDmnTypeSubSub.isCollection()); // It must inherit the value from its "super item"
+            assertTrue(clientDmnTypeSubSub.isComposite());
+            assertNotNull(clientDmnTypeSubSub.getFields());
+            assertEquals(2, clientDmnTypeSubSub.getFields().size());
+            assertNull(clientDmnTypeSubSub.getFeelType());
+        }
+    */
     @Test
     public void getFactModelTupleEmptyElements() {
         attributesMapInput.put(TYPEREF_QNAME, "number");
