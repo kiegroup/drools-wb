@@ -98,14 +98,14 @@ public class BusinessCentralGridContextMenuTest extends GridContextMenuTest {
     @Test
     public void show_Simulation_NullRunScenarioElement() {
         businessCentralGridContextMenuSpy.runSingleScenarioElement = null;
-        super.show(businessCentralGridContextMenuSpy, GridWidget.SIMULATION, 0, 0, 1);
+        super.show(businessCentralGridContextMenuSpy, GridWidget.SIMULATION, ScenarioSimulationEditorConstants.INSTANCE.scenario(), "scenario",0, 0, 1);
         verify(businessCentralGridContextMenuSpy, times(1)).addExecutableMenuItem(eq(GRIDCONTEXTMENU_RUN_SINGLE_SCENARIO), eq(ScenarioSimulationEditorConstants.INSTANCE.runSingleScenario()), eq("runSingleScenario"));
         verify(businessCentralGridContextMenuSpy, times(1)).mapEvent(eq(createdElementMock), isA(RunSingleScenarioEvent.class));
     }
 
     @Test
     public void show_Simulation_NotNullRunScenarioElement() {
-        super.show(businessCentralGridContextMenuSpy, GridWidget.SIMULATION, 0, 0, 1);
+        super.show(businessCentralGridContextMenuSpy, GridWidget.SIMULATION, ScenarioSimulationEditorConstants.INSTANCE.scenario(), "scenario", 0, 0, 1);
         verify(businessCentralGridContextMenuSpy, never()).addExecutableMenuItem(eq(GRIDCONTEXTMENU_RUN_SINGLE_SCENARIO), eq(ScenarioSimulationEditorConstants.INSTANCE.runSingleScenario()), eq("runSingleScenario"));
         verify(businessCentralGridContextMenuSpy, times(1)).mapEvent(eq(runSingleScenarioElementMock), isA(RunSingleScenarioEvent.class));
     }
@@ -113,14 +113,14 @@ public class BusinessCentralGridContextMenuTest extends GridContextMenuTest {
     @Test
     public void show_Background_NullRunScenarioElement() {
         businessCentralGridContextMenuSpy.runSingleScenarioElement = null;
-        super.show(businessCentralGridContextMenuSpy, GridWidget.BACKGROUND, 0, 0, 1);
+        super.show(businessCentralGridContextMenuSpy, GridWidget.BACKGROUND, ScenarioSimulationEditorConstants.INSTANCE.background(), "background", 0, 0, 1);
         verify(businessCentralGridContextMenuSpy, never()).addExecutableMenuItem(eq(GRIDCONTEXTMENU_RUN_SINGLE_SCENARIO), eq(ScenarioSimulationEditorConstants.INSTANCE.runSingleScenario()), eq("runSingleScenario"));
         verify(businessCentralGridContextMenuSpy, never()).mapEvent(eq(createdElementMock), isA(RunSingleScenarioEvent.class));
     }
 
     @Test
     public void show_Background_NotNullRunScenarioElement() {
-        super.show(businessCentralGridContextMenuSpy, GridWidget.BACKGROUND, 0, 0, 1);
+        super.show(businessCentralGridContextMenuSpy, GridWidget.BACKGROUND, ScenarioSimulationEditorConstants.INSTANCE.background(), "background", 0, 0, 1);
         verify(businessCentralGridContextMenuSpy, never()).addExecutableMenuItem(eq(GRIDCONTEXTMENU_RUN_SINGLE_SCENARIO), eq(ScenarioSimulationEditorConstants.INSTANCE.runSingleScenario()), eq("runSingleScenario"));
         verify(businessCentralGridContextMenuSpy, never()).mapEvent(eq(createdElementMock), isA(RunSingleScenarioEvent.class));
     }

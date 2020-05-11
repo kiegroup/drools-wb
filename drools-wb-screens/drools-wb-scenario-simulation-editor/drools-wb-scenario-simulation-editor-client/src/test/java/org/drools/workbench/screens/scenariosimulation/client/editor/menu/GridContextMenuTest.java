@@ -108,12 +108,12 @@ public class GridContextMenuTest {
 
     @Test
     public void show_Simulation() {
-        show(gridContextMenuSpy, GridWidget.SIMULATION, 0, 0, 1);
+        show(gridContextMenuSpy, GridWidget.SIMULATION, ScenarioSimulationEditorConstants.INSTANCE.scenario(), "scenario", 0, 0, 1);
     }
 
     @Test
-    public void show_Background() {
-        show(gridContextMenuSpy, GridWidget.BACKGROUND, 0, 0, 1);
+    public void show_Background() {        String expectedLabel;
+        show(gridContextMenuSpy, GridWidget.BACKGROUND, ScenarioSimulationEditorConstants.INSTANCE.background(), "background", 0, 0, 1);
     }
 
     protected void initMenu(GridContextMenu gridContextMenu) {
@@ -124,16 +124,7 @@ public class GridContextMenuTest {
         verify(gridContextMenu, times(1)).addExecutableMenuItem(eq(GRIDCONTEXTMENU_DELETE_ROW), eq(ScenarioSimulationEditorConstants.INSTANCE.deleteRow()), eq("deleteRow"));
     }
 
-    protected void show(GridContextMenu gridContextMenu, GridWidget gridWidget, int mx, int my, int rowIndex) {
-        String expectedLabel;
-        String expectedI18n;
-        if (GridWidget.BACKGROUND.equals(gridWidget)) {
-            expectedLabel = ScenarioSimulationEditorConstants.INSTANCE.background();
-            expectedI18n = "background";
-        } else {
-            expectedLabel = ScenarioSimulationEditorConstants.INSTANCE.scenario();
-            expectedI18n = "scenario";
-        }
+    protected void show(GridContextMenu gridContextMenu, GridWidget gridWidget, String expectedLabel, String expectedI18n, int mx, int my, int rowIndex) {
         gridContextMenu.show(gridWidget, mx, my, rowIndex);
         verify(gridContextMenu, times(1)).show(eq(gridWidget), eq(0), eq(0));
         verify(gridContextMenu, times(1)).mapEvent(eq(insertRowAboveLIElementMock), isA(InsertRowEvent.class));
