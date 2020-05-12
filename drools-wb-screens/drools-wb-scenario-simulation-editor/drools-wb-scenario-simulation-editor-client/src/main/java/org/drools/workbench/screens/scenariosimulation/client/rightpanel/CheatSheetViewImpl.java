@@ -188,6 +188,10 @@ public class CheatSheetViewImpl
                                                 + ScenarioSimulationEditorConstants.INSTANCE.and() + " " + "<i>" + ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet12() + "</i>"
                                                 + ScenarioSimulationEditorConstants.INSTANCE.forExample() + " " + "<tt>date(\"2019-05-13\")</tt>" + " " + ScenarioSimulationEditorConstants.INSTANCE.or() + " "
                                                 + "<tt>time(\"14:10:00+02:00\")</tt>");
+        dmnCheatSheetList5.setInnerHTML("<i>" + ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet19() + "</i>" + ScenarioSimulationEditorConstants.INSTANCE.forExample() +
+                                                " " + "<tt>duration(\"P1DT23H12M30S\")</tt>");
+        dmnCheatSheetList5.setInnerHTML("<i>" + ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet20() + "</i>" + ScenarioSimulationEditorConstants.INSTANCE.forExample() +
+                                                " " + "<tt>duration(\"P3Y5M\")</tt>");
         dmnCheatSheetList4.setInnerHTML("<i>" + ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet13() + "</i>");
         dmnCheatSheetList5.setInnerHTML("<i>" + ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet14() + "</i>" + ScenarioSimulationEditorConstants.INSTANCE.forExample() +
                                                 " " + "<tt>{x : 5, even : false, type : \"integer number\"}</tt>");
