@@ -296,6 +296,200 @@ public class AbstractKogitoDMNServiceTest {
     }
 
     @Test
+    public void testGetCustomWithItemComponentDMNTypes() {
+        // tPeople[structure]
+        //    address[structure]
+        //       country[string]
+
+        final JSITItemDefinition tPeople = mock(JSITItemDefinition.class);
+        final String tPeopleType = "tPeopleType";
+        final String addressFieldName = "address";
+        final String countryFieldName = "country";
+
+        when(tPeople.getName()).thenReturn(tPeopleType);
+
+        final JSITItemDefinition address = mock(JSITItemDefinition.class);
+        when(address.getName()).thenReturn(addressFieldName);
+        final List<JSITItemDefinition> tPeopleFields = Arrays.asList(address);
+
+        final JSITItemDefinition country = mock(JSITItemDefinition.class);
+        when(country.getName()).thenReturn(countryFieldName);
+        when(country.getTypeRef()).thenReturn(BuiltInType.STRING.getName());
+        final List<JSITItemDefinition> tAddressFields = Arrays.asList(country);
+
+        when(tPeople.getItemComponent()).thenReturn(tPeopleFields);
+        when(address.getItemComponent()).thenReturn(tAddressFields);
+
+        final List<JSITItemDefinition> definitions = Arrays.asList(tPeople);
+
+        final Map<String, ClientDMNType> dmnTypesMap = abstractKogitoDMNServiceSpy.getDMNDataTypesMap(definitions, "namespace");
+
+        assertTrue(dmnTypesMap.containsKey(tPeopleType));
+
+        final ClientDMNType dmnPeopleType = dmnTypesMap.get(tPeopleType);
+
+        assertEquals(1, dmnPeopleType.getFields().size());
+        assertTrue(dmnPeopleType.getFields().containsKey(addressFieldName));
+        assertNull(dmnPeopleType.getFeelType());
+        assertFalse(dmnPeopleType.isCollection());
+        assertTrue(dmnPeopleType.isComposite());
+
+        ClientDMNType addressType = dmnPeopleType.getFields().get(addressFieldName);
+        assertNotNull(addressType);
+        assertEquals(1, addressType.getFields().size());
+        assertTrue(addressType.getFields().containsKey(countryFieldName));
+        assertNull(addressType.getFeelType());
+        assertFalse(addressType.isCollection());
+        assertTrue(addressType.isComposite());
+
+        ClientDMNType countryType = addressType.getFields().get(countryFieldName);
+        assertEquals(0, countryType.getFields().size());
+        assertEquals(BuiltInType.STRING, countryType.getFeelType());
+        assertFalse(countryType.isCollection());
+        assertFalse(countryType.isComposite());
+
+        // It must contains all elements defined in BuiltInType ENUM
+        assertTrue(dmnTypesMap.size() == 15);
+        for (BuiltInType builtInType : BuiltInType.values()) {
+            Arrays.stream(builtInType.getNames()).forEach(name -> assertNotNull(dmnTypesMap.get(name)));
+        }
+    }
+
+    @Test
+    public void testGetCustomInheritsSimpleCustomDMNTypes() {
+        // tPeople[string]
+        // tMen[tPeople]
+
+        final JSITItemDefinition tPeople = mock(JSITItemDefinition.class);
+        final JSITItemDefinition tMen = mock(JSITItemDefinition.class);
+
+        final String tPeopleType = "tPeopleType";
+        final String tMenType = "tMenType";
+
+        when(tMen.getName()).thenReturn(tMenType);
+        when(tMen.getTypeRef()).thenReturn(tPeopleType);
+
+        when(tPeople.getName()).thenReturn(tPeopleType);
+        when(tPeople.getTypeRef()).thenReturn(BuiltInType.STRING.getName());
+
+        final List<JSITItemDefinition> definitions = Arrays.asList(tPeople, tMen);
+
+        final Map<String, ClientDMNType> dmnTypesMap = abstractKogitoDMNServiceSpy.getDMNDataTypesMap(definitions, "namespace");
+
+        assertTrue(dmnTypesMap.containsKey(tPeopleType));
+
+        final ClientDMNType dmnPeopleType = dmnTypesMap.get(tPeopleType);
+
+        assertTrue(dmnPeopleType.getFields().isEmpty());
+        assertEquals(BuiltInType.STRING, dmnPeopleType.getFeelType());
+        assertFalse(dmnPeopleType.isCollection());
+        assertFalse(dmnPeopleType.isComposite());
+
+        final ClientDMNType dmnMenType = dmnTypesMap.get(tMenType);
+
+        assertTrue(dmnMenType.getFields().isEmpty());
+        assertEquals((BuiltInType.STRING), dmnMenType.getFeelType());
+        assertFalse(dmnMenType.isCollection());
+        assertFalse(dmnMenType.isComposite());
+
+        // It must contains all elements defined in BuiltInType ENUM
+        assertTrue(dmnTypesMap.size() == 16);
+        for (BuiltInType builtInType : BuiltInType.values()) {
+            Arrays.stream(builtInType.getNames()).forEach(name -> assertNotNull(dmnTypesMap.get(name)));
+        }
+    }
+
+    @Test
+    public void testGetCustomCollectionInheritsSimpleCustomDMNTypes() {
+        // tPeople[string]
+        // tMen[tPeople] isCollection
+
+        final JSITItemDefinition tPeople = mock(JSITItemDefinition.class);
+        final JSITItemDefinition tMen = mock(JSITItemDefinition.class);
+
+        final String tPeopleType = "tPeopleType";
+        final String tMenType = "tMenType";
+
+        when(tMen.getName()).thenReturn(tMenType);
+        when(tMen.getTypeRef()).thenReturn(tPeopleType);
+        when(tMen.getIsCollection()).thenReturn(true);
+
+        when(tPeople.getName()).thenReturn(tPeopleType);
+        when(tPeople.getTypeRef()).thenReturn(BuiltInType.STRING.getName());
+
+        final List<JSITItemDefinition> definitions = Arrays.asList(tPeople, tMen);
+
+        final Map<String, ClientDMNType> dmnTypesMap = abstractKogitoDMNServiceSpy.getDMNDataTypesMap(definitions, "namespace");
+
+        assertTrue(dmnTypesMap.containsKey(tPeopleType));
+
+        final ClientDMNType dmnPeopleType = dmnTypesMap.get(tPeopleType);
+
+        assertTrue(dmnPeopleType.getFields().isEmpty());
+        assertEquals(BuiltInType.STRING, dmnPeopleType.getFeelType());
+        assertFalse(dmnPeopleType.isCollection());
+        assertFalse(dmnPeopleType.isComposite());
+
+        final ClientDMNType dmnMenType = dmnTypesMap.get(tMenType);
+
+        assertTrue(dmnMenType.getFields().isEmpty());
+        assertEquals(BuiltInType.STRING, dmnMenType.getFeelType());
+        assertTrue(dmnMenType.isCollection());
+        assertFalse(dmnMenType.isComposite());
+
+        // It must contains all elements defined in BuiltInType ENUM
+        assertTrue(dmnTypesMap.size() == 16);
+        for (BuiltInType builtInType : BuiltInType.values()) {
+            Arrays.stream(builtInType.getNames()).forEach(name -> assertNotNull(dmnTypesMap.get(name)));
+        }
+    }
+
+    @Test
+    public void testGetCustomInheritsSimpleCustomCollectionDMNTypes() {
+        // tPeople[string] isCollection
+        // tMen[tPeople]
+
+        final JSITItemDefinition tPeople = mock(JSITItemDefinition.class);
+        final JSITItemDefinition tMen = mock(JSITItemDefinition.class);
+
+        final String tPeopleType = "tPeopleType";
+        final String tMenType = "tMenType";
+
+        when(tMen.getName()).thenReturn(tMenType);
+        when(tMen.getTypeRef()).thenReturn(tPeopleType);
+
+        when(tPeople.getName()).thenReturn(tPeopleType);
+        when(tPeople.getTypeRef()).thenReturn(BuiltInType.STRING.getName());
+        when(tPeople.getIsCollection()).thenReturn(true);
+
+        final List<JSITItemDefinition> definitions = Arrays.asList(tPeople, tMen);
+
+        final Map<String, ClientDMNType> dmnTypesMap = abstractKogitoDMNServiceSpy.getDMNDataTypesMap(definitions, "namespace");
+
+        assertTrue(dmnTypesMap.containsKey(tPeopleType));
+
+        final ClientDMNType dmnPeopleType = dmnTypesMap.get(tPeopleType);
+
+        assertTrue(dmnPeopleType.getFields().isEmpty());
+        assertEquals(BuiltInType.STRING, dmnPeopleType.getFeelType());
+        assertTrue(dmnPeopleType.isCollection());
+        assertFalse(dmnPeopleType.isComposite());
+
+        final ClientDMNType dmnMenType = dmnTypesMap.get(tMenType);
+
+        assertTrue(dmnMenType.getFields().isEmpty());
+        assertEquals(BuiltInType.STRING, dmnMenType.getFeelType());
+        assertTrue(dmnMenType.isCollection());
+        assertFalse(dmnMenType.isComposite());
+
+        // It must contains all elements defined in BuiltInType ENUM
+        assertTrue(dmnTypesMap.size() == 16);
+        for (BuiltInType builtInType : BuiltInType.values()) {
+            Arrays.stream(builtInType.getNames()).forEach(name -> assertNotNull(dmnTypesMap.get(name)));
+        }
+    }
+
+    @Test
     public void testGetRecursiveDMNTypes() {
         // tAddress contains tCountry which contains tPeople which contains tAddress:
         // tPeople[structure]
@@ -527,12 +721,14 @@ public class AbstractKogitoDMNServiceTest {
         assertEquals(1, dmnPeopleType.getFields().size());
         assertTrue(dmnPeopleType.getFields().containsKey(addressFieldName));
         assertEquals(dmnAddressType, dmnPeopleType.getFields().get(addressFieldName));
+        assertNull(dmnPeopleType.getFeelType());
         assertFalse(dmnPeopleType.isCollection());
         assertTrue(dmnPeopleType.isComposite());
 
         assertEquals(1, dmnAddressType.getFields().size());
         assertTrue(dmnAddressType.getFields().containsKey(countryFieldName));
         assertEquals(dmnCountryType, dmnAddressType.getFields().get(countryFieldName));
+        assertNull(dmnAddressType.getFeelType());
         assertFalse(dmnAddressType.isCollection());
         assertTrue(dmnAddressType.isComposite());
 
@@ -543,12 +739,14 @@ public class AbstractKogitoDMNServiceTest {
         assertTrue(dmnCountryType.getFields().get(peopleFieldName).isComposite());
         assertEquals(tPeopleType, dmnCountryType.getFields().get(peopleFieldName).getName());
         assertTrue(dmnCountryType.getFields().containsKey(regionsName));
+        assertNull(dmnCountryType.getFeelType());
         assertNotEquals(stringType, dmnCountryType.getFields().get(regionsName));
         assertTrue(dmnCountryType.getFields().get(regionsName).isCollection());
         assertFalse(dmnCountryType.getFields().get(regionsName).isComposite());
         assertEquals(BuiltInType.STRING.getName(), dmnCountryType.getFields().get(regionsName).getName());
         assertTrue(dmnCountryType.getFields().containsKey(nameLabel));
         assertEquals(stringType, dmnCountryType.getFields().get(nameLabel));
+        assertEquals(BuiltInType.STRING, stringType.getFeelType());
         assertFalse(stringType.isCollection());
         assertFalse(stringType.isComposite());
 
@@ -574,7 +772,7 @@ public class AbstractKogitoDMNServiceTest {
         assertFalse(clientDmnType.isCollection());
         assertFalse(clientDmnType.isComposite());
         assertTrue(clientDmnType.getFields().isEmpty());
-        assertNull(clientDmnType.getFeelType());
+        assertEquals(BuiltInType.STRING, clientDmnType.getFeelType());
         assertTrue(defaultTypesMap.containsKey(TYPE_NAME));
         assertTrue(defaultTypesMap.containsValue(clientDmnType));
     }
@@ -593,7 +791,7 @@ public class AbstractKogitoDMNServiceTest {
         assertFalse(clientDmnType.isCollection());
         assertFalse(clientDmnType.isComposite());
         assertTrue(clientDmnType.getFields().isEmpty());
-        assertNull(clientDmnType.getFeelType());
+        assertEquals(BuiltInType.STRING, clientDmnType.getFeelType());
         assertFalse(defaultTypesMap.containsKey(TYPE_NAME));
         assertFalse(defaultTypesMap.containsValue(clientDmnType));
     }

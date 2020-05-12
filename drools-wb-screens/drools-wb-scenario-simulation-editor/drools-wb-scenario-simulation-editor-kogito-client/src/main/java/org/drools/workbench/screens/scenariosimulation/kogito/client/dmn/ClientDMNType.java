@@ -101,4 +101,8 @@ public class ClientDMNType {
     public void setCollection(final boolean collection) {
         this.collection = collection;
     }
+
+    public void setFeelType(BuiltInType feelType) {
+        this.feelType = feelType;
+    }
 }

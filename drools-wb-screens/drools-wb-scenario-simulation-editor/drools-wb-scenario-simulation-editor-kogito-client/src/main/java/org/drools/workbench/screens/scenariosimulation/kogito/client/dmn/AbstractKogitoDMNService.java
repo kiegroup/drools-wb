@@ -216,6 +216,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
                 itemDefinitionDMNType.addFields(superDmnType.getFields());
                 itemDefinitionDMNType.setCollection(superDmnType.isCollection() || itemDefinitionDMNType.isCollection());
                 itemDefinitionDMNType.setIsComposite(superDmnType.isComposite() || itemDefinitionDMNType.isComposite());
+                itemDefinitionDMNType.setFeelType(superDmnType.getFeelType() != null ? superDmnType.getFeelType() : null);
             } else {
                 throw new IllegalStateException(
                         "Item: " + itemDefinition.getName() + " refers to typeRef: " + itemDefinition.getTypeRef()
@@ -266,10 +267,8 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
                      * Therefore, a new DMNType must be created and then it manages its defined subfields in recursive way */
                     fieldDMNType = createDMNType(allItemDefinitions, jsitItemDefinitionField, namespace, dmnTypesMap);
                 } else {
-                    /* The following case are not managed, because invalid:
-                       - typeRef is null and no subfields;
-                       - typeRef is null and at least one subfield;
-                     */
+                    /* The following case are not managed, because invalid typeRef empty and no subfields OR typeRef
+                     * empty and at least one subfield */
                     continue;
                 }
 
