@@ -124,6 +124,12 @@ public class CheatSheetViewImpl
     @DataField("dmnCheatSheetList7")
     protected LIElement dmnCheatSheetList7 = Document.get().createLIElement();
 
+    @DataField("dmnCheatSheetList8")
+    protected LIElement dmnCheatSheetList8 = Document.get().createLIElement();
+
+    @DataField("dmnCheatSheetList9")
+    protected LIElement dmnCheatSheetList9 = Document.get().createLIElement();
+
     @DataField("dmnCheatSheetParagraph6")
     protected ParagraphElement dmnCheatSheetParagraph6 = Document.get().createPElement();
 
@@ -188,17 +194,17 @@ public class CheatSheetViewImpl
                                                 + ScenarioSimulationEditorConstants.INSTANCE.and() + " " + "<i>" + ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet12() + "</i>"
                                                 + ScenarioSimulationEditorConstants.INSTANCE.forExample() + " " + "<tt>date(\"2019-05-13\")</tt>" + " " + ScenarioSimulationEditorConstants.INSTANCE.or() + " "
                                                 + "<tt>time(\"14:10:00+02:00\")</tt>");
-        dmnCheatSheetList5.setInnerHTML("<i>" + ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet19() + "</i>" + ScenarioSimulationEditorConstants.INSTANCE.forExample() +
+        dmnCheatSheetList4.setInnerHTML("<i>" + ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet19() + "</i>" + ScenarioSimulationEditorConstants.INSTANCE.forExample() +
                                                 " " + "<tt>duration(\"P1DT23H12M30S\")</tt>");
         dmnCheatSheetList5.setInnerHTML("<i>" + ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet20() + "</i>" + ScenarioSimulationEditorConstants.INSTANCE.forExample() +
                                                 " " + "<tt>duration(\"P3Y5M\")</tt>");
-        dmnCheatSheetList4.setInnerHTML("<i>" + ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet13() + "</i>");
-        dmnCheatSheetList5.setInnerHTML("<i>" + ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet14() + "</i>" + ScenarioSimulationEditorConstants.INSTANCE.forExample() +
+        dmnCheatSheetList6.setInnerHTML("<i>" + ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet13() + "</i>");
+        dmnCheatSheetList7.setInnerHTML("<i>" + ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet14() + "</i>" + ScenarioSimulationEditorConstants.INSTANCE.forExample() +
                                                 " " + "<tt>{x : 5, even : false, type : \"integer number\"}</tt>");
-        dmnCheatSheetList6.setInnerHTML("<i>" + ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet15() + "</i>"
+        dmnCheatSheetList8.setInnerHTML("<i>" + ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet15() + "</i>"
                                                 + " " + ScenarioSimulationEditorConstants.INSTANCE.and() + " " + "<i>" + ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet16() + "</i>"
                                                 + ScenarioSimulationEditorConstants.INSTANCE.forExample() + " " + "<tt>[1 .. 10]</tt> or <tt>[2, 3, 4, 5]</tt>");
-        dmnCheatSheetList7.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet18());
+        dmnCheatSheetList9.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet18());
         dmnCheatSheetParagraph6.setInnerHTML(ScenarioSimulationEditorConstants.INSTANCE.dmnCheatSheet17());
     }
 
