@@ -222,13 +222,12 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
                         "Item: " + itemDefinition.getName() + " refers to typeRef: " + itemDefinition.getTypeRef()
                                 + " which can't be found.");
             }
-        } else {
-            populateItemDefinitionFields(allDefinitions,
-                                         itemDefinition,
-                                         namespace,
-                                         dmnTypesDataMap,
-                                         itemDefinitionDMNType);
         }
+        populateItemDefinitionFields(allDefinitions,
+                                     itemDefinition,
+                                     namespace,
+                                     dmnTypesDataMap,
+                                     itemDefinitionDMNType);
 
         return itemDefinitionDMNType;
    }
@@ -263,7 +262,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
                     /* The field refers to a DMType which must be present in dmnTypesMap */
                     fieldDMNType = getOrCreateDMNType(allItemDefinitions, typeRef, namespace, dmnTypesMap);
                 } else if (typeRef == null && hasSubFields) {
-                    /* In this case we are handling a Structure type not defined in allItemDefinition list.
+                    /* In this case we are handling an "in place" Structure type not defined in allItemDefinition list.
                      * Therefore, a new DMNType must be created and then it manages its defined subfields in recursive way */
                     fieldDMNType = createDMNType(allItemDefinitions, jsitItemDefinitionField, namespace, dmnTypesMap);
                 } else {
@@ -279,7 +278,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
                     fieldDMNType = fieldDMNType.copyAsCollection();
                 }
 
-                clientDMNType.getFields().put(jsitItemDefinitionField.getName(), fieldDMNType);
+                clientDMNType.addField(jsitItemDefinitionField.getName(), fieldDMNType);
             }
         }
     }
