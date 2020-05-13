@@ -218,6 +218,10 @@ public class DMNTypeServiceImpl
                     }
                     toReturn.addExpandableProperty(entry.getKey(), typeName);
                 } else {  // a simple type is just name -> type
+                    /* In case we have allowedValues, the correct DMNTypeName is inside baseType field */
+                    if (entry.getValue().getAllowedValues() != null && ! entry.getValue().getAllowedValues().isEmpty()) {
+                        typeName = entry.getValue().getBaseType().getName();
+                    }
                     simpleFields.put(entry.getKey(), typeName);
                 }
             }
