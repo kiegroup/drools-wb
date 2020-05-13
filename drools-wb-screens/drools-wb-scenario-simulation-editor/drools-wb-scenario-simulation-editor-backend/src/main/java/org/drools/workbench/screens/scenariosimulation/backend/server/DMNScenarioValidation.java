@@ -105,8 +105,12 @@ public class DMNScenarioValidation extends AbstractScenarioValidation {
         String factMappingType = ScenarioSimulationSharedUtils.isList(typeName) ?
                 factMapping.getGenericTypes().get(0) :
                 typeName;
+        /* In case we have allowedValues, the correct DMNTypeName is inside baseType field */
+        String dmnTypeName = (dmnType.getAllowedValues() == null || dmnType.getAllowedValues().isEmpty()) ?
+                dmnType.getName() :
+                dmnType.getBaseType().getName();
 
-        return Objects.equals(factMappingType, dmnType.getName());
+        return Objects.equals(factMappingType, dmnTypeName);
     }
 
     protected DMNModel getDMNModel(KieContainer kieContainer, String dmnPath) {

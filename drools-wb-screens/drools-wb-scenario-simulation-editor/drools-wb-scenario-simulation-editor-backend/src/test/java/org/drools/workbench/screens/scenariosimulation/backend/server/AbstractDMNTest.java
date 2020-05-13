@@ -16,8 +16,10 @@
 
 package org.drools.workbench.screens.scenariosimulation.backend.server;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
@@ -32,6 +34,8 @@ import org.kie.dmn.core.ast.InputDataNodeImpl;
 import org.kie.dmn.core.impl.CompositeTypeImpl;
 import org.kie.dmn.core.impl.SimpleTypeImpl;
 import org.kie.dmn.core.util.DMNRuntimeUtil;
+import org.kie.dmn.feel.runtime.UnaryTest;
+import org.kie.dmn.feel.runtime.UnaryTestImpl;
 import org.kie.dmn.model.v1_2.TDecision;
 import org.kie.dmn.model.v1_2.TInputData;
 
@@ -39,7 +43,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
-public class AbstractDMNTest {
+public abstract class AbstractDMNTest {
 
     protected DMNModel dmnModelLocal;
 
@@ -123,6 +127,16 @@ public class AbstractDMNTest {
     }
 
     /**
+     * Returns a <b>single</b> <code>SimpleTypeImpl</code>
+     * @return
+     */
+    protected SimpleTypeImpl getSimpleNoCollectionWithAllowedValues() {
+        List<UnaryTest> allowedValues = new ArrayList<>();
+        allowedValues.add(new UnaryTestImpl(null, "value"));
+        return new SimpleTypeImpl("simpleNameSpace", "simpleType", null, false, allowedValues, getSimpleNoCollection(), null);
+    }
+
+    /**
      * Returns a <b>string collection</b> <code>SimpleTypeImpl</code>
      * @return
      */
@@ -167,6 +181,16 @@ public class AbstractDMNTest {
         toReturn.addField(EXPANDABLE_PROPERTY_PHONENUMBERS, phoneNumberComposite);
         toReturn.addField(EXPANDABLE_PROPERTY_DETAILS, detailsComposite);
         toReturn.addField("name", nameSimple);
+
+        return toReturn;
+    }
+
+    protected CompositeTypeImpl getSingleCompositeWithAllowedValues() {
+        // Complex object retrieve
+        CompositeTypeImpl toReturn = new CompositeTypeImpl("compositeNameSpace", COMPOSITE_TYPE_NAME, null);
+
+        toReturn.addField("gender", getSimpleNoCollectionWithAllowedValues());
+        toReturn.addField("name", new SimpleTypeImpl(null, SIMPLE_TYPE_NAME, null));
 
         return toReturn;
     }
