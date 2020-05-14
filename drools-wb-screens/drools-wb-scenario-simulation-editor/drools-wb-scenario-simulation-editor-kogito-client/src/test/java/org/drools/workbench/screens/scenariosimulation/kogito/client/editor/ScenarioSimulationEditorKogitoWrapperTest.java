@@ -189,6 +189,11 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
             }
 
             @Override
+            protected void marshallContent(ScenarioSimulationModel scenarioSimulationModel, Promise.PromiseExecutorCallbackFn.ResolveCallbackFn<String> resolveCallbackFn) {
+                // JSInterops logic, can't be tested
+            }
+
+            @Override
             protected void resetEditorPages() {
                 //Do nothing
             }
