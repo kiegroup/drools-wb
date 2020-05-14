@@ -28,8 +28,13 @@ import org.kie.soup.project.datamodel.oracle.DataType;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
 import org.kie.workbench.common.widgets.decoratedgrid.client.widget.cells.AbstractProxyPopupDropDownEditCell;
 import org.kie.workbench.common.widgets.decoratedgrid.client.widget.cells.ProxyPopupNumericBigDecimalDropDownEditCell;
+import org.kie.workbench.common.widgets.decoratedgrid.client.widget.cells.ProxyPopupNumericBigIntegerDropDownEditCell;
+import org.kie.workbench.common.widgets.decoratedgrid.client.widget.cells.ProxyPopupNumericByteDropDownEditCell;
 import org.kie.workbench.common.widgets.decoratedgrid.client.widget.cells.ProxyPopupNumericDoubleDropDownEditCell;
+import org.kie.workbench.common.widgets.decoratedgrid.client.widget.cells.ProxyPopupNumericFloatDropDownEditCell;
 import org.kie.workbench.common.widgets.decoratedgrid.client.widget.cells.ProxyPopupNumericIntegerDropDownEditCell;
+import org.kie.workbench.common.widgets.decoratedgrid.client.widget.cells.ProxyPopupNumericLongDropDownEditCell;
+import org.kie.workbench.common.widgets.decoratedgrid.client.widget.cells.ProxyPopupNumericShortDropDownEditCell;
 import org.kie.workbench.common.widgets.decoratedgrid.client.widget.cells.ProxyPopupTextDropDownEditCell;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -171,15 +176,8 @@ public class TemplateDataCellFactoryTest {
     }
 
     @Test
-    public void testEnumHasPriorityOverListOperatorInteger() throws Exception {
-        testEnumAndOperator(DataType.TYPE_NUMERIC_INTEGER, "in");
-        verify(testedFactory).decoratedGridCellValueAdaptor(puddCaptor.capture());
-        assertTrue(puddCaptor.getValue() instanceof ProxyPopupTextDropDownEditCell);
-    }
-
-    @Test
-    public void testEnumHasPriorityOverListOperatorDouble() throws Exception {
-        testEnumAndOperator(DataType.TYPE_NUMERIC_DOUBLE, "in");
+    public void testEnumHasPriorityOverListOperatorNumeric() throws Exception {
+        testEnumAndOperator(DataType.TYPE_NUMERIC, "in");
         verify(testedFactory).decoratedGridCellValueAdaptor(puddCaptor.capture());
         assertTrue(puddCaptor.getValue() instanceof ProxyPopupTextDropDownEditCell);
     }
@@ -192,10 +190,80 @@ public class TemplateDataCellFactoryTest {
     }
 
     @Test
-    public void testEnumHasPriorityButSimpleOperatorInteger() throws Exception {
-        testEnumAndOperator(DataType.TYPE_NUMERIC_INTEGER, "==");
+    public void testEnumHasPriorityOverListOperatorBigInteger() throws Exception {
+        testEnumAndOperator(DataType.TYPE_NUMERIC_BIGINTEGER, "in");
         verify(testedFactory).decoratedGridCellValueAdaptor(puddCaptor.capture());
-        assertTrue(puddCaptor.getValue() instanceof ProxyPopupNumericIntegerDropDownEditCell);
+        assertTrue(puddCaptor.getValue() instanceof ProxyPopupTextDropDownEditCell);
+    }
+
+    @Test
+    public void testEnumHasPriorityOverListOperatorByte() throws Exception {
+        testEnumAndOperator(DataType.TYPE_NUMERIC_BYTE, "in");
+        verify(testedFactory).decoratedGridCellValueAdaptor(puddCaptor.capture());
+        assertTrue(puddCaptor.getValue() instanceof ProxyPopupTextDropDownEditCell);
+    }
+
+    @Test
+    public void testEnumHasPriorityOverListOperatorDouble() throws Exception {
+        testEnumAndOperator(DataType.TYPE_NUMERIC_DOUBLE, "in");
+        verify(testedFactory).decoratedGridCellValueAdaptor(puddCaptor.capture());
+        assertTrue(puddCaptor.getValue() instanceof ProxyPopupTextDropDownEditCell);
+    }
+
+    @Test
+    public void testEnumHasPriorityOverListOperatorFloat() throws Exception {
+        testEnumAndOperator(DataType.TYPE_NUMERIC_FLOAT, "in");
+        verify(testedFactory).decoratedGridCellValueAdaptor(puddCaptor.capture());
+        assertTrue(puddCaptor.getValue() instanceof ProxyPopupTextDropDownEditCell);
+    }
+
+    @Test
+    public void testEnumHasPriorityOverListOperatorInteger() throws Exception {
+        testEnumAndOperator(DataType.TYPE_NUMERIC_INTEGER, "in");
+        verify(testedFactory).decoratedGridCellValueAdaptor(puddCaptor.capture());
+        assertTrue(puddCaptor.getValue() instanceof ProxyPopupTextDropDownEditCell);
+    }
+
+    @Test
+    public void testEnumHasPriorityOverListOperatorLong() throws Exception {
+        testEnumAndOperator(DataType.TYPE_NUMERIC_LONG, "in");
+        verify(testedFactory).decoratedGridCellValueAdaptor(puddCaptor.capture());
+        assertTrue(puddCaptor.getValue() instanceof ProxyPopupTextDropDownEditCell);
+    }
+
+    @Test
+    public void testEnumHasPriorityOverListOperatorShort() throws Exception {
+        testEnumAndOperator(DataType.TYPE_NUMERIC_SHORT, "in");
+        verify(testedFactory).decoratedGridCellValueAdaptor(puddCaptor.capture());
+        assertTrue(puddCaptor.getValue() instanceof ProxyPopupTextDropDownEditCell);
+    }
+
+    @Test
+    public void testEnumHasPriorityButSimpleOperatorNumeric() throws Exception {
+        testEnumAndOperator(DataType.TYPE_NUMERIC, "==");
+        verify(testedFactory).decoratedGridCellValueAdaptor(puddCaptor.capture());
+        assertTrue(puddCaptor.getValue() instanceof ProxyPopupNumericBigDecimalDropDownEditCell);
+    }
+
+    @Test
+    public void testEnumHasPriorityButSimpleOperatorBigDecimal() throws Exception {
+        testEnumAndOperator(DataType.TYPE_NUMERIC_BIGDECIMAL, "==");
+        verify(testedFactory).decoratedGridCellValueAdaptor(puddCaptor.capture());
+        assertTrue(puddCaptor.getValue() instanceof ProxyPopupNumericBigDecimalDropDownEditCell);
+    }
+
+    @Test
+    public void testEnumHasPriorityButSimpleOperatorBigInteger() throws Exception {
+        testEnumAndOperator(DataType.TYPE_NUMERIC_BIGINTEGER, "==");
+        verify(testedFactory).decoratedGridCellValueAdaptor(puddCaptor.capture());
+        assertTrue(puddCaptor.getValue() instanceof ProxyPopupNumericBigIntegerDropDownEditCell);
+    }
+
+    @Test
+    public void testEnumHasPriorityButSimpleOperatorByte() throws Exception {
+        testEnumAndOperator(DataType.TYPE_NUMERIC_BYTE, "==");
+        verify(testedFactory).decoratedGridCellValueAdaptor(puddCaptor.capture());
+        assertTrue(puddCaptor.getValue() instanceof ProxyPopupNumericByteDropDownEditCell);
     }
 
     @Test
@@ -206,10 +274,41 @@ public class TemplateDataCellFactoryTest {
     }
 
     @Test
-    public void testEnumHasPriorityButSimpleOperatorBigDecimal() throws Exception {
-        testEnumAndOperator(DataType.TYPE_NUMERIC_BIGDECIMAL, "==");
+    public void testEnumHasPriorityButSimpleOperatorFloat() throws Exception {
+        testEnumAndOperator(DataType.TYPE_NUMERIC_FLOAT, "==");
         verify(testedFactory).decoratedGridCellValueAdaptor(puddCaptor.capture());
-        assertTrue(puddCaptor.getValue() instanceof ProxyPopupNumericBigDecimalDropDownEditCell);
+        assertTrue(puddCaptor.getValue() instanceof ProxyPopupNumericFloatDropDownEditCell);
+    }
+
+    @Test
+    public void testEnumHasPriorityButSimpleOperatorInteger() throws Exception {
+        testEnumAndOperator(DataType.TYPE_NUMERIC_INTEGER, "==");
+        verify(testedFactory).decoratedGridCellValueAdaptor(puddCaptor.capture());
+        assertTrue(puddCaptor.getValue() instanceof ProxyPopupNumericIntegerDropDownEditCell);
+    }
+
+    @Test
+    public void testEnumHasPriorityButSimpleOperatorLong() throws Exception {
+        testEnumAndOperator(DataType.TYPE_NUMERIC_LONG, "==");
+        verify(testedFactory).decoratedGridCellValueAdaptor(puddCaptor.capture());
+        assertTrue(puddCaptor.getValue() instanceof ProxyPopupNumericLongDropDownEditCell);
+    }
+
+    @Test
+    public void testEnumHasPriorityButSimpleOperatorShort() throws Exception {
+        testEnumAndOperator(DataType.TYPE_NUMERIC_SHORT, "==");
+        verify(testedFactory).decoratedGridCellValueAdaptor(puddCaptor.capture());
+        assertTrue(puddCaptor.getValue() instanceof ProxyPopupNumericShortDropDownEditCell);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testIllegalNumericType() {
+        final String factType = "org.kiegroup.Car";
+        final String factField = "carAttribute";
+        final String dataType = DataType.TYPE_DATE;
+        final String operator = "in";
+
+        testedFactory.makeNumericSelectionEnumCell(factType, factField, dataType, operator);
     }
 
     private void testEnumAndOperator(final String dataType, final String operator) throws Exception {
