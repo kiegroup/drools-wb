@@ -231,14 +231,15 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
         scenarioSimulationEditorKogitoWrapperSpy.prepareContent(resolveCallBackMock, rejectCallbackFnMock);
         verify(scenarioSimulationEditorKogitoWrapperSpy, times(1)).synchronizeColumnsDimension(eq(simulationGridPanelMock), eq(backgroundGridPanelMock));
         verify(scenarioSimulationEditorKogitoWrapperSpy, times(1)).marshallContent(eq(scenarioSimulationModelMock), eq(resolveCallBackMock));
+        verify(scenarioSimulationEditorPresenterMock, never()).sendNotification(any(), any());
     }
 
     @Test
     public void prepareContent_Exception() {
+        willThrow(Exception.class).given(scenarioSimulationEditorKogitoWrapperSpy).marshallContent(any(), any());
         scenarioSimulationEditorKogitoWrapperSpy.prepareContent(resolveCallBackMock, rejectCallbackFnMock);
         verify(scenarioSimulationEditorKogitoWrapperSpy, times(1)).synchronizeColumnsDimension(eq(simulationGridPanelMock), eq(backgroundGridPanelMock));
         verify(scenarioSimulationEditorKogitoWrapperSpy, times(1)).marshallContent(eq(scenarioSimulationModelMock), eq(resolveCallBackMock));
-        willThrow(Exception.class).given(scenarioSimulationEditorKogitoWrapperSpy).marshallContent(any(), any());
         verify(scenarioSimulationEditorPresenterMock, times(1)).sendNotification(anyString(), eq(NotificationEvent.NotificationType.ERROR));
     }
 
