@@ -15,6 +15,7 @@
  */
 package org.drools.workbench.screens.scenariosimulation.backend.server;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -36,8 +37,10 @@ import org.junit.runner.RunWith;
 import org.kie.api.runtime.KieContainer;
 import org.kie.dmn.api.core.DMNModel;
 import org.kie.dmn.api.core.DMNType;
+import org.kie.dmn.api.core.DMNUnaryTest;
 import org.kie.dmn.api.core.ast.DecisionNode;
 import org.kie.dmn.core.impl.BaseDMNTypeImpl;
+import org.kie.dmn.feel.runtime.UnaryTestImpl;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -125,6 +128,16 @@ public class DMNScenarioValidationTest {
 
         createDMNType("myComplexType", "myComplexType", "parent");
 
+        // numberFM is valid with allowedValues
+        FactMapping quantityFM = test2.getScesimModelDescriptor().addFactMapping(
+                myComplexFactIdentifier,
+                ExpressionIdentifier.create("quantity", FactMappingType.GIVEN));
+        quantityFM.addExpressionElement("tMYCOMPLEXTYPE", "tMYCOMPLEXTYPE");
+        quantityFM.addExpressionElement("quantity", "number");
+
+        List<DMNUnaryTest> allowedValues = Arrays.asList(new UnaryTestImpl(null, "1"));
+        createDMNTypeWithAllowedValues("myComplexType", "myComplexType", "quantity", allowedValues);
+
         List<FactMappingValidationError> errorsTest2 = validationSpy.validate(test2, settingsLocal, null);
         checkResult(errorsTest2);
 
@@ -201,6 +214,21 @@ public class DMNScenarioValidationTest {
         for (String step : steps) {
             currentType = addStep(currentType, step);
         }
+
+        mapOfMockDecisions.put(decisionName, decisionNodeMock);
+    }
+
+    private void createDMNTypeWithAllowedValues(String decisionName, String rootType, String step, List<DMNUnaryTest> allowedTypes) {
+        DecisionNode decisionNodeMock = getOrCreateDecisionNode(decisionName, rootType);
+
+        DMNType currentType = decisionNodeMock.getResultType();
+        currentType = addStep(currentType, step);
+        when(currentType.getAllowedValues()).thenReturn(allowedTypes);
+        when(currentType.getName()).thenReturn(step);
+
+        DMNType numberType = initDMNType("number");
+        when(numberType.getName()).thenReturn("number");
+        when(currentType.getBaseType()).thenReturn(numberType);
 
         mapOfMockDecisions.put(decisionName, decisionNodeMock);
     }
