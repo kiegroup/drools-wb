@@ -169,6 +169,44 @@ public class NewDecisionTableXLSHandlerTest {
     }
 
     @Test
+    public void testSuccessXLSX() {
+        final String fileName = "fileName";
+        final Package pkg = mock(Package.class);
+        final Path resourcesPath = PathFactory.newPath("resources",
+                                                       "default://project/src/main/resources");
+
+        when(pkg.getPackageMainResourcesPath()).thenReturn(resourcesPath);
+        when(uploadWidget.getFilenameSelectedToUpload()).thenReturn(fileName + ".xlsx");
+
+        handler.create(pkg,
+                       fileName,
+                       newResourcePresenter);
+
+        verify(uploadWidget,
+               times(1)).submit(eq(resourcesPath),
+                                eq(fileName + "." + decisionTableXLSXResourceType.getSuffix()),
+                                any(String.class),
+                                successCmdCaptor.capture(),
+                                failureCmdCaptor.capture());
+
+        successCmdCaptor.getValue().execute();
+
+        verify(busyIndicatorView,
+               times(1)).hideBusyIndicator();
+        verify(newResourcePresenter,
+               times(1)).complete();
+        verify(mockNotificationEvent,
+               times(1)).fire(any(NotificationEvent.class));
+        verify(newResourceSuccessEventMock,
+               times(1)).fire(any(NewResourceSuccessEvent.class));
+        verify(placeManager,
+               times(1)).goTo(newPathCaptor.capture());
+
+        assertEquals("default://project/src/main/resources/fileName.xlsx",
+                     newPathCaptor.getValue().toURI());
+    }
+
+    @Test
     public void testSuccessMultiByteProjectName() {
         final String fileName = "fileName";
         final Package pkg = mock( Package.class );
