@@ -119,6 +119,11 @@ public class BusinessCentralDMODataManagementStrategy extends AbstractDMODataMan
     }
 
     @Override
+    protected String[] getEnumValues(String factType, String factField) {
+        return oracle.getEnumValues(factType, factField);
+    }
+
+    @Override
     protected boolean skipPopulateTestTools() {
         return oracle == null || oracle.getFactTypes().length == 0;
     }

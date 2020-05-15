@@ -42,6 +42,8 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
 
     protected abstract List<String> getFactTypes();
 
+    protected abstract String[] getEnumValues(String factType, String factField);
+
     protected abstract boolean skipPopulateTestTools();
 
     protected abstract void manageDataObjects(final List<String> dataObjectsTypes,
@@ -104,6 +106,10 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
         for (ModelField modelField : modelFields) {
             if (!modelField.getName().equals("this")) {
                 String className = SIMPLE_CLASSES_MAP.containsKey(modelField.getClassName()) ? SIMPLE_CLASSES_MAP.get(modelField.getClassName()).getCanonicalName() : modelField.getClassName();
+                String[] enumValues = getEnumValues(factName, modelField.getName());
+                if (enumValues != null && enumValues.length > 0) {
+                    className = Enum.class.getCanonicalName();
+                }
                 simpleProperties.put(modelField.getName(), className);
                 if (ScenarioSimulationSharedUtils.isCollection(className)) {
                     populateGenericTypeMap(genericTypesMap, factName, modelField.getName(), ScenarioSimulationSharedUtils.isList(className));

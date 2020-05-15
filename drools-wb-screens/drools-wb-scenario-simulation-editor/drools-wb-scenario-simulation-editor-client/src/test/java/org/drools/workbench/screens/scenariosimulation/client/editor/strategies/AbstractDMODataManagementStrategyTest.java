@@ -88,6 +88,11 @@ public class AbstractDMODataManagementStrategyTest extends AbstractScenarioSimul
             }
 
             @Override
+            protected String[] getEnumValues(String factType, String factField) {
+                return new String[0];
+            }
+
+            @Override
             protected boolean skipPopulateTestTools() {
                 return false;
             }
