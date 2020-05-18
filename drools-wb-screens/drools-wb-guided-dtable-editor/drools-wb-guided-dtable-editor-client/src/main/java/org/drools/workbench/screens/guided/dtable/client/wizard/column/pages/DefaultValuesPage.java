@@ -27,7 +27,6 @@ import org.drools.workbench.models.guided.dtable.shared.model.BRLColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.BRLVariableColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.DTCellValue52;
 import org.drools.workbench.models.guided.dtable.shared.model.DTColumnConfig52;
-import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
 import org.drools.workbench.screens.guided.dtable.client.resources.i18n.GuidedDecisionTableErraiConstants;
 import org.drools.workbench.screens.guided.dtable.client.widget.DTCellValueWidgetFactory;
 import org.drools.workbench.screens.guided.dtable.client.wizard.column.commons.HasDefaultValuesPage;
@@ -101,8 +100,7 @@ public class DefaultValuesPage<T extends HasDefaultValuesPage & HasRuleModellerP
     protected DTCellValueWidgetFactory factory() {
         return DTCellValueWidgetFactory.getInstance(plugin().getPresenter().getModel(),
                                                     plugin().getPresenter().getDataModelOracle(),
-                                                    false,
-                                                    plugin().getPresenter().getModel().getTableFormat() == GuidedDecisionTable52.TableFormat.EXTENDED_ENTRY);
+                                                    false);
     }
 
     public interface View extends UberElement<DefaultValuesPage> {

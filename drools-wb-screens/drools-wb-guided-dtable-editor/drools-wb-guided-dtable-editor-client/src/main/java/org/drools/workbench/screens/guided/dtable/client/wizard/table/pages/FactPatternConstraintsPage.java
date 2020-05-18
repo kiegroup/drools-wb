@@ -73,8 +73,7 @@ public class FactPatternConstraintsPage extends AbstractGuidedDecisionTableWizar
         //Set-up a factory for value editors
         view.setDTCellValueWidgetFactory(DTCellValueWidgetFactory.getInstance(model,
                                                                               oracle,
-                                                                              false,
-                                                                              allowEmptyValues()));
+                                                                              false));
         content.setWidget(view);
     }
 

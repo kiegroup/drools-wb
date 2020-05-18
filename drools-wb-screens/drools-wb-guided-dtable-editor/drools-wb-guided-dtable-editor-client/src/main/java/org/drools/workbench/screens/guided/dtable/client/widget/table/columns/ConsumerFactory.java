@@ -29,7 +29,7 @@ import org.gwtbootstrap3.client.ui.TextBox;
 import org.uberfire.ext.widgets.common.client.common.DatePicker;
 import org.uberfire.ext.wires.core.grids.client.model.GridCell;
 
-import static org.kie.workbench.common.widgets.client.util.TimeZoneUtils.convertFromServerTimeZone;
+import static org.kie.workbench.common.widgets.client.util.TimeZoneUtils.FORMATTER;
 
 /**
  * Factory for common consumers used by the different columns.
@@ -111,7 +111,24 @@ public class ConsumerFactory {
             } else {
                 value = new Date();
             }
-            widget.setValue(convertFromServerTimeZone(value));
+            widget.setValue(value);
+        };
+    }
+
+    /**
+     * Callback to set the value of a DatePicker based on the Cells value.
+     * This is method needs to be used for LocalDate cells as LocalDate has no GWT support in client modules
+     */
+    public static <E extends SingleValueDOMElement<String, DatePicker>> Consumer<E> makeOnCreationCallbackLocalDate(final GridCell<String> cell) {
+        return (e) -> {
+            final DatePicker widget = e.getWidget();
+            final Date value;
+            if (hasValue(cell)) {
+                value = FORMATTER.parse(cell.getValue().getValue());
+            } else {
+                value = new Date();
+            }
+            widget.setValue(value);
         };
     }
 
@@ -120,6 +137,14 @@ public class ConsumerFactory {
      * @return
      */
     public static <E extends SingleValueDOMElement<Date, DatePicker>> Consumer<E> makeOnDisplayDatePickerCallback() {
+        return (e) -> e.getWidget().setFocus(true);
+    }
+
+    /**
+     * Callback to set the Focus on the DatePicker when a LocalDate cell is being edited
+     * This is method needs to be used for LocalDate cells as LocalDate has no GWT support in client modules
+     */
+    public static <E extends SingleValueDOMElement<String, DatePicker>> Consumer<E> makeOnDisplayDatePickerCallbackLocalDate() {
         return (e) -> e.getWidget().setFocus(true);
     }
 

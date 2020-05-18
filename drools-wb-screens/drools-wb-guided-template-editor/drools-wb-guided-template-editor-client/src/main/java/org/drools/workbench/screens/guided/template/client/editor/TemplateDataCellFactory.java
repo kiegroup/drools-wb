@@ -84,8 +84,8 @@ public class TemplateDataCellFactory
         } else {
             if (column.getDataType().equals(DataType.TYPE_BOOLEAN)) {
                 return makeBooleanCell();
-            } else if (column.getDataType().equals(DataType.TYPE_DATE)) {
-                return makeDateCell();
+            } else if (DataType.isDate(column.getDataType())) {
+                return makeUniversalDateCell();
             } else if (dataType.equals(DataType.TYPE_NUMERIC)) {
                 return makeNumericCell();
             } else if (dataType.equals(DataType.TYPE_NUMERIC_BIGDECIMAL)) {

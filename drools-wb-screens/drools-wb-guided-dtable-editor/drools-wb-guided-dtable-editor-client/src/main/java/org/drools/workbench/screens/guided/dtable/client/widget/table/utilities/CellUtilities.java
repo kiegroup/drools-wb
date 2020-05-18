@@ -34,7 +34,6 @@ public class CellUtilities {
     /**
      * Override the default, GWT-centric, Date conversion utility class. Only
      * use to hook-in a JVM Compatible implementation for tests
-     *
      * @param dc
      */
     public static void injectDateConvertor(DateConverter dc) {
@@ -47,7 +46,6 @@ public class CellUtilities {
      * associated with the Cell Value can be incorrect for legacy models. For
      * pre-5.2 they will always be String and for pre-5.4 numerical fields are
      * always Numeric
-     *
      * @param dataType
      * @param dcv
      */
@@ -91,6 +89,9 @@ public class CellUtilities {
             case DATE:
                 dcv.setDateValue(convertToDate(dcv));
                 break;
+            case LOCAL_DATE:
+                dcv.setLocalDateValue(convertToString(dcv));
+                break;
             case BOOLEAN:
                 dcv.setBooleanValue(convertToBoolean(dcv));
                 break;
@@ -102,7 +103,6 @@ public class CellUtilities {
 
     /**
      * Convert a DTCellValue52 to it's String representation
-     *
      * @param dcv
      * @return
      */
@@ -112,6 +112,8 @@ public class CellUtilities {
                 return convertBooleanValueToString(dcv);
             case DATE:
                 return convertDateValueToString(dcv);
+            case LOCAL_DATE:
+                return dcv.getLocalDateValue();
             case NUMERIC:
                 return convertNumericValueToString(dcv);
             case NUMERIC_BIGDECIMAL:
@@ -136,7 +138,6 @@ public class CellUtilities {
 
     /**
      * Remove a comma-separated value, replacing the comma-separated value with the first in the comma-separated list
-     *
      * @param dcv
      */
     public void removeCommaSeparatedValue(DTCellValue52 dcv) {
@@ -540,6 +541,37 @@ public class CellUtilities {
         }
     }
 
+    public String convertToLocalDate(final DTCellValue52 cell) {
+        switch (cell.getDataType()) {
+            case LOCAL_DATE:
+                return cell.getLocalDateValue();
+            case DATE:
+                final Date value = cell.getDateValue();
+                if (value == null || DATE_CONVERTOR == null) {
+                    return null;
+                }
+                try {
+                    return DATE_CONVERTOR.format(value);
+                } catch (IllegalArgumentException e) {
+                    return null;
+                }
+            case STRING:
+                final String text = cell.getStringValue();
+                if (text == null || DATE_CONVERTOR == null) {
+                    return null;
+                }
+                try {
+                    if (DATE_CONVERTOR.parse(text) != null) {
+                        return text;
+                    }
+                } catch (IllegalArgumentException e) {
+                    return null;
+                }
+            default:
+                return null;
+        }
+    }
+
     public Boolean convertToBoolean(final DTCellValue52 cell) {
         switch (cell.getDataType()) {
             case BOOLEAN:
@@ -584,6 +616,8 @@ public class CellUtilities {
                     return DATE_CONVERTOR.format(d);
                 }
                 return null;
+            case LOCAL_DATE:
+                return cell.getLocalDateValue();
             case BOOLEAN:
                 if (cell.getBooleanValue() == null) {
                     return null;

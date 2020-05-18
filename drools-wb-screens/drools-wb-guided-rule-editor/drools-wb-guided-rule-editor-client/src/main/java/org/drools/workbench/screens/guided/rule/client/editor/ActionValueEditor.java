@@ -286,7 +286,7 @@ public class ActionValueEditor extends Composite {
         }
 
         //Date picker
-        if (DataType.TYPE_DATE.equals(value.getType())) {
+        if (DataType.isDate(value.getType())) {
 
             final DatePicker datePicker = new DatePicker(false);
 

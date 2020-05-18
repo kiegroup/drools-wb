@@ -24,6 +24,7 @@ import java.util.stream.IntStream;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.columns.dom.datepicker.DatePickerDOMElement;
+import org.drools.workbench.screens.guided.dtable.client.widget.table.columns.dom.datepicker.LocalDatePickerDOMElement;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.columns.dom.listbox.MultiValueDOMElement;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.columns.dom.listbox.MultiValueSingletonDOMElementFactory;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.columns.dom.textbox.SingleValueDOMElement;
@@ -37,6 +38,8 @@ import org.mockito.Mock;
 import org.uberfire.ext.widgets.common.client.common.DatePicker;
 import org.uberfire.ext.wires.core.grids.client.model.GridCell;
 import org.uberfire.ext.wires.core.grids.client.model.GridCellValue;
+import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridCell;
+import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridCellValue;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.selections.CellSelectionStrategy;
 
 import static org.kie.workbench.common.services.shared.preferences.ApplicationPreferences.DATE_FORMAT;
@@ -149,6 +152,37 @@ public class ConsumerFactoryTest {
         callback.accept(datePickerDomElement);
 
         verify(datePickerWidget).setValue(asDate(dateConvertedFromServerTimezone));
+    }
+
+    @Test
+    public void testMakeOnCreationCallbackLocalDate() {
+
+        final LocalDatePickerDOMElement datePickerDomElement = mock(LocalDatePickerDOMElement.class);
+        final DatePicker datePickerWidget = mock(DatePicker.class);
+        final String serverDate = "05-01-2018 06:00:00 +0300";
+        final String dateConvertedFromServerTimezone = "05-01-2018 00:00:00 -0300";
+        final Consumer<SingleValueDOMElement<String, DatePicker>> callback =
+                ConsumerFactory.makeOnCreationCallbackLocalDate(new BaseGridCell<>(new BaseGridCellValue<>(serverDate)));
+
+        when(datePickerDomElement.getWidget()).thenReturn(datePickerWidget);
+
+        callback.accept(datePickerDomElement);
+
+        verify(datePickerWidget).setValue(asDate(dateConvertedFromServerTimezone));
+    }
+
+    @Test
+    public void testMakeOnDisplayDatePickerCallbackLocalDate() {
+        final LocalDatePickerDOMElement datePickerDomElement = mock(LocalDatePickerDOMElement.class);
+        final DatePicker datePickerWidget = mock(DatePicker.class);
+
+        when(datePickerDomElement.getWidget()).thenReturn(datePickerWidget);
+
+        final Consumer<SingleValueDOMElement<String, DatePicker>> testedConsumer =
+                ConsumerFactory.makeOnDisplayDatePickerCallbackLocalDate();
+
+        testedConsumer.accept(datePickerDomElement);
+        verify(datePickerWidget).setFocus(true);
     }
 
     private void setupMultipleSelectTest(final int enumLookupSize,

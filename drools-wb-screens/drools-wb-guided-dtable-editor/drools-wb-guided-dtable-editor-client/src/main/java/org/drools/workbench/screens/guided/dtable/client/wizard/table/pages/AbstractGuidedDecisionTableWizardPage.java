@@ -88,12 +88,4 @@ public abstract class AbstractGuidedDecisionTableWizardPage
         //Default implementation does nothing
     }
 
-    /**
-     * Check whether empty values are permitted
-     * @return True if empty values are permitted
-     */
-    protected boolean allowEmptyValues() {
-        return this.model.getTableFormat() == GuidedDecisionTable52.TableFormat.EXTENDED_ENTRY;
-    }
-
 }

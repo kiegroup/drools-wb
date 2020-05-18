@@ -71,6 +71,9 @@ public class GridWidgetCellFactoryImpl implements GridWidgetCellFactory {
             case DATE:
                 return new GuidedDecisionTableUiCell<>(cellUtilities.convertToDate(cell),
                                                        cell.isOtherwise());
+            case LOCAL_DATE:
+                return new GuidedDecisionTableUiCell<>(cellUtilities.convertToLocalDate(cell),
+                                                       cell.isOtherwise());
             case BOOLEAN:
                 return new GuidedDecisionTableUiCell<>(cellUtilities.convertToBoolean(cell),
                                                        cell.isOtherwise());

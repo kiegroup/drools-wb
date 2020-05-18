@@ -48,11 +48,13 @@ import org.drools.workbench.screens.guided.dtable.client.widget.table.columns.En
 import org.drools.workbench.screens.guided.dtable.client.widget.table.columns.EnumSingleSelectStringUiColumn;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.columns.FloatUiColumn;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.columns.IntegerUiColumn;
+import org.drools.workbench.screens.guided.dtable.client.widget.table.columns.LocalDateUiColumn;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.columns.LongUiColumn;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.columns.ShortUiColumn;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.columns.StringUiColumn;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.columns.ValueListUiColumn;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.columns.dom.datepicker.DatePickerSingletonDOMElementFactory;
+import org.drools.workbench.screens.guided.dtable.client.widget.table.columns.dom.datepicker.LocalDatePickerSingletonDOMElementFactory;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.columns.dom.listbox.ListBoxBigDecimalSingletonDOMElementFactory;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.columns.dom.listbox.ListBoxBigIntegerSingletonDOMElementFactory;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.columns.dom.listbox.ListBoxBooleanSingletonDOMElementFactory;
@@ -236,6 +238,14 @@ public abstract class BaseColumnConverterImpl implements BaseColumnConverter {
                                  !column.isHideColumn(),
                                  access,
                                  gridWidget);
+        } else if (DataType.TYPE_LOCAL_DATE.equals(type)) {
+            return newLocalDateColumn(makeHeaderMetaData(column),
+                                      Math.max(column.getWidth(),
+                                               DEFAULT_COLUMN_WIDTH),
+                                      true,
+                                      !column.isHideColumn(),
+                                      access,
+                                      gridWidget);
         } else {
             return newStringColumn(makeHeaderMetaData(column),
                                    Math.max(column.getWidth(),
@@ -714,6 +724,22 @@ public abstract class BaseColumnConverterImpl implements BaseColumnConverter {
                                 new DatePickerSingletonDOMElementFactory(gridPanel,
                                                                          gridLayer,
                                                                          gridWidget));
+    }
+
+    protected GridColumn<String> newLocalDateColumn(final List<GridColumn.HeaderMetaData> headerMetaData,
+                                                    final double width,
+                                                    final boolean isResizable,
+                                                    final boolean isVisible,
+                                                    final GuidedDecisionTablePresenter.Access access,
+                                                    final GuidedDecisionTableView gridWidget) {
+        return new LocalDateUiColumn(headerMetaData,
+                                     width,
+                                     isResizable,
+                                     isVisible,
+                                     access,
+                                     new LocalDatePickerSingletonDOMElementFactory(gridPanel,
+                                                                                   gridLayer,
+                                                                                   gridWidget));
     }
 
     protected GridColumn<Boolean> newBooleanColumn(final List<GridColumn.HeaderMetaData> headerMetaData,

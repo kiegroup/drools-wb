@@ -206,7 +206,8 @@ public abstract class AnalyzerUpdateTestBase {
 
         for (final DataType.DataTypes dataType : dataTypes) {
             row.add(new DTCellValue52(dataType,
-                                      true));
+                                      true,
+                                      null));
         }
         return row;
     }

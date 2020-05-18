@@ -18,6 +18,7 @@ package org.drools.workbench.screens.guided.dtable.client.widget;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -82,50 +83,46 @@ public class DTCellValueWidgetFactory {
 
     public static DTCellValueWidgetFactory getInstance(GuidedDecisionTable52 model,
                                                        AsyncPackageDataModelOracle oracle,
-                                                       boolean isReadOnly,
-                                                       boolean allowEmptyValues) {
+                                                       boolean isReadOnly) {
         switch (model.getTableFormat()) {
             case EXTENDED_ENTRY:
                 return new DTCellValueWidgetFactory(model,
                                                     oracle,
                                                     new DefaultValueDropDownManager(model,
                                                                                     oracle),
-                                                    isReadOnly,
-                                                    allowEmptyValues);
+                                                    isReadOnly);
             default:
                 return new DTCellValueWidgetFactory(model,
                                                     oracle,
                                                     new LimitedEntryDropDownManager(model,
                                                                                     oracle),
-                                                    isReadOnly,
-                                                    allowEmptyValues);
+                                                    isReadOnly);
         }
     }
 
     private DTCellValueWidgetFactory(GuidedDecisionTable52 model,
                                      AsyncPackageDataModelOracle oracle,
                                      LimitedEntryDropDownManager dropDownManager,
-                                     boolean isReadOnly,
-                                     boolean allowEmptyValues) {
+                                     boolean isReadOnly) {
         this.model = model;
         this.oracle = oracle;
         this.columnUtilities = new ColumnUtilities(model,
                                                    oracle);
         this.dropDownManager = dropDownManager;
         this.isReadOnly = isReadOnly;
-        this.allowEmptyValues = allowEmptyValues;
+        this.allowEmptyValues = model.getTableFormat() == GuidedDecisionTable52.TableFormat.EXTENDED_ENTRY;
     }
 
     /**
      * Make a DTCellValue for a column
-     *
      * @param c
      * @return
      */
     public DTCellValue52 makeNewValue(DTColumnConfig52 c) {
         DataType.DataTypes type = columnUtilities.getTypeSafeType(c);
         return new DTCellValue52(type,
-                                 allowEmptyValues);
+                                 allowEmptyValues,
+                                 getDefaultLocalDateValue());
     }
 
     /**
@@ -133,7 +130,6 @@ public class DTCellValueWidgetFactory {
      * object as well since the pattern may be different to that to which the
      * column has been bound in the Decision Table model, i.e. when adding or
      * editing a column
-     *
      * @param p
      * @param c
      * @return
@@ -143,7 +139,8 @@ public class DTCellValueWidgetFactory {
         DataType.DataTypes type = columnUtilities.getTypeSafeType(p,
                                                                   c);
         return new DTCellValue52(type,
-                                 allowEmptyValues);
+                                 allowEmptyValues,
+                                 getDefaultLocalDateValue());
     }
 
     /**
@@ -153,7 +150,6 @@ public class DTCellValueWidgetFactory {
      * Pattern52 object as well since the pattern may be different to that to
      * which the column has been bound in the Decision Table model, i.e. when
      * adding or editing a column
-     *
      * @param pattern
      * @param column
      * @param value
@@ -193,7 +189,6 @@ public class DTCellValueWidgetFactory {
      * Make a DTCellValue for a column. This overloaded method takes a Pattern52
      * object as well since the ActionSetFieldCol52 column may be associated
      * with an unbound Pattern
-     *
      * @param p
      * @param c
      * @return
@@ -203,7 +198,9 @@ public class DTCellValueWidgetFactory {
         DataType.DataTypes type = columnUtilities.getTypeSafeType(p,
                                                                   c);
         return new DTCellValue52(type,
-                                 allowEmptyValues);
+                                 allowEmptyValues,
+                                 getDefaultLocalDateValue()
+        );
     }
 
     /**
@@ -212,7 +209,6 @@ public class DTCellValueWidgetFactory {
      * "Default Value" and "Option List"). This overloaded method takes a
      * Pattern52 object as well since the ActionSetFieldCol52 column may be
      * associated with an unbound Pattern
-     *
      * @param pattern
      * @param column
      * @param value
@@ -250,7 +246,6 @@ public class DTCellValueWidgetFactory {
      * Get a Widget to edit a DTCellValue. A value is explicitly provided as
      * some columns (in the future) will have multiple DTCellValues (for
      * "Default Value" and "Option List").
-     *
      * @param column
      * @param value
      * @return
@@ -349,6 +344,8 @@ public class DTCellValueWidgetFactory {
                 return makeBooleanSelector(value);
             case DATE:
                 return makeDateSelector(value);
+            case LOCAL_DATE:
+                return makeLocalDateSelector(value);
             default:
                 return makeTextBox(value);
         }
@@ -683,5 +680,32 @@ public class DTCellValueWidgetFactory {
         datePicker.setValue(value.getDateValue());
 
         return datePicker;
+    }
+
+    private Widget makeLocalDateSelector(final DTCellValue52 value) {
+        //If read-only return a label
+        if (isReadOnly) {
+            Label dateLabel = new Label();
+            dateLabel.setText(value.getLocalDateValue());
+            return dateLabel;
+        }
+
+        final DatePicker datePicker = new DatePicker(allowEmptyValues);
+
+        // Wire up update handler
+        datePicker.addChangeDateHandler((e) -> value.setLocalDateValue(format.format(datePicker.getValue())));
+
+        datePicker.setFormat(DATE_FORMAT);
+        datePicker.setValue(value.getLocalDateValue() != null ? format.parse(value.getLocalDateValue()) : null);
+
+        return datePicker;
+    }
+
+    /**
+     * In case of LimitedEntry Decision Table we need to show DatPicker with non empty value
+     * This method is workaround to pass formatted LocalDate string to backend
+     */
+    String getDefaultLocalDateValue() {
+        return format.format(new Date());
     }
 }

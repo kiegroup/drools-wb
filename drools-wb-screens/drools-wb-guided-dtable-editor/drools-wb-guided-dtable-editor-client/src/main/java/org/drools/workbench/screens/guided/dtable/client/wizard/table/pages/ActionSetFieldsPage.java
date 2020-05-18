@@ -88,8 +88,7 @@ public class ActionSetFieldsPage extends AbstractGuidedDecisionTableWizardPage
         //Set-up a factory for value editors
         view.setDTCellValueWidgetFactory(DTCellValueWidgetFactory.getInstance(model,
                                                                               oracle,
-                                                                              false,
-                                                                              allowEmptyValues()));
+                                                                              false));
 
         //Existing ActionSetFieldCols (should be empty for a new Decision Table)
         for (ActionCol52 a : model.getActionCols()) {

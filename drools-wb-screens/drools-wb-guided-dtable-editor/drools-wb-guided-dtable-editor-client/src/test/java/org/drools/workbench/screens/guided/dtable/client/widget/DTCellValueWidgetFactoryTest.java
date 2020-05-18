@@ -36,6 +36,8 @@ import org.kie.workbench.common.services.shared.preferences.ApplicationPreferenc
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
 import org.mockito.Mock;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -70,7 +72,6 @@ public class DTCellValueWidgetFactoryTest {
 
         factory = DTCellValueWidgetFactory.getInstance(model,
                                                        oracle,
-                                                       false,
                                                        false);
 
         insertFactCol52 = new ActionInsertFactCol52();
@@ -135,5 +136,11 @@ public class DTCellValueWidgetFactoryTest {
                                             cellValue);
 
         assertTrue(widget instanceof ListBox);
+    }
+
+    @Test
+    public void testLocalDateDefaultValue() {
+        assertNotNull(factory.getDefaultLocalDateValue());
+        assertFalse(factory.getDefaultLocalDateValue().isEmpty());
     }
 }

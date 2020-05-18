@@ -342,7 +342,7 @@ public class ConstraintValueEditor extends Composite {
 
         //Date picker
         boolean isCEPOperator = CEPOracle.isCEPOperator((this.constraint).getOperator());
-        if (DataType.TYPE_DATE.equals(this.fieldType) || (DataType.TYPE_THIS.equals(this.fieldName) && isCEPOperator)) {
+        if (DataType.isDate(this.fieldType) || (DataType.TYPE_THIS.equals(this.fieldName) && isCEPOperator)) {
             if (this.readOnly) {
                 return new SmallLabel(constraint.getValue());
             }

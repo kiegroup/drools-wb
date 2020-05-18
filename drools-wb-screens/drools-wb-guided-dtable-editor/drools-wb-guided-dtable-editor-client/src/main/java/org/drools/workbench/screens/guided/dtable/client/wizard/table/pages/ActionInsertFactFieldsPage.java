@@ -93,8 +93,7 @@ public class ActionInsertFactFieldsPage extends AbstractGuidedDecisionTableWizar
         //Set-up a factory for value editors
         view.setDTCellValueWidgetFactory(DTCellValueWidgetFactory.getInstance(model,
                                                                               oracle,
-                                                                              false,
-                                                                              allowEmptyValues()));
+                                                                              false));
 
         //Available types
         final List<String> availableTypes = Arrays.asList(oracle.getFactTypes());
