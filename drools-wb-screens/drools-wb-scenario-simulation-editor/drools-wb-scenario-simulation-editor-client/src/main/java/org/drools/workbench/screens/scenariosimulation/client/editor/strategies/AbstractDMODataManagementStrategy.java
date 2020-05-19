@@ -16,6 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.editor.strategies;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -103,6 +104,7 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
     public FactModelTree getFactModelTree(String factName, ModelField[] modelFields) {
         Map<String, String> simpleProperties = new HashMap<>();
         Map<String, List<String>> genericTypesMap = new HashMap<>();
+        Map<String, List<String>> allowedValuesMap = new HashMap<>();
         String factPackageName = packageName;
         String fullFactClassName = getFQCNByFactName(factName);
         if (fullFactClassName != null && fullFactClassName.contains(".")) {
@@ -110,7 +112,11 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
         }
         for (ModelField modelField : modelFields) {
             if (!modelField.getName().equals("this")) {
-                String fieldClassName = hasEnumValues(factName, modelField.getName()) ? Enum.class.getSimpleName() : modelField.getClassName();
+                boolean isEnum = hasEnumValues(factName, modelField.getName());
+                String fieldClassName = isEnum ? Enum.class.getSimpleName() : modelField.getClassName();
+                if (isEnum) {
+                     allowedValuesMap.put(modelField.getName(), Arrays.asList(getEnumValues(factName, modelField.getClassName())));
+                }
                 String className = SIMPLE_CLASSES_MAP.containsKey(fieldClassName) ? SIMPLE_CLASSES_MAP.get(fieldClassName).getCanonicalName() : modelField.getClassName();
                 simpleProperties.put(modelField.getName(), className);
                 if (ScenarioSimulationSharedUtils.isCollection(className)) {
@@ -118,7 +124,7 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
                 }
             }
         }
-        return new FactModelTree(factName, factPackageName, simpleProperties, genericTypesMap);
+        return new FactModelTree(factName, factPackageName, simpleProperties, genericTypesMap, allowedValuesMap);
     }
 
     /**
