@@ -100,7 +100,9 @@ public class BusinessCentralDMODataManagementStrategy extends AbstractDMODataMan
     }
 
     @Override
-    protected void manageDataObjects(List<String> dataObjectsTypes, final TestToolsView.Presenter testToolsPresenter,  int expectedElements,
+    protected void manageDataObjects(final List<String> dataObjectsTypes,
+                                     final TestToolsView.Presenter testToolsPresenter,
+                                     final int expectedElements,
                                      final SortedMap<String, FactModelTree> dataObjectsFieldsMap,
                                      final ScenarioSimulationContext context,
                                      final List<String> simpleJavaTypes,
@@ -119,8 +121,18 @@ public class BusinessCentralDMODataManagementStrategy extends AbstractDMODataMan
     }
 
     @Override
+    protected boolean hasEnumValues(String factType, String factField) {
+        return oracle.hasEnums(factType, factField);
+    }
+
+    @Override
     protected String[] getEnumValues(String factType, String factField) {
         return oracle.getEnumValues(factType, factField);
+    }
+
+    @Override
+    protected void getSuperType(String factType, Callback<String> callback) {
+        oracle.getSuperType(factType, callback);
     }
 
     @Override

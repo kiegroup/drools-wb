@@ -30,6 +30,7 @@ import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToo
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
 import org.kie.soup.project.datamodel.oracle.ModelField;
+import org.uberfire.client.callbacks.Callback;
 
 public abstract class AbstractDMODataManagementStrategy extends AbstractDataManagementStrategy {
 
@@ -42,7 +43,11 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
 
     protected abstract List<String> getFactTypes();
 
+    protected abstract boolean hasEnumValues(String factType, String factField);
+
     protected abstract String[] getEnumValues(String factType, String factField);
+
+    protected abstract void getSuperType(String factType, Callback<String> callback);
 
     protected abstract boolean skipPopulateTestTools();
 
@@ -105,14 +110,11 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
         }
         for (ModelField modelField : modelFields) {
             if (!modelField.getName().equals("this")) {
-                String className = SIMPLE_CLASSES_MAP.containsKey(modelField.getClassName()) ? SIMPLE_CLASSES_MAP.get(modelField.getClassName()).getCanonicalName() : modelField.getClassName();
-                String[] enumValues = getEnumValues(factName, modelField.getName());
-                if (enumValues != null && enumValues.length > 0) {
-                    className = Enum.class.getCanonicalName();
-                }
+                String fieldClassName = hasEnumValues(factName, modelField.getName()) ? Enum.class.getSimpleName() : modelField.getClassName();
+                String className = SIMPLE_CLASSES_MAP.containsKey(fieldClassName) ? SIMPLE_CLASSES_MAP.get(fieldClassName).getCanonicalName() : modelField.getClassName();
                 simpleProperties.put(modelField.getName(), className);
                 if (ScenarioSimulationSharedUtils.isCollection(className)) {
-                    populateGenericTypeMap(genericTypesMap, factName, modelField.getName(), ScenarioSimulationSharedUtils.isList(className));
+                    populateGenericTypeMap(genericTypesMap, factName, fieldClassName, ScenarioSimulationSharedUtils.isList(className));
                 }
             }
         }

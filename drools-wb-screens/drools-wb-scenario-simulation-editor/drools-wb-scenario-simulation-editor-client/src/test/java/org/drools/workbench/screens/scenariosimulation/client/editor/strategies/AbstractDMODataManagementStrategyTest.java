@@ -33,6 +33,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.uberfire.backend.vfs.ObservablePath;
+import org.uberfire.client.callbacks.Callback;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
@@ -88,8 +89,18 @@ public class AbstractDMODataManagementStrategyTest extends AbstractScenarioSimul
             }
 
             @Override
+            protected boolean hasEnumValues(String factType, String factField) {
+                return false;
+            }
+
+            @Override
             protected String[] getEnumValues(String factType, String factField) {
                 return new String[0];
+            }
+
+            @Override
+            protected void getSuperType(String factType, Callback<String> callback) {
+
             }
 
             @Override

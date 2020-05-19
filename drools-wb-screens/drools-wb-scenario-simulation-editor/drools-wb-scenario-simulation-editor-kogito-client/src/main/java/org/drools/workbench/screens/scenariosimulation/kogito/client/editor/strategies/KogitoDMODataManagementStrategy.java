@@ -28,6 +28,7 @@ import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationM
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.kie.soup.project.datamodel.oracle.ModelField;
 import org.uberfire.backend.vfs.ObservablePath;
+import org.uberfire.client.callbacks.Callback;
 
 public class KogitoDMODataManagementStrategy extends AbstractDMODataManagementStrategy {
 
@@ -64,8 +65,18 @@ public class KogitoDMODataManagementStrategy extends AbstractDMODataManagementSt
     }
 
     @Override
+    protected boolean hasEnumValues(String factType, String factField) {
+        return false;
+    }
+
+    @Override
     protected String[] getEnumValues(String factType, String factField) {
         return new String[0];
+    }
+
+    @Override
+    protected void getSuperType(String factType, Callback<String> callback) {
+
     }
 
     @Override
