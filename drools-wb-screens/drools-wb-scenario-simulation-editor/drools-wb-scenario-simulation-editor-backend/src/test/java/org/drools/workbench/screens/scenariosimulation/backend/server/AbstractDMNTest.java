@@ -16,10 +16,8 @@
 
 package org.drools.workbench.screens.scenariosimulation.backend.server;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
@@ -34,8 +32,6 @@ import org.kie.dmn.core.ast.InputDataNodeImpl;
 import org.kie.dmn.core.impl.CompositeTypeImpl;
 import org.kie.dmn.core.impl.SimpleTypeImpl;
 import org.kie.dmn.core.util.DMNRuntimeUtil;
-import org.kie.dmn.feel.runtime.UnaryTest;
-import org.kie.dmn.feel.runtime.UnaryTestImpl;
 import org.kie.dmn.model.v1_2.TDecision;
 import org.kie.dmn.model.v1_2.TInputData;
 
@@ -130,10 +126,8 @@ public abstract class AbstractDMNTest {
      * Returns a <b>single</b> <code>SimpleTypeImpl</code>
      * @return
      */
-    protected SimpleTypeImpl getSimpleNoCollectionWithAllowedValues() {
-        List<UnaryTest> allowedValues = new ArrayList<>();
-        allowedValues.add(new UnaryTestImpl(null, "value"));
-        return new SimpleTypeImpl("simpleNameSpace", "simpleType", null, false, allowedValues, getSimpleNoCollection(), null);
+    protected SimpleTypeImpl getSimpleNoCollectionWithBaseType() {
+        return new SimpleTypeImpl("simpleNameSpace", "simpleType", null, false, null, getSimpleNoCollection(), null);
     }
 
     /**
@@ -185,11 +179,11 @@ public abstract class AbstractDMNTest {
         return toReturn;
     }
 
-    protected CompositeTypeImpl getSingleCompositeWithAllowedValues() {
+    protected CompositeTypeImpl getSingleCompositeWithBaseTypeField() {
         // Complex object retrieve
         CompositeTypeImpl toReturn = new CompositeTypeImpl("compositeNameSpace", COMPOSITE_TYPE_NAME, null);
 
-        toReturn.addField("gender", getSimpleNoCollectionWithAllowedValues());
+        toReturn.addField("gender", getSimpleNoCollectionWithBaseType());
         toReturn.addField("name", new SimpleTypeImpl(null, SIMPLE_TYPE_NAME, null));
 
         return toReturn;
