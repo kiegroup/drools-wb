@@ -31,6 +31,7 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.menu.GridCo
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderExpectedContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.HeaderGivenContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.editor.menu.OtherContextMenu;
+import org.drools.workbench.screens.scenariosimulation.client.editor.menu.UnmodifiableColumnGridContextMenu;
 import org.drools.workbench.screens.scenariosimulation.client.metadata.ScenarioHeaderMetaData;
 import org.drools.workbench.screens.scenariosimulation.client.popover.ErrorReportPopoverPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationGridHeaderUtilities;
@@ -48,6 +49,7 @@ public class ScenarioContextMenuRegistry {
     protected GivenContextMenu givenContextMenu;
     protected ExpectedContextMenu expectedContextMenu;
     protected GridContextMenu gridContextMenu;
+    protected UnmodifiableColumnGridContextMenu unmodifiableColumnGridContextMenu;
     protected ErrorReportPopoverPresenter errorReportPopoverPresenter;
 
     @Inject
@@ -56,13 +58,15 @@ public class ScenarioContextMenuRegistry {
                                        final HeaderExpectedContextMenu headerExpectedContextMenu,
                                        final GivenContextMenu givenContextMenu,
                                        final ExpectedContextMenu expectedContextMenu,
-                                       final GridContextMenu gridContextMenu) {
+                                       final GridContextMenu gridContextMenu,
+                                       final UnmodifiableColumnGridContextMenu unmodifiableColumnGridContextMenu) {
         this.otherContextMenu = otherContextMenu;
         this.headerGivenContextMenu = headerGivenContextMenu;
         this.headerExpectedContextMenu = headerExpectedContextMenu;
         this.givenContextMenu = givenContextMenu;
         this.expectedContextMenu = expectedContextMenu;
         this.gridContextMenu = gridContextMenu;
+        this.unmodifiableColumnGridContextMenu = unmodifiableColumnGridContextMenu;
     }
 
     public void setEventBus(final EventBus eventBus) {
@@ -72,6 +76,7 @@ public class ScenarioContextMenuRegistry {
         givenContextMenu.setEventBus(eventBus);
         expectedContextMenu.setEventBus(eventBus);
         gridContextMenu.setEventBus(eventBus);
+        unmodifiableColumnGridContextMenu.setEventBus(eventBus);
     }
 
     public void hideMenus() {
@@ -81,6 +86,7 @@ public class ScenarioContextMenuRegistry {
         givenContextMenu.hide();
         expectedContextMenu.hide();
         gridContextMenu.hide();
+        unmodifiableColumnGridContextMenu.hide();
     }
 
     public boolean manageRightClick(final ScenarioGrid scenarioGrid,
@@ -182,7 +188,15 @@ public class ScenarioContextMenuRegistry {
         if (scenarioGridColumn == null) {
             return false;
         }
-        gridContextMenu.show(scenarioGrid.getGridWidget(), left, top, uiRowIndex);
+        String group = scenarioGridColumn.getInformationHeaderMetaData().getColumnGroup();
+        switch (group) {
+            case "GIVEN":
+            case "EXPECT":
+                gridContextMenu.show(scenarioGrid.getGridWidget(), left, top, uiRowIndex);
+                break;
+            default:
+                unmodifiableColumnGridContextMenu.show(scenarioGrid.getGridWidget(), left, top, uiRowIndex);
+        }
         scenarioGrid.setSelectedCell(uiRowIndex, uiColumnIndex);
         return true;
     }
