@@ -16,7 +16,6 @@
 package org.drools.workbench.screens.scenariosimulation.model.typedescriptor;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +51,6 @@ public class FactModelTree {
      * Map of the expandable properties: key = property name, value = property' expandable/complex type
      */
     private Map<String, String> expandableProperties = new HashMap<>();
-    private Map<String, List<String>> allowedValues;
     private Type type;
 
     public FactModelTree() {
@@ -68,19 +66,6 @@ public class FactModelTree {
      */
     public FactModelTree(String factName, String fullPackage, Map<String, String> simpleProperties, Map<String, List<String>> genericTypesMap) {
         this(factName, fullPackage, simpleProperties, genericTypesMap, Type.UNDEFINED);
-    }
-
-    /**
-     * Call this constructor to have a <code>FactModelTree</code> with <b>UNDEFINED</b> <code>Type</code>
-     * @param factName
-     * @param fullPackage
-     * @param simpleProperties
-     * @param genericTypesMap the <b>generic type</b> info, in the format {collection_class_name}#{generic_type}: ex "java.util.List#com.Book"
-     * @param allowedValues
-     */
-    public FactModelTree(String factName, String fullPackage, Map<String, String> simpleProperties, Map<String, List<String>> genericTypesMap, Map<String, List<String>> allowedValues) {
-        this(factName, fullPackage, simpleProperties, genericTypesMap, Type.UNDEFINED);
-        this.allowedValues = allowedValues;
     }
 
     /**
@@ -117,10 +102,6 @@ public class FactModelTree {
 
     public Map<String, List<String>> getGenericTypesMap() {
         return genericTypesMap;
-    }
-
-    public Map<String, List<String>> getAllowedValues() {
-        return Collections.unmodifiableMap(allowedValues);
     }
 
     public void addSimpleProperty(String propertyName, String propertyType) {
