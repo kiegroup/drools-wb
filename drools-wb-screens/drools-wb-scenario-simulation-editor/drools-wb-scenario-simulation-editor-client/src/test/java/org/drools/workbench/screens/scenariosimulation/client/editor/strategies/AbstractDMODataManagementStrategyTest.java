@@ -18,6 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.editor.strategies
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -109,7 +110,7 @@ public class AbstractDMODataManagementStrategyTest extends AbstractScenarioSimul
             }
 
             @Override
-            protected void manageDataObjects(List<String> dataObjectsTypes, TestToolsView.Presenter testToolsPresenter, int expectedElements, SortedMap<String, FactModelTree> dataObjectsFieldsMap, ScenarioSimulationContext context, List<String> simpleJavaTypes, GridWidget gridWidget) {
+            protected void manageDataObjects(List<String> dataObjectsTypes, Map<String, String> superTypeMap, TestToolsView.Presenter testToolsPresenter, int expectedElements, SortedMap<String, FactModelTree> dataObjectsFieldsMap, ScenarioSimulationContext context, List<String> simpleJavaTypes, GridWidget gridWidget) {
 
             }
 

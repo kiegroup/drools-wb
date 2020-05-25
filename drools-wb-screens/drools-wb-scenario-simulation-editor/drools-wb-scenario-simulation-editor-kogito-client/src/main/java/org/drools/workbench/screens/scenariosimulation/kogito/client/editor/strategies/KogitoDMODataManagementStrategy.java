@@ -17,6 +17,7 @@ package org.drools.workbench.screens.scenariosimulation.kogito.client.editor.str
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedMap;
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
@@ -50,16 +51,6 @@ public class KogitoDMODataManagementStrategy extends AbstractDMODataManagementSt
     }
 
     @Override
-    protected void manageDataObjects(List<String> dataObjectsTypes, TestToolsView.Presenter testToolsPresenter, int expectedElements, SortedMap<String, FactModelTree> dataObjectsFieldsMap, ScenarioSimulationContext context, List<String> simpleJavaTypes, GridWidget gridWidget) {
-        // Iterate over all dataObjects to retrieve their modelfields
-        dataObjectsTypes.forEach(factType -> {
-            ModelField[] retrieved = kogitoOracle.getFieldCompletions(factType);
-            FactModelTree toSend = getFactModelTree(factType, retrieved);
-            aggregatorCallbackMethod(testToolsPresenter, expectedElements, dataObjectsFieldsMap, context, toSend, simpleJavaTypes, gridWidget);
-        });
-    }
-
-    @Override
     protected List<String> getFactTypes() {
         return Arrays.asList(kogitoOracle.getFactTypes());
     }
@@ -76,12 +67,22 @@ public class KogitoDMODataManagementStrategy extends AbstractDMODataManagementSt
 
     @Override
     protected void getSuperType(String factType, Callback<String> callback) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     protected boolean skipPopulateTestTools() {
         return kogitoOracle == null || kogitoOracle.getFactTypes().length == 0;
+    }
+
+    @Override
+    protected void manageDataObjects(List<String> dataObjectsTypes, Map<String, String> superTypeMap, TestToolsView.Presenter testToolsPresenter, int expectedElements, SortedMap<String, FactModelTree> dataObjectsFieldsMap, ScenarioSimulationContext context, List<String> simpleJavaTypes, GridWidget gridWidget) {
+        // Iterate over all dataObjects to retrieve their modelfields
+        dataObjectsTypes.forEach(factType -> {
+            ModelField[] retrieved = kogitoOracle.getFieldCompletions(factType);
+            FactModelTree toSend = getFactModelTree(factType, superTypeMap, retrieved);
+            aggregatorCallbackMethod(testToolsPresenter, expectedElements, dataObjectsFieldsMap, context, toSend, simpleJavaTypes, gridWidget);
+        });
     }
 
     @Override

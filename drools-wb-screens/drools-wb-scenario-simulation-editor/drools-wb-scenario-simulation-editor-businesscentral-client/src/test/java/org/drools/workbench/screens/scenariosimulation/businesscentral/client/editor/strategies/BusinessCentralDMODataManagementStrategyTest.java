@@ -19,6 +19,7 @@ package org.drools.workbench.screens.scenariosimulation.businesscentral.client.e
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -194,8 +195,8 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractScenar
     public void fieldCompletionsCallbackMethod() {
         ModelField[] result = {};
         Callback<FactModelTree> aggregatorCallbackMock = mock(Callback.class);
-        businessCentralDmoDataManagementStrategySpy.fieldCompletionsCallbackMethod(TestProperties.FACT_NAME, result, aggregatorCallbackMock);
-        verify(businessCentralDmoDataManagementStrategySpy, times(1)).getFactModelTree(eq(TestProperties.FACT_NAME), eq(result));
+        businessCentralDmoDataManagementStrategySpy.fieldCompletionsCallbackMethod(TestProperties.FACT_NAME, Collections.emptyMap(), result, aggregatorCallbackMock);
+        verify(businessCentralDmoDataManagementStrategySpy, times(1)).getFactModelTree(eq(TestProperties.FACT_NAME), Collections.emptyMap(), eq(result));
         verify(aggregatorCallbackMock, times(1)).callback(isA(FactModelTree.class));
     }
 
@@ -203,7 +204,7 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractScenar
     public void getFactModelTree() {
         Map<String, String> simpleProperties = getSimplePropertiesInner();
         final ModelField[] modelFields = getModelFieldsInner(simpleProperties);
-        final FactModelTree retrieved = businessCentralDmoDataManagementStrategySpy.getFactModelTree(TestProperties.FACT_NAME, modelFields);
+        final FactModelTree retrieved = businessCentralDmoDataManagementStrategySpy.getFactModelTree(TestProperties.FACT_NAME, Collections.emptyMap(), modelFields);
         assertNotNull(retrieved);
         Assert.assertEquals(TestProperties.FACT_NAME, retrieved.getFactName());
         assertEquals("", retrieved.getFullPackage());

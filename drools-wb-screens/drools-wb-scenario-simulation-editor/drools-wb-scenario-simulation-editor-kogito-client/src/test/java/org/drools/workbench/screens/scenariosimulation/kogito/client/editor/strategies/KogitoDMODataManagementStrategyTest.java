@@ -17,7 +17,9 @@ package org.drools.workbench.screens.scenariosimulation.kogito.client.editor.str
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -71,7 +73,7 @@ public class KogitoDMODataManagementStrategyTest {
     public void setup() {
         kogitoDMODataManagementStrategySpy = spy(new KogitoDMODataManagementStrategy(oracleMock) {
             @Override
-            public FactModelTree getFactModelTree(String factName, ModelField[] modelFields) {
+            public FactModelTree getFactModelTree(String factName, Map<String, String> superTypeMap, ModelField[] modelFields) {
                 return factModelTreeMock;
             }
             @Override
@@ -117,9 +119,9 @@ public class KogitoDMODataManagementStrategyTest {
         List<String> dataObjectsType = Arrays.asList(factType);
         SortedMap<String, FactModelTree> dataObjectsFieldMap = new TreeMap<>();
         List<String> javaSimpleType = new ArrayList<>();
-        kogitoDMODataManagementStrategySpy.manageDataObjects(dataObjectsType, testToolsPresenterMock, 1, dataObjectsFieldMap, scenarioSimulationContextMock, javaSimpleType, gridWidgetMock);
+        kogitoDMODataManagementStrategySpy.manageDataObjects(dataObjectsType, Collections.emptyMap(), testToolsPresenterMock, 1, dataObjectsFieldMap, scenarioSimulationContextMock, javaSimpleType, gridWidgetMock);
         verify(oracleMock, times(1)).getFieldCompletions(eq(factType));
-        verify(kogitoDMODataManagementStrategySpy, times(1)).getFactModelTree(eq(factType), eq(modelFields));
+        verify(kogitoDMODataManagementStrategySpy, times(1)).getFactModelTree(eq(factType), Collections.emptyMap(), eq(modelFields));
         verify(kogitoDMODataManagementStrategySpy, times(1)).aggregatorCallbackMethod(eq(testToolsPresenterMock), eq(1), eq(dataObjectsFieldMap), eq(scenarioSimulationContextMock), eq(factModelTreeMock), eq(javaSimpleType), eq(gridWidgetMock));
     }
 
