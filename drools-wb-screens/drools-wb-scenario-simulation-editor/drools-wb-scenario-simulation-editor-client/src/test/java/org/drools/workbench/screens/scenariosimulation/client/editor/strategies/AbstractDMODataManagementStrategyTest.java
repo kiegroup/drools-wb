@@ -90,16 +90,6 @@ public class AbstractDMODataManagementStrategyTest extends AbstractScenarioSimul
             }
 
             @Override
-            protected boolean hasEnumValues(String factType, String factField) {
-                return false;
-            }
-
-            @Override
-            protected String[] getEnumValues(String factType, String factField) {
-                return new String[0];
-            }
-
-            @Override
             protected void getSuperType(String factType, Callback<String> callback) {
 
             }

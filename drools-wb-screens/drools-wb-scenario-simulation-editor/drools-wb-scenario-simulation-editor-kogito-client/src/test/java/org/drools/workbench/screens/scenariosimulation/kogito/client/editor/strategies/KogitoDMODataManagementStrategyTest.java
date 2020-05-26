@@ -118,10 +118,11 @@ public class KogitoDMODataManagementStrategyTest {
         when(oracleMock.getFieldCompletions(eq(factType))).thenReturn(modelFields);
         List<String> dataObjectsType = Arrays.asList(factType);
         SortedMap<String, FactModelTree> dataObjectsFieldMap = new TreeMap<>();
+        Map<String, String> superTypesMap = Collections.emptyMap();
         List<String> javaSimpleType = new ArrayList<>();
-        kogitoDMODataManagementStrategySpy.manageDataObjects(dataObjectsType, Collections.emptyMap(), testToolsPresenterMock, 1, dataObjectsFieldMap, scenarioSimulationContextMock, javaSimpleType, gridWidgetMock);
+        kogitoDMODataManagementStrategySpy.manageDataObjects(dataObjectsType, superTypesMap, testToolsPresenterMock, 1, dataObjectsFieldMap, scenarioSimulationContextMock, javaSimpleType, gridWidgetMock);
         verify(oracleMock, times(1)).getFieldCompletions(eq(factType));
-        verify(kogitoDMODataManagementStrategySpy, times(1)).getFactModelTree(eq(factType), Collections.emptyMap(), eq(modelFields));
+        verify(kogitoDMODataManagementStrategySpy, times(1)).getFactModelTree(eq(factType), eq(superTypesMap), eq(modelFields));
         verify(kogitoDMODataManagementStrategySpy, times(1)).aggregatorCallbackMethod(eq(testToolsPresenterMock), eq(1), eq(dataObjectsFieldMap), eq(scenarioSimulationContextMock), eq(factModelTreeMock), eq(javaSimpleType), eq(gridWidgetMock));
     }
 
@@ -165,4 +166,10 @@ public class KogitoDMODataManagementStrategyTest {
         kogitoDMODataManagementStrategySpy.getParametricFieldType(FACT_NAME, "propertyName");
         verify(oracleMock, times(1)).getParametricFieldType(eq(FACT_NAME), eq("propertyName"));
     }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void getSuperType() {
+        kogitoDMODataManagementStrategySpy.getSuperType("", null);
+    }
+
 }

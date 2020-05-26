@@ -124,16 +124,6 @@ public class BusinessCentralDMODataManagementStrategy extends AbstractDMODataMan
     }
 
     @Override
-    protected boolean hasEnumValues(String factType, String factField) {
-        return oracle.hasEnums(factType, factField);
-    }
-
-    @Override
-    protected String[] getEnumValues(String factType, String factField) {
-        return oracle.getEnumValues(factType, factField);
-    }
-
-    @Override
     protected void getSuperType(String factType, Callback<String> callback) {
         oracle.getSuperType(factType, callback);
     }

@@ -51,18 +51,25 @@ public class KogitoDMODataManagementStrategy extends AbstractDMODataManagementSt
     }
 
     @Override
+    protected void manageDataObjects(final List<String> dataObjectsTypes,
+                                     final Map<String, String> superTypeMap,
+                                     final TestToolsView.Presenter testToolsPresenter,
+                                     final int expectedElements,
+                                     final SortedMap<String, FactModelTree> dataObjectsFieldsMap,
+                                     final ScenarioSimulationContext context,
+                                     final List<String> simpleJavaTypes,
+                                     final GridWidget gridWidget) {
+        // Iterate over all dataObjects to retrieve their modelfields
+        dataObjectsTypes.forEach(factType -> {
+            ModelField[] retrieved = kogitoOracle.getFieldCompletions(factType);
+            FactModelTree toSend = getFactModelTree(factType, superTypeMap, retrieved);
+            aggregatorCallbackMethod(testToolsPresenter, expectedElements, dataObjectsFieldsMap, context, toSend, simpleJavaTypes, gridWidget);
+        });
+    }
+
+    @Override
     protected List<String> getFactTypes() {
         return Arrays.asList(kogitoOracle.getFactTypes());
-    }
-
-    @Override
-    protected boolean hasEnumValues(String factType, String factField) {
-        return false;
-    }
-
-    @Override
-    protected String[] getEnumValues(String factType, String factField) {
-        return new String[0];
     }
 
     @Override
@@ -73,16 +80,6 @@ public class KogitoDMODataManagementStrategy extends AbstractDMODataManagementSt
     @Override
     protected boolean skipPopulateTestTools() {
         return kogitoOracle == null || kogitoOracle.getFactTypes().length == 0;
-    }
-
-    @Override
-    protected void manageDataObjects(List<String> dataObjectsTypes, Map<String, String> superTypeMap, TestToolsView.Presenter testToolsPresenter, int expectedElements, SortedMap<String, FactModelTree> dataObjectsFieldsMap, ScenarioSimulationContext context, List<String> simpleJavaTypes, GridWidget gridWidget) {
-        // Iterate over all dataObjects to retrieve their modelfields
-        dataObjectsTypes.forEach(factType -> {
-            ModelField[] retrieved = kogitoOracle.getFieldCompletions(factType);
-            FactModelTree toSend = getFactModelTree(factType, superTypeMap, retrieved);
-            aggregatorCallbackMethod(testToolsPresenter, expectedElements, dataObjectsFieldsMap, context, toSend, simpleJavaTypes, gridWidget);
-        });
     }
 
     @Override
