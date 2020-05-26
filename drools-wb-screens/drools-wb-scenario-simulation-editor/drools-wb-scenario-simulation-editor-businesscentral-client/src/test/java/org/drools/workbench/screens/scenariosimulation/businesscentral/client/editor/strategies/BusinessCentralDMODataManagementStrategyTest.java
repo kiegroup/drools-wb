@@ -71,6 +71,8 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractScenar
 
     @Mock
     private AsyncPackageDataModelOracle oracleMock;
+    @Mock
+    private GridWidget gridWidgetMock;
 
     private BusinessCentralDMODataManagementStrategy.ResultHolder factModelTreeHolderlocal;
 
@@ -194,9 +196,10 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractScenar
     @Test
     public void fieldCompletionsCallbackMethod() {
         ModelField[] result = {};
+        Map<String, String> superTypesMap = Collections.emptyMap();
         Callback<FactModelTree> aggregatorCallbackMock = mock(Callback.class);
-        businessCentralDmoDataManagementStrategySpy.fieldCompletionsCallbackMethod(TestProperties.FACT_NAME, Collections.emptyMap(), result, aggregatorCallbackMock);
-        verify(businessCentralDmoDataManagementStrategySpy, times(1)).getFactModelTree(eq(TestProperties.FACT_NAME), Collections.emptyMap(), eq(result));
+        businessCentralDmoDataManagementStrategySpy.fieldCompletionsCallbackMethod(TestProperties.FACT_NAME, superTypesMap, result, aggregatorCallbackMock);
+        verify(businessCentralDmoDataManagementStrategySpy, times(1)).getFactModelTree(eq(TestProperties.FACT_NAME), eq(superTypesMap), eq(result));
         verify(aggregatorCallbackMock, times(1)).callback(isA(FactModelTree.class));
     }
 
@@ -284,6 +287,27 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractScenar
         verify(businessCentralDmoDataManagementStrategySpy, never()).populateFactModelTree(isA(FactModelTree.class), isA(SortedMap.class));
         assertNull(factModelTreeHolderlocal.getFactModelTuple());
         verify(businessCentralDmoDataManagementStrategySpy, never()).storeData(isA(FactModelTuple.class), eq(testToolsPresenterMock), eq(scenarioSimulationContextLocal), eq(GridWidget.SIMULATION));
+    }
+
+    @Test
+    public void retrieveFactModelTuple() {
+        String factType = "factType";
+        ModelField[] modelFields = new ModelField[1];
+        Callback<ModelField[]> callbackMock = mock(Callback.class);
+        List<String> dataObjectsType = Arrays.asList(factType);
+        SortedMap<String, FactModelTree> dataObjectsFieldMap = new TreeMap<>();
+        Map<String, String> superTypesMap = Collections.emptyMap();
+        List<String> javaSimpleType = new ArrayList<>();
+        when(businessCentralDmoDataManagementStrategySpy.fieldCompletionsCallback(eq("factType"), eq(superTypesMap), isA(Callback.class))).thenReturn(callbackMock);
+        businessCentralDmoDataManagementStrategySpy.manageDataObjects(dataObjectsType, superTypesMap, testToolsPresenterMock, 1, dataObjectsFieldMap, scenarioSimulationContextLocal, javaSimpleType, gridWidgetMock);
+        verify(oracleMock, times(1)).getFieldCompletions(eq(factType), eq(callbackMock));
+    }
+
+    @Test
+    public void getSuperType() {
+        Callback<String> superTypeCallbackMock = mock(Callback.class);
+        businessCentralDmoDataManagementStrategySpy.getSuperType("factType", superTypeCallbackMock);
+        verify(oracleMock, times(1)).getSuperType(eq("factType"), eq(superTypeCallbackMock));
     }
 
     private void commonIsADataType(String value, boolean expected) {
