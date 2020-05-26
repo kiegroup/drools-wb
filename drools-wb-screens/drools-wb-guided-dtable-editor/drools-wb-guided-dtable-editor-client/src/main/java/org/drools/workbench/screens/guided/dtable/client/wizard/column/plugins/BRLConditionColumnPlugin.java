@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -54,8 +55,10 @@ import org.drools.workbench.screens.guided.dtable.client.widget.table.model.sync
 import org.drools.workbench.screens.guided.dtable.client.widget.table.model.synchronizers.ModelSynchronizer.VetoUpdatePatternInUseException;
 import org.drools.workbench.screens.guided.dtable.client.wizard.column.NewGuidedDecisionTableColumnWizard;
 import org.drools.workbench.screens.guided.dtable.client.wizard.column.commons.HasAdditionalInfoPage;
+import org.drools.workbench.screens.guided.dtable.client.wizard.column.commons.HasDefaultValuesPage;
 import org.drools.workbench.screens.guided.dtable.client.wizard.column.commons.HasRuleModellerPage;
 import org.drools.workbench.screens.guided.dtable.client.wizard.column.pages.AdditionalInfoPage;
+import org.drools.workbench.screens.guided.dtable.client.wizard.column.pages.DefaultValuesPage;
 import org.drools.workbench.screens.guided.dtable.client.wizard.column.pages.RuleModellerPage;
 import org.drools.workbench.screens.guided.dtable.client.wizard.column.plugins.commons.AdditionalInfoPageInitializer;
 import org.drools.workbench.screens.guided.dtable.client.wizard.column.plugins.commons.BaseDecisionTableColumnPlugin;
@@ -70,11 +73,13 @@ import org.uberfire.ext.widgets.core.client.wizards.WizardPageStatusChangeEvent;
 import static org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52.TableFormat.LIMITED_ENTRY;
 
 @Dependent
-public class BRLConditionColumnPlugin extends BaseDecisionTableColumnPlugin implements HasRuleModellerPage,
+public class BRLConditionColumnPlugin extends BaseDecisionTableColumnPlugin implements HasDefaultValuesPage,
+                                                                                       HasRuleModellerPage,
                                                                                        HasAdditionalInfoPage,
                                                                                        TemplateVariablesChangedEvent.Handler {
 
     private RuleModellerPage ruleModellerPage;
+    private DefaultValuesPage defaultValuesPage;
 
     private AdditionalInfoPage additionalInfoPage;
 
@@ -88,6 +93,7 @@ public class BRLConditionColumnPlugin extends BaseDecisionTableColumnPlugin impl
 
     @Inject
     public BRLConditionColumnPlugin(final RuleModellerPage ruleModellerPage,
+                                    final DefaultValuesPage defaultValuesPage,
                                     final AdditionalInfoPage additionalInfoPage,
                                     final Event<WizardPageStatusChangeEvent> changeEvent,
                                     final TranslationService translationService) {
@@ -95,6 +101,7 @@ public class BRLConditionColumnPlugin extends BaseDecisionTableColumnPlugin impl
               translationService);
 
         this.ruleModellerPage = ruleModellerPage;
+        this.defaultValuesPage = defaultValuesPage;
         this.additionalInfoPage = additionalInfoPage;
     }
 
@@ -122,13 +129,14 @@ public class BRLConditionColumnPlugin extends BaseDecisionTableColumnPlugin impl
     public List<WizardPage> getPages() {
         return new ArrayList<WizardPage>() {{
             add(ruleModellerPage);
+            add(defaultValuesPage);
             add(additionalInfoPage());
         }};
     }
 
     @Override
     public Boolean generateColumn() {
-        getDefinedVariables(getRuleModel());
+        setupDefinedVariables(getRuleModel());
 
         editingCol().setDefinition(Arrays.asList(getRuleModel().lhs));
 
@@ -159,7 +167,8 @@ public class BRLConditionColumnPlugin extends BaseDecisionTableColumnPlugin impl
         return Type.ADVANCED;
     }
 
-    boolean getDefinedVariables(RuleModel ruleModel) {
+    @Override
+    public boolean setupDefinedVariables(RuleModel ruleModel) {
         Map<InterpolationVariable, Integer> ivs = new HashMap<>();
         RuleModelVisitor rmv = new RuleModelVisitor(ivs);
         rmv.visit(ruleModel);
@@ -196,6 +205,10 @@ public class BRLConditionColumnPlugin extends BaseDecisionTableColumnPlugin impl
                                                                                  iv.getFactType(),
                                                                                  iv.getFactField(),
                                                                                  iv.getOperator());
+            final Optional<BRLConditionVariableColumn> oldCol = getChildEditingCol(iv.getVarName());
+            if (oldCol.isPresent()) {
+                variable.setDefaultValue(oldCol.get().getDefaultValue());
+            }
             variable.setHeader(editingCol.getHeader());
             variable.setHideColumn(editingCol.isHideColumn());
             variables[index] = variable;
@@ -207,6 +220,16 @@ public class BRLConditionColumnPlugin extends BaseDecisionTableColumnPlugin impl
             variableList.add(variable);
         }
         return variableList;
+    }
+
+    private Optional<BRLConditionVariableColumn> getChildEditingCol(final String varName) {
+        for (BRLConditionVariableColumn childColumn : editingCol().getChildColumns()) {
+            if (Objects.equals(varName, childColumn.getVarName())) {
+                return Optional.of(childColumn);
+            }
+        }
+
+        return Optional.empty();
     }
 
     @Override
@@ -371,6 +394,9 @@ public class BRLConditionColumnPlugin extends BaseDecisionTableColumnPlugin impl
                                                                                 variable.getFactType(),
                                                                                 variable.getFactField());
 
+        if (variable.getDefaultValue() != null) {
+            clone.setDefaultValue(variable.getDefaultValue().cloneDefaultValueCell());
+        }
         clone.setHeader(variable.getHeader());
         clone.setHideColumn(variable.isHideColumn());
         clone.setWidth(variable.getWidth());
@@ -434,7 +460,7 @@ public class BRLConditionColumnPlugin extends BaseDecisionTableColumnPlugin impl
     @Override
     public void onTemplateVariablesChanged(TemplateVariablesChangedEvent event) {
         if (event.getSource() == getRuleModel()) {
-            getDefinedVariables(event.getModel());
+            setupDefinedVariables(event.getModel());
         }
     }
 }
