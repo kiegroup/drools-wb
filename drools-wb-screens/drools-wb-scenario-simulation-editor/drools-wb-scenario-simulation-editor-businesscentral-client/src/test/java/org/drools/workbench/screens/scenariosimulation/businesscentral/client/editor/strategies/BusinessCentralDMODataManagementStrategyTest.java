@@ -245,7 +245,7 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractScenar
         assertEquals(TestProperties.FACT_NAME, retrieved.getFactName());
         assertEquals("", retrieved.getFullPackage());
         assertTrue(retrieved.getSimpleProperties().containsKey(TestProperties.LOWER_CASE_VALUE));
-        assertEquals(Enum.class.getCanonicalName(), retrieved.getSimpleProperties().get(TestProperties.LOWER_CASE_VALUE));
+        assertEquals(TestProperties.FULL_FACT_CLASSNAME, retrieved.getSimpleProperties().get(TestProperties.LOWER_CASE_VALUE));
     }
 
     @Test
