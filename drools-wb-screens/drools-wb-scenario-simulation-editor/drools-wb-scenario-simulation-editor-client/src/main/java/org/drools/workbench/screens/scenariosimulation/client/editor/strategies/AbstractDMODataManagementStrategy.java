@@ -23,6 +23,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import org.drools.scenariosimulation.api.utils.ConstantsHolder;
 import org.drools.scenariosimulation.api.utils.ScenarioSimulationSharedUtils;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
@@ -107,7 +108,22 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
                                                                                                 factType)));
     }
 
-    private Callback<String> superTypeAggregatorCallBack(final List<String> dataObjectsTypes,
+    /**
+     * This method returns a Callback required when calling <code>getSuperType</code> method.
+     * Basically, its aim to to join all the asynchronous calls done previously calling
+     * <code>getSuperType</code> methods.
+     * @param dataObjectsTypes
+     * @param superTypeMap
+     * @param testToolsPresenter
+     * @param expectedElements
+     * @param dataObjectsFieldsMap
+     * @param context
+     * @param simpleJavaTypes
+     * @param gridWidget
+     * @param factType
+     * @return
+     */
+    protected Callback<String> superTypeAggregatorCallBack(final List<String> dataObjectsTypes,
                                                          final Map<String, String> superTypeMap,
                                                          final TestToolsView.Presenter testToolsPresenter,
                                                          final int expectedElements,
@@ -118,6 +134,8 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
                                                          final String factType) {
         return superType -> {
             superTypeMap.put(factType, superType);
+            /* This is used to invoke this callback only once, when all the expected superclasses
+               of the expected factTypes have been managed */
             if (superTypeMap.size() == expectedElements) {
                 manageDataObjects(dataObjectsTypes, superTypeMap, testToolsPresenter, expectedElements, dataObjectsFieldsMap, context, simpleJavaTypes, gridWidget);
             }
@@ -143,9 +161,9 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
         if (fullFactClassName != null && fullFactClassName.contains(".")) {
             factPackageName = fullFactClassName.substring(0, fullFactClassName.lastIndexOf('.'));
         }
-        if (Enum.class.getCanonicalName().equals(superTypeMap.get(factName))) {
-            simpleProperties.put("value", Enum.class.getCanonicalName());
-            return new FactModelTree(factName,factPackageName, simpleProperties, genericTypesMap);
+        if (ScenarioSimulationSharedUtils.isEnum(superTypeMap.get(factName))) {
+            simpleProperties.put(ConstantsHolder.VALUE, Enum.class.getCanonicalName());
+            return new FactModelTree(factName, factPackageName, simpleProperties, genericTypesMap);
         }
 
         for (ModelField modelField : modelFields) {
