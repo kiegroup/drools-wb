@@ -91,7 +91,7 @@ public class AbstractDMODataManagementStrategyTest extends AbstractScenarioSimul
 
             @Override
             protected void getSuperType(String factType, Callback<String> callback) {
-
+                // Do Nothing
             }
 
             @Override

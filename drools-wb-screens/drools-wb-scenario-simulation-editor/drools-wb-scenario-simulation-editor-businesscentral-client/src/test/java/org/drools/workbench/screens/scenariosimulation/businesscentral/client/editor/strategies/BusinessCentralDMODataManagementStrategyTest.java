@@ -40,6 +40,8 @@ import org.junit.runner.RunWith;
 import org.kie.soup.project.datamodel.oracle.FieldAccessorsAndMutators;
 import org.kie.soup.project.datamodel.oracle.ModelField;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.uberfire.client.callbacks.Callback;
 
@@ -73,6 +75,8 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractScenar
     private AsyncPackageDataModelOracle oracleMock;
     @Mock
     private GridWidget gridWidgetMock;
+    @Captor
+    private ArgumentCaptor<Callback<String>> callbackArgumentCaptor;
 
     private BusinessCentralDMODataManagementStrategy.ResultHolder factModelTreeHolderlocal;
 
@@ -123,6 +127,10 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractScenar
         String[] notEmptyFactTypes = getRandomStringArray();
         when(oracleMock.getFactTypes()).thenReturn(notEmptyFactTypes);
         businessCentralDmoDataManagementStrategySpy.populateTestTools(testToolsPresenterMock, scenarioSimulationContextLocal, GridWidget.SIMULATION);
+        for (String factType : notEmptyFactTypes) {
+            verify(oracleMock, times(1)).getSuperType(eq(factType), callbackArgumentCaptor.capture());
+            callbackArgumentCaptor.getValue().callback("");
+        }
         verify(businessCentralDmoDataManagementStrategySpy, times(1)).aggregatorCallback(eq(testToolsPresenterMock), anyInt(), any(SortedMap.class), eq(scenarioSimulationContextLocal), isA(List.class), eq(GridWidget.SIMULATION));
         for (String factType : notEmptyFactTypes) {
             verify(oracleMock, times(1)).getFieldCompletions(eq(factType), any(Callback.class));
@@ -139,6 +147,10 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractScenar
         String[] notEmptyFactTypes = mergeArrays(dataObjectTypes, simpleJavaTypes);
         when(oracleMock.getFactTypes()).thenReturn(notEmptyFactTypes);
         businessCentralDmoDataManagementStrategySpy.populateTestTools(testToolsPresenterMock, scenarioSimulationContextLocal, GridWidget.SIMULATION);
+        for (String factType : dataObjectTypes) {
+            verify(oracleMock, times(1)).getSuperType(eq(factType), callbackArgumentCaptor.capture());
+            callbackArgumentCaptor.getValue().callback("");
+        }
         verify(businessCentralDmoDataManagementStrategySpy, times(1)).aggregatorCallback(eq(testToolsPresenterMock), anyInt(), any(SortedMap.class), eq(scenarioSimulationContextLocal), isA(List.class), eq(GridWidget.SIMULATION));
         for (String factType : dataObjectTypes) {
             verify(oracleMock, times(1)).getFieldCompletions(eq(factType), any(Callback.class));
@@ -201,6 +213,17 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractScenar
         businessCentralDmoDataManagementStrategySpy.fieldCompletionsCallbackMethod(TestProperties.FACT_NAME, superTypesMap, result, aggregatorCallbackMock);
         verify(businessCentralDmoDataManagementStrategySpy, times(1)).getFactModelTree(eq(TestProperties.FACT_NAME), eq(superTypesMap), eq(result));
         verify(aggregatorCallbackMock, times(1)).callback(isA(FactModelTree.class));
+    }
+
+    @Test
+    public void fieldCompletionsCallback() {
+        ModelField[] result = {};
+        Map<String, String> superTypesMap = Collections.emptyMap();
+        Callback<FactModelTree> aggregatorCallbackMock = mock(Callback.class);
+        Callback<ModelField[]> returnCallback =
+                businessCentralDmoDataManagementStrategySpy.fieldCompletionsCallback(TestProperties.FACT_NAME, superTypesMap, aggregatorCallbackMock);
+        returnCallback.callback(result);
+        verify(businessCentralDmoDataManagementStrategySpy, times(1)).fieldCompletionsCallbackMethod(eq(TestProperties.FACT_NAME), eq(superTypesMap), eq(result), eq(aggregatorCallbackMock));
     }
 
     @Test
@@ -292,7 +315,6 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractScenar
     @Test
     public void retrieveFactModelTuple() {
         String factType = "factType";
-        ModelField[] modelFields = new ModelField[1];
         Callback<ModelField[]> callbackMock = mock(Callback.class);
         List<String> dataObjectsType = Arrays.asList(factType);
         SortedMap<String, FactModelTree> dataObjectsFieldMap = new TreeMap<>();
