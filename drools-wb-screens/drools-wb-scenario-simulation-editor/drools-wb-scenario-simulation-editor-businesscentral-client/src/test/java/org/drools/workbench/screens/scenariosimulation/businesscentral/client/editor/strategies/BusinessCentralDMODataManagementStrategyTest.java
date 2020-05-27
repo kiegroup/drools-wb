@@ -33,7 +33,6 @@ import org.drools.workbench.screens.scenariosimulation.client.editor.AbstractSce
 import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -232,8 +231,21 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractScenar
         final ModelField[] modelFields = getModelFieldsInner(simpleProperties);
         final FactModelTree retrieved = businessCentralDmoDataManagementStrategySpy.getFactModelTree(TestProperties.FACT_NAME, Collections.emptyMap(), modelFields);
         assertNotNull(retrieved);
-        Assert.assertEquals(TestProperties.FACT_NAME, retrieved.getFactName());
+        assertEquals(TestProperties.FACT_NAME, retrieved.getFactName());
         assertEquals("", retrieved.getFullPackage());
+    }
+
+    @Test
+    public void getFactModelTreeEnumClass() {
+        final ModelField[] modelFields = {};
+        Map<String, String> superTypesMap = new HashMap<>();
+        superTypesMap.put(TestProperties.FACT_NAME, Enum.class.getCanonicalName());
+        final FactModelTree retrieved = businessCentralDmoDataManagementStrategySpy.getFactModelTree(TestProperties.FACT_NAME,superTypesMap, modelFields);
+        assertNotNull(retrieved);
+        assertEquals(TestProperties.FACT_NAME, retrieved.getFactName());
+        assertEquals("", retrieved.getFullPackage());
+        assertTrue(retrieved.getSimpleProperties().containsKey(TestProperties.LOWER_CASE_VALUE));
+        assertEquals(Enum.class.getCanonicalName(), retrieved.getSimpleProperties().get(TestProperties.LOWER_CASE_VALUE));
     }
 
     @Test
