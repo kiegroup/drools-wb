@@ -168,7 +168,7 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
 
         for (ModelField modelField : modelFields) {
             if (!modelField.getName().equals("this")) {
-                String className = SIMPLE_CLASSES_MAP.containsKey(modelField.getClassName()) ? SIMPLE_CLASSES_MAP.get(modelField.getClassName()).getCanonicalName() : modelField.getClassName();
+                String className = defineClassNameField(modelField.getClassName(), superTypeMap);
                 simpleProperties.put(modelField.getName(), className);
                 if (ScenarioSimulationSharedUtils.isCollection(className)) {
                     populateGenericTypeMap(genericTypesMap, factName, modelField.getName(), ScenarioSimulationSharedUtils.isList(className));
@@ -176,6 +176,16 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
             }
         }
         return new FactModelTree(factName, factPackageName, simpleProperties, genericTypesMap);
+    }
+
+    protected String defineClassNameField(String modelFieldClassName, Map<String, String> superTypesMap) {
+        if (SIMPLE_CLASSES_MAP.containsKey(modelFieldClassName)) {
+            return SIMPLE_CLASSES_MAP.get(modelFieldClassName).getCanonicalName();
+        }
+        if (ScenarioSimulationSharedUtils.isEnum(superTypesMap.get(modelFieldClassName))) {
+            return getFQCNByFactName(modelFieldClassName);
+        }
+        return modelFieldClassName;
     }
 
     /**
