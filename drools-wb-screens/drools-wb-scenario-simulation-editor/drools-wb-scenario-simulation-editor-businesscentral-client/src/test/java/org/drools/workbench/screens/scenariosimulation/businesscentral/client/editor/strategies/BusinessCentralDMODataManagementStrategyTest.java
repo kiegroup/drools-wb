@@ -87,7 +87,7 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractScenar
         factModelTupleLocal = new FactModelTuple(new TreeMap<>(), new TreeMap<>());
         factModelTreeHolderlocal = new BusinessCentralDMODataManagementStrategy.ResultHolder();
         factModelTreeHolderlocal.setFactModelTuple(factModelTupleLocal);
-        when(oracleMock.getFQCNByFactName(TestProperties.FACT_NAME)).thenReturn(TestProperties.FULL_FACT_CLASSNAME);
+        when(oracleMock.getFQCNByFactName(TestProperties.FACT_NAME)).thenReturn(TestProperties.FULL_CLASS_NAME);
         when(oracleFactoryMock.makeAsyncPackageDataModelOracle(observablePathMock, modelLocal, content.getDataModel())).thenReturn(oracleMock);
         this.businessCentralDmoDataManagementStrategySpy = spy(new BusinessCentralDMODataManagementStrategy(oracleFactoryMock) {
             {
@@ -232,7 +232,7 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractScenar
         final FactModelTree retrieved = businessCentralDmoDataManagementStrategySpy.getFactModelTree(TestProperties.FACT_NAME, Collections.emptyMap(), modelFields);
         assertNotNull(retrieved);
         assertEquals(TestProperties.FACT_NAME, retrieved.getFactName());
-        assertEquals("", retrieved.getFullPackage());
+        assertEquals(TestProperties.FULL_PACKAGE, retrieved.getFullPackage());
     }
 
     @Test
@@ -243,9 +243,9 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractScenar
         final FactModelTree retrieved = businessCentralDmoDataManagementStrategySpy.getFactModelTree(TestProperties.FACT_NAME,superTypesMap, modelFields);
         assertNotNull(retrieved);
         assertEquals(TestProperties.FACT_NAME, retrieved.getFactName());
-        assertEquals("", retrieved.getFullPackage());
+        assertEquals(TestProperties.FULL_PACKAGE, retrieved.getFullPackage());
         assertTrue(retrieved.getSimpleProperties().containsKey(TestProperties.LOWER_CASE_VALUE));
-        assertEquals(TestProperties.FULL_FACT_CLASSNAME, retrieved.getSimpleProperties().get(TestProperties.LOWER_CASE_VALUE));
+        assertEquals(TestProperties.FULL_CLASS_NAME, retrieved.getSimpleProperties().get(TestProperties.LOWER_CASE_VALUE));
     }
 
     @Test
