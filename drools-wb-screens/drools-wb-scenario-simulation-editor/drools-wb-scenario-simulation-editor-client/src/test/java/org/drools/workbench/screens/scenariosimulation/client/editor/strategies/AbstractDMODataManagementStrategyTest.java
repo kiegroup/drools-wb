@@ -60,14 +60,16 @@ public class AbstractDMODataManagementStrategyTest extends AbstractScenarioSimul
     private AbstractDMODataManagementStrategy.ResultHolder factModelTreeHolderlocal;
 
     private FactModelTuple factModelTupleLocal;
-    private SortedMap<String, FactModelTree> visibleFactsLocal = new TreeMap<>();
-    private SortedMap<String, FactModelTree> hiddenFactsLocal = new TreeMap<>();
-    private List<String> factTypes = new ArrayList<>();
+    private SortedMap<String, FactModelTree> visibleFactsLocal;
+    private SortedMap<String, FactModelTree> hiddenFactsLocal;
+    private List<String> factTypes;
 
     @Before
     public void setup() {
         super.setup();
         factTypes = new ArrayList<>();
+        visibleFactsLocal = new TreeMap<>();
+        hiddenFactsLocal = new TreeMap<>();
         factModelTupleLocal = new FactModelTuple(visibleFactsLocal, hiddenFactsLocal);
         factModelTreeHolderlocal = new AbstractDataManagementStrategy.ResultHolder();
         factModelTreeHolderlocal.setFactModelTuple(factModelTupleLocal);
