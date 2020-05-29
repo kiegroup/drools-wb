@@ -41,6 +41,8 @@ import org.uberfire.client.callbacks.Callback;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.never;
@@ -57,14 +59,15 @@ public class AbstractDMODataManagementStrategyTest extends AbstractScenarioSimul
     private AbstractDMODataManagementStrategy abstractDMODataManagementStrategySpy;
     private AbstractDMODataManagementStrategy.ResultHolder factModelTreeHolderlocal;
 
-
     private FactModelTuple factModelTupleLocal;
     private SortedMap<String, FactModelTree> visibleFactsLocal = new TreeMap<>();
     private SortedMap<String, FactModelTree> hiddenFactsLocal = new TreeMap<>();
+    private List<String> factTypes = new ArrayList<>();
 
     @Before
     public void setup() {
         super.setup();
+        factTypes = new ArrayList<>();
         factModelTupleLocal = new FactModelTuple(visibleFactsLocal, hiddenFactsLocal);
         factModelTreeHolderlocal = new AbstractDataManagementStrategy.ResultHolder();
         factModelTreeHolderlocal.setFactModelTuple(factModelTupleLocal);
@@ -92,7 +95,7 @@ public class AbstractDMODataManagementStrategyTest extends AbstractScenarioSimul
 
             @Override
             protected List<String> getFactTypes() {
-                return new ArrayList<>();
+                return factTypes;
             }
 
             @Override
@@ -124,12 +127,26 @@ public class AbstractDMODataManagementStrategyTest extends AbstractScenarioSimul
         factModelTreeHolderlocal.setFactModelTuple(null);
         abstractDMODataManagementStrategySpy.populateTestTools(testToolsPresenterMock, scenarioSimulationContextLocal, GridWidget.SIMULATION);
         verify(abstractDMODataManagementStrategySpy, never()).storeData(eq(factModelTupleLocal), eq(testToolsPresenterMock), eq(scenarioSimulationContextLocal), eq(GridWidget.SIMULATION));
+        verify(abstractDMODataManagementStrategySpy, times(1)).aggregatorCallbackMethod(eq(testToolsPresenterMock), eq(0), isA(SortedMap.class), eq(scenarioSimulationContextLocal), eq(null), isA(List.class), eq(GridWidget.SIMULATION));
+        verify(abstractDMODataManagementStrategySpy, never()).loadSuperTypes(any(), any(), anyInt(), any(), any(), any(), any(), any());
+    }
+
+    @Test
+    public void populateTestToolsWithoutFactModelTupleWithFactTypes() {
+        factTypes.add(TestProperties.CLASS_NAME);
+        factModelTreeHolderlocal.setFactModelTuple(null);
+        abstractDMODataManagementStrategySpy.populateTestTools(testToolsPresenterMock, scenarioSimulationContextLocal, GridWidget.SIMULATION);
+        verify(abstractDMODataManagementStrategySpy, never()).storeData(eq(factModelTupleLocal), eq(testToolsPresenterMock), eq(scenarioSimulationContextLocal), eq(GridWidget.SIMULATION));
+        verify(abstractDMODataManagementStrategySpy, never()).aggregatorCallbackMethod(any(), anyInt(), any(), any(), any(), any(), any());
+        verify(abstractDMODataManagementStrategySpy, times(1)).loadSuperTypes(isA(List.class), eq(testToolsPresenterMock), eq(1), isA(SortedMap.class), isA(Map.class), eq(scenarioSimulationContextLocal), isA(List.class), eq(GridWidget.SIMULATION));
     }
 
     @Test
     public void populateTestToolsWithFactModelTuple() {
         abstractDMODataManagementStrategySpy.populateTestTools(testToolsPresenterMock, scenarioSimulationContextLocal, GridWidget.SIMULATION);
         verify(abstractDMODataManagementStrategySpy, times(1)).storeData(eq(factModelTupleLocal), eq(testToolsPresenterMock), eq(scenarioSimulationContextLocal), eq(GridWidget.SIMULATION));
+        verify(abstractDMODataManagementStrategySpy, never()).loadSuperTypes(any(), any(), anyInt(), any(), any(), any(), any(), any());
+        verify(abstractDMODataManagementStrategySpy, never()).aggregatorCallbackMethod(any(), anyInt(), any(), any(), any(), any(), any());
     }
 
     @Test
