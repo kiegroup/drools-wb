@@ -25,6 +25,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import org.drools.workbench.screens.scenariosimulation.client.TestProperties;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.editor.AbstractScenarioSimulationEditorTest;
 import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
@@ -162,5 +163,27 @@ public class AbstractDMODataManagementStrategyTest extends AbstractScenarioSimul
         assertTrue(superTypesMap.containsKey(factType2));
         assertEquals(Class.class.getCanonicalName(), superTypesMap.get(factType2));
         verify(abstractDMODataManagementStrategySpy, times(1)).manageDataObjects(eq(dataObjectsType), eq(superTypesMap), eq(testToolsPresenterMock), eq(expectedElement), eq(dataObjectsFieldMap), eq(scenarioSimulationContextLocal), eq(javaSimpleType), eq(GridWidget.SIMULATION));
+    }
+
+    @Test
+    public void defineClassNameField_SimpleType() {
+        Map<String, String> superTypesMap = new HashMap<>();
+        String retrieved = abstractDMODataManagementStrategySpy.defineClassNameField(String.class.getSimpleName(), superTypesMap);
+        assertEquals(String.class.getCanonicalName(), retrieved);
+    }
+
+    @Test
+    public void defineClassNameField_NotSimpleNotEnum() {
+        Map<String, String> superTypesMap = new HashMap<>();
+        String retrieved = abstractDMODataManagementStrategySpy.defineClassNameField(TestProperties.CLASS_NAME, superTypesMap);
+        assertEquals(TestProperties.CLASS_NAME, retrieved);
+    }
+
+    @Test
+    public void defineClassNameField_NotSimpleEnum() {
+        Map<String, String> superTypesMap = new HashMap<>();
+        superTypesMap.put(TestProperties.CLASS_NAME, Enum.class.getCanonicalName());
+        String retrieved = abstractDMODataManagementStrategySpy.defineClassNameField(TestProperties.CLASS_NAME, superTypesMap);
+        assertEquals(FQCN_BY_FACTNAME, retrieved);
     }
 }
