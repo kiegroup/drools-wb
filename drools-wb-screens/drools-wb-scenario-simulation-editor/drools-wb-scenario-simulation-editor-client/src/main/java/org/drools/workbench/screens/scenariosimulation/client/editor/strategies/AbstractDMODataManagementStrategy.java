@@ -161,7 +161,7 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
         if (fullFactClassName != null && fullFactClassName.contains(".")) {
             factPackageName = fullFactClassName.substring(0, fullFactClassName.lastIndexOf('.'));
         }
-        if (ScenarioSimulationSharedUtils.isEnum(superTypeMap.get(factName))) {
+        if (ScenarioSimulationSharedUtils.isEnumCanonicalName(superTypeMap.get(factName))) {
             simpleProperties.put(ConstantsHolder.VALUE, fullFactClassName);
             return getSimpleClassFactModelTree(factName, fullFactClassName);
         }
@@ -182,7 +182,7 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
         if (SIMPLE_CLASSES_MAP.containsKey(modelFieldClassName)) {
             return SIMPLE_CLASSES_MAP.get(modelFieldClassName).getCanonicalName();
         }
-        if (ScenarioSimulationSharedUtils.isEnum(superTypesMap.get(modelFieldClassName))) {
+        if (ScenarioSimulationSharedUtils.isEnumCanonicalName(superTypesMap.get(modelFieldClassName))) {
             return getFQCNByFactName(modelFieldClassName);
         }
         return modelFieldClassName;
