@@ -27,7 +27,6 @@ import com.google.gwt.user.client.ui.IsWidget;
 import elemental2.promise.Promise;
 import org.drools.scenariosimulation.api.model.AbstractScesimData;
 import org.drools.scenariosimulation.api.model.AbstractScesimModel;
-import org.drools.scenariosimulation.api.model.AuditLog;
 import org.drools.scenariosimulation.api.model.Background;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
@@ -217,10 +216,9 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
                 .exportScesimModel(CSV, scesimModel);
     }
 
-    @Override
-    public void onDownloadReportToCsv(RemoteCallback<Object> exportCallBack, ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback, AuditLog auditLog) {
+    public void onDownloadReportToCsv(RemoteCallback<Object> exportCallBack, ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback, SimulationRunMetadata simulationRunMetadata) {
         runnerReportService.call(exportCallBack, scenarioSimulationHasBusyIndicatorDefaultErrorCallback)
-                .getReport(auditLog);
+                .getReport(simulationRunMetadata);
     }
 
     @Override
@@ -488,7 +486,10 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
         SimulationRunMetadata simulationRunMetadata = lastRunResult != null ? lastRunResult.getSimulationRunMetadata() : null;
         presenter.populateCoverageReport(modelType, simulationRunMetadata);
         if (simulationRunMetadata != null && simulationRunMetadata.getAuditLog() != null) {
-            presenter.setDownloadReportCommand(() -> onDownloadReportToCsv(scenarioSimulationEditorPresenter.getExportCallBack(), new ScenarioSimulationHasBusyIndicatorDefaultErrorCallback(scenarioSimulationEditorPresenter.getView()), simulationRunMetadata.getAuditLog()));
+            presenter.setDownloadReportCommand(() -> onDownloadReportToCsv(
+                    scenarioSimulationEditorPresenter.getExportCallBack(),
+                    new ScenarioSimulationHasBusyIndicatorDefaultErrorCallback(scenarioSimulationEditorPresenter.getView()),
+                    simulationRunMetadata));
         }
     }
 }

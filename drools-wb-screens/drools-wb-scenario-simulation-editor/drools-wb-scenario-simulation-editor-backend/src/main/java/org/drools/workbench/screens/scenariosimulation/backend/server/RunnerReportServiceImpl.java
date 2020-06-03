@@ -17,7 +17,7 @@ package org.drools.workbench.screens.scenariosimulation.backend.server;
 
 import javax.enterprise.context.ApplicationScoped;
 
-import org.drools.scenariosimulation.api.model.AuditLog;
+import org.drools.scenariosimulation.api.model.SimulationRunMetadata;
 import org.drools.workbench.screens.scenariosimulation.backend.server.downloadreport.ScenarioCsvDownloadReport;
 import org.drools.workbench.screens.scenariosimulation.service.RunnerReportService;
 import org.guvnor.common.services.backend.exceptions.ExceptionUtilities;
@@ -30,9 +30,9 @@ public class RunnerReportServiceImpl implements RunnerReportService {
     protected ScenarioCsvDownloadReport scenarioCsvDownloadReport = new ScenarioCsvDownloadReport();
 
     @Override
-    public Object getReport(AuditLog auditLog) {
+    public Object getReport(SimulationRunMetadata scenarioRunMetadata) {
         try {
-            return scenarioCsvDownloadReport.getReport(auditLog);
+            return scenarioCsvDownloadReport.getReport(scenarioRunMetadata);
         } catch (Exception e) {
             throw ExceptionUtilities.handleException(e);
         }

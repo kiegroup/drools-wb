@@ -29,13 +29,13 @@ import elemental2.promise.Promise;
 import jsinterop.base.Js;
 import org.drools.scenariosimulation.api.model.AbstractScesimData;
 import org.drools.scenariosimulation.api.model.AbstractScesimModel;
-import org.drools.scenariosimulation.api.model.AuditLog;
 import org.drools.scenariosimulation.api.model.Background;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScenarioWithIndex;
 import org.drools.scenariosimulation.api.model.ScesimModelDescriptor;
 import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
+import org.drools.scenariosimulation.api.model.SimulationRunMetadata;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.SCESIMMainJs;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.callbacks.SCESIMMarshallCallback;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.callbacks.SCESIMUnmarshallCallback;
@@ -222,7 +222,7 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     }
 
     @Override
-    public void onDownloadReportToCsv(RemoteCallback<Object> exportCallBack, ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback, AuditLog auditLog) {
+    public void onDownloadReportToCsv(RemoteCallback<Object> exportCallBack, ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback, SimulationRunMetadata auditLog) {
         //
     }
 
