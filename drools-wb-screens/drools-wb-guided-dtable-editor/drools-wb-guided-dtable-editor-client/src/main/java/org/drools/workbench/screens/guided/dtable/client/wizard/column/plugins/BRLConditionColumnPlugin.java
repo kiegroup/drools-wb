@@ -78,6 +78,8 @@ public class BRLConditionColumnPlugin extends BaseDecisionTableColumnPlugin impl
                                                                                        HasAdditionalInfoPage,
                                                                                        TemplateVariablesChangedEvent.Handler {
 
+    private static final String EMPTY_COLUMN_NAME = "";
+
     private RuleModellerPage ruleModellerPage;
     private DefaultValuesPage defaultValuesPage;
 
@@ -186,10 +188,14 @@ public class BRLConditionColumnPlugin extends BaseDecisionTableColumnPlugin impl
 
         //If there are no variables add a boolean column to specify whether the fragment should apply
         if (ivs.isEmpty()) {
-            BRLConditionVariableColumn variable = new BRLConditionVariableColumn("",
+            BRLConditionVariableColumn variable = new BRLConditionVariableColumn(EMPTY_COLUMN_NAME,
                                                                                  DataType.TYPE_BOOLEAN);
             variable.setHeader(editingCol.getHeader());
             variable.setHideColumn(editingCol.isHideColumn());
+            final Optional<BRLConditionVariableColumn> oldCol = getChildEditingCol(EMPTY_COLUMN_NAME);
+            if (oldCol.isPresent()) {
+                variable.setDefaultValue(oldCol.get().getDefaultValue());
+            }
             List<BRLConditionVariableColumn> variables = new ArrayList<BRLConditionVariableColumn>();
             variables.add(variable);
             return variables;

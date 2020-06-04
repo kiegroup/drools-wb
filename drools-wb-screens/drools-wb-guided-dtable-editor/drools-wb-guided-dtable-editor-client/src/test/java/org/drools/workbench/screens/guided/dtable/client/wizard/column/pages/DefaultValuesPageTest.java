@@ -16,7 +16,7 @@
 package org.drools.workbench.screens.guided.dtable.client.wizard.column.pages;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Map;
 
 import com.google.gwt.user.client.ui.IsWidget;
@@ -58,10 +58,8 @@ public class DefaultValuesPageTest {
     }
 
     private static void setupPreferences() {
-        final Map<String, String> preferences = new HashMap<String, String>() {{
-            put(ApplicationPreferences.DATE_FORMAT,
-                DATE_FORMAT);
-        }};
+        final Map<String, String> preferences = Collections.singletonMap(ApplicationPreferences.DATE_FORMAT,
+                                                                         DATE_FORMAT);
         ApplicationPreferences.setUp(preferences);
     }
 
@@ -78,10 +76,10 @@ public class DefaultValuesPageTest {
     private DTCellValueWidgetFactory factory;
 
     @Mock
-    private IsWidget widget1;
+    private IsWidget defaultValueOneWidget;
 
     @Mock
-    private IsWidget widget2;
+    private IsWidget defaultValueTwoWidget;
 
     private DefaultValuesPage page;
 
@@ -103,10 +101,10 @@ public class DefaultValuesPageTest {
         doReturn(brlActionColumn).when(plugin).editingCol();
         final DTCellValue52 defaultValue = new DTCellValue52();
         brlActionVariableColumn1.setDefaultValue(defaultValue);
-        doReturn(widget1).when(factory).getWidget(brlActionVariableColumn1,
-                                                  defaultValue);
-        doReturn(widget2).when(factory).getWidget(eq(brlActionVariableColumn2),
-                                                  any(DTCellValue52.class));
+        doReturn(defaultValueOneWidget).when(factory).getWidget(brlActionVariableColumn1,
+                                                                defaultValue);
+        doReturn(defaultValueTwoWidget).when(factory).getWidget(eq(brlActionVariableColumn2),
+                                                                any(DTCellValue52.class));
     }
 
     @Test
@@ -153,8 +151,8 @@ public class DefaultValuesPageTest {
         verify(view).clear();
 
         verify(view).addVariable("var1",
-                                 widget1);
+                                 defaultValueOneWidget);
         verify(view).addVariable("var2",
-                                 widget2);
+                                 defaultValueTwoWidget);
     }
 }

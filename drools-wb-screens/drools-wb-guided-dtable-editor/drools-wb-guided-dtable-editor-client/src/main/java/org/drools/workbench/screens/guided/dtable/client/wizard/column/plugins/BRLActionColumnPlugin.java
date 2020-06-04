@@ -68,6 +68,8 @@ public class BRLActionColumnPlugin extends BaseDecisionTableColumnPlugin impleme
                                                                                     HasAdditionalInfoPage,
                                                                                     TemplateVariablesChangedEvent.Handler {
 
+    private static final String EMPTY_COLUMN_NAME = "";
+
     private RuleModellerPage ruleModellerPage;
     private DefaultValuesPage defaultValuesPage;
 
@@ -190,10 +192,14 @@ public class BRLActionColumnPlugin extends BaseDecisionTableColumnPlugin impleme
 
         //If there are no variables add a boolean column to specify whether the fragment should apply
         if (ivs.isEmpty()) {
-            BRLActionVariableColumn variable = new BRLActionVariableColumn("",
+            BRLActionVariableColumn variable = new BRLActionVariableColumn(EMPTY_COLUMN_NAME,
                                                                            DataType.TYPE_BOOLEAN);
             variable.setHeader(editingCol().getHeader());
             variable.setHideColumn(editingCol().isHideColumn());
+            final Optional<BRLActionVariableColumn> oldCol = getChildEditingCol(EMPTY_COLUMN_NAME);
+            if (oldCol.isPresent()) {
+                variable.setDefaultValue(oldCol.get().getDefaultValue());
+            }
             List<BRLActionVariableColumn> variables = new ArrayList<BRLActionVariableColumn>();
             variables.add(variable);
             return variables;

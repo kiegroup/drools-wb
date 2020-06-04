@@ -49,6 +49,7 @@ import org.uberfire.mocks.EventSourceMock;
 
 import static org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52.TableFormat.EXTENDED_ENTRY;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doReturn;
@@ -77,6 +78,56 @@ public class BRLActionColumnPluginChildColumnUpdateTest {
                                            mock(AdditionalInfoPage.class),
                                            mock(EventSourceMock.class),
                                            mock(TranslationService.class));
+    }
+
+    @Test
+    public void testChildColumnDefaultWhenNoTemplateKeys() throws Exception {
+        initPlugin(getBrlActionColumnWithNoTemplateValues());
+
+        final Boolean success = plugin.generateColumn();
+
+        assertTrue(success);
+        assertNotNull(plugin.editingCol().getChildColumns().get(0).getDefaultValue());
+    }
+
+    @Test
+    public void testChildColumnDefaultValues() throws Exception {
+        initPlugin(getBrlActionColumnWithTemplateValues());
+
+        final Boolean success = plugin.generateColumn();
+
+        assertTrue(success);
+        assertNull(plugin.editingCol().getChildColumns().get(0).getDefaultValue());
+        assertNull(plugin.editingCol().getChildColumns().get(1).getDefaultValue());
+    }
+
+    @Test
+    public void testChildColumnDefaultValuesValuesAdded() throws Exception {
+        initPlugin(getBrlActionColumnWithTemplateValues());
+
+        plugin.editingCol().getChildColumns().get(0).setDefaultValue(new DTCellValue52("Hello"));
+        final Boolean success = plugin.generateColumn();
+
+        assertTrue(success);
+        assertEquals("Hello", plugin.editingCol().getChildColumns().get(0).getDefaultValue().getStringValue());
+        assertNull(plugin.editingCol().getChildColumns().get(1).getDefaultValue());
+    }
+
+    private void initPlugin(final BRLActionColumn brlActionColumn) {
+        plugin.setOriginalColumnConfig52(brlActionColumn);
+        final NewGuidedDecisionTableColumnWizard wizard = new NewGuidedDecisionTableColumnWizard(mock(WizardView.class),
+                                                                                                 mock(SummaryPage.class),
+                                                                                                 translationService,
+                                                                                                 mock(DecisionTablePopoverUtils.class));
+
+        doReturn(EXTENDED_ENTRY).when(model).getTableFormat();
+        doReturn(model).when(presenter).getModel();
+        doReturn(mock(EventBus.class)).when(presenter).getEventBus();
+        wizard.init(presenter);
+        plugin.init(wizard);
+    }
+
+    private BRLActionColumn getBrlActionColumnWithTemplateValues() {
         final BRLActionColumn brlActionColumn = new BRLActionColumn();
 
         final ActionInsertFact actionInsertFact = new ActionInsertFact("Person");
@@ -94,38 +145,28 @@ public class BRLActionColumnPluginChildColumnUpdateTest {
         brlActionColumn.getDefinition().add(actionInsertFact);
         brlActionColumn.getChildColumns().add(new BRLActionVariableColumn("$default", BRLActionVariableColumn.FIELD_VAR_NAME));
         brlActionColumn.getChildColumns().add(new BRLActionVariableColumn("$default1", BRLActionVariableColumn.FIELD_VAR_NAME));
-
-        plugin.setOriginalColumnConfig52(brlActionColumn);
-        final NewGuidedDecisionTableColumnWizard wizard = new NewGuidedDecisionTableColumnWizard(mock(WizardView.class),
-                                                                                                 mock(SummaryPage.class),
-                                                                                                 translationService,
-                                                                                                 mock(DecisionTablePopoverUtils.class));
-
-        doReturn(EXTENDED_ENTRY).when(model).getTableFormat();
-        doReturn(model).when(presenter).getModel();
-        doReturn(mock(EventBus.class)).when(presenter).getEventBus();
-        wizard.init(presenter);
-        plugin.init(wizard);
+        return brlActionColumn;
     }
 
-    @Test
-    public void testChildColumnDefaultValues() throws Exception {
+    private BRLActionColumn getBrlActionColumnWithNoTemplateValues() {
+        final BRLActionColumn brlActionColumn = new BRLActionColumn();
 
-        final Boolean success = plugin.generateColumn();
-
-        assertTrue(success);
-        assertNull(plugin.editingCol().getChildColumns().get(0).getDefaultValue());
-        assertNull(plugin.editingCol().getChildColumns().get(1).getDefaultValue());
-    }
-
-    @Test
-    public void testChildColumnDefaultValuesValuesAdded() throws Exception {
-
-        plugin.editingCol().getChildColumns().get(0).setDefaultValue(new DTCellValue52("Hello"));
-        final Boolean success = plugin.generateColumn();
-
-        assertTrue(success);
-        assertEquals("Hello", plugin.editingCol().getChildColumns().get(0).getDefaultValue().getStringValue());
-        assertNull(plugin.editingCol().getChildColumns().get(1).getDefaultValue());
+        final ActionInsertFact actionInsertFact = new ActionInsertFact("Person");
+        actionInsertFact.setBoundName("$a");
+        final ActionFieldValue afv1 = new ActionFieldValue("name",
+                                                           "Toni",
+                                                           DataType.TYPE_STRING);
+        afv1.setNature(FieldNatureType.TYPE_LITERAL);
+        actionInsertFact.addFieldValue(afv1);
+        final ActionFieldValue afv2 = new ActionFieldValue("age",
+                                                           "12",
+                                                           DataType.TYPE_STRING);
+        afv2.setNature(FieldNatureType.TYPE_LITERAL);
+        actionInsertFact.addFieldValue(afv2);
+        brlActionColumn.getDefinition().add(actionInsertFact);
+        final BRLActionVariableColumn variableColumn = new BRLActionVariableColumn("", BRLActionVariableColumn.FIELD_VAR_NAME);
+        variableColumn.setDefaultValue(new DTCellValue52("test"));
+        brlActionColumn.getChildColumns().add(variableColumn);
+        return brlActionColumn;
     }
 }

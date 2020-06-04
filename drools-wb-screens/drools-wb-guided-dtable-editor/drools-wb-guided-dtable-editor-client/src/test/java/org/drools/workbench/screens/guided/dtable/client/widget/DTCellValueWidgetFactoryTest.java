@@ -23,6 +23,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.models.guided.dtable.shared.model.ActionInsertFactCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.BRLActionVariableColumn;
+import org.drools.workbench.models.guided.dtable.shared.model.BRLConditionVariableColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.DTCellValue52;
 import org.drools.workbench.models.guided.dtable.shared.model.DTColumnConfig52;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
@@ -121,5 +122,18 @@ public class DTCellValueWidgetFactoryTest {
                                             cellValue);
 
         assertTrue(widget instanceof TextBox);
+    }
+
+    @Test
+    public void testEnumDropdownForBRLColumn() throws Exception {
+        BRLConditionVariableColumn column = mock(BRLConditionVariableColumn.class);
+        doReturn("Person").when(column).getFactType();
+        doReturn("name").when(column).getFactField();
+        when(oracle.hasEnums("Person",
+                             "name")).thenReturn(true);
+        IsWidget widget = factory.getWidget(column,
+                                            cellValue);
+
+        assertTrue(widget instanceof ListBox);
     }
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.guided.dtable.client.wizard.column.pages;
+package org.drools.workbench.screens.guided.dtable.client.wizard.column.pages.component;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -35,17 +35,17 @@ public class KeyValueWidgetView implements IsElement,
     @DataField("keyTextLabel")
     private final HTMLLabelElement keyTextLabel;
 
-    @DataField("valueWidget")
-    private final HTMLDivElement valueWidget;
+    @DataField("gdtColumnDefaultvalueWidget")
+    private final HTMLDivElement gdtColumnDefaultvalueWidget;
 
     private Elemental2DomUtil elemental2DomUtil;
 
     @Inject
     public KeyValueWidgetView(final HTMLLabelElement keyTextLabel,
-                              final HTMLDivElement valueWidget,
+                              final HTMLDivElement gdtColumnDefaultvalueWidget,
                               final Elemental2DomUtil elemental2DomUtil) {
         this.keyTextLabel = keyTextLabel;
-        this.valueWidget = valueWidget;
+        this.gdtColumnDefaultvalueWidget = gdtColumnDefaultvalueWidget;
         this.elemental2DomUtil = elemental2DomUtil;
     }
 
@@ -59,8 +59,8 @@ public class KeyValueWidgetView implements IsElement,
 
         Widget widget = value.asWidget();
 
-        elemental2DomUtil.removeAllElementChildren(valueWidget);
-        elemental2DomUtil.appendWidgetToElement(valueWidget, widget);
+        elemental2DomUtil.removeAllElementChildren(gdtColumnDefaultvalueWidget);
+        elemental2DomUtil.appendWidgetToElement(gdtColumnDefaultvalueWidget, widget);
     }
 
     @Override

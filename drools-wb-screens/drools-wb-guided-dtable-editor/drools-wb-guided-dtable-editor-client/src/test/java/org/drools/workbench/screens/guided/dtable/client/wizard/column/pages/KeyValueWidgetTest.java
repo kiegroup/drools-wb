@@ -16,6 +16,7 @@
 package org.drools.workbench.screens.guided.dtable.client.wizard.column.pages;
 
 import com.google.gwt.user.client.ui.IsWidget;
+import org.drools.workbench.screens.guided.dtable.client.wizard.column.pages.component.KeyValueWidget;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -20,6 +20,7 @@ import javax.inject.Inject;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import elemental2.dom.HTMLDivElement;
+import org.drools.workbench.screens.guided.dtable.client.wizard.column.pages.component.KeyValueWidget;
 import org.jboss.errai.common.client.dom.elemental2.Elemental2DomUtil;
 import org.jboss.errai.ioc.client.container.IOC;
 import org.jboss.errai.ui.client.local.api.IsElement;
