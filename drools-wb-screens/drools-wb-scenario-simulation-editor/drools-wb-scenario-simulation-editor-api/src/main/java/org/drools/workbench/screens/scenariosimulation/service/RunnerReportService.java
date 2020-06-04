@@ -25,7 +25,7 @@ import org.jboss.errai.bus.server.annotations.Remote;
 public interface RunnerReportService {
 
     /**
-     * This method returns the report of the given <code>AuditLog</code>>
+     * This method returns the report of the given <code>SimulationRunMetadata</code>
      *
      * @param scenarioRunMetadata
      * @return
