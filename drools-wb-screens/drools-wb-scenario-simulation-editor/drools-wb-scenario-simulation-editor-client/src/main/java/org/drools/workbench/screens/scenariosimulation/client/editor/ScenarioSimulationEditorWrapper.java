@@ -45,7 +45,7 @@ public interface ScenarioSimulationEditorWrapper {
 
     void wrappedRegisterDock(final String id, final IsWidget widget);
 
-    void onImport(String fileContents, RemoteCallback<AbstractScesimModel<?>> importCallBack, ErrorCallback<Object> importErrorCallback, AbstractScesimModel<? extends AbstractScesimData> scesimModel);
+    void onImport(String fileContents, RemoteCallback<AbstractScesimModel> importCallBack, ErrorCallback<Object> importErrorCallback, AbstractScesimModel<? extends AbstractScesimData> scesimModel);
 
     void onExportToCsv(RemoteCallback<Object> exportCallBack, ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback, AbstractScesimModel<? extends AbstractScesimData> scesimModel);
 

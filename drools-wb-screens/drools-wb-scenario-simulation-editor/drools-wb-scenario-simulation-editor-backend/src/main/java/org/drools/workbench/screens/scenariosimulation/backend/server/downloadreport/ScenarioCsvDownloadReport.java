@@ -17,46 +17,80 @@ package org.drools.workbench.screens.scenariosimulation.backend.server.downloadr
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.drools.scenariosimulation.api.model.AuditLogLine;
 import org.drools.scenariosimulation.api.model.SimulationRunMetadata;
+import org.guvnor.common.services.backend.exceptions.ExceptionUtilities;
 
 public class ScenarioCsvDownloadReport {
+
+    protected static final String[] OVERALL_STATS_HEADER = {"AVAILABLE RULES", "RULES FIRED", "PERCENTAGE OF RULES FIRED"};
+    protected static final String[] RULES_COUNTER_HEADER = {"RULE", "NUMBER OF TIMES"};
+    protected static final String[] AUDIT_HEADER = {"SCENARIO INDEX", "SCENARIO NAME", "RESULT INDEX", "RESULT", "LEVEL"};
 
     /**
      * @param simulationRunMetadata the <code>SimulationRunMetadata</code> to print out
      * @return
      * @throws IOException
      */
-    public String getReport(SimulationRunMetadata simulationRunMetadata) throws IOException {
+    public String getReport(SimulationRunMetadata simulationRunMetadata) {
         StringBuilder stringBuilder = new StringBuilder();
-        CSVPrinter printer = new CSVPrinter(stringBuilder, CSVFormat.DEFAULT);
-        printer.printRecord(Arrays.asList("AVAILABLE RULES", "RULES FIRED", "PERCENTAGE OF RULES FIRED"));
-        printer.printRecord(Arrays.asList(simulationRunMetadata.getAvailable(),
-                                          simulationRunMetadata.getExecuted(),
-                                          simulationRunMetadata.getCoveragePercentage()));
 
-        Map<String, Integer> outputCounter = simulationRunMetadata.getOutputCounter();
-        if (outputCounter != null && !outputCounter.isEmpty()) {
-            printer.println();
-            printer.printRecord(Arrays.asList("RULE", "NUMBER OF TIMES"));
-            for (Map.Entry<String, Integer> entry : outputCounter.entrySet()) {
-                printRulesCounterLine(printer, entry.getKey(), entry.getValue());
+        try (CSVPrinter printer = new CSVPrinter(stringBuilder, CSVFormat.DEFAULT)) {
+            generateOverallStatsHeader(printer);
+            printOverallStatsLine(printer,
+                                  simulationRunMetadata.getAvailable(),
+                                  simulationRunMetadata.getExecuted(),
+                                  simulationRunMetadata.getCoveragePercentage());
+
+            Map<String, Integer> outputCounter = simulationRunMetadata.getOutputCounter();
+            if (outputCounter != null && !outputCounter.isEmpty()) {
+                printer.println();
+                generateRulesCounterHeader(printer);
+
+                for (Map.Entry<String, Integer> entry : outputCounter.entrySet()) {
+                    printRulesCounterLine(printer, entry.getKey(), entry.getValue());
+                }
             }
+
+            List<AuditLogLine> auditLogLines = simulationRunMetadata.getAuditLog().getAuditLogLines();
+            if (auditLogLines != null && !auditLogLines.isEmpty()) {
+                printer.println();
+                generateAuditLogHeader(printer);
+
+                for (AuditLogLine auditLogLine : auditLogLines) {
+                    printAuditLogLine(auditLogLine, printer);
+                }
+            }
+        } catch (IOException e) {
+            throw ExceptionUtilities.handleException(e);
         }
 
-        if (!simulationRunMetadata.getAuditLog().getAuditLogLines().isEmpty()) {
-            printer.println();
-            generateHeader(printer);
-            for (AuditLogLine auditLogLine : simulationRunMetadata.getAuditLog().getAuditLogLines()) {
-                printAuditLogLine(auditLogLine, printer);
-            }
-        }
-        printer.close();
         return stringBuilder.toString();
+    }
+
+    protected void generateOverallStatsHeader(CSVPrinter printer) throws IOException {
+        printer.printRecord(OVERALL_STATS_HEADER);
+    }
+
+    protected void printOverallStatsLine(CSVPrinter printer, int available, int executed, double coveragePercentage) throws IOException {
+        printer.printRecord(Arrays.asList(available, executed, coveragePercentage));
+    }
+
+    protected void generateRulesCounterHeader(CSVPrinter printer) throws IOException {
+        printer.printRecord(RULES_COUNTER_HEADER);
+    }
+
+    protected void printRulesCounterLine(CSVPrinter printer, String rule, int times) throws IOException {
+        printer.printRecord(Arrays.asList(rule, times));
+    }
+
+    protected void generateAuditLogHeader(CSVPrinter printer) throws IOException {
+        printer.printRecord(AUDIT_HEADER);
     }
 
     protected void printAuditLogLine(AuditLogLine toPrint, CSVPrinter printer) throws IOException {
@@ -66,13 +100,5 @@ public class ScenarioCsvDownloadReport {
         printer.print(toPrint.getMessage());
         printer.print(toPrint.getLevel());
         printer.println();
-    }
-
-    protected void printRulesCounterLine(CSVPrinter printer, String rule, int times) throws IOException {
-        printer.printRecord(Arrays.asList(rule, times));
-    }
-
-    protected void generateHeader(CSVPrinter printer) throws IOException {
-        printer.printRecord(Arrays.asList("SCENARIO INDEX", "SCENARIO NAME", "RESULT INDEX", "RESULT", "LEVEL"));
     }
 }

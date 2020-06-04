@@ -20,7 +20,6 @@ import javax.enterprise.context.ApplicationScoped;
 import org.drools.scenariosimulation.api.model.SimulationRunMetadata;
 import org.drools.workbench.screens.scenariosimulation.backend.server.downloadreport.ScenarioCsvDownloadReport;
 import org.drools.workbench.screens.scenariosimulation.service.RunnerReportService;
-import org.guvnor.common.services.backend.exceptions.ExceptionUtilities;
 import org.jboss.errai.bus.server.annotations.Service;
 
 @Service
@@ -31,10 +30,6 @@ public class RunnerReportServiceImpl implements RunnerReportService {
 
     @Override
     public Object getReport(SimulationRunMetadata scenarioRunMetadata) {
-        try {
-            return scenarioCsvDownloadReport.getReport(scenarioRunMetadata);
-        } catch (Exception e) {
-            throw ExceptionUtilities.handleException(e);
-        }
+        return scenarioCsvDownloadReport.getReport(scenarioRunMetadata);
     }
 }
