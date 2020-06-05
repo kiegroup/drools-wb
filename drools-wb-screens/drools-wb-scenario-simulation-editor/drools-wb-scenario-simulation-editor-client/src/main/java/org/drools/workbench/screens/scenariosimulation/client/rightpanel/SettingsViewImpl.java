@@ -28,6 +28,7 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.user.client.ui.Composite;
+import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
 import org.jboss.errai.ui.shared.api.annotations.EventHandler;
 import org.jboss.errai.ui.shared.api.annotations.Templated;
@@ -97,12 +98,18 @@ public class SettingsViewImpl
     @DataField("stateless")
     protected InputElement stateless = Document.get().createCheckInputElement();
 
-    public SettingsViewImpl() {
-    }
+    @DataField("statelessLabel")
+    protected SpanElement statelessLabel = Document.get().createSpanElement();
 
     @Override
     public void init(Presenter presenter) {
         this.presenter = presenter;
+        nameLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.name());
+        typeLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.type());
+        statelessLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.statelessLabel());
+        dmnFileLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.dmnModelLabel());
+        dmnNamespaceLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.dmnNamespaceLabel());
+        dmnNameLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.dmnNameLabel());
     }
 
     @Override
