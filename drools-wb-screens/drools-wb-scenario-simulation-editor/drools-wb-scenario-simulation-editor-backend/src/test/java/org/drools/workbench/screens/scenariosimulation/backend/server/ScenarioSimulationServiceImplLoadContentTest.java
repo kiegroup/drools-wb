@@ -17,10 +17,6 @@ package org.drools.workbench.screens.scenariosimulation.backend.server;
 
 import javax.enterprise.event.Event;
 
-import org.drools.scenariosimulation.api.model.Background;
-import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
-import org.drools.scenariosimulation.api.model.Settings;
-import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.guvnor.common.services.backend.config.SafeSessionInfo;
 import org.guvnor.common.services.shared.metadata.model.Overview;
@@ -64,33 +60,21 @@ public class ScenarioSimulationServiceImplLoadContentTest {
     private DataModelService dataModelService;
 
     @InjectMocks
-    private ScenarioSimulationServiceImpl service = new ScenarioSimulationServiceImpl(mock(SafeSessionInfo.class))  {
-        @Override
-        protected ScenarioSimulationModel unmarshalInternal(String content) {
-            Simulation simulation = new Simulation();
-            Background background = new Background();
-            Settings settings = new Settings();
-            settings.setType(ScenarioSimulationModel.Type.DMN);
-            ScenarioSimulationModel toReturn = new ScenarioSimulationModel();
-            toReturn.setSimulation(simulation);
-            toReturn.setBackground(background);
-            toReturn.setSettings(settings);
-            return toReturn;
-        }
-    };
+    private ScenarioSimulationServiceImpl service = new ScenarioSimulationServiceImpl(mock(SafeSessionInfo.class));
 
     private Path path = PathFactory.newPath("contextpath", "file:///contextpath");
 
     @Before
-    public void setUp() {
-        doReturn("<xml></xml>").when(ioService).readAllString(any());
+    public void setUp() throws Exception {
+        doReturn("").when(ioService).readAllString(any());
         doReturn(false).when(pathResolver).isDotFile(any());
         doReturn(mock(Overview.class)).when(overviewLoader).loadOverview(any());
+
         doReturn(mock(PackageDataModelOracle.class)).when(dataModelService).getDataModel(path);
     }
 
     @Test
-    public void loadContent() {
+    public void loadContent() throws Exception {
         final ScenarioSimulationModelContent scenarioSimulationModelContent = service.loadContent(path);
 
         assertNotNull(scenarioSimulationModelContent);
