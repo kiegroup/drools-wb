@@ -37,6 +37,7 @@ import org.guvnor.common.services.project.model.GAV;
 import org.guvnor.common.services.project.model.POM;
 import org.guvnor.common.services.project.model.Package;
 import org.guvnor.common.services.project.service.POMService;
+import org.guvnor.common.services.shared.exceptions.GenericPortableException;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
 import org.jboss.errai.security.shared.api.identity.User;
 import org.junit.Before;
@@ -48,6 +49,7 @@ import org.kie.workbench.common.services.shared.project.KieModuleService;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.uberfire.backend.server.util.Paths;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.backend.vfs.PathFactory;
 import org.uberfire.ext.editor.commons.backend.service.SaveAndRenameServiceImpl;
@@ -146,10 +148,12 @@ public class ScenarioSimulationServiceImplTest {
         @Override
         protected ScenarioSimulationModel unmarshalInternal(String content) {
             Simulation simulation = new Simulation();
+            Background background = new Background();
             Settings settings = new Settings();
             settings.setType(Type.DMN);
             ScenarioSimulationModel toReturn = new ScenarioSimulationModel();
             toReturn.setSimulation(simulation);
+            toReturn.setBackground(background);
             toReturn.setSettings(settings);
             return toReturn;
         }
@@ -439,13 +443,22 @@ public class ScenarioSimulationServiceImplTest {
 
     @Test
     public void load() {
+        when(ioServiceMock.readAllString(eq(Paths.convert(path)))).thenReturn("<xml></xml>");
         ScenarioSimulationModel model = service.load(path);
-
         assertEquals(Type.DMN, model.getSettings().getType());
         verify(dmnTypeServiceMock, times(1)).initializeNameAndNamespace(any(), any(), anyString());
+    }
 
+    @Test(expected = GenericPortableException.class)
+    public void load_NullContent() {
+        // Empty content returned from <code>ioService.readAllString</code>
+        service.load(path);
+    }
+
+    @Test
+    public void loadWithExceptionInitializeNameAndNamespace() {
+        when(ioServiceMock.readAllString(eq(Paths.convert(path)))).thenReturn("<xml></xml>");
         doThrow(new ImpossibleToFindDMNException("")).when(dmnTypeServiceMock).initializeNameAndNamespace(any(), any(), anyString());
-
         try {
             service.load(path);
         } catch (Exception e) {

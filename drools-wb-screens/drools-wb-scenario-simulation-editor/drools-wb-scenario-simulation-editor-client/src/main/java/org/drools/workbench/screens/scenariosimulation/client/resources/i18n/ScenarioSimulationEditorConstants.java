@@ -362,6 +362,8 @@ public interface ScenarioSimulationEditorConstants
 
     String validationSucceed();
 
+    String loadContentFailedNotification();
+
     String backgroundTabTitle();
 
     String export();
