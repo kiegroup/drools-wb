@@ -486,11 +486,6 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
         scenarioSimulationEditorPresenter.getModelSuccessCallbackMethod(dataManagementStrategy, model);
     }
 
-    protected void getModelErrorCallbackMethod() {
-        baseView.hideBusyIndicator();
-        //return getNoSuchFileExceptionErrorCallback();
-    }
-
     protected void onBackgroundTabSelected() {
         scenarioSimulationEditorPresenter.onBackgroundTabSelected();
     }

@@ -90,6 +90,7 @@ public class ScenarioSimulationServiceImpl
 
     private static final String KIE_VERSION = "kie.version";
     private static final String JUNIT_ACTIVATOR_PACKAGE_NAME = "testscenario";
+
     @Inject
     protected ScenarioSimulationBuilder scenarioSimulationBuilder;
     @Inject
@@ -199,9 +200,6 @@ public class ScenarioSimulationServiceImpl
     public ScenarioSimulationModel load(final Path path) {
         try {
             final String content = ioService.readAllString(Paths.convert(path));
-            if (content == null || content.trim().isEmpty()) {
-                throw new IllegalArgumentException("File " + path.getFileName() + " is empty!");
-            }
 
             final ScenarioSimulationModel scenarioSimulationModel = unmarshalInternal(content);
             final Settings settings = scenarioSimulationModel.getSettings();
