@@ -428,7 +428,6 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
                 eq(NotificationEvent.NotificationType.ERROR));
     }
 
-
     @Test
     public void onEditTabSelected() {
         scenarioSimulationEditorBusinessClientWrapper.onEditTabSelected();
