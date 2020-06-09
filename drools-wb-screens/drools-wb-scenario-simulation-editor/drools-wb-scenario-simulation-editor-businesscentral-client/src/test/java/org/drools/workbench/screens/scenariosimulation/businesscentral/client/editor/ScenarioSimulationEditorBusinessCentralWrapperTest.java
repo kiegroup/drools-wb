@@ -59,7 +59,6 @@ import org.jboss.errai.common.client.api.RemoteCallback;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.kie.workbench.common.widgets.client.callbacks.CommandDrivenErrorCallback;
 import org.kie.workbench.common.widgets.client.docks.DefaultEditorDock;
 import org.kie.workbench.common.widgets.client.resources.i18n.CommonConstants;
 import org.kie.workbench.common.widgets.configresource.client.widget.bound.ImportsWidgetPresenter;
@@ -413,7 +412,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     @Test
     public void loadContent() {
         scenarioSimulationEditorBusinessClientWrapper.loadContent();
-        verify(scenarioSimulationCaller, times(1)).call(isA(RemoteCallback.class), isA(CommandDrivenErrorCallback.class));
+        verify(scenarioSimulationCaller, times(1)).call(isA(RemoteCallback.class), isA(ErrorCallback.class));
         verify(scenarioSimulationServiceMock, times(1)).loadContent(eq(observablePathMock));
     }
 
