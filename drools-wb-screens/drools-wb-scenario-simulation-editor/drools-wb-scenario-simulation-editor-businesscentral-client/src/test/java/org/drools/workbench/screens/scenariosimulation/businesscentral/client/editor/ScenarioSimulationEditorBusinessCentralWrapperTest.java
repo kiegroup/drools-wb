@@ -220,6 +220,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
                 this.saveAndRenameCommandBuilder = saveAndRenameCommandBuilderMock;
                 this.assetUpdateValidator = assetUpdateValidatorMock;
                 this.projectController = projectControllerMock;
+                this.place = placeRequestMock;
             }
         });
         when(placeRequestMock.getPath()).thenReturn(observablePathMock);
@@ -415,6 +416,18 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         verify(scenarioSimulationCaller, times(1)).call(isA(RemoteCallback.class), isA(ErrorCallback.class));
         verify(scenarioSimulationServiceMock, times(1)).loadContent(eq(observablePathMock));
     }
+
+    @Test
+    public void getLoadContentErrorCallback() {
+        ErrorCallback<Boolean> errorCallback = scenarioSimulationEditorBusinessClientWrapper.getLoadContentErrorCallback();
+        errorCallback.error(true, new Exception("Message"));
+
+        verify(placeManagerMock, times(1)).forceClosePlace(eq(placeRequestMock));
+        verify(scenarioSimulationEditorPresenterMock, times(1)).sendNotification(
+                eq(ScenarioSimulationEditorConstants.INSTANCE.loadContentFailedNotification() + "Message"),
+                eq(NotificationEvent.NotificationType.ERROR));
+    }
+
 
     @Test
     public void onEditTabSelected() {

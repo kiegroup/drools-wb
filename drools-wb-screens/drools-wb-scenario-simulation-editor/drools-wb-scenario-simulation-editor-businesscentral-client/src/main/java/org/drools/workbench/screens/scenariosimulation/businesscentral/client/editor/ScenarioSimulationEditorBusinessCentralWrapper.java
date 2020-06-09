@@ -423,7 +423,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
                      getLoadContentErrorCallback()).loadContent(versionRecordManager.getCurrentPath());
     }
 
-    public ErrorCallback<Boolean> getLoadContentErrorCallback() {
+    protected ErrorCallback<Boolean> getLoadContentErrorCallback() {
         return (message, exception) -> {
             CustomBusyPopup.close();
             BusyPopup.close();
