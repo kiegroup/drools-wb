@@ -92,7 +92,7 @@ public class ScenarioSimulationServiceImplLoadContentTest {
 
     @Before
     public void setUp() {
-        doReturn("<xml></xml>").when(ioService).readAllString(any());
+        doReturn("").when(ioService).readAllString(any());
         doReturn(false).when(pathResolver).isDotFile(any());
         doReturn(mock(Overview.class)).when(overviewLoader).loadOverview(any());
         doReturn(mock(PackageDataModelOracle.class)).when(dataModelService).getDataModel(path);
