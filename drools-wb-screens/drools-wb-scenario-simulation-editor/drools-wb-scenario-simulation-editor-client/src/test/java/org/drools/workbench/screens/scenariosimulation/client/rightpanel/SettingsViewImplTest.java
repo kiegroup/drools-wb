@@ -16,7 +16,6 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
-import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.ChangeEvent;
