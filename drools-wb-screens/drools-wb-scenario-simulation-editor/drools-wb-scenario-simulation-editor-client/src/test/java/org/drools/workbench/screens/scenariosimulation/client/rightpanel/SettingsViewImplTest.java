@@ -16,15 +16,18 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
+import com.google.gwt.dom.client.SpanElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -33,7 +36,7 @@ import static org.mockito.Mockito.verify;
 @RunWith(GwtMockitoTestRunner.class)
 public class SettingsViewImplTest extends AbstractSettingsTest {
 
-    private SettingsViewImpl settingsView;
+    private SettingsViewImpl settingsViewSpy;
 
     @Mock
     private ChangeEvent changeEventMock;
@@ -47,7 +50,7 @@ public class SettingsViewImplTest extends AbstractSettingsTest {
     @Before
     public void setup() {
         super.setup();
-        this.settingsView = spy(new SettingsViewImpl() {
+        this.settingsViewSpy = spy(new SettingsViewImpl() {
             {
                 this.kieSettingsContent = kieSettingsContentMock;
                 this.nameLabel = nameLabelMock;
@@ -67,14 +70,27 @@ public class SettingsViewImplTest extends AbstractSettingsTest {
                 this.dmnName = dmnNameMock;
                 this.skipFromBuild = skipFromBuildMock;
                 this.stateless = statelessMock;
+                this.statelessLabel = statelessLabelMock;
             }
         });
-        settingsView.init(settingsPresenterMock);
+        settingsViewSpy.init(settingsPresenterMock);
+    }
+
+    @Test
+    public void init() {
+        settingsViewSpy.init(settingsPresenterMock);
+        assertEquals(settingsPresenterMock, settingsViewSpy.presenter);
+        nameLabelMock.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.name());
+        typeLabelMock.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.type());
+        statelessLabelMock.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.statelessLabel());
+        dmnModelLabelMock.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.dmnModelLabel());
+        dmnNamespaceLabelMock.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.dmnNamespaceLabel());
+        dmnNameLabelMock.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.dmnNameLabel());
     }
 
     @Test
     public void resetTest() {
-        settingsView.reset();
+        settingsViewSpy.reset();
         verify(scenarioTypeMock, times(1)).setInnerText(eq(""));
         verify(fileNameMock, times(1)).setValue(eq(""));
         verify(dmnNameMock, times(1)).setValue(eq(""));
@@ -89,25 +105,25 @@ public class SettingsViewImplTest extends AbstractSettingsTest {
 
     @Test
     public void syncDmoSession() {
-        settingsView.syncDmoSession(blurEventMock);
+        settingsViewSpy.syncDmoSession(blurEventMock);
         verify(settingsPresenterMock, times(1)).syncDmoSession();
     }
 
     @Test
     public void syncRuleFlowGroup() {
-        settingsView.syncRuleFlowGroup(blurEventMock);
+        settingsViewSpy.syncRuleFlowGroup(blurEventMock);
         verify(settingsPresenterMock, times(1)).syncRuleFlowGroup();
     }
 
     @Test
     public void syncStateless() {
-        settingsView.syncStateless(changeEventMock);
+        settingsViewSpy.syncStateless(changeEventMock);
         verify(settingsPresenterMock, times(1)).syncStateless();
     }
 
     @Test
     public void syncSkipFromBuild() {
-        settingsView.syncSkipFromBuild(changeEventMock);
+        settingsViewSpy.syncSkipFromBuild(changeEventMock);
         verify(settingsPresenterMock, times(1)).syncSkipFromBuild();
     }
 }
