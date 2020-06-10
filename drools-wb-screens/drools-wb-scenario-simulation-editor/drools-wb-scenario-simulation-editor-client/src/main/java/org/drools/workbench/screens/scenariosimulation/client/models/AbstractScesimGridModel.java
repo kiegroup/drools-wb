@@ -607,9 +607,11 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
      * It selects the current selected header cells group
      */
     public void reselectCurrentHeaderCell() {
-        int rowIndex = getSelectedHeaderCells().get(0).getRowIndex();
-        int columnIndex = getSelectedHeaderCells().get(0).getColumnIndex();
-        selectHeaderCell(rowIndex, columnIndex);
+        if (!getSelectedHeaderCells().isEmpty()) {
+            int rowIndex = getSelectedHeaderCells().get(0).getRowIndex();
+            int columnIndex = getSelectedHeaderCells().get(0).getColumnIndex();
+            selectHeaderCell(rowIndex, columnIndex);
+        }
     }
 
     public GridColumn<?> getSelectedColumn() {

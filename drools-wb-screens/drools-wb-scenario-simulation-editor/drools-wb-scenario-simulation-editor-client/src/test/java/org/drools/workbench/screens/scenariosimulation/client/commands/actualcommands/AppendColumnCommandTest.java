@@ -59,5 +59,6 @@ public class AppendColumnCommandTest extends AbstractScenarioGridCommandTest {
         verify(commandSpy, times(1)).getScenarioGridColumnLocal(anyString(), anyString(), eq(COLUMN_ID), eq(COLUMN_GROUP), eq(factMappingType), eq(scenarioHeaderTextBoxSingletonDOMElementFactorySpy), eq(scenarioCellTextAreaSingletonDOMElementFactorySpy), eq(ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
         verify(scenarioGridModelMock, times(1)).getFirstIndexRightOfGroup(eq(COLUMN_GROUP));
         verify(scenarioGridModelMock, times(1)).insertColumn(eq(FIRST_INDEX_RIGHT), eq(gridColumnMock));
+        verify(scenarioGridModelMock, times(1)).reselectCurrentHeaderCell();
     }
 }
