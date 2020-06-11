@@ -143,7 +143,7 @@ public class KogitoScenarioSimulationBuilderTest {
 
         Map<String, FactModelTree> hiddenFacts = new HashMap<>();
 
-        FactModelTree factModelTree = new FactModelTree("myFact", "", new HashMap<>(), Collections.emptyMap());
+        FactModelTree factModelTree = new FactModelTree("myFact", "", new HashMap<>(), Collections.emptyMap(), Collections.emptyMap());
         factModelTree.addExpandableProperty("recursiveProperty", "recursive");
         String propertyType = String.class.getCanonicalName();
         String propertyName = "simpleProperty";
@@ -179,12 +179,12 @@ public class KogitoScenarioSimulationBuilderTest {
 
         Map<String, FactModelTree> hiddenFacts = new HashMap<>();
 
-        FactModelTree factModelTree = new FactModelTree("myFact", "", new HashMap<>(), Collections.emptyMap());
+        FactModelTree factModelTree = new FactModelTree("myFact", "", new HashMap<>(), Collections.emptyMap(), Collections.emptyMap());
         factModelTree.addExpandableProperty("nestedProperty", "tNested");
         factModelTree.addExpandableProperty("nestedProperty2", "tNested2");
 
-        FactModelTree nested1 = new FactModelTree("tNested1", "", new HashMap<>(), Collections.emptyMap());
-        FactModelTree nested2 = new FactModelTree("tNested2", "", new HashMap<>(), Collections.emptyMap());
+        FactModelTree nested1 = new FactModelTree("tNested1", "", new HashMap<>(), Collections.emptyMap(), Collections.emptyMap());
+        FactModelTree nested2 = new FactModelTree("tNested2", "", new HashMap<>(), Collections.emptyMap(), Collections.emptyMap());
         String propertyType = String.class.getCanonicalName();
         String propertyName = "stingProperty";
         nested1.addSimpleProperty(propertyName, propertyType);

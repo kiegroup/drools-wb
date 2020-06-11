@@ -153,7 +153,7 @@ public class DMNSimulationSettingsCreationStrategyTest extends AbstractDMNTest {
 
         Map<String, FactModelTree> hiddenFacts = new HashMap<>();
 
-        FactModelTree factModelTree = new FactModelTree("myFact", "", new HashMap<>(), Collections.emptyMap());
+        FactModelTree factModelTree = new FactModelTree("myFact", "", new HashMap<>(), Collections.emptyMap(), Collections.emptyMap());
         factModelTree.addExpandableProperty("recursiveProperty", "recursive");
         String propertyType = String.class.getCanonicalName();
         String propertyName = "simpleProperty";
@@ -189,12 +189,12 @@ public class DMNSimulationSettingsCreationStrategyTest extends AbstractDMNTest {
 
         Map<String, FactModelTree> hiddenFacts = new HashMap<>();
 
-        FactModelTree factModelTree = new FactModelTree("myFact", "", new HashMap<>(), Collections.emptyMap());
+        FactModelTree factModelTree = new FactModelTree("myFact", "", new HashMap<>(), Collections.emptyMap(), Collections.emptyMap());
         factModelTree.addExpandableProperty("nestedProperty", "tNested");
         factModelTree.addExpandableProperty("nestedProperty2", "tNested2");
 
-        FactModelTree nested1 = new FactModelTree("tNested1", "", new HashMap<>(), Collections.emptyMap());
-        FactModelTree nested2 = new FactModelTree("tNested2", "", new HashMap<>(), Collections.emptyMap());
+        FactModelTree nested1 = new FactModelTree("tNested1", "", new HashMap<>(), Collections.emptyMap(), Collections.emptyMap());
+        FactModelTree nested2 = new FactModelTree("tNested2", "", new HashMap<>(), Collections.emptyMap(), Collections.emptyMap());
         String propertyType = String.class.getCanonicalName();
         String propertyName = "stingProperty";
         nested1.addSimpleProperty(propertyName, propertyType);
@@ -326,11 +326,11 @@ public class DMNSimulationSettingsCreationStrategyTest extends AbstractDMNTest {
         Map<String, String> simpleFields = new HashMap<>();
         if (!type.isComposite()) {
             simpleFields.put(VALUE, type.getName());
-            FactModelTree simpleFactModelTree = new FactModelTree(name, "", simpleFields, new HashMap<>(), fmType);
+            FactModelTree simpleFactModelTree = new FactModelTree(name, "", simpleFields, new HashMap<>(), Collections.emptyMap(), fmType);
             simpleFactModelTree.setSimple(true);
             return simpleFactModelTree;
         }
-        FactModelTree factModelTree = new FactModelTree(name, "", simpleFields, new HashMap<>(), fmType);
+        FactModelTree factModelTree = new FactModelTree(name, "", simpleFields, new HashMap<>(),Collections.emptyMap(), fmType);
         for (Map.Entry<String, DMNType> entry : type.getFields().entrySet()) {
             if (!entry.getValue().isComposite()) {
                 simpleFields.put(entry.getKey(), entry.getValue().getName());

@@ -387,7 +387,7 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractScenar
     }
 
     private FactModelTree getFactModelTreeInner(String factName) {
-        return new FactModelTree(factName, AbstractScenarioSimulationEditorTest.SCENARIO_PACKAGE, getSimplePropertiesInner(), new HashMap<>());
+        return new FactModelTree(factName, AbstractScenarioSimulationEditorTest.SCENARIO_PACKAGE, getSimplePropertiesInner(), Collections.emptyMap(), new HashMap<>());
     }
 
     private SortedMap<String, FactModelTree> getFactTypeFieldsMapInner(Collection<String> keys) {

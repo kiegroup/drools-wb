@@ -27,9 +27,10 @@ public interface FieldItemView {
          * @param factName
          * @param fieldName
          * @param className
+         * @param baseClassName
          * @return
          */
-        LIElement getLIElement(String parentPath, String factName, String fieldName, String className);
+        LIElement getLIElement(String parentPath, String factName, String fieldName, String className, String baseClassName);
 
         void onFieldElementClick(FieldItemView selected);
 
@@ -50,6 +51,8 @@ public interface FieldItemView {
 
     String getClassName();
 
+    String getBaseClassName();
+
     void setPresenter(FieldItemView.Presenter fieldItemPresenter);
 
     /**
@@ -62,8 +65,9 @@ public interface FieldItemView {
      * @param factName
      * @param fieldName
      * @param className
+     * @param baseClassName
      */
-    void setFieldData(String fullPath, String factName, String fieldName, String className);
+    void setFieldData(String fullPath, String factName, String fieldName, String className, String baseClassName);
 
     LIElement getLIElement();
 

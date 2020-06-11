@@ -58,9 +58,9 @@ public class FieldItemPresenterTest extends AbstractTestToolsTest {
 
     @Test
     public void getLIElement() {
-        fieldItemPresenter.getLIElement("", FACT_NAME, FACT_NAME, FACT_MODEL_TREE.getFactName());
+        fieldItemPresenter.getLIElement("", FACT_NAME, FACT_NAME, FACT_MODEL_TREE.getFactName(), "");
         verify(viewsProviderMock, times(1)).getFieldItemView();
-        verify(mockFieldItemView, times(1)).setFieldData(eq(""), eq(FACT_NAME), eq(FACT_NAME), eq(FACT_MODEL_TREE.getFactName()));
+        verify(mockFieldItemView, times(1)).setFieldData(eq(""), eq(FACT_NAME), eq(FACT_NAME), eq(FACT_MODEL_TREE.getFactName()), eq(""));
         verify(mockFieldItemView, times(1)).setPresenter(eq(fieldItemPresenter));
     }
 

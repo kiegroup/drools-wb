@@ -18,6 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -606,7 +607,7 @@ public class TestToolsPresenterTest extends AbstractTestToolsTest {
     @Test
     public void updateInstanceIsAssignedStatus_Present() {
         String instance = "CHECK_INSTANCE";
-        FactModelTree factModel = new FactModelTree(instance, FACT_PACKAGE, getMockSimpleProperties(), new HashMap<>());
+        FactModelTree factModel = new FactModelTree(instance, FACT_PACKAGE, getMockSimpleProperties(), Collections.emptyMap(), new HashMap<>());
         dataObjectFactTreeMap.put(instance, factModel);
         testToolsPresenterSpy.updateInstanceIsAssignedStatus(instance);
         verify(listGroupItemPresenterMock, times(1)).setInstanceAssigned(eq(instance), eq(true));

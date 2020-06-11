@@ -79,7 +79,7 @@ public class FieldItemViewTest extends AbstractTestToolsTest {
 
     @Test
     public void setFieldData() {
-        fieldItemViewSpy.setFieldData(FULL_PROPERTY_PATH, FACT_NAME, FIELD_NAME, FACT_MODEL_TREE.getFactName());
+        fieldItemViewSpy.setFieldData(FULL_PROPERTY_PATH, FACT_NAME, FIELD_NAME, FACT_MODEL_TREE.getFactName(), "");
         verify(fieldNameElementMock, times(1)).setInnerHTML(eq(INNER_HTML));
         verify(fieldNameElementMock, times(1)).setAttribute(eq("id"), eq(ID_ATTRIBUTE));
         verify(fieldNameElementMock, times(1)).setAttribute(eq("fieldName"), eq(FIELD_NAME));

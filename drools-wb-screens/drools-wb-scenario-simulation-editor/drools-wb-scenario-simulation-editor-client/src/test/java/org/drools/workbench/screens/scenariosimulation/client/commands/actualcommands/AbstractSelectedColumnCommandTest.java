@@ -18,6 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.commands.actualco
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -275,9 +276,9 @@ public abstract class AbstractSelectedColumnCommandTest extends AbstractScenario
 
     /* This test is usable ONLY by <code>SetPropertyCommandTest</code> subclass */
     protected void navigateComplexObject() {
-        FactModelTree book = new FactModelTree("Book", "com.Book", new HashMap<>(), new HashMap<>());
+        FactModelTree book = new FactModelTree("Book", "com.Book", new HashMap<>(), Collections.emptyMap(), new HashMap<>());
         book.addExpandableProperty("author", "Author");
-        FactModelTree author = new FactModelTree("Author", "com.Author", new HashMap<>(), new HashMap<>());
+        FactModelTree author = new FactModelTree("Author", "com.Author", new HashMap<>(), Collections.emptyMap(), new HashMap<>());
         SortedMap<String, FactModelTree> sortedMap = spy(new TreeMap<>());
         sortedMap.put("Book", book);
         sortedMap.put("Author", author);

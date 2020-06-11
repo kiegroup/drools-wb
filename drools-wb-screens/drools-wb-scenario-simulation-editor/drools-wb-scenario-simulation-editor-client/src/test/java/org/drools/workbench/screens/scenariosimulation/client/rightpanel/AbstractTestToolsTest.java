@@ -17,6 +17,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -72,7 +73,7 @@ abstract class AbstractTestToolsTest {
                 .range(0, 3)
                 .forEach(id -> {
                     String key = getRandomString();
-                    FactModelTree value = new FactModelTree(key, FACT_PACKAGE, getMockSimpleProperties(), new HashMap<>());
+                    FactModelTree value = new FactModelTree(key, FACT_PACKAGE, getMockSimpleProperties(), Collections.emptyMap(), new HashMap<>());
                     toReturn.put(key, value);
                     if (id == 1) {
                         value.addSimpleProperty(getRandomString(), getRandomFactModelTree(toReturn, 0));
@@ -93,7 +94,7 @@ abstract class AbstractTestToolsTest {
             String fullName = DataManagementStrategy.SIMPLE_CLASSES_MAP.get(key).getCanonicalName();
             simpleProperties.put(LOWER_CASE_VALUE, fullName);
             String packageName = fullName.substring(0, fullName.lastIndexOf("."));
-            FactModelTree value = new FactModelTree(key, packageName, simpleProperties, new HashMap<>());
+            FactModelTree value = new FactModelTree(key, packageName, simpleProperties, Collections.emptyMap(), new HashMap<>());
             toReturn.put(key, value);
         }
         return toReturn;

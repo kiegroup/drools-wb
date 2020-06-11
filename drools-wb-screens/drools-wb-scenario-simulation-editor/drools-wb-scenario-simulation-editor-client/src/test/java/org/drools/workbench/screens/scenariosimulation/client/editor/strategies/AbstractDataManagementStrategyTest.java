@@ -17,6 +17,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.editor.strategies;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -195,7 +196,7 @@ public class AbstractDataManagementStrategyTest extends AbstractScenarioSimulati
 
     private SortedMap<String, FactModelTree> getSourceMap() {
         SortedMap<String, FactModelTree> toReturn = new TreeMap<>();
-        FactModelTree toPut = new FactModelTree("Void", "package", new HashMap<>(), new HashMap<>());
+        FactModelTree toPut = new FactModelTree("Void", "package", new HashMap<>(), Collections.emptyMap(), new HashMap<>());
         toReturn.put("Void", toPut);
         return toReturn;
     }
