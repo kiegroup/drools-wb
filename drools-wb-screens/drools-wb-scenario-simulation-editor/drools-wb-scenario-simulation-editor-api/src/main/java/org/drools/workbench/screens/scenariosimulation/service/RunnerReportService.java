@@ -15,6 +15,7 @@
  */
 package org.drools.workbench.screens.scenariosimulation.service;
 
+import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.SimulationRunMetadata;
 import org.jboss.errai.bus.server.annotations.Remote;
 
@@ -28,8 +29,9 @@ public interface RunnerReportService {
      * This method returns the report of the given <code>SimulationRunMetadata</code>
      *
      * @param scenarioRunMetadata
+     * @param modelType
      * @return
      */
-    Object getReport(SimulationRunMetadata scenarioRunMetadata);
+    Object getReport(SimulationRunMetadata scenarioRunMetadata, ScenarioSimulationModel.Type modelType);
 
 }

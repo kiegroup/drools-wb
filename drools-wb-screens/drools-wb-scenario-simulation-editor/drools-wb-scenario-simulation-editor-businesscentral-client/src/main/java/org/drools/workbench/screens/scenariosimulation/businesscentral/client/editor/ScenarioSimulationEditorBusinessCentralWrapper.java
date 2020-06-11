@@ -216,9 +216,12 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
                 .exportScesimModel(CSV, scesimModel);
     }
 
-    public void onDownloadReportToCsv(RemoteCallback<Object> exportCallBack, ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback, SimulationRunMetadata simulationRunMetadata) {
+    public void onDownloadReportToCsv(RemoteCallback<Object> exportCallBack,
+                                      ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback,
+                                      SimulationRunMetadata simulationRunMetadata,
+                                      ScenarioSimulationModel.Type modelType) {
         runnerReportService.call(exportCallBack, scenarioSimulationHasBusyIndicatorDefaultErrorCallback)
-                .getReport(simulationRunMetadata);
+                .getReport(simulationRunMetadata, modelType);
     }
 
     @Override
@@ -489,7 +492,8 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
             presenter.setDownloadReportCommand(() -> onDownloadReportToCsv(
                     scenarioSimulationEditorPresenter.getExportCallBack(),
                     new ScenarioSimulationHasBusyIndicatorDefaultErrorCallback(scenarioSimulationEditorPresenter.getView()),
-                    simulationRunMetadata));
+                    simulationRunMetadata,
+                    modelType));
         }
     }
 }

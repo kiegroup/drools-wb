@@ -29,12 +29,18 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.drools.scenariosimulation.api.model.AuditLog;
 import org.drools.scenariosimulation.api.model.AuditLogLine;
+import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.SimulationRunMetadata;
 import org.junit.Test;
 
-import static org.drools.workbench.screens.scenariosimulation.backend.server.downloadreport.ScenarioCsvDownloadReport.AUDIT_HEADER;
-import static org.drools.workbench.screens.scenariosimulation.backend.server.downloadreport.ScenarioCsvDownloadReport.OVERALL_STATS_HEADER;
-import static org.drools.workbench.screens.scenariosimulation.backend.server.downloadreport.ScenarioCsvDownloadReport.RULES_COUNTER_HEADER;
+import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type.DMN;
+import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type.RULE;
+import static org.drools.workbench.screens.scenariosimulation.backend.server.downloadreport.ScenarioCsvDownloadReport.DMN_AUDIT_HEADER;
+import static org.drools.workbench.screens.scenariosimulation.backend.server.downloadreport.ScenarioCsvDownloadReport.DMN_COUNTER_HEADER;
+import static org.drools.workbench.screens.scenariosimulation.backend.server.downloadreport.ScenarioCsvDownloadReport.DMN_OVERALL_STATS_HEADER;
+import static org.drools.workbench.screens.scenariosimulation.backend.server.downloadreport.ScenarioCsvDownloadReport.RULE_AUDIT_HEADER;
+import static org.drools.workbench.screens.scenariosimulation.backend.server.downloadreport.ScenarioCsvDownloadReport.RULE_COUNTER_HEADER;
+import static org.drools.workbench.screens.scenariosimulation.backend.server.downloadreport.ScenarioCsvDownloadReport.RULE_OVERALL_STATS_HEADER;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -44,23 +50,32 @@ public class ScenarioCsvDownloadReportTest {
     private final ScenarioCsvDownloadReport scenarioCsvDownloadReport = new ScenarioCsvDownloadReport();
 
     @Test
-    public void getReport() throws IOException {
+    public void getReport_RULE() {
+        commonGetReport(RULE, RULE_OVERALL_STATS_HEADER, RULE_COUNTER_HEADER, RULE_AUDIT_HEADER);
+    }
+
+    @Test
+    public void getReport_DMN() {
+        commonGetReport(DMN, DMN_OVERALL_STATS_HEADER, DMN_COUNTER_HEADER, DMN_AUDIT_HEADER);
+    }
+
+    private void commonGetReport(ScenarioSimulationModel.Type type, String[] overallStats, String[] counterHeader, String[] auditHeader) {
         AuditLog auditLog = new AuditLog();
         IntStream.range(0, 6).forEach(index -> auditLog.addAuditLogLine(getAuditLogLine()));
         SimulationRunMetadata simulationRunMetadata = getSimulationRunMetadata(auditLog);
-        String retrieved = scenarioCsvDownloadReport.getReport(simulationRunMetadata);
+        String retrieved = scenarioCsvDownloadReport.getReport(simulationRunMetadata, type);
         assertNotNull(retrieved);
         String[] retrievedLines = retrieved.split("\r\n");
-        commonCheckHeader(OVERALL_STATS_HEADER, retrievedLines[0]);
+        commonCheckHeader(overallStats, retrievedLines[0]);
         List<String> overallStatsData = Arrays.asList(String.valueOf(simulationRunMetadata.getAvailable()), String.valueOf(simulationRunMetadata.getExecuted()), String.valueOf(simulationRunMetadata.getCoveragePercentage()));
         commonCheckRetrievedString(retrievedLines[1], overallStatsData);
         assertTrue(retrievedLines[2].isEmpty());
-        commonCheckHeader(RULES_COUNTER_HEADER, retrievedLines[3]);
+        commonCheckHeader(counterHeader, retrievedLines[3]);
         Map.Entry<String, Integer> entry = simulationRunMetadata.getOutputCounter().entrySet().iterator().next();
         List<String> rulesCounterData = Arrays.asList("\"" + entry.getKey() + "\"", String.valueOf(entry.getValue()));
         commonCheckRetrievedString(retrievedLines[4], rulesCounterData);
         assertTrue(retrievedLines[5].isEmpty());
-        commonCheckHeader(AUDIT_HEADER, retrievedLines[6]);
+        commonCheckHeader(auditHeader, retrievedLines[6]);
         for (int i = 7; i < retrievedLines.length; i++) {
             AuditLogLine auditLogLine = auditLog.getAuditLogLines().get(i - 7);
             List<String> auditData = Arrays.asList(String.valueOf(auditLogLine.getScenarioIndex()), "\"" + auditLogLine.getScenario() + "\"", String.valueOf(auditLogLine.getExecutionIndex()), "\"" + auditLogLine.getMessage() + "\"", auditLogLine.getLevel());
@@ -69,12 +84,21 @@ public class ScenarioCsvDownloadReportTest {
     }
 
     @Test
-    public void generateOverallStatsHeader() throws IOException {
+    public void generateOverallStatsHeaderRULE() throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         CSVPrinter printer = getCSVPrinter(stringBuilder);
-        scenarioCsvDownloadReport.generateOverallStatsHeader(printer);
+        scenarioCsvDownloadReport.generateOverallStatsHeader(printer, ScenarioSimulationModel.Type.RULE);
         String retrieved = stringBuilder.toString();
-        commonCheckHeader(OVERALL_STATS_HEADER, retrieved);
+        commonCheckHeader(RULE_OVERALL_STATS_HEADER, retrieved);
+    }
+
+    @Test
+    public void generateOverallStatsHeaderDMN() throws IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+        CSVPrinter printer = getCSVPrinter(stringBuilder);
+        scenarioCsvDownloadReport.generateOverallStatsHeader(printer, DMN);
+        String retrieved = stringBuilder.toString();
+        commonCheckHeader(DMN_OVERALL_STATS_HEADER, retrieved);
     }
 
     @Test
@@ -91,12 +115,21 @@ public class ScenarioCsvDownloadReportTest {
     }
 
     @Test
-    public void generateRulesCounterHeader() throws IOException {
+    public void generateRulesCounterHeaderRULE() throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         CSVPrinter printer = getCSVPrinter(stringBuilder);
-        scenarioCsvDownloadReport.generateRulesCounterHeader(printer);
+        scenarioCsvDownloadReport.generateRulesCounterHeader(printer, ScenarioSimulationModel.Type.RULE);
         String retrieved = stringBuilder.toString();
-        commonCheckHeader(RULES_COUNTER_HEADER, retrieved);
+        commonCheckHeader(RULE_COUNTER_HEADER, retrieved);
+    }
+
+    @Test
+    public void generateRulesCounterHeaderDMN() throws IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+        CSVPrinter printer = getCSVPrinter(stringBuilder);
+        scenarioCsvDownloadReport.generateRulesCounterHeader(printer, DMN);
+        String retrieved = stringBuilder.toString();
+        commonCheckHeader(DMN_COUNTER_HEADER, retrieved);
     }
 
     @Test
@@ -114,13 +147,23 @@ public class ScenarioCsvDownloadReportTest {
     }
 
     @Test
-    public void generateAuditLogHeader() throws IOException {
+    public void generateAuditLogHeaderRULE() throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         CSVPrinter printer = getCSVPrinter(stringBuilder);
-        scenarioCsvDownloadReport.generateAuditLogHeader(printer);
+        scenarioCsvDownloadReport.generateAuditLogHeader(printer, RULE);
         String retrieved = stringBuilder.toString();
-        commonCheckHeader(AUDIT_HEADER, retrieved);
+        commonCheckHeader(RULE_AUDIT_HEADER, retrieved);
     }
+
+    @Test
+    public void generateAuditLogHeaderDMN() throws IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+        CSVPrinter printer = getCSVPrinter(stringBuilder);
+        scenarioCsvDownloadReport.generateAuditLogHeader(printer, DMN);
+        String retrieved = stringBuilder.toString();
+        commonCheckHeader(DMN_AUDIT_HEADER, retrieved);
+    }
+
 
     @Test
     public void printAuditLogLine() throws IOException {

@@ -23,25 +23,30 @@ import java.util.Map;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.drools.scenariosimulation.api.model.AuditLogLine;
+import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.SimulationRunMetadata;
 import org.guvnor.common.services.backend.exceptions.ExceptionUtilities;
 
 public class ScenarioCsvDownloadReport {
 
-    protected static final String[] OVERALL_STATS_HEADER = {"AVAILABLE RULES", "RULES FIRED", "PERCENTAGE OF RULES FIRED"};
-    protected static final String[] RULES_COUNTER_HEADER = {"RULE", "NUMBER OF TIMES"};
-    protected static final String[] AUDIT_HEADER = {"SCENARIO INDEX", "SCENARIO NAME", "RESULT INDEX", "RESULT", "LEVEL"};
+    protected static final String[] DMN_OVERALL_STATS_HEADER = {"AVAILABLE DECISIONS", "DECISIONS FIRED", "PERCENTAGE OF DECISIONS FIRED"};
+    protected static final String[] RULE_OVERALL_STATS_HEADER = {"AVAILABLE RULES", "RULES FIRED", "PERCENTAGE OF RULES FIRED"};
+    protected static final String[] DMN_COUNTER_HEADER = {"DECISION", "NUMBER OF TIMES"};
+    protected static final String[] RULE_COUNTER_HEADER = {"RULE", "NUMBER OF TIMES"};
+    protected static final String[] DMN_AUDIT_HEADER = {"TEST SCENARIO INDEX", "TEST SCENARIO NAME", "DECISION INDEX", "EVALUATED DECISION", "LEVEL"};
+    protected static final String[] RULE_AUDIT_HEADER = {"TEST SCENARIO INDEX", "TEST SCENARIO NAME", "RULE INDEX", "FIRED RULE", "LEVEL"};
 
     /**
      * @param simulationRunMetadata the <code>SimulationRunMetadata</code> to print out
+     * @param modelType
      * @return
      * @throws IOException
      */
-    public String getReport(SimulationRunMetadata simulationRunMetadata) {
+    public String getReport(SimulationRunMetadata simulationRunMetadata, ScenarioSimulationModel.Type modelType) {
         StringBuilder stringBuilder = new StringBuilder();
 
         try (CSVPrinter printer = new CSVPrinter(stringBuilder, CSVFormat.DEFAULT)) {
-            generateOverallStatsHeader(printer);
+            generateOverallStatsHeader(printer, modelType);
             printOverallStatsLine(printer,
                                   simulationRunMetadata.getAvailable(),
                                   simulationRunMetadata.getExecuted(),
@@ -50,7 +55,7 @@ public class ScenarioCsvDownloadReport {
             Map<String, Integer> outputCounter = simulationRunMetadata.getOutputCounter();
             if (outputCounter != null && !outputCounter.isEmpty()) {
                 printer.println();
-                generateRulesCounterHeader(printer);
+                generateRulesCounterHeader(printer, modelType);
 
                 for (Map.Entry<String, Integer> entry : outputCounter.entrySet()) {
                     printRulesCounterLine(printer, entry.getKey(), entry.getValue());
@@ -60,7 +65,7 @@ public class ScenarioCsvDownloadReport {
             List<AuditLogLine> auditLogLines = simulationRunMetadata.getAuditLog().getAuditLogLines();
             if (auditLogLines != null && !auditLogLines.isEmpty()) {
                 printer.println();
-                generateAuditLogHeader(printer);
+                generateAuditLogHeader(printer, modelType);
 
                 for (AuditLogLine auditLogLine : auditLogLines) {
                     printAuditLogLine(auditLogLine, printer);
@@ -73,24 +78,36 @@ public class ScenarioCsvDownloadReport {
         return stringBuilder.toString();
     }
 
-    protected void generateOverallStatsHeader(CSVPrinter printer) throws IOException {
-        printer.printRecord(OVERALL_STATS_HEADER);
+    protected void generateOverallStatsHeader(CSVPrinter printer, ScenarioSimulationModel.Type modelType) throws IOException {
+        if (ScenarioSimulationModel.Type.DMN.equals(modelType)) {
+            printer.printRecord(DMN_OVERALL_STATS_HEADER);
+        } else {
+            printer.printRecord(RULE_OVERALL_STATS_HEADER);
+        }
     }
 
     protected void printOverallStatsLine(CSVPrinter printer, int available, int executed, double coveragePercentage) throws IOException {
         printer.printRecord(Arrays.asList(available, executed, coveragePercentage));
     }
 
-    protected void generateRulesCounterHeader(CSVPrinter printer) throws IOException {
-        printer.printRecord(RULES_COUNTER_HEADER);
+    protected void generateRulesCounterHeader(CSVPrinter printer, ScenarioSimulationModel.Type modelType) throws IOException {
+        if (ScenarioSimulationModel.Type.DMN.equals(modelType)) {
+            printer.printRecord(DMN_COUNTER_HEADER);
+        } else {
+            printer.printRecord(RULE_COUNTER_HEADER);
+        }
     }
 
     protected void printRulesCounterLine(CSVPrinter printer, String rule, int times) throws IOException {
         printer.printRecord(Arrays.asList(rule, times));
     }
 
-    protected void generateAuditLogHeader(CSVPrinter printer) throws IOException {
-        printer.printRecord(AUDIT_HEADER);
+    protected void generateAuditLogHeader(CSVPrinter printer, ScenarioSimulationModel.Type modelType) throws IOException {
+        if (ScenarioSimulationModel.Type.DMN.equals(modelType)) {
+            printer.printRecord(DMN_AUDIT_HEADER);
+        } else {
+            printer.printRecord(RULE_AUDIT_HEADER);
+        }
     }
 
     protected void printAuditLogLine(AuditLogLine toPrint, CSVPrinter printer) throws IOException {

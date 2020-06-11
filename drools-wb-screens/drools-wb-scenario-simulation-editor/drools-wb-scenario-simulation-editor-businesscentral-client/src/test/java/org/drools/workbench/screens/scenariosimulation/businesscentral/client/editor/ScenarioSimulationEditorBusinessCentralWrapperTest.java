@@ -312,9 +312,9 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     public void onDownloadReportToCSV() {
         RemoteCallback<Object> remoteCallback = mock(RemoteCallback.class);
         ScenarioSimulationHasBusyIndicatorDefaultErrorCallback errorCallback = mock(ScenarioSimulationHasBusyIndicatorDefaultErrorCallback.class);
-        scenarioSimulationEditorBusinessClientWrapper.onDownloadReportToCsv(remoteCallback, errorCallback, simulationRunMetadataMock);
+        scenarioSimulationEditorBusinessClientWrapper.onDownloadReportToCsv(remoteCallback, errorCallback, simulationRunMetadataMock, RULE);
         verify(runnerReportServiceCaller, times(1)).call(eq(remoteCallback), eq(errorCallback));
-        verify(runnerReportServiceMock, times(1)).getReport(eq(simulationRunMetadataMock));
+        verify(runnerReportServiceMock, times(1)).getReport(eq(simulationRunMetadataMock), eq(RULE));
     }
 
     @Test
@@ -616,8 +616,9 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         verify(presenterSpy, times(1)).setDownloadReportCommand(commandArgumentCaptor.capture());
         commandArgumentCaptor.getValue().execute();
         verify(scenarioSimulationEditorBusinessClientWrapper, times(1)).onDownloadReportToCsv(eq(exportCallBackMock),
-                                                                                                                   isA(ScenarioSimulationHasBusyIndicatorDefaultErrorCallback.class),
-                                                                                                                   eq(simulationRunMetadataMock));
+                                                                                              isA(ScenarioSimulationHasBusyIndicatorDefaultErrorCallback.class),
+                                                                                              eq(simulationRunMetadataMock),
+                                                                                              eq(DMN));
         //
         reset(presenterSpy, simulationRunMetadataMock, scenarioSimulationEditorBusinessClientWrapper);
         scenarioSimulationEditorBusinessClientWrapper.lastRunResult = null;
@@ -639,7 +640,8 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         verify(presenterSpy, times(1)).setDownloadReportCommand(commandArgumentCaptor.capture());
         commandArgumentCaptor.getValue().execute();
         verify(scenarioSimulationEditorBusinessClientWrapper, times(1)).onDownloadReportToCsv(eq(exportCallBackMock),
-                                                                                             isA(ScenarioSimulationHasBusyIndicatorDefaultErrorCallback.class),
-                                                                                             eq(simulationRunMetadataMock));
+                                                                                              isA(ScenarioSimulationHasBusyIndicatorDefaultErrorCallback.class),
+                                                                                              eq(simulationRunMetadataMock),
+                                                                                              eq(RULE));
     }
 }
