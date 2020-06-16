@@ -603,17 +603,6 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
         IntStream.range(0, columns).forEach(columnIndex -> selectCell(rowIndex, columnIndex));
     }
 
-    /**
-     * It selects the current selected header cells group
-     */
-    public void reselectCurrentHeaderCell() {
-        if (!getSelectedHeaderCells().isEmpty()) {
-            int rowIndex = getSelectedHeaderCells().get(0).getRowIndex();
-            int columnIndex = getSelectedHeaderCells().get(0).getColumnIndex();
-            selectHeaderCell(rowIndex, columnIndex);
-        }
-    }
-
     public GridColumn<?> getSelectedColumn() {
         return selectedColumn;
     }

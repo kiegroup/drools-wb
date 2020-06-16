@@ -15,6 +15,7 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.widgets;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -513,5 +514,22 @@ public class ScenarioGridTest {
         scenarioGridSpy.ensureCellIsSelected();
         verify(scenarioGridSpy, never()).selectCell(anyInt(), anyInt(), anyBoolean(), anyBoolean());
         verify(scenarioGridSpy, never()).signalTestTools();
+    }
+
+    public void reselectCurrentHeaderCell() {
+        List<GridData.SelectedCell> selectedHeaderCells = new ArrayList<>();
+        selectedHeaderCells.add(new GridData.SelectedCell(0, 0));
+        selectedHeaderCells.add(new GridData.SelectedCell(0, 1));
+        selectedHeaderCells.add(new GridData.SelectedCell(0, 2));
+        when(scenarioGridModelMock.getSelectedHeaderCells()).thenReturn(selectedHeaderCells);
+        scenarioGridSpy.reselectCurrentHeaderCell();
+        verify(scenarioGridSpy, times(1)).setSelectedColumnAndHeader(eq(0), eq(0));
+    }
+
+    public void reselectCurrentHeaderCell_NoHeaderCellsSelected() {
+        List<GridData.SelectedCell> selectedHeaderCells = new ArrayList<>();
+        when(scenarioGridModelMock.getSelectedHeaderCells()).thenReturn(selectedHeaderCells);
+        scenarioGridSpy.reselectCurrentHeaderCell();
+        verify(scenarioGridSpy, never()).setSelectedColumnAndHeader(anyInt(), anyInt());
     }
 }

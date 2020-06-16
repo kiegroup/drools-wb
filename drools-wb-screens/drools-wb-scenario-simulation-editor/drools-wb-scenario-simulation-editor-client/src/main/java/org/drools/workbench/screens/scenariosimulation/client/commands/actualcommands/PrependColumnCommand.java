@@ -41,6 +41,6 @@ public class PrependColumnCommand extends AbstractInsertColumnCommand {
         final AbstractScesimGridModel gridModel = context.getAbstractScesimGridModelByGridWidget(gridWidget);
         final int index = gridModel.getFirstIndexLeftOfGroup(status.getColumnGroup());
         commonInsertColumnCommand(context, status, index);
-        gridModel.reselectCurrentHeaderCell();
+        context.getSelectedScenarioGridPanel().ifPresent(panel -> panel.getScenarioGrid().reselectCurrentHeaderCell());
     }
 }

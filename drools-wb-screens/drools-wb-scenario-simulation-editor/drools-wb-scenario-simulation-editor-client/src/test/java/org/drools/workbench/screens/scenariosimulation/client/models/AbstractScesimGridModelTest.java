@@ -16,7 +16,6 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.models;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -46,7 +45,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.uberfire.ext.wires.core.grids.client.model.GridCell;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
-import org.uberfire.ext.wires.core.grids.client.model.GridData;
 import org.uberfire.ext.wires.core.grids.client.model.GridRow;
 import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridRow;
 import org.uberfire.ext.wires.core.grids.client.widget.dom.single.impl.BaseSingletonDOMElementFactory;
@@ -347,25 +345,6 @@ public class AbstractScesimGridModelTest extends AbstractScenarioSimulationTest 
     public void setSelectedColumn_OverflowIndex() {
         int columnIndex = 7;
         abstractScesimGridModelSpy.selectColumn(columnIndex);
-    }
-
-    @Test
-    public void reselectCurrentHeaderCell() {
-        List<GridData.SelectedCell> selectedHeaderCells = new ArrayList<>();
-        selectedHeaderCells.add(new GridData.SelectedCell(0, 0));
-        selectedHeaderCells.add(new GridData.SelectedCell(0, 1));
-        selectedHeaderCells.add(new GridData.SelectedCell(0, 2));
-        when(abstractScesimGridModelSpy.getSelectedHeaderCells()).thenReturn(selectedHeaderCells);
-        abstractScesimGridModelSpy.reselectCurrentHeaderCell();
-        verify(abstractScesimGridModelSpy, times(1)).selectHeaderCell(eq(0), eq(0));
-    }
-
-    @Test
-    public void reselectCurrentHeaderCell_NoHeaderCellsSelected() {
-        List<GridData.SelectedCell> selectedHeaderCells = new ArrayList<>();
-        when(abstractScesimGridModelSpy.getSelectedHeaderCells()).thenReturn(selectedHeaderCells);
-        abstractScesimGridModelSpy.reselectCurrentHeaderCell();
-        verify(abstractScesimGridModelSpy, never()).selectHeaderCell(anyInt(), anyInt());
     }
 
     @Test

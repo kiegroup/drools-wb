@@ -59,6 +59,6 @@ public class PrependColumnCommandTest extends AbstractScenarioGridCommandTest {
         verify(commandSpy, times(1)).getScenarioGridColumnLocal(anyString(), anyString(), anyString(), eq(COLUMN_GROUP), eq(factMappingType), eq(scenarioHeaderTextBoxSingletonDOMElementFactorySpy), eq(scenarioCellTextAreaSingletonDOMElementFactorySpy), eq(ScenarioSimulationEditorConstants.INSTANCE.defineValidType()));
         verify(scenarioGridModelMock, times(1)).getFirstIndexLeftOfGroup(eq(COLUMN_GROUP));
         verify(scenarioGridModelMock, times(1)).insertColumn(eq(FIRST_INDEX_LEFT), eq(gridColumnMock));
-        verify(scenarioGridModelMock, times(1)).reselectCurrentHeaderCell();
+        verify(scenarioGridMock, times(1)).reselectCurrentHeaderCell();
     }
 }
