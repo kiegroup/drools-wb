@@ -39,6 +39,11 @@ public class SettingsViewImpl
         extends Composite
         implements SettingsView {
 
+    protected static final String STATELESS_LABEL = "Stateless Session";
+    protected static final String DMN_MODEL_LABEL = "DMN model";
+    protected static final String DMN_NAMESPACE_LABEL = "DMN namespace";
+    protected static final String DMN_NAME_LABEL = "DMN name";
+
     protected Presenter presenter;
 
     @DataField("kieSettingsContent")
@@ -106,10 +111,10 @@ public class SettingsViewImpl
         this.presenter = presenter;
         nameLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.name());
         typeLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.type());
-        statelessLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.statelessLabel());
-        dmnFileLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.dmnModelLabel());
-        dmnNamespaceLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.dmnNamespaceLabel());
-        dmnNameLabel.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.dmnNameLabel());
+        statelessLabel.setInnerText(STATELESS_LABEL);
+        dmnFileLabel.setInnerText(DMN_MODEL_LABEL);
+        dmnNamespaceLabel.setInnerText(DMN_NAMESPACE_LABEL);
+        dmnNameLabel.setInnerText(DMN_NAME_LABEL);
     }
 
     @Override

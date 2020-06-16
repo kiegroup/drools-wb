@@ -26,6 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
+import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsViewImpl.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.spy;
@@ -79,12 +80,12 @@ public class SettingsViewImplTest extends AbstractSettingsTest {
     public void init() {
         settingsViewSpy.init(settingsPresenterMock);
         assertEquals(settingsPresenterMock, settingsViewSpy.presenter);
-        nameLabelMock.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.name());
-        typeLabelMock.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.type());
-        statelessLabelMock.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.statelessLabel());
-        dmnModelLabelMock.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.dmnModelLabel());
-        dmnNamespaceLabelMock.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.dmnNamespaceLabel());
-        dmnNameLabelMock.setInnerText(ScenarioSimulationEditorConstants.INSTANCE.dmnNameLabel());
+        nameLabelMock.setInnerText(eq(ScenarioSimulationEditorConstants.INSTANCE.name()));
+        typeLabelMock.setInnerText(eq(ScenarioSimulationEditorConstants.INSTANCE.type()));
+        statelessLabelMock.setInnerText(eq(STATELESS_LABEL));
+        dmnModelLabelMock.setInnerText(eq(DMN_MODEL_LABEL));
+        dmnNamespaceLabelMock.setInnerText(eq(DMN_NAMESPACE_LABEL));
+        dmnNameLabelMock.setInnerText(eq(DMN_NAME_LABEL));
     }
 
     @Test

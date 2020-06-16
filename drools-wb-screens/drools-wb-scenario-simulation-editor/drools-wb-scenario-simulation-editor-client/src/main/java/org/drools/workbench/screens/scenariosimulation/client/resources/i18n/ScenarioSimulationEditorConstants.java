@@ -274,14 +274,6 @@ public interface ScenarioSimulationEditorConstants
 
     String type();
 
-    String statelessLabel();
-
-    String dmnModelLabel();
-
-    String dmnNamespaceLabel();
-
-    String dmnNameLabel();
-
     String dmnPathErrorLabel(String dmnPath);
 
     String dmnPathErrorDetailedLabel(String dmnPath);
