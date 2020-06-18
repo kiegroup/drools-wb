@@ -422,7 +422,6 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         ErrorCallback<Boolean> errorCallback = scenarioSimulationEditorBusinessClientWrapper.getLoadContentErrorCallback();
         errorCallback.error(true, new Exception("Message"));
 
-        verify(placeManagerMock, times(1)).forceClosePlace(eq(placeRequestMock));
         verify(scenarioSimulationEditorPresenterMock, times(1)).sendNotification(
                 eq(ScenarioSimulationEditorConstants.INSTANCE.loadContentFailedNotification() + "Message"),
                 eq(NotificationEvent.NotificationType.ERROR));
