@@ -430,6 +430,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
             scenarioSimulationEditorPresenter.sendNotification(ScenarioSimulationEditorConstants.INSTANCE.loadContentFailedNotification()
                                                                        + exception.getMessage(),
                                                                NotificationEvent.NotificationType.ERROR);
+            placeManager.forceClosePlace(place);
             return false;
         };
     }
