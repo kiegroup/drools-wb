@@ -130,7 +130,11 @@
       <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
-    <!-- END TEST -->
+      <dependency>
+          <groupId>org.uberfire</groupId>
+          <artifactId>appformer-kogito-bridge</artifactId>
+      </dependency>
+      <!-- END TEST -->
   </dependencies>
 
   <dependencyManagement>
