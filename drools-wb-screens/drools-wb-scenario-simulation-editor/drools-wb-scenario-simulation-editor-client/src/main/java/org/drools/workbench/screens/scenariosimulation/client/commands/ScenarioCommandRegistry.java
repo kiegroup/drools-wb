@@ -24,17 +24,17 @@ import java.util.Optional;
 
 import javax.enterprise.context.Dependent;
 
-import org.appformer.client.stateControl.registry.impl.DefaultRegistryImpl;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.AbstractScenarioGridCommand;
 import org.kie.workbench.common.command.client.CommandResult;
 import org.kie.workbench.common.command.client.CommandResultBuilder;
 import org.kie.workbench.common.command.client.impl.CommandResultImpl;
+import org.kie.workbench.common.command.client.registry.command.CommandRegistryImpl;
 
 /**
  * This class is used to store <code>Queue</code>es of <b>executed/undone</b> <code>Command</code>s
  */
 @Dependent
-public class ScenarioCommandRegistry extends DefaultRegistryImpl<AbstractScenarioGridCommand> {
+public class ScenarioCommandRegistry extends CommandRegistryImpl<AbstractScenarioGridCommand> {
 
     protected final Deque<AbstractScenarioGridCommand> undoneCommands = new ArrayDeque<>();
 
