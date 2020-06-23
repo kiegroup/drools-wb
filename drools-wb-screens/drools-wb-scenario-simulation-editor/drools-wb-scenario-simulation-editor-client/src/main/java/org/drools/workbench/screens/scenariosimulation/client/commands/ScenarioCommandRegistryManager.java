@@ -15,28 +15,31 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands;
 
-import java.util.ArrayDeque;
 import java.util.Collections;
-import java.util.Deque;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 
 import javax.enterprise.context.Dependent;
+import javax.inject.Inject;
 
+import org.appformer.client.stateControl.registry.DefaultRegistry;
+import org.appformer.client.stateControl.registry.Registry;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.AbstractScenarioGridCommand;
 import org.kie.workbench.common.command.client.CommandResult;
 import org.kie.workbench.common.command.client.CommandResultBuilder;
 import org.kie.workbench.common.command.client.impl.CommandResultImpl;
-import org.kie.workbench.common.command.client.registry.command.CommandRegistryImpl;
 
 /**
  * This class is used to store <code>Queue</code>es of <b>executed/undone</b> <code>Command</code>s
  */
 @Dependent
-public class ScenarioCommandRegistry extends CommandRegistryImpl<AbstractScenarioGridCommand> {
+public class ScenarioCommandRegistryManager {
 
-    protected final Deque<AbstractScenarioGridCommand> undoneCommands = new ArrayDeque<>();
+    @Inject
+    protected Registry<AbstractScenarioGridCommand> doneCommands;
+    @Inject
+    protected DefaultRegistry<AbstractScenarioGridCommand> undoneCommands;
 
     /**
      * Method to register the status as it was soon before the command execution,
@@ -45,7 +48,7 @@ public class ScenarioCommandRegistry extends CommandRegistryImpl<AbstractScenari
      * @param command
      */
     public void register(ScenarioSimulationContext context, AbstractScenarioGridCommand command) {
-        super.register(command);
+        doneCommands.register(command);
         undoneCommands.clear();
         setUndoRedoButtonStatus(context);
     }
@@ -57,16 +60,16 @@ public class ScenarioCommandRegistry extends CommandRegistryImpl<AbstractScenari
      */
     public CommandResult<ScenarioSimulationViolation> undo(ScenarioSimulationContext scenarioSimulationContext) {
         CommandResult<ScenarioSimulationViolation> toReturn;
-        if (!getHistory().isEmpty()) {
+        if (!doneCommands.isEmpty()) {
             // to restore to implement tab switching
-            final Optional<CommandResult<ScenarioSimulationViolation>> optionalPreexecuted = commonUndoRedoPreexecution(scenarioSimulationContext, peek());
+            final Optional<CommandResult<ScenarioSimulationViolation>> optionalPreexecuted = commonUndoRedoPreexecution(scenarioSimulationContext, doneCommands.peek());
             if (optionalPreexecuted.isPresent()) {
                 return optionalPreexecuted.get();
             } else {
-                final AbstractScenarioGridCommand toUndo = pop();
+                final AbstractScenarioGridCommand toUndo = doneCommands.pop();
                 toReturn = commonUndoRedoOperation(scenarioSimulationContext, toUndo, true);
                 if (Objects.equals(CommandResultBuilder.SUCCESS, toReturn)) {
-                    undoneCommands.push(toUndo);
+                    undoneCommands.register(toUndo);
                 }
             }
         } else {
@@ -92,7 +95,7 @@ public class ScenarioCommandRegistry extends CommandRegistryImpl<AbstractScenari
                 final AbstractScenarioGridCommand toRedo = undoneCommands.pop();
                 toReturn = commonUndoRedoOperation(scenarioSimulationContext, toRedo, false);
                 if (Objects.equals(CommandResultBuilder.SUCCESS, toReturn)) {
-                    register(toRedo);
+                    doneCommands.register(toRedo);
                 }
             }
         } else {
@@ -131,7 +134,7 @@ public class ScenarioCommandRegistry extends CommandRegistryImpl<AbstractScenari
     }
 
     protected void setUndoRedoButtonStatus(final ScenarioSimulationContext scenarioSimulationContext) {
-        scenarioSimulationContext.scenarioSimulationEditorPresenter.setUndoButtonEnabledStatus(!getHistory().isEmpty());
+        scenarioSimulationContext.scenarioSimulationEditorPresenter.setUndoButtonEnabledStatus(!doneCommands.isEmpty());
         scenarioSimulationContext.scenarioSimulationEditorPresenter.setRedoButtonEnabledStatus(!undoneCommands.isEmpty());
     }
 }

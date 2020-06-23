@@ -22,9 +22,10 @@ import javax.inject.Inject;
 
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioCommandManager;
-import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioCommandRegistry;
+import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioCommandRegistryManager;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationEventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationStateControlManager;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationView;
 import org.drools.workbench.screens.scenariosimulation.client.menu.ScenarioContextMenuRegistry;
@@ -63,10 +64,13 @@ public class ScenarioSimulationProducer {
     protected ScenarioSimulationEventHandler scenarioSimulationEventHandler;
 
     @Inject
-    protected ScenarioCommandRegistry scenarioCommandRegistry;
+    protected ScenarioCommandRegistryManager scenarioCommandRegistryManager;
 
     @Inject
     protected ScenarioCommandManager scenarioCommandManager;
+
+    @Inject
+    protected ScenarioSimulationStateControlManager scenarioSimulationStateControlManager;
 
     @Inject
     protected Event<NotificationEvent> notificationEvent;
@@ -83,8 +87,11 @@ public class ScenarioSimulationProducer {
         scenarioSimulationEventHandler.setFileUploadPopupPresenter(fileUploadPopupPresenter);
         scenarioSimulationEventHandler.setNotificationEvent(notificationEvent);
         scenarioSimulationEventHandler.setScenarioCommandManager(scenarioCommandManager);
-        scenarioSimulationEventHandler.setScenarioCommandRegistry(scenarioCommandRegistry);
+        scenarioSimulationEventHandler.setScenarioCommandRegistryManager(scenarioCommandRegistryManager);
         scenarioSimulationEventHandler.setContext(scenarioGridPanelProducer.getScenarioSimulationContext());
+
+        scenarioSimulationStateControlManager.initialize(scenarioCommandRegistryManager,
+                                                         scenarioGridPanelProducer.getScenarioSimulationContext());
     }
 
     public EventBus getEventBus() {
