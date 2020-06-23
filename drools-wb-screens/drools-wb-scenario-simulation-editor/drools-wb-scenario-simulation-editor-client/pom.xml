@@ -192,10 +192,6 @@
       <groupId>org.uberfire</groupId>
       <artifactId>appformer-client-api</artifactId>
     </dependency>
-      <dependency>
-          <groupId>org.uberfire</groupId>
-          <artifactId>appformer-kogito-bridge</artifactId>
-      </dependency>
 
   </dependencies>
 

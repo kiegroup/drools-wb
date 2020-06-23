@@ -23,7 +23,6 @@ import java.util.Optional;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
-import org.appformer.client.stateControl.registry.DefaultRegistry;
 import org.appformer.client.stateControl.registry.Registry;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.AbstractScenarioGridCommand;
 import org.kie.workbench.common.command.client.CommandResult;
@@ -39,7 +38,7 @@ public class ScenarioCommandRegistryManager {
     @Inject
     protected Registry<AbstractScenarioGridCommand> doneCommands;
     @Inject
-    protected DefaultRegistry<AbstractScenarioGridCommand> undoneCommands;
+    protected Registry<AbstractScenarioGridCommand> undoneCommands;
 
     /**
      * Method to register the status as it was soon before the command execution,

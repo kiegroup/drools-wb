@@ -17,8 +17,6 @@ package org.drools.workbench.screens.scenariosimulation.client.commands;
 
 public interface ScenarioSimulationStateControlManager {
 
-    default void initialize(ScenarioCommandRegistryManager scenarioCommandRegistryManager,
-                            ScenarioSimulationContext scenarioSimulationContext) {
-
-    }
+    void initialize(ScenarioCommandRegistryManager scenarioCommandRegistryManager,
+                            ScenarioSimulationContext scenarioSimulationContext);
 }
