@@ -25,7 +25,6 @@ import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioC
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioCommandRegistryManager;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationEventHandler;
-import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationStateControlManager;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationView;
 import org.drools.workbench.screens.scenariosimulation.client.menu.ScenarioContextMenuRegistry;
@@ -70,9 +69,6 @@ public class ScenarioSimulationProducer {
     protected ScenarioCommandManager scenarioCommandManager;
 
     @Inject
-    protected ScenarioSimulationStateControlManager scenarioSimulationStateControlManager;
-
-    @Inject
     protected Event<NotificationEvent> notificationEvent;
 
     @PostConstruct
@@ -89,9 +85,6 @@ public class ScenarioSimulationProducer {
         scenarioSimulationEventHandler.setScenarioCommandManager(scenarioCommandManager);
         scenarioSimulationEventHandler.setScenarioCommandRegistryManager(scenarioCommandRegistryManager);
         scenarioSimulationEventHandler.setContext(scenarioGridPanelProducer.getScenarioSimulationContext());
-
-        scenarioSimulationStateControlManager.initialize(scenarioCommandRegistryManager,
-                                                         scenarioGridPanelProducer.getScenarioSimulationContext());
     }
 
     public EventBus getEventBus() {

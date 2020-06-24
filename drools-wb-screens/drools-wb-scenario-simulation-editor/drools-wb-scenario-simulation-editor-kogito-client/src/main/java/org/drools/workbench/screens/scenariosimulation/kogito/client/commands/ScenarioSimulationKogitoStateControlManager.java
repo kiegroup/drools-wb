@@ -24,21 +24,19 @@ import org.appformer.kogito.bridge.client.interop.WindowRef;
 import org.appformer.kogito.bridge.client.stateControl.interop.StateControl;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioCommandRegistryManager;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
-import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationStateControlManager;
 
 @Dependent
-public class KogitoScenarioSimulationStateControlManager implements ScenarioSimulationStateControlManager {
+public class ScenarioSimulationKogitoStateControlManager {
 
     private Supplier<Boolean> envelopeAvailableSupplier;
     private Supplier<StateControl> stateControlSupplier;
 
     @Inject
-    public KogitoScenarioSimulationStateControlManager() {
+    public ScenarioSimulationKogitoStateControlManager() {
          envelopeAvailableSupplier = WindowRef::isEnvelopeAvailable;
          stateControlSupplier = StateControl::get;
     }
 
-    @Override
     public void initialize(final ScenarioCommandRegistryManager scenarioCommandRegistryManager,
                            final ScenarioSimulationContext scenarioSimulationContext) {
         if (isEnvelopeAvailable()) {
@@ -46,7 +44,6 @@ public class KogitoScenarioSimulationStateControlManager implements ScenarioSimu
             stateControlSupplier.get().setRedoCommand(() -> scenarioCommandRegistryManager.redo(scenarioSimulationContext));
         }
     }
-
 
     private boolean isEnvelopeAvailable() {
         return envelopeAvailableSupplier.get();
