@@ -21,25 +21,18 @@ import java.util.Objects;
 import java.util.Optional;
 
 import javax.enterprise.context.Dependent;
-import javax.inject.Inject;
 
-import org.appformer.client.stateControl.registry.DefaultRegistry;
-import org.appformer.client.stateControl.registry.Registry;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.AbstractScenarioGridCommand;
 import org.kie.workbench.common.command.client.CommandResult;
 import org.kie.workbench.common.command.client.CommandResultBuilder;
 import org.kie.workbench.common.command.client.impl.CommandResultImpl;
+import org.kie.workbench.common.command.client.registry.AbstractRegistryManager;
 
 /**
  * This class is used to store <code>Queue</code>es of <b>executed/undone</b> <code>Command</code>s
  */
 @Dependent
-public class ScenarioCommandRegistryManager {
-
-    @Inject
-    protected Registry<AbstractScenarioGridCommand> doneCommands;
-    @Inject
-    protected DefaultRegistry<AbstractScenarioGridCommand> undoneCommands;
+public class ScenarioCommandRegistryManager extends AbstractRegistryManager<AbstractScenarioGridCommand> {
 
     /**
      * Method to register the status as it was soon before the command execution,
