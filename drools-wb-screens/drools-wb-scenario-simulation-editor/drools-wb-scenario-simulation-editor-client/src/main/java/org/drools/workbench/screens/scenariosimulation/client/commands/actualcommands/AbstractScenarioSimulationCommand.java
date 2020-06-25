@@ -64,6 +64,8 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
         }
     }
 
+
+
     protected abstract void internalExecute(ScenarioSimulationContext context) throws Exception;
 
     protected CommandResult<ScenarioSimulationViolation> commonExecution(final ScenarioSimulationContext context) {
