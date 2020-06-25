@@ -19,12 +19,21 @@ package org.drools.workbench.screens.scenariosimulation.client.commands;
 import java.util.Optional;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import org.appformer.client.stateControl.registry.impl.DefaultRegistryImpl;
 import org.drools.workbench.screens.scenariosimulation.client.AbstractScenarioSimulationTest;
+import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.AbstractScenarioGridCommand;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.kie.workbench.common.command.client.CommandResult;
 import org.kie.workbench.common.command.client.CommandResultBuilder;
+import org.mockito.Mock;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
@@ -37,110 +46,110 @@ import static org.mockito.Mockito.verify;
 public class ScenarioCommandRegistryManagerTest extends AbstractScenarioSimulationTest {
 
     private ScenarioCommandRegistryManager scenarioCommandRegistryManagerSpy;
+    private DefaultRegistryImpl<AbstractScenarioGridCommand> undoCommandsSpy;
+    private DefaultRegistryImpl<AbstractScenarioGridCommand> redoCommandsSpy;
+
+    @Mock
+    private AbstractScenarioGridCommand abstractScenarioGridCommandMock;
 
     @Before
     public void setup() {
         super.setup();
+        undoCommandsSpy = spy(new DefaultRegistryImpl<>());
+        redoCommandsSpy = spy(new DefaultRegistryImpl<>());
         scenarioCommandRegistryManagerSpy = spy(new ScenarioCommandRegistryManager() {
-
+            {
+                this.doneCommands = undoCommandsSpy;
+                this.undoneCommands = redoCommandsSpy;
+            }
         });
     }
 
     @Test
     public void register() {
-        /*scenarioCommandRegistryManagerSpy.undoneCommands.add(mock(AbstractScenarioGridCommand.class));
-        assertFalse(scenarioCommandRegistryManagerSpy.undoneCommands.isEmpty());
-        scenarioCommandRegistryManagerSpy.register(scenarioSimulationContextLocal, mock(AbstractScenarioGridCommand.class));
-        assertTrue(scenarioCommandRegistryManagerSpy.undoneCommands.isEmpty());
-        verify(scenarioCommandRegistryManagerSpy, times(1)).setUndoRedoButtonStatus(eq(scenarioSimulationContextLocal));*/
+        redoCommandsSpy.register(abstractScenarioGridCommandMock);
+        assertFalse(redoCommandsSpy.isEmpty());
+        scenarioCommandRegistryManagerSpy.register(scenarioSimulationContextLocal, abstractScenarioGridCommandMock);
+        verify(undoCommandsSpy, times(1)).register(eq(abstractScenarioGridCommandMock));
+        verify(redoCommandsSpy, times(1)).clear();
+        verify(scenarioCommandRegistryManagerSpy, times(1)).setUndoRedoButtonStatus(eq(scenarioSimulationContextLocal));
+        assertTrue(redoCommandsSpy.isEmpty());
     }
 
     @Test
     public void undoEmpty() {
-       /* scenarioCommandRegistryManagerSpy.undoneCommands.clear();
         final CommandResult<ScenarioSimulationViolation> retrieved = scenarioCommandRegistryManagerSpy.undo(scenarioSimulationContextLocal);
         assertEquals(CommandResult.Type.WARNING, retrieved.getType());
         verify(scenarioCommandRegistryManagerSpy, never()).commonUndoRedoOperation(eq(scenarioSimulationContextLocal), eq(appendRowCommandMock), eq(true));
-        verify(scenarioCommandRegistryManagerSpy, times(1)).setUndoRedoButtonStatus(eq(scenarioSimulationContextLocal));*/
+        verify(scenarioCommandRegistryManagerSpy, times(1)).setUndoRedoButtonStatus(eq(scenarioSimulationContextLocal));
     }
 
     @Test
     public void undoNotEmptySameGrid() {
-        /*
-        scenarioCommandRegistryManagerSpy.undoneCommands.clear();
-        AbstractScenarioGridCommand commandMock = mock(AbstractScenarioGridCommand.class);
-        //scenarioCommandRegistryManagerSpy.register(commandMock);
+        undoCommandsSpy.register(abstractScenarioGridCommandMock);
         doReturn(CommandResultBuilder.SUCCESS).when(scenarioCommandRegistryManagerSpy).commonUndoRedoOperation(any(), any(), anyBoolean());
         doReturn(Optional.empty()).when(scenarioCommandRegistryManagerSpy).commonUndoRedoPreexecution(any(), any());
         final CommandResult<ScenarioSimulationViolation> retrieved = scenarioCommandRegistryManagerSpy.undo(scenarioSimulationContextLocal);
         assertEquals(CommandResult.Type.INFO, retrieved.getType());
-        verify(scenarioCommandRegistryManagerSpy, times(1)).commonUndoRedoOperation(eq(scenarioSimulationContextLocal), eq(commandMock), eq(true));
-        verify(scenarioCommandRegistryManagerSpy, times(1)).setUndoRedoButtonStatus(eq(scenarioSimulationContextLocal));*/
+        verify(scenarioCommandRegistryManagerSpy, times(1)).commonUndoRedoOperation(eq(scenarioSimulationContextLocal), eq(abstractScenarioGridCommandMock), eq(true));
+        verify(scenarioCommandRegistryManagerSpy, times(1)).setUndoRedoButtonStatus(eq(scenarioSimulationContextLocal));
     }
 
-    @Test
+    @Test //TODO Recheck
     public void undoNotEmptyDifferentGrid() {
-        /*int currentSize = scenarioCommandRegistryManagerSpy.undoneCommands.size();
-        scenarioCommandRegistryManagerSpy.register(scenarioSimulationContextLocal, appendRowCommandMock);
-        verify(scenarioCommandRegistryManagerSpy, times(1)).setUndoRedoButtonStatus(eq(scenarioSimulationContextLocal));
+        undoCommandsSpy.register(appendRowCommandMock);
         doReturn(Optional.of(CommandResultBuilder.SUCCESS)).when(appendRowCommandMock).commonUndoRedoPreexecution(eq(scenarioSimulationContextLocal));
+        assertFalse(undoCommandsSpy.isEmpty());
         scenarioCommandRegistryManagerSpy.undo(scenarioSimulationContextLocal);
-        //assertEquals(currentSize, scenarioCommandRegistryManagerSpy.undoneCommands.size());
+        assertFalse(undoCommandsSpy.isEmpty());
         verify(scenarioCommandRegistryManagerSpy, never()).commonUndoRedoOperation(eq(scenarioSimulationContextLocal), eq(appendRowCommandMock), eq(true));
-        verify(scenarioCommandRegistryManagerSpy, times(1)).setUndoRedoButtonStatus(eq(scenarioSimulationContextLocal));
-        */
+        verify(scenarioCommandRegistryManagerSpy, never()).setUndoRedoButtonStatus(eq(scenarioSimulationContextLocal));
+        assertFalse(undoCommandsSpy.isEmpty());
     }
 
     @Test
     public void redoEmpty() {
-        /*
-        scenarioCommandRegistryManagerSpy.undoneCommands.clear();
         scenarioCommandRegistryManagerSpy.redo(scenarioSimulationContextLocal);
         verify(scenarioCommandRegistryManagerSpy, never()).commonUndoRedoOperation(eq(scenarioSimulationContextLocal), eq(appendRowCommandMock), eq(true));
-        verify(scenarioCommandRegistryManagerSpy, times(1)).setUndoRedoButtonStatus(eq(scenarioSimulationContextLocal));*/
+        verify(scenarioCommandRegistryManagerSpy, times(1)).setUndoRedoButtonStatus(eq(scenarioSimulationContextLocal));
     }
 
     @Test
     public void redoNotEmptySameGrid() {
-        /*
-        scenarioCommandRegistryManagerSpy.undoneCommands.clear();
-        AbstractScenarioGridCommand commandMock = mock(AbstractScenarioGridCommand.class);
-        //scenarioCommandRegistryManagerSpy.undoneCommands.add(commandMock);
+        redoCommandsSpy.register(abstractScenarioGridCommandMock);
         doReturn(CommandResultBuilder.SUCCESS).when(scenarioCommandRegistryManagerSpy).commonUndoRedoOperation(any(), any(), anyBoolean());
         doReturn(Optional.empty()).when(scenarioCommandRegistryManagerSpy).commonUndoRedoPreexecution(any(), any());
         final CommandResult<ScenarioSimulationViolation> retrieved = scenarioCommandRegistryManagerSpy.redo(scenarioSimulationContextLocal);
         assertEquals(CommandResult.Type.INFO, retrieved.getType());
-        verify(scenarioCommandRegistryManagerSpy, never()).commonUndoRedoOperation(eq(scenarioSimulationContextLocal), eq(commandMock), eq(true));
-        verify(scenarioCommandRegistryManagerSpy, times(1)).setUndoRedoButtonStatus(eq(scenarioSimulationContextLocal));*/
+        verify(scenarioCommandRegistryManagerSpy, never()).commonUndoRedoOperation(eq(scenarioSimulationContextLocal), eq(abstractScenarioGridCommandMock), eq(true));
+        verify(scenarioCommandRegistryManagerSpy, times(1)).setUndoRedoButtonStatus(eq(scenarioSimulationContextLocal));
     }
 
     @Test
     public void redoNotEmptyDifferentGrid() {
-        //scenarioCommandRegistryManagerSpy.undoneCommands.push(appendRowCommandMock);
+        redoCommandsSpy.register(appendRowCommandMock);
         doReturn(Optional.of(CommandResultBuilder.SUCCESS)).when(appendRowCommandMock).commonUndoRedoPreexecution(eq(scenarioSimulationContextLocal));
-        //int currentSize = scenarioCommandRegistryManagerSpy.undoneCommands.size();
+        assertFalse(redoCommandsSpy.isEmpty());
         scenarioCommandRegistryManagerSpy.redo(scenarioSimulationContextLocal);
-        //assertEquals(currentSize, scenarioCommandRegistryManagerSpy.undoneCommands.size());
         verify(scenarioCommandRegistryManagerSpy, never()).commonUndoRedoOperation(eq(scenarioSimulationContextLocal), eq(appendRowCommandMock), eq(false));
         verify(scenarioCommandRegistryManagerSpy, never()).setUndoRedoButtonStatus(eq(scenarioSimulationContextLocal));
+        assertFalse(redoCommandsSpy.isEmpty());
     }
 
     @Test
     public void setUndoRedoButtonStatus() {
-        //scenarioCommandRegistryManagerSpy.clear();
-        //scenarioCommandRegistryManagerSpy.undoneCommands.clear();
         scenarioCommandRegistryManagerSpy.setUndoRedoButtonStatus(scenarioSimulationContextLocal);
         verify(scenarioSimulationEditorPresenterMock, times(1)).setUndoButtonEnabledStatus(eq(false));
         verify(scenarioSimulationEditorPresenterMock, times(1)).setRedoButtonEnabledStatus(eq(false));
         //
         reset(scenarioSimulationEditorPresenterMock);
-        //scenarioCommandRegistryManagerSpy.register(appendRowCommandMock);
+        undoCommandsSpy.register(appendRowCommandMock);
         scenarioCommandRegistryManagerSpy.setUndoRedoButtonStatus(scenarioSimulationContextLocal);
         verify(scenarioSimulationEditorPresenterMock, times(1)).setUndoButtonEnabledStatus(eq(true));
         verify(scenarioSimulationEditorPresenterMock, times(1)).setRedoButtonEnabledStatus(eq(false));
         //
         reset(scenarioSimulationEditorPresenterMock);
-        //scenarioCommandRegistryManagerSpy.undoneCommands.push(appendRowCommandMock);
+        redoCommandsSpy.register(appendRowCommandMock);
         scenarioCommandRegistryManagerSpy.setUndoRedoButtonStatus(scenarioSimulationContextLocal);
         verify(scenarioSimulationEditorPresenterMock, times(1)).setUndoButtonEnabledStatus(eq(true));
         verify(scenarioSimulationEditorPresenterMock, times(1)).setRedoButtonEnabledStatus(eq(true));

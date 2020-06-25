@@ -74,11 +74,6 @@ public class ScenarioCellTextAreaDOMElementTest extends AbstractFactoriesTest {
             protected SimplePanel getContainer() {
                 return simplePanelMock;
             }
-
-            @Override
-            public String getValue() {
-                return "value";
-            }
         });
     }
 
