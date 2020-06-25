@@ -26,13 +26,13 @@ import org.drools.workbench.screens.scenariosimulation.client.commands.actualcom
 import org.kie.workbench.common.command.client.CommandResult;
 import org.kie.workbench.common.command.client.CommandResultBuilder;
 import org.kie.workbench.common.command.client.impl.CommandResultImpl;
-import org.kie.workbench.common.command.client.registry.AbstractRegistryManager;
+import org.kie.workbench.common.command.client.registry.AbstractCommandRegistryManager;
 
 /**
  * This class is used to store <code>Queue</code>es of <b>executed/undone</b> <code>Command</code>s
  */
 @Dependent
-public class ScenarioCommandRegistryManager extends AbstractRegistryManager<AbstractScenarioGridCommand> {
+public class ScenarioCommandRegistryManager extends AbstractCommandRegistryManager<AbstractScenarioGridCommand> {
 
     /**
      * Method to register the status as it was soon before the command execution,
