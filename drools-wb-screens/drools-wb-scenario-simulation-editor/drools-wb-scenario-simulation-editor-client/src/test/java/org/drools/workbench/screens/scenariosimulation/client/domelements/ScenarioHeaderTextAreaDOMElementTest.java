@@ -57,7 +57,7 @@ public class ScenarioHeaderTextAreaDOMElementTest extends AbstractFactoriesTest 
         scenarioHeaderTextAreaDOMElement = spy(new ScenarioHeaderTextAreaDOMElement(textAreaMock, scenarioGridLayerMock, scenarioGridMock) {
             {
                 this.context = contextMock;
-                this.scenarioGridCell =scenarioGridCellMock;
+                this.scenarioGridCell = scenarioGridCellMock;
             }
         });
     }
