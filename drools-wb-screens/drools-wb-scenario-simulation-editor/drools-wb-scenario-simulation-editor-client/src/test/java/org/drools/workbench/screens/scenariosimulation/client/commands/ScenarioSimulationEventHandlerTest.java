@@ -504,7 +504,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         when(scenarioCommandManagerMock.execute(eq(scenarioSimulationContextLocal), eq(appendRowCommandMock))).thenReturn(status);
         scenarioSimulationEventHandler.commonExecution(appendRowCommandMock, true);
         assertEquals(simulationMock, scenarioSimulationContextLocal.getStatus().getSimulation());
-        //verify(scenarioCommandRegistryManagerMock, never()).register(eq(appendRowCommandMock));
+        verify(scenarioCommandRegistryManagerMock, never()).register(eq(scenarioSimulationContextLocal), eq(appendRowCommandMock));
     }
 
     @Test

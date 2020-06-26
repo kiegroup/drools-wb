@@ -26,7 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(GwtMockitoTestRunner.class)
 public class ScenarioSimulationContextTest extends AbstractScenarioSimulationTest {
@@ -192,5 +192,17 @@ public class ScenarioSimulationContextTest extends AbstractScenarioSimulationTes
     public void getScenarioExpressionCellTextAreaSingletonDOMElementFactory() {
         assertEquals(scenarioExpressionCellTextAreaSingletonDOMElementFactorySpy,
                      scenarioSimulationContextLocal.getScenarioExpressionCellTextAreaSingletonDOMElementFactory(GridWidget.SIMULATION));
+    }
+
+    @Test
+    public void setUndoButtonEnabledStatus() {
+        scenarioSimulationContextLocal.setUndoButtonEnabledStatus(true);
+        verify(scenarioSimulationEditorPresenterMock, times(1)).setUndoButtonEnabledStatus(eq(true));
+    }
+
+    @Test
+    public void setRedoButtonEnabledStatus() {
+        scenarioSimulationContextLocal.setRedoButtonEnabledStatus(true);
+        verify(scenarioSimulationEditorPresenterMock, times(1)).setRedoButtonEnabledStatus(eq(true));
     }
 }
