@@ -95,7 +95,7 @@ public class ScenarioCommandRegistryManagerTest extends AbstractScenarioSimulati
         verify(scenarioCommandRegistryManagerSpy, times(1)).setUndoRedoButtonStatus(eq(scenarioSimulationContextLocal));
     }
 
-    @Test //TODO Recheck
+    @Test
     public void undoNotEmptyDifferentGrid() {
         doneCommandsRegistrySpy.register(appendRowCommandMock);
         doReturn(Optional.of(CommandResultBuilder.SUCCESS)).when(appendRowCommandMock).commonUndoRedoPreexecution(eq(scenarioSimulationContextLocal));
