@@ -41,8 +41,8 @@ public class ScenarioCommandRegistryManager extends AbstractCommandRegistryManag
      * @param command
      */
     public void register(ScenarioSimulationContext context, AbstractScenarioGridCommand command) {
-        doneCommands.register(command);
-        undoneCommands.clear();
+        doneCommandsRegistry.register(command);
+        undoneCommandsRegistry.clear();
         setUndoRedoButtonStatus(context);
     }
 
@@ -53,20 +53,22 @@ public class ScenarioCommandRegistryManager extends AbstractCommandRegistryManag
      */
     public CommandResult<ScenarioSimulationViolation> undo(ScenarioSimulationContext scenarioSimulationContext) {
         CommandResult<ScenarioSimulationViolation> toReturn;
-        if (!doneCommands.isEmpty()) {
+        if (!doneCommandsRegistry.isEmpty()) {
             // to restore to implement tab switching
-            final Optional<CommandResult<ScenarioSimulationViolation>> optionalPreexecuted = commonUndoRedoPreexecution(scenarioSimulationContext, doneCommands.peek());
+            final Optional<CommandResult<ScenarioSimulationViolation>> optionalPreexecuted =
+                    commonUndoRedoPreexecution(scenarioSimulationContext, doneCommandsRegistry.peek());
             if (optionalPreexecuted.isPresent()) {
                 return optionalPreexecuted.get();
             } else {
-                final AbstractScenarioGridCommand toUndo = doneCommands.pop();
+                final AbstractScenarioGridCommand toUndo = doneCommandsRegistry.pop();
                 toReturn = commonUndoRedoOperation(scenarioSimulationContext, toUndo, true);
                 if (Objects.equals(CommandResultBuilder.SUCCESS, toReturn)) {
-                    undoneCommands.register(toUndo);
+                    undoneCommandsRegistry.register(toUndo);
                 }
             }
         } else {
-            toReturn = new CommandResultImpl<>(CommandResult.Type.WARNING, Collections.singletonList(new ScenarioSimulationViolation("No commands to undo")));
+            toReturn = new CommandResultImpl<>(CommandResult.Type.WARNING, Collections.singletonList(
+                    new ScenarioSimulationViolation("No commands to undo")));
         }
         setUndoRedoButtonStatus(scenarioSimulationContext);
         return toReturn;
@@ -79,20 +81,22 @@ public class ScenarioCommandRegistryManager extends AbstractCommandRegistryManag
      */
     public CommandResult<ScenarioSimulationViolation> redo(ScenarioSimulationContext scenarioSimulationContext) {
         CommandResult<ScenarioSimulationViolation> toReturn;
-        if (!undoneCommands.isEmpty()) {
+        if (!undoneCommandsRegistry.isEmpty()) {
             // to restore to implement tab switching
-            final Optional<CommandResult<ScenarioSimulationViolation>> optionalPreexecuted = commonUndoRedoPreexecution(scenarioSimulationContext, undoneCommands.peek());
+            final Optional<CommandResult<ScenarioSimulationViolation>> optionalPreexecuted =
+                    commonUndoRedoPreexecution(scenarioSimulationContext, undoneCommandsRegistry.peek());
             if (optionalPreexecuted.isPresent()) {
                 return optionalPreexecuted.get();
             } else {
-                final AbstractScenarioGridCommand toRedo = undoneCommands.pop();
+                final AbstractScenarioGridCommand toRedo = undoneCommandsRegistry.pop();
                 toReturn = commonUndoRedoOperation(scenarioSimulationContext, toRedo, false);
                 if (Objects.equals(CommandResultBuilder.SUCCESS, toReturn)) {
-                    doneCommands.register(toRedo);
+                    doneCommandsRegistry.register(toRedo);
                 }
             }
         } else {
-            toReturn = new CommandResultImpl<>(CommandResult.Type.WARNING, Collections.singletonList(new ScenarioSimulationViolation("No commands to redo")));
+            toReturn = new CommandResultImpl<>(CommandResult.Type.WARNING, Collections.singletonList(
+                    new ScenarioSimulationViolation("No commands to redo")));
         }
         setUndoRedoButtonStatus(scenarioSimulationContext);
         return toReturn;
@@ -105,7 +109,8 @@ public class ScenarioCommandRegistryManager extends AbstractCommandRegistryManag
      * @param scenarioSimulationContext
      * @param command
      */
-    protected Optional<CommandResult<ScenarioSimulationViolation>> commonUndoRedoPreexecution(final ScenarioSimulationContext scenarioSimulationContext, final AbstractScenarioGridCommand command) {
+    protected Optional<CommandResult<ScenarioSimulationViolation>> commonUndoRedoPreexecution(final ScenarioSimulationContext scenarioSimulationContext,
+                                                                                              final AbstractScenarioGridCommand command) {
         return command.commonUndoRedoPreexecution(scenarioSimulationContext);
     }
 
@@ -116,7 +121,9 @@ public class ScenarioCommandRegistryManager extends AbstractCommandRegistryManag
      * @param isUndo
      * @return
      */
-    protected CommandResult<ScenarioSimulationViolation> commonUndoRedoOperation(final ScenarioSimulationContext scenarioSimulationContext, final AbstractScenarioGridCommand command, boolean isUndo) {
+    protected CommandResult<ScenarioSimulationViolation> commonUndoRedoOperation(final ScenarioSimulationContext scenarioSimulationContext,
+                                                                                 final AbstractScenarioGridCommand command,
+                                                                                 final boolean isUndo) {
         CommandResult<ScenarioSimulationViolation> toReturn;
         if (isUndo) {
             toReturn = command.undo(scenarioSimulationContext);
@@ -127,7 +134,7 @@ public class ScenarioCommandRegistryManager extends AbstractCommandRegistryManag
     }
 
     protected void setUndoRedoButtonStatus(final ScenarioSimulationContext scenarioSimulationContext) {
-        scenarioSimulationContext.scenarioSimulationEditorPresenter.setUndoButtonEnabledStatus(!doneCommands.isEmpty());
-        scenarioSimulationContext.scenarioSimulationEditorPresenter.setRedoButtonEnabledStatus(!undoneCommands.isEmpty());
+        scenarioSimulationContext.setUndoButtonEnabledStatus(!doneCommandsRegistry.isEmpty());
+        scenarioSimulationContext.setRedoButtonEnabledStatus(!undoneCommandsRegistry.isEmpty());
     }
 }
