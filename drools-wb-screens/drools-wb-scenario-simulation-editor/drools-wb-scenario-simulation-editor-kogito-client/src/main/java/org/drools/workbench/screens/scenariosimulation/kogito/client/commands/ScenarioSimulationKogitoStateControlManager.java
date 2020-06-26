@@ -28,8 +28,8 @@ import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioS
 @Dependent
 public class ScenarioSimulationKogitoStateControlManager {
 
-    private Supplier<Boolean> envelopeAvailableSupplier;
-    private Supplier<StateControl> stateControlSupplier;
+    protected Supplier<Boolean> envelopeAvailableSupplier;
+    protected Supplier<StateControl> stateControlSupplier;
 
     @Inject
     public ScenarioSimulationKogitoStateControlManager() {
