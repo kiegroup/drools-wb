@@ -52,11 +52,11 @@ public class ScenarioSimulationKogitoProducerTest {
     @Mock
     private ScenarioContextMenuRegistry scenarioContextMenuRegistryMock;
 
-    private ScenarioSimulationKogitoProducer scenarioSimulationKogitoProducerSpy;
+    private AbstractScenarioSimulationKogitoProducer scenarioSimulationKogitoProducerSpy;
 
     @Before
     public void setup() {
-        scenarioSimulationKogitoProducerSpy = spy(new ScenarioSimulationKogitoProducer() {
+        scenarioSimulationKogitoProducerSpy = spy(new AbstractScenarioSimulationKogitoProducer() {
             {
                 this.scenarioSimulationStateControlManager = scenarioSimulationKogitoStateControlManagerMock;
                 this.scenarioCommandRegistryManager = scenarioCommandRegistryManagerMock;

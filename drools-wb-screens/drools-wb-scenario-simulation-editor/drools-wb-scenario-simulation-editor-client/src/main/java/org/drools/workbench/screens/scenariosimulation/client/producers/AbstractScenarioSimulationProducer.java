@@ -38,8 +38,7 @@ import org.uberfire.workbench.events.NotificationEvent;
 /**
  * <code>@Dependent</code> Class meant to be the only <i>Producer</i> for a given {@link org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter}
  */
-@Dependent
-public class ScenarioSimulationProducer {
+public abstract class AbstractScenarioSimulationProducer {
 
     @Inject
     protected ScenarioGridPanelProducer scenarioGridPanelProducer;

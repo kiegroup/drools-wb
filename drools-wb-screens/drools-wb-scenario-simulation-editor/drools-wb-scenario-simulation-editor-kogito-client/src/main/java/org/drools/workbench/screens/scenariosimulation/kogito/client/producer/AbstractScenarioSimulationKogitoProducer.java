@@ -16,16 +16,13 @@
 package org.drools.workbench.screens.scenariosimulation.kogito.client.producer;
 
 import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Specializes;
 import javax.inject.Inject;
 
-import org.drools.workbench.screens.scenariosimulation.client.producers.ScenarioSimulationProducer;
+import org.drools.workbench.screens.scenariosimulation.client.producers.AbstractScenarioSimulationProducer;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.commands.ScenarioSimulationKogitoStateControlManager;
 
-
-@Specializes
 @Dependent
-public class ScenarioSimulationKogitoProducer extends ScenarioSimulationProducer {
+public class AbstractScenarioSimulationKogitoProducer extends AbstractScenarioSimulationProducer {
 
     @Inject
     protected ScenarioSimulationKogitoStateControlManager scenarioSimulationStateControlManager;
