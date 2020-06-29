@@ -16,7 +16,6 @@
 package org.drools.workbench.screens.scenariosimulation.client.producers;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.Dependent;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 

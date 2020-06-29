@@ -22,7 +22,7 @@ import org.drools.workbench.screens.scenariosimulation.client.producers.Abstract
 import org.drools.workbench.screens.scenariosimulation.kogito.client.commands.ScenarioSimulationKogitoStateControlManager;
 
 @Dependent
-public class AbstractScenarioSimulationKogitoProducer extends AbstractScenarioSimulationProducer {
+public class ScenarioSimulationKogitoProducer extends AbstractScenarioSimulationProducer {
 
     @Inject
     protected ScenarioSimulationKogitoStateControlManager scenarioSimulationStateControlManager;
