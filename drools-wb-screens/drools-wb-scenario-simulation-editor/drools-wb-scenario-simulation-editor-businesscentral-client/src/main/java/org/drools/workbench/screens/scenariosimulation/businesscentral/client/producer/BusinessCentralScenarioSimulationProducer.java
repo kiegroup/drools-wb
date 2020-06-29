@@ -15,9 +15,9 @@
  */
 package org.drools.workbench.screens.scenariosimulation.businesscentral.client.producer;
 
-import org.drools.workbench.screens.scenariosimulation.client.producers.AbstractScenarioSimulationProducer;
-
 import javax.enterprise.context.Dependent;
+
+import org.drools.workbench.screens.scenariosimulation.client.producers.AbstractScenarioSimulationProducer;
 
 @Dependent
 public class BusinessCentralScenarioSimulationProducer extends AbstractScenarioSimulationProducer {
