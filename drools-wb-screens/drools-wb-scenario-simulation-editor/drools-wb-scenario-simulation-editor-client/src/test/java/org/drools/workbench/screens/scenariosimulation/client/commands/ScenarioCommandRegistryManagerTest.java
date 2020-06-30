@@ -101,10 +101,9 @@ public class ScenarioCommandRegistryManagerTest extends AbstractScenarioSimulati
         doReturn(Optional.of(CommandResultBuilder.SUCCESS)).when(appendRowCommandMock).commonUndoRedoPreexecution(eq(scenarioSimulationContextLocal));
         assertFalse(doneCommandsRegistrySpy.isEmpty());
         scenarioCommandRegistryManagerSpy.undo(scenarioSimulationContextLocal);
-        assertFalse(doneCommandsRegistrySpy.isEmpty());
-        verify(scenarioCommandRegistryManagerSpy, never()).commonUndoRedoOperation(eq(scenarioSimulationContextLocal), eq(appendRowCommandMock), eq(true));
-        verify(scenarioCommandRegistryManagerSpy, never()).setUndoRedoButtonStatus(eq(scenarioSimulationContextLocal));
-        assertFalse(doneCommandsRegistrySpy.isEmpty());
+        assertTrue(doneCommandsRegistrySpy.isEmpty());
+        verify(scenarioCommandRegistryManagerSpy, times(1)).commonUndoRedoOperation(eq(scenarioSimulationContextLocal), eq(appendRowCommandMock), eq(true));
+        verify(scenarioCommandRegistryManagerSpy, times(1)).setUndoRedoButtonStatus(eq(scenarioSimulationContextLocal));
     }
 
     @Test
@@ -131,9 +130,9 @@ public class ScenarioCommandRegistryManagerTest extends AbstractScenarioSimulati
         doReturn(Optional.of(CommandResultBuilder.SUCCESS)).when(appendRowCommandMock).commonUndoRedoPreexecution(eq(scenarioSimulationContextLocal));
         assertFalse(undoneCommandsRegistrySpy.isEmpty());
         scenarioCommandRegistryManagerSpy.redo(scenarioSimulationContextLocal);
-        verify(scenarioCommandRegistryManagerSpy, never()).commonUndoRedoOperation(eq(scenarioSimulationContextLocal), eq(appendRowCommandMock), eq(false));
-        verify(scenarioCommandRegistryManagerSpy, never()).setUndoRedoButtonStatus(eq(scenarioSimulationContextLocal));
-        assertFalse(undoneCommandsRegistrySpy.isEmpty());
+        verify(scenarioCommandRegistryManagerSpy, times(1)).commonUndoRedoOperation(eq(scenarioSimulationContextLocal), eq(appendRowCommandMock), eq(false));
+        verify(scenarioCommandRegistryManagerSpy, times(1)).setUndoRedoButtonStatus(eq(scenarioSimulationContextLocal));
+        assertTrue(undoneCommandsRegistrySpy.isEmpty());
     }
 
     @Test

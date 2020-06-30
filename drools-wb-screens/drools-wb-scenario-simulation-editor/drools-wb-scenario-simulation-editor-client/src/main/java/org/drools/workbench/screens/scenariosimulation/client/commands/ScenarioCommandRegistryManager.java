@@ -54,17 +54,11 @@ public class ScenarioCommandRegistryManager extends AbstractCommandRegistryManag
     public CommandResult<ScenarioSimulationViolation> undo(ScenarioSimulationContext scenarioSimulationContext) {
         CommandResult<ScenarioSimulationViolation> toReturn;
         if (!doneCommandsRegistry.isEmpty()) {
-            // to restore to implement tab switching
-            final Optional<CommandResult<ScenarioSimulationViolation>> optionalPreexecuted =
-                    commonUndoRedoPreexecution(scenarioSimulationContext, doneCommandsRegistry.peek());
-            if (optionalPreexecuted.isPresent()) {
-                return optionalPreexecuted.get();
-            } else {
-                final AbstractScenarioGridCommand toUndo = doneCommandsRegistry.pop();
-                toReturn = commonUndoRedoOperation(scenarioSimulationContext, toUndo, true);
-                if (Objects.equals(CommandResultBuilder.SUCCESS, toReturn)) {
-                    undoneCommandsRegistry.register(toUndo);
-                }
+            commonUndoRedoPreexecution(scenarioSimulationContext, doneCommandsRegistry.peek());
+            final AbstractScenarioGridCommand toUndo = doneCommandsRegistry.pop();
+            toReturn = commonUndoRedoOperation(scenarioSimulationContext, toUndo, true);
+            if (Objects.equals(CommandResultBuilder.SUCCESS, toReturn)) {
+                undoneCommandsRegistry.register(toUndo);
             }
         } else {
             toReturn = new CommandResultImpl<>(CommandResult.Type.WARNING, Collections.singletonList(
@@ -82,17 +76,11 @@ public class ScenarioCommandRegistryManager extends AbstractCommandRegistryManag
     public CommandResult<ScenarioSimulationViolation> redo(ScenarioSimulationContext scenarioSimulationContext) {
         CommandResult<ScenarioSimulationViolation> toReturn;
         if (!undoneCommandsRegistry.isEmpty()) {
-            // to restore to implement tab switching
-            final Optional<CommandResult<ScenarioSimulationViolation>> optionalPreexecuted =
-                    commonUndoRedoPreexecution(scenarioSimulationContext, undoneCommandsRegistry.peek());
-            if (optionalPreexecuted.isPresent()) {
-                return optionalPreexecuted.get();
-            } else {
-                final AbstractScenarioGridCommand toRedo = undoneCommandsRegistry.pop();
-                toReturn = commonUndoRedoOperation(scenarioSimulationContext, toRedo, false);
-                if (Objects.equals(CommandResultBuilder.SUCCESS, toReturn)) {
-                    doneCommandsRegistry.register(toRedo);
-                }
+            commonUndoRedoPreexecution(scenarioSimulationContext, undoneCommandsRegistry.peek());
+            final AbstractScenarioGridCommand toRedo = undoneCommandsRegistry.pop();
+            toReturn = commonUndoRedoOperation(scenarioSimulationContext, toRedo, false);
+            if (Objects.equals(CommandResultBuilder.SUCCESS, toReturn)) {
+                doneCommandsRegistry.register(toRedo);
             }
         } else {
             toReturn = new CommandResultImpl<>(CommandResult.Type.WARNING, Collections.singletonList(
