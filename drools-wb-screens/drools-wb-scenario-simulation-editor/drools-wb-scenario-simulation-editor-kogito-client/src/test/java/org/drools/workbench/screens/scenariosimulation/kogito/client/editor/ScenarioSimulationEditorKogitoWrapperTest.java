@@ -345,6 +345,7 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
         when(settingsMock.getType()).thenReturn(ScenarioSimulationModel.Type.RULE);
         when(scenarioSimulationEditorPresenterMock.getJsonModel(eq(scenarioSimulationModelMock))).thenReturn(JSON_MODEL);
         scenarioSimulationEditorKogitoWrapperSpy.onModelSuccessCallbackMethod(scenarioSimulationModelMock);
+        verify(scenarioSimulationEditorPresenterMock, times(1)).sendNotification(eq(ScenarioSimulationEditorConstants.INSTANCE.ruleScenarioNotSupported()), eq(NotificationEvent.NotificationType.WARNING));
         verify(scenarioSimulationEditorPresenterMock, times(1)).setPackageName(eq(ScenarioSimulationEditorKogitoWrapper.DEFAULT_PACKAGE));
         verify(((BaseKogitoEditor) scenarioSimulationEditorKogitoWrapperSpy), times(1)).setOriginalContentHash(eq(JSON_MODEL.hashCode()));
         verify(scenarioSimulationEditorPresenterMock, times(1)).getModelSuccessCallbackMethod(dataManagementStrategyCaptor.capture(), eq(scenarioSimulationModelMock));
@@ -357,6 +358,7 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
         when(settingsMock.getType()).thenReturn(ScenarioSimulationModel.Type.DMN);
         when(scenarioSimulationEditorPresenterMock.getJsonModel(eq(scenarioSimulationModelMock))).thenReturn(JSON_MODEL);
         scenarioSimulationEditorKogitoWrapperSpy.onModelSuccessCallbackMethod(scenarioSimulationModelMock);
+        verify(scenarioSimulationEditorPresenterMock,never()).sendNotification(any(), any());
         verify(scenarioSimulationEditorPresenterMock, times(1)).setPackageName(eq(ScenarioSimulationEditorKogitoWrapper.DEFAULT_PACKAGE));
         verify(((BaseKogitoEditor)scenarioSimulationEditorKogitoWrapperSpy), times(1)).setOriginalContentHash(eq(JSON_MODEL.hashCode()));
         verify(scenarioSimulationEditorPresenterMock, times(1)).getModelSuccessCallbackMethod(dataManagementStrategyCaptor.capture(), eq(scenarioSimulationModelMock));

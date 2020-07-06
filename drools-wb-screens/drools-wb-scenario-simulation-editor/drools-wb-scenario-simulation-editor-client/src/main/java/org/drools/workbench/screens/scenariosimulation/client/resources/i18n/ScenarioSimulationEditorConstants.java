@@ -378,6 +378,8 @@ public interface ScenarioSimulationEditorConstants
 
     String backgroundErrorNotification();
 
+    String ruleScenarioNotSupported();
+
     String testToolsDescription();
 
     String testToolObjectSelectionTitle();
