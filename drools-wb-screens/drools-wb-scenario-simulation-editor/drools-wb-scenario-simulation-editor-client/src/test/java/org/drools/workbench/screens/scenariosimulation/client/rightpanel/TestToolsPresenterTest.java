@@ -18,7 +18,6 @@ package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,13 +91,13 @@ public class TestToolsPresenterTest extends AbstractTestToolsTest {
         final String firstKey = dataObjectFactTreeMap.firstKey();
         final FactModelTree factModelTree = dataObjectFactTreeMap.get(firstKey);
         final String firstPropertyKey = (String) new ArrayList(factModelTree.getSimpleProperties().keySet()).get(0);
-        final FactModelTree.SimpleType firstPropertyClass = factModelTree.getSimpleProperties().get(firstPropertyKey);
+        final FactModelTree.PropertyTypeName firstPropertyClass = factModelTree.getSimpleProperties().get(firstPropertyKey);
 
         when(selectedListGroupItemViewMock.getActualClassName()).thenReturn(firstKey);
 
         when(selectedFieldItemViewMock.getFullPath()).thenReturn(firstKey);
         when(selectedFieldItemViewMock.getFieldName()).thenReturn(firstPropertyKey);
-        when(selectedFieldItemViewMock.getClassName()).thenReturn(firstPropertyClass.getSimpleTypeName());
+        when(selectedFieldItemViewMock.getClassName()).thenReturn(firstPropertyClass.getTypeName());
 
         when(listGroupItemPresenterMock.getDivElement(FACT_NAME, FACT_MODEL_TREE)).thenReturn(divItemContainerMock);
         this.testToolsPresenterSpy = spy(new TestToolsPresenter(testToolsViewMock, listGroupItemPresenterMock) {

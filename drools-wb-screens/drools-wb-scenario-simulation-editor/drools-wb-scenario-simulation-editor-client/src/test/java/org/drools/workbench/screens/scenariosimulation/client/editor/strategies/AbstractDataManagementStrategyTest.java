@@ -17,7 +17,6 @@
 package org.drools.workbench.screens.scenariosimulation.client.editor.strategies;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -98,13 +97,13 @@ public class AbstractDataManagementStrategyTest extends AbstractScenarioSimulati
             String fullName = expectedClazz.getCanonicalName();
             String packageName = fullName.substring(0, fullName.lastIndexOf("."));
             assertEquals(packageName, retrieved.getFullPackage());
-            Map<String, FactModelTree.SimpleType> simpleProperties = retrieved.getSimpleProperties();
+            Map<String, FactModelTree.PropertyTypeName> simpleProperties = retrieved.getSimpleProperties();
             assertNotNull(simpleProperties);
             assertEquals(1, simpleProperties.size());
             assertTrue(simpleProperties.containsKey(TestProperties.LOWER_CASE_VALUE));
-            FactModelTree.SimpleType simplePropertyValue = simpleProperties.get(TestProperties.LOWER_CASE_VALUE);
+            FactModelTree.PropertyTypeName simplePropertyValue = simpleProperties.get(TestProperties.LOWER_CASE_VALUE);
             assertNotNull(simplePropertyValue);
-            assertEquals(fullName, simplePropertyValue.getSimpleTypeName());
+            assertEquals(fullName, simplePropertyValue.getTypeName());
         }
     }
 

@@ -199,7 +199,7 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
         }
         String fullPath = parentPath.isEmpty() ? factName : parentPath + "." + factName;
         factModelTree.getSimpleProperties().forEach(
-                (key, value) -> toPopulate.addFactField(fieldItemPresenter.getLIElement(fullPath, factName, key, value.getSimpleTypeName(), value.getSimpleTypeNameToVisualize() )));
+                (key, value) -> toPopulate.addFactField(fieldItemPresenter.getLIElement(fullPath, factName, key, value.getTypeName(), value.getPropertyTypeNameToVisualize() )));
         factModelTree.getExpandableProperties().forEach(
                 (key, value) -> toPopulate.addExpandableFactField(getDivElement(fullPath, key, value)));
     }

@@ -134,9 +134,9 @@ public class TestProperties {
 
     public static final String STRING_CLASS_NAME = String.class.getCanonicalName();
     public static final String NUMBER_CLASS_NAME = Number.class.getCanonicalName();
-    public static final Map<String, FactModelTree.SimpleType> EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE = new HashMap<>();
+    public static final Map<String, FactModelTree.PropertyTypeName> EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE = new HashMap<>();
     public static final Map<String, String> EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE_1 = new HashMap<>();
-    public static final Map<String, FactModelTree.SimpleType> EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE_2 = new HashMap<>();
+    public static final Map<String, FactModelTree.PropertyTypeName> EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE_2 = new HashMap<>();
     public static final Map<String, String> EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE_3 = new HashMap<>();
 
     public static final Double GRID_WIDTH = 100.0;

@@ -17,7 +17,6 @@
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -90,18 +89,18 @@ abstract class AbstractTestToolsTest {
     protected SortedMap<String, FactModelTree> getSimpleJavaTypeFieldsMap() {
         SortedMap<String, FactModelTree> toReturn = new TreeMap<>();
         for (String key : DataManagementStrategy.SIMPLE_CLASSES_MAP.keySet()) {
-            Map<String, FactModelTree.SimpleType> simpleProperties = new HashMap<>();
-            FactModelTree.SimpleType fullName = new FactModelTree.SimpleType(DataManagementStrategy.SIMPLE_CLASSES_MAP.get(key).getCanonicalName());
+            Map<String, FactModelTree.PropertyTypeName> simpleProperties = new HashMap<>();
+            FactModelTree.PropertyTypeName fullName = new FactModelTree.PropertyTypeName(DataManagementStrategy.SIMPLE_CLASSES_MAP.get(key).getCanonicalName());
             simpleProperties.put(LOWER_CASE_VALUE, fullName);
-            String packageName = fullName.getSimpleTypeName().substring(0, fullName.getSimpleTypeName().lastIndexOf("."));
+            String packageName = fullName.getTypeName().substring(0, fullName.getTypeName().lastIndexOf("."));
             FactModelTree value = new FactModelTree(key, packageName, simpleProperties, new HashMap<>());
             toReturn.put(key, value);
         }
         return toReturn;
     }
 
-    protected Map<String, FactModelTree.SimpleType> getMockSimpleProperties() {
-        Map<String, FactModelTree.SimpleType> toReturn = new HashMap<>();
+    protected Map<String, FactModelTree.PropertyTypeName> getMockSimpleProperties() {
+        Map<String, FactModelTree.PropertyTypeName> toReturn = new HashMap<>();
         IntStream
                 .range(0, +3)
                 .forEach(id -> toReturn.put(getRandomString(), getRandomType()));
@@ -120,19 +119,19 @@ abstract class AbstractTestToolsTest {
         return builder.toString();
     }
 
-    protected FactModelTree.SimpleType getRandomType() {
+    protected FactModelTree.PropertyTypeName getRandomType() {
         int type = new Random().nextInt(4);
         switch (type) {
             case 0:
-                return new FactModelTree.SimpleType("lava.lang.String");
+                return new FactModelTree.PropertyTypeName("lava.lang.String");
             case 1:
-                return new FactModelTree.SimpleType("byte");
+                return new FactModelTree.PropertyTypeName("byte");
             case 2:
-                return new FactModelTree.SimpleType("java.lang.Integer");
+                return new FactModelTree.PropertyTypeName("java.lang.Integer");
             case 3:
-                return new FactModelTree.SimpleType("java.lang.Boolean");
+                return new FactModelTree.PropertyTypeName("java.lang.Boolean");
             default:
-                return new FactModelTree.SimpleType("int");
+                return new FactModelTree.PropertyTypeName("int");
         }
     }
 }

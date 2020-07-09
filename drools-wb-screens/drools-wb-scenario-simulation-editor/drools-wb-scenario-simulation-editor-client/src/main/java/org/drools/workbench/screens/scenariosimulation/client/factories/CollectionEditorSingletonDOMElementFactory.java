@@ -165,7 +165,7 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
         } else {
             toReturn = scenarioSimulationContext.getDataObjectFieldsMap().get(typeName).getSimpleProperties()
                     .entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey,
-                                                                  e -> e.getValue().getSimpleTypeName()));
+                                                                  e -> e.getValue().getTypeName()));
         }
         return toReturn;
     }

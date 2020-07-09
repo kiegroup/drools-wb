@@ -39,11 +39,10 @@ public class FactModelTree {
     private String factName;  // The name of the asset
     private String fullPackage;  // The package of the asset
     private boolean isSimple = false;
-
     /**
-     * Map of the properties: key = property name, value = property' simple type
+     * Map of the simple properties: key = property name, value = property' type name
      */
-    private Map<String, SimpleType> simpleProperties;
+    private Map<String, PropertyTypeName> simpleProperties;
     /**
      * Map of the collection' properties generic-type: key = property name (ex "books"), value = list of property' generic types (ex "com.Book")
      */
@@ -65,7 +64,7 @@ public class FactModelTree {
      * @param simpleProperties
      * @param genericTypesMap the <b>generic type</b> info, in the format {collection_class_name}#{generic_type}: ex "java.util.List#com.Book"
      */
-    public FactModelTree(String factName, String fullPackage, Map<String, SimpleType> simpleProperties, Map<String, List<String>> genericTypesMap) {
+    public FactModelTree(String factName, String fullPackage, Map<String, PropertyTypeName> simpleProperties, Map<String, List<String>> genericTypesMap) {
         this(factName, fullPackage, simpleProperties, genericTypesMap, Type.UNDEFINED);
     }
 
@@ -77,7 +76,7 @@ public class FactModelTree {
      * @param genericTypesMap the <b>generic type</b> info, in the format {collection_class_name}#{generic_type}: ex "java.util.List#com.Book"
      * @param type
      */
-    public FactModelTree(String factName, String fullPackage, Map<String, SimpleType> simpleProperties, Map<String, List<String>> genericTypesMap, Type type) {
+    public FactModelTree(String factName, String fullPackage, Map<String, PropertyTypeName> simpleProperties, Map<String, List<String>> genericTypesMap, Type type) {
         this.factName = factName;
         this.fullPackage = fullPackage;
         this.simpleProperties = simpleProperties;
@@ -93,7 +92,7 @@ public class FactModelTree {
         return fullPackage;
     }
 
-    public Map<String, SimpleType> getSimpleProperties() {
+    public Map<String, PropertyTypeName> getSimpleProperties() {
         return simpleProperties;
     }
 
@@ -105,8 +104,8 @@ public class FactModelTree {
         return genericTypesMap;
     }
 
-    public void addSimpleProperty(String propertyName, SimpleType simpleType) {
-        simpleProperties.put(propertyName, simpleType);
+    public void addSimpleProperty(String propertyName, PropertyTypeName propertyTypeName) {
+        simpleProperties.put(propertyName, propertyTypeName);
     }
 
     public void addExpandableProperty(String propertyName, String propertyType) {
@@ -139,7 +138,7 @@ public class FactModelTree {
     }
 
     public FactModelTree cloneFactModelTree() {
-        Map<String, SimpleType> clonedSimpleProperties = new HashMap<>(simpleProperties);
+        Map<String, PropertyTypeName> clonedSimpleProperties = new HashMap<>(simpleProperties);
         Map<String, List<String>> clonedGenericTypesMap =
                 genericTypesMap.entrySet()
                         .stream()
@@ -167,31 +166,36 @@ public class FactModelTree {
                 '}';
     }
 
-    public static class SimpleType {
+    /**
+     * Nested DTO which holds a Property name.
+     * - typeName: It is the real DMNType name;
+     * - baseTypeName: It represents the baseType
+     */
+    public static class PropertyTypeName {
 
-        private String simpleTypeName;
+        private String typeName;
         private Optional<String> baseTypeName;
 
-        public SimpleType(String simpleTypeName) {
-            this.simpleTypeName = simpleTypeName;
+        public PropertyTypeName(String typeName) {
+            this.typeName = typeName;
             this.baseTypeName = Optional.empty();
         }
 
-        public SimpleType(String simpleTypeName, String baseTypeName) {
-            this.simpleTypeName = simpleTypeName;
+        public PropertyTypeName(String typeName, String baseTypeName) {
+            this.typeName = typeName;
             this.baseTypeName = Optional.ofNullable(baseTypeName);
         }
 
-        public String getSimpleTypeName() {
-            return simpleTypeName;
+        public String getTypeName() {
+            return typeName;
         }
 
         public Optional<String> getBaseTypeName() {
             return baseTypeName;
         }
 
-        public String getSimpleTypeNameToVisualize() {
-            return baseTypeName.orElse(simpleTypeName);
+        public String getPropertyTypeNameToVisualize() {
+            return baseTypeName.orElse(typeName);
         }
     }
 }

@@ -168,10 +168,10 @@ public class ListGroupItemPresenterTest extends AbstractTestToolsTest {
     public void populateListGroupItemView() {
         listGroupItemPresenter.populateListGroupItemView(listGroupItemViewMock, "", FACT_MODEL_TREE.getFactName(), FACT_MODEL_TREE);
         verify(listGroupItemViewMock, times(1)).setFactName(eq(FACT_MODEL_TREE.getFactName()));
-        Map<String, FactModelTree.SimpleType> simpleProperties = FACT_MODEL_TREE.getSimpleProperties();
+        Map<String, FactModelTree.PropertyTypeName> simpleProperties = FACT_MODEL_TREE.getSimpleProperties();
         for (String key : simpleProperties.keySet()) {
-            FactModelTree.SimpleType value = simpleProperties.get(key);
-            verify(fieldItemPresenterSpy, times(1)).getLIElement(eq(FACT_MODEL_TREE.getFactName()), eq(FACT_MODEL_TREE.getFactName()), eq(key), eq(value.getSimpleTypeName()),eq(value.getSimpleTypeNameToVisualize()));
+            FactModelTree.PropertyTypeName value = simpleProperties.get(key);
+            verify(fieldItemPresenterSpy, times(1)).getLIElement(eq(FACT_MODEL_TREE.getFactName()), eq(FACT_MODEL_TREE.getFactName()), eq(key), eq(value.getTypeName()),eq(value.getPropertyTypeNameToVisualize()));
         }
         verify(listGroupItemViewMock, times(simpleProperties.size())).addFactField(anyObject());
         reset(listGroupItemViewMock);

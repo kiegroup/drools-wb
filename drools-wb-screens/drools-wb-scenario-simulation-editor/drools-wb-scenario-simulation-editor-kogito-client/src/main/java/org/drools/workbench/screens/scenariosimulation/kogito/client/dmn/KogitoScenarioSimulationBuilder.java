@@ -379,21 +379,21 @@ public class KogitoScenarioSimulationBuilder {
         List<String> previousSteps = new ArrayList<>(readOnlyPreviousSteps);
         // if is a simple type it generates a single column
         if (factModelTree.isSimple()) {
-            FactModelTree.SimpleType factType = factModelTree.getSimpleProperties().get(VALUE);
-            factMappingExtractor.getFactMapping(factModelTree, VALUE, previousSteps, factType.getSimpleTypeName());
+            FactModelTree.PropertyTypeName factType = factModelTree.getSimpleProperties().get(VALUE);
+            factMappingExtractor.getFactMapping(factModelTree, VALUE, previousSteps, factType.getTypeName());
         }
         // otherwise it adds a column for each simple properties direct or nested
         else {
-            for (Map.Entry<String, FactModelTree.SimpleType> entry : factModelTree.getSimpleProperties().entrySet()) {
+            for (Map.Entry<String, FactModelTree.PropertyTypeName> entry : factModelTree.getSimpleProperties().entrySet()) {
                 String factName = entry.getKey();
-                FactModelTree.SimpleType factType = entry.getValue();
+                FactModelTree.PropertyTypeName factType = entry.getValue();
 
-                FactMapping factMapping = factMappingExtractor.getFactMapping(factModelTree, factName, previousSteps, factType.getSimpleTypeName());
+                FactMapping factMapping = factMappingExtractor.getFactMapping(factModelTree, factName, previousSteps, factType.getTypeName());
 
-                if (ScenarioSimulationSharedUtils.isList(factType.getSimpleTypeName())) {
+                if (ScenarioSimulationSharedUtils.isList(factType.getTypeName())) {
                     factMapping.setGenericTypes(factModelTree.getGenericTypeInfo(factName));
                 }
-                factMapping.addExpressionElement(factName, factType.getSimpleTypeName());
+                factMapping.addExpressionElement(factName, factType.getTypeName());
             }
 
             for (Map.Entry<String, String> entry : factModelTree.getExpandableProperties().entrySet()) {
