@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
@@ -42,11 +43,7 @@ public class FactModelTree {
     /**
      * Map of the properties: key = property name, value = property' simple type
      */
-    private Map<String, String> simpleProperties;
-    /**
-     *
-     */
-    private Map<String, String> baseTypeSimpleProperties;
+    private Map<String, SimpleType> simpleProperties;
     /**
      * Map of the collection' properties generic-type: key = property name (ex "books"), value = list of property' generic types (ex "com.Book")
      */
@@ -68,8 +65,8 @@ public class FactModelTree {
      * @param simpleProperties
      * @param genericTypesMap the <b>generic type</b> info, in the format {collection_class_name}#{generic_type}: ex "java.util.List#com.Book"
      */
-    public FactModelTree(String factName, String fullPackage, Map<String, String> simpleProperties, Map<String, String> baseTypeSimpleProperties, Map<String, List<String>> genericTypesMap) {
-        this(factName, fullPackage, simpleProperties, baseTypeSimpleProperties, genericTypesMap, Type.UNDEFINED);
+    public FactModelTree(String factName, String fullPackage, Map<String, SimpleType> simpleProperties, Map<String, List<String>> genericTypesMap) {
+        this(factName, fullPackage, simpleProperties, genericTypesMap, Type.UNDEFINED);
     }
 
     /**
@@ -80,11 +77,10 @@ public class FactModelTree {
      * @param genericTypesMap the <b>generic type</b> info, in the format {collection_class_name}#{generic_type}: ex "java.util.List#com.Book"
      * @param type
      */
-    public FactModelTree(String factName, String fullPackage, Map<String, String> simpleProperties, Map<String, String> baseTypeSimpleProperties, Map<String, List<String>> genericTypesMap, Type type) {
+    public FactModelTree(String factName, String fullPackage, Map<String, SimpleType> simpleProperties, Map<String, List<String>> genericTypesMap, Type type) {
         this.factName = factName;
         this.fullPackage = fullPackage;
         this.simpleProperties = simpleProperties;
-        this.baseTypeSimpleProperties = baseTypeSimpleProperties;
         this.genericTypesMap = genericTypesMap;
         this.type = type;
     }
@@ -97,12 +93,8 @@ public class FactModelTree {
         return fullPackage;
     }
 
-    public Map<String, String> getSimpleProperties() {
+    public Map<String, SimpleType> getSimpleProperties() {
         return simpleProperties;
-    }
-
-    public Map<String, String> getBaseTypeSimpleProperties() {
-        return baseTypeSimpleProperties;
     }
 
     public Map<String, String> getExpandableProperties() {
@@ -113,8 +105,8 @@ public class FactModelTree {
         return genericTypesMap;
     }
 
-    public void addSimpleProperty(String propertyName, String propertyType) {
-        simpleProperties.put(propertyName, propertyType);
+    public void addSimpleProperty(String propertyName, SimpleType simpleType) {
+        simpleProperties.put(propertyName, simpleType);
     }
 
     public void addExpandableProperty(String propertyName, String propertyType) {
@@ -147,8 +139,7 @@ public class FactModelTree {
     }
 
     public FactModelTree cloneFactModelTree() {
-        Map<String, String> clonedSimpleProperties = new HashMap<>(simpleProperties);
-        Map<String, String> clonedBaseTypeSimpleProperties = new HashMap<>(baseTypeSimpleProperties);
+        Map<String, SimpleType> clonedSimpleProperties = new HashMap<>(simpleProperties);
         Map<String, List<String>> clonedGenericTypesMap =
                 genericTypesMap.entrySet()
                         .stream()
@@ -161,7 +152,7 @@ public class FactModelTree {
                                 }
 
                         ));
-        FactModelTree toReturn = new FactModelTree(factName, fullPackage, clonedSimpleProperties, clonedBaseTypeSimpleProperties, clonedGenericTypesMap, type);
+        FactModelTree toReturn = new FactModelTree(factName, fullPackage, clonedSimpleProperties, clonedGenericTypesMap, type);
         toReturn.expandableProperties = new HashMap<>(expandableProperties);
         toReturn.isSimple = isSimple;
         return toReturn;
@@ -172,8 +163,35 @@ public class FactModelTree {
         return "FactModelTree{" +
                 "factName='" + factName + '\'' +
                 ", simpleProperties=" + simpleProperties +
-                ", baseTypeSimpleProperties=" + baseTypeSimpleProperties +
                 ", expandableProperties=" + expandableProperties +
                 '}';
+    }
+
+    public static class SimpleType {
+
+        private String simpleTypeName;
+        private Optional<String> baseTypeName;
+
+        public SimpleType(String simpleTypeName) {
+            this.simpleTypeName = simpleTypeName;
+            this.baseTypeName = Optional.empty();
+        }
+
+        public SimpleType(String simpleTypeName, String baseTypeName) {
+            this.simpleTypeName = simpleTypeName;
+            this.baseTypeName = Optional.ofNullable(baseTypeName);
+        }
+
+        public String getSimpleTypeName() {
+            return simpleTypeName;
+        }
+
+        public Optional<String> getBaseTypeName() {
+            return baseTypeName;
+        }
+
+        public String getSimpleTypeNameToVisualize() {
+            return baseTypeName.orElse(simpleTypeName);
+        }
     }
 }

@@ -117,12 +117,12 @@ public class CollectionEditorSingletonDOMElementFactoryTest extends AbstractFact
         when(factModelTreeMock1.getSimpleProperties()).thenReturn(EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE);
         when(factModelTreeMock1.getExpandableProperties()).thenReturn(EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE_1);
         when(scenarioSimulationContextLocal.getDataObjectFieldsMap().get(FULL_CLASS_NAME)).thenReturn(factModelTreeMock1);
-        EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE.put("x", "y");
+        EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE.put("x", new FactModelTree.SimpleType("y"));
         EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE_1.put("a", "b");
         when(scenarioSimulationContextLocal.getDataObjectFieldsMap().get("testclass")).thenReturn(factModelTreeMock2);
         when(factModelTreeMock2.getSimpleProperties()).thenReturn(EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE_2);
         when(factModelTreeMock2.getExpandableProperties()).thenReturn(EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE_1);
-        EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE_2.put("z", "w");
+        EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE_2.put("z", new FactModelTree.SimpleType("w"));
         when(scenarioSimulationContextLocal.getDataObjectFieldsMap().get(FULL_FACT_CLASSNAME)).thenReturn(factModelTreeMock3);
         when(scenarioSimulationContextLocal.getDataObjectFieldsMap().get(CLASS_NAME)).thenReturn(factModelTreeMock3);
         when(factModelTreeMock3.getSimpleProperties()).thenReturn(EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE_2);
@@ -159,7 +159,7 @@ public class CollectionEditorSingletonDOMElementFactoryTest extends AbstractFact
     @Test
     public void getExpandableProperties_NotSimpleType() {
         Map<String, Map<String, String>> expectedResult = new HashMap<>();
-        expectedResult.put("a", EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE_2);
+        expectedResult.put("a", EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE_3);
         Map<String, Map<String, String>> resultMap = collectionEditorSingletonDOMElementFactorySpy.getExpandablePropertiesMap(FULL_FACT_CLASSNAME);
         assertEquals(resultMap, expectedResult);
     }
@@ -180,7 +180,7 @@ public class CollectionEditorSingletonDOMElementFactoryTest extends AbstractFact
 
     @Test
     public void manageMap_NotRuleNotSimpleType() {
-        manageMap(FULL_CLASS_NAME, DMN, EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE);
+        manageMap(FULL_CLASS_NAME, DMN, EXPECTED_MAP_FOR_NOT_SIMPLE_TYPE_1);
     }
 
     private void manageMap(String genericType1, ScenarioSimulationModel.Type type, Map<String, String> expectedMap1) {

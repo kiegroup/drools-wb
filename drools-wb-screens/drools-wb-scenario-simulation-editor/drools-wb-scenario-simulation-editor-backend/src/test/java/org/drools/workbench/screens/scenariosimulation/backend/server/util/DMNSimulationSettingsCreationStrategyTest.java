@@ -153,11 +153,11 @@ public class DMNSimulationSettingsCreationStrategyTest extends AbstractDMNTest {
 
         Map<String, FactModelTree> hiddenFacts = new HashMap<>();
 
-        FactModelTree factModelTree = new FactModelTree("myFact", "", new HashMap<>(), Collections.emptyMap(), Collections.emptyMap());
+        FactModelTree factModelTree = new FactModelTree("myFact", "", new HashMap<>(), Collections.emptyMap());
         factModelTree.addExpandableProperty("recursiveProperty", "recursive");
         String propertyType = String.class.getCanonicalName();
         String propertyName = "simpleProperty";
-        factModelTree.addSimpleProperty(propertyName, propertyType);
+        factModelTree.addSimpleProperty(propertyName, new FactModelTree.SimpleType(propertyType));
 
         hiddenFacts.put("recursive", factModelTree);
 
@@ -189,18 +189,18 @@ public class DMNSimulationSettingsCreationStrategyTest extends AbstractDMNTest {
 
         Map<String, FactModelTree> hiddenFacts = new HashMap<>();
 
-        FactModelTree factModelTree = new FactModelTree("myFact", "", new HashMap<>(), Collections.emptyMap(), Collections.emptyMap());
+        FactModelTree factModelTree = new FactModelTree("myFact", "", new HashMap<>(), Collections.emptyMap());
         factModelTree.addExpandableProperty("nestedProperty", "tNested");
         factModelTree.addExpandableProperty("nestedProperty2", "tNested2");
 
-        FactModelTree nested1 = new FactModelTree("tNested1", "", new HashMap<>(), Collections.emptyMap(), Collections.emptyMap());
-        FactModelTree nested2 = new FactModelTree("tNested2", "", new HashMap<>(), Collections.emptyMap(), Collections.emptyMap());
+        FactModelTree nested1 = new FactModelTree("tNested1", "", new HashMap<>(), Collections.emptyMap());
+        FactModelTree nested2 = new FactModelTree("tNested2", "", new HashMap<>(), Collections.emptyMap());
         String propertyType = String.class.getCanonicalName();
         String propertyName = "stingProperty";
-        nested1.addSimpleProperty(propertyName, propertyType);
+        nested1.addSimpleProperty(propertyName, new FactModelTree.SimpleType(propertyType));
         String propertyType2 = Boolean.class.getCanonicalName();
         String propertyName2 = "booleanProperty";
-        nested2.addSimpleProperty(propertyName2, propertyType2);
+        nested2.addSimpleProperty(propertyName2, new FactModelTree.SimpleType(propertyType2));
 
         hiddenFacts.put("tNested", nested1);
         hiddenFacts.put("tNested2", nested2);
@@ -323,17 +323,17 @@ public class DMNSimulationSettingsCreationStrategyTest extends AbstractDMNTest {
     }
 
     private FactModelTree createFactModelTree(String name, String path, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.Type fmType) {
-        Map<String, String> simpleFields = new HashMap<>();
+        Map<String, FactModelTree.SimpleType> simpleFields = new HashMap<>();
         if (!type.isComposite()) {
-            simpleFields.put(VALUE, type.getName());
-            FactModelTree simpleFactModelTree = new FactModelTree(name, "", simpleFields, new HashMap<>(), Collections.emptyMap(), fmType);
+            simpleFields.put(VALUE, new FactModelTree.SimpleType(type.getName()));
+            FactModelTree simpleFactModelTree = new FactModelTree(name, "", simpleFields, new HashMap<>(), fmType);
             simpleFactModelTree.setSimple(true);
             return simpleFactModelTree;
         }
-        FactModelTree factModelTree = new FactModelTree(name, "", simpleFields, new HashMap<>(),Collections.emptyMap(), fmType);
+        FactModelTree factModelTree = new FactModelTree(name, "", simpleFields, new HashMap<>(), fmType);
         for (Map.Entry<String, DMNType> entry : type.getFields().entrySet()) {
             if (!entry.getValue().isComposite()) {
-                simpleFields.put(entry.getKey(), entry.getValue().getName());
+                simpleFields.put(entry.getKey(), new FactModelTree.SimpleType(entry.getValue().getName()));
             } else {
                 String expandableId = path + "." + entry.getKey();
                 factModelTree.addExpandableProperty(entry.getKey(), expandableId);

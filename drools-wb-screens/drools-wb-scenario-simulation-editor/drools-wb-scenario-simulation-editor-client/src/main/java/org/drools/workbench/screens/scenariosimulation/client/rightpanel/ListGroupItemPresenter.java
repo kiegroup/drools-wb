@@ -198,9 +198,8 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
             toPopulate.setFactNameAndType(factName, factModelTree.getFactName()); // the name of the property differ from the type of the factModelTree: this means that we are populating children of the class
         }
         String fullPath = parentPath.isEmpty() ? factName : parentPath + "." + factName;
-        Map<String, String> baseTypeSimpleProperties = factModelTree.getBaseTypeSimpleProperties();
         factModelTree.getSimpleProperties().forEach(
-                (key, value) -> toPopulate.addFactField(fieldItemPresenter.getLIElement(fullPath, factName, key, value, baseTypeSimpleProperties.getOrDefault(key, value))));
+                (key, value) -> toPopulate.addFactField(fieldItemPresenter.getLIElement(fullPath, factName, key, value.getSimpleTypeName(), value.getSimpleTypeNameToVisualize() )));
         factModelTree.getExpandableProperties().forEach(
                 (key, value) -> toPopulate.addExpandableFactField(getDivElement(fullPath, key, value)));
     }

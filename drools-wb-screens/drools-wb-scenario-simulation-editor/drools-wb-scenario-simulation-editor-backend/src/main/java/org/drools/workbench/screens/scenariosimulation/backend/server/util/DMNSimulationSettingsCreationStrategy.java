@@ -165,15 +165,14 @@ public class DMNSimulationSettingsCreationStrategy implements SimulationSettings
         List<String> previousSteps = new ArrayList<>(readOnlyPreviousSteps);
         // if is a simple type it generates a single column
         if (factModelTree.isSimple()) {
-
-            String factType = factModelTree.getSimpleProperties().get(VALUE);
-            factMappingExtractor.getFactMapping(factModelTree, VALUE, previousSteps, factType);
+            FactModelTree.SimpleType factType = factModelTree.getSimpleProperties().get(VALUE);
+            factMappingExtractor.getFactMapping(factModelTree, VALUE, previousSteps, factType.getSimpleTypeName());
         }
         // otherwise it adds a column for each simple properties direct or nested
         else {
-            for (Map.Entry<String, String> entry : factModelTree.getSimpleProperties().entrySet()) {
+            for (Map.Entry<String, FactModelTree.SimpleType> entry : factModelTree.getSimpleProperties().entrySet()) {
                 String factName = entry.getKey();
-                String factType = entry.getValue();
+                String factType = entry.getValue().getSimpleTypeName();
 
                 FactMapping factMapping = factMappingExtractor.getFactMapping(factModelTree, factName, previousSteps, factType);
 

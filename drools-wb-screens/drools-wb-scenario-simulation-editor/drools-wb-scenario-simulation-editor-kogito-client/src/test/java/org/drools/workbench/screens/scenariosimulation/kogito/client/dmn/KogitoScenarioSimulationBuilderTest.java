@@ -143,11 +143,11 @@ public class KogitoScenarioSimulationBuilderTest {
 
         Map<String, FactModelTree> hiddenFacts = new HashMap<>();
 
-        FactModelTree factModelTree = new FactModelTree("myFact", "", new HashMap<>(), Collections.emptyMap(), Collections.emptyMap());
+        FactModelTree factModelTree = new FactModelTree("myFact", "", new HashMap<>(), Collections.emptyMap());
         factModelTree.addExpandableProperty("recursiveProperty", "recursive");
         String propertyType = String.class.getCanonicalName();
         String propertyName = "simpleProperty";
-        factModelTree.addSimpleProperty(propertyName, propertyType);
+        factModelTree.addSimpleProperty(propertyName, new FactModelTree.SimpleType(propertyType));
 
         hiddenFacts.put("recursive", factModelTree);
 
@@ -179,18 +179,18 @@ public class KogitoScenarioSimulationBuilderTest {
 
         Map<String, FactModelTree> hiddenFacts = new HashMap<>();
 
-        FactModelTree factModelTree = new FactModelTree("myFact", "", new HashMap<>(), Collections.emptyMap(), Collections.emptyMap());
+        FactModelTree factModelTree = new FactModelTree("myFact", "", new HashMap<>(), Collections.emptyMap());
         factModelTree.addExpandableProperty("nestedProperty", "tNested");
         factModelTree.addExpandableProperty("nestedProperty2", "tNested2");
 
-        FactModelTree nested1 = new FactModelTree("tNested1", "", new HashMap<>(), Collections.emptyMap(), Collections.emptyMap());
-        FactModelTree nested2 = new FactModelTree("tNested2", "", new HashMap<>(), Collections.emptyMap(), Collections.emptyMap());
+        FactModelTree nested1 = new FactModelTree("tNested1", "", new HashMap<>(), Collections.emptyMap());
+        FactModelTree nested2 = new FactModelTree("tNested2", "", new HashMap<>(), Collections.emptyMap());
         String propertyType = String.class.getCanonicalName();
         String propertyName = "stingProperty";
-        nested1.addSimpleProperty(propertyName, propertyType);
+        nested1.addSimpleProperty(propertyName, new FactModelTree.SimpleType(propertyType));
         String propertyType2 = Boolean.class.getCanonicalName();
         String propertyName2 = "booleanProperty";
-        nested2.addSimpleProperty(propertyName2, propertyType2);
+        nested2.addSimpleProperty(propertyName2, new FactModelTree.SimpleType(propertyType2));
 
         hiddenFacts.put("tNested", nested1);
         hiddenFacts.put("tNested2", nested2);

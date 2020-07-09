@@ -98,13 +98,13 @@ public class AbstractDataManagementStrategyTest extends AbstractScenarioSimulati
             String fullName = expectedClazz.getCanonicalName();
             String packageName = fullName.substring(0, fullName.lastIndexOf("."));
             assertEquals(packageName, retrieved.getFullPackage());
-            Map<String, String> simpleProperties = retrieved.getSimpleProperties();
+            Map<String, FactModelTree.SimpleType> simpleProperties = retrieved.getSimpleProperties();
             assertNotNull(simpleProperties);
             assertEquals(1, simpleProperties.size());
             assertTrue(simpleProperties.containsKey(TestProperties.LOWER_CASE_VALUE));
-            String simplePropertyValue = simpleProperties.get(TestProperties.LOWER_CASE_VALUE);
+            FactModelTree.SimpleType simplePropertyValue = simpleProperties.get(TestProperties.LOWER_CASE_VALUE);
             assertNotNull(simplePropertyValue);
-            assertEquals(fullName, simplePropertyValue);
+            assertEquals(fullName, simplePropertyValue.getSimpleTypeName());
         }
     }
 
@@ -196,7 +196,7 @@ public class AbstractDataManagementStrategyTest extends AbstractScenarioSimulati
 
     private SortedMap<String, FactModelTree> getSourceMap() {
         SortedMap<String, FactModelTree> toReturn = new TreeMap<>();
-        FactModelTree toPut = new FactModelTree("Void", "package", new HashMap<>(), Collections.emptyMap(), new HashMap<>());
+        FactModelTree toPut = new FactModelTree("Void", "package", new HashMap<>(), new HashMap<>());
         toReturn.put("Void", toPut);
         return toReturn;
     }

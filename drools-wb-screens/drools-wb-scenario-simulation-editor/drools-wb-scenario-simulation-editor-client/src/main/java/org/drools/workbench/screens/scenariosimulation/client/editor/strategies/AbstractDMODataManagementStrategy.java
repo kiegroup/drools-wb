@@ -16,7 +16,6 @@
 package org.drools.workbench.screens.scenariosimulation.client.editor.strategies;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -155,7 +154,7 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
      * will always be a <code>java.lang.String</code>
      */
     public FactModelTree getFactModelTree(String factName, Map<String, String> superTypeMap, ModelField[] modelFields) {
-        Map<String, String> simpleProperties = new HashMap<>();
+        Map<String, FactModelTree.SimpleType> simpleProperties = new HashMap<>();
         Map<String, List<String>> genericTypesMap = new HashMap<>();
         String factPackageName = packageName;
         String fullFactClassName = getFQCNByFactName(factName);
@@ -163,20 +162,20 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
             factPackageName = fullFactClassName.substring(0, fullFactClassName.lastIndexOf('.'));
         }
         if (ScenarioSimulationSharedUtils.isEnumCanonicalName(superTypeMap.get(factName))) {
-            simpleProperties.put(ConstantsHolder.VALUE, fullFactClassName);
+            simpleProperties.put(ConstantsHolder.VALUE, new FactModelTree.SimpleType(fullFactClassName));
             return getSimpleClassFactModelTree(factName, fullFactClassName);
         }
 
         for (ModelField modelField : modelFields) {
             if (!modelField.getName().equals("this")) {
                 String className = defineClassNameField(modelField.getClassName(), superTypeMap);
-                simpleProperties.put(modelField.getName(), className);
+                simpleProperties.put(modelField.getName(), new FactModelTree.SimpleType(className));
                 if (ScenarioSimulationSharedUtils.isCollection(className)) {
                     populateGenericTypeMap(genericTypesMap, factName, modelField.getName(), ScenarioSimulationSharedUtils.isList(className));
                 }
             }
         }
-        return new FactModelTree(factName, factPackageName, simpleProperties, Collections.emptyMap(), genericTypesMap);
+        return new FactModelTree(factName, factPackageName, simpleProperties, genericTypesMap);
     }
 
     protected String defineClassNameField(String modelFieldClassName, Map<String, String> superTypesMap) {

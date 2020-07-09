@@ -227,7 +227,7 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractScenar
 
     @Test
     public void getFactModelTree() {
-        Map<String, String> simpleProperties = getSimplePropertiesInner();
+        Map<String, FactModelTree.SimpleType> simpleProperties = getSimplePropertiesInner();
         final ModelField[] modelFields = getModelFieldsInner(simpleProperties);
         final FactModelTree retrieved = businessCentralDmoDataManagementStrategySpy.getFactModelTree(TestProperties.FACT_NAME, Collections.emptyMap(), modelFields);
         assertNotNull(retrieved);
@@ -251,8 +251,8 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractScenar
     @Test
     public void getInstanceMap() {
         FactModelTree toPopulate = getFactModelTreeInner(randomAlphabetic(3));
-        final Map<String, String> simpleProperties = toPopulate.getSimpleProperties();
-        final Collection<String> values = simpleProperties.values();
+        final Map<String, FactModelTree.SimpleType> simpleProperties = toPopulate.getSimpleProperties();
+        final Collection<FactModelTree.SimpleType> values = simpleProperties.values();
         SortedMap<String, FactModelTree> factTypeFieldsMap = getFactTypeFieldsMapInner(values);
         SortedMap<String, FactModelTree> retrieved = businessCentralDmoDataManagementStrategySpy.getInstanceMap(factTypeFieldsMap);
         assertNotNull(retrieved);
@@ -370,9 +370,9 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractScenar
         assertEquals(fullFactType, retrieved.get(retrieved.size() - 1));
     }
 
-    private ModelField[] getModelFieldsInner(Map<String, String> simpleProperties) {
+    private ModelField[] getModelFieldsInner(Map<String, FactModelTree.SimpleType> simpleProperties) {
         List<ModelField> toReturn = new ArrayList<>();
-        simpleProperties.forEach((key, value) -> toReturn.add(getModelFieldInner(key, value, "String")));
+        simpleProperties.forEach((key, value) -> toReturn.add(getModelFieldInner(key, value.getSimpleTypeName(), "String")));
         return toReturn.toArray(new ModelField[toReturn.size()]);
     }
 
@@ -387,20 +387,20 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractScenar
     }
 
     private FactModelTree getFactModelTreeInner(String factName) {
-        return new FactModelTree(factName, AbstractScenarioSimulationEditorTest.SCENARIO_PACKAGE, getSimplePropertiesInner(), Collections.emptyMap(), new HashMap<>());
+        return new FactModelTree(factName, AbstractScenarioSimulationEditorTest.SCENARIO_PACKAGE, getSimplePropertiesInner(), new HashMap<>());
     }
 
-    private SortedMap<String, FactModelTree> getFactTypeFieldsMapInner(Collection<String> keys) {
+    private SortedMap<String, FactModelTree> getFactTypeFieldsMapInner(Collection<FactModelTree.SimpleType> keys) {
         return new TreeMap<>(keys.stream()
-                                     .collect(Collectors.toMap(key -> key,
-                                                               key -> (FactModelTree) getFactModelTreeInner(key))));
+                                     .collect(Collectors.toMap(key -> key.getSimpleTypeName(),
+                                                               key -> (FactModelTree) getFactModelTreeInner(key.getSimpleTypeName()))));
     }
 
-    private Map<String, String> getSimplePropertiesInner() {
+    private Map<String, FactModelTree.SimpleType> getSimplePropertiesInner() {
         String[] keys = getRandomStringArray();
         return Arrays.stream(keys)
                 .collect(Collectors.toMap(key -> key,
-                                          key -> key += "_VALUE"));
+                                          key -> new FactModelTree.SimpleType(key += "_VALUE")));
     }
 
     private String[] getRandomStringArray() {
