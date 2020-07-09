@@ -257,9 +257,9 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
     public void populateFactModelTree(FactModelTree toPopulate, final SortedMap<String, FactModelTree> factTypeFieldsMap) {
         List<String> toRemove = new ArrayList<>();
         toPopulate.getSimpleProperties().forEach((key, value) -> {
-            if (factTypeFieldsMap.containsKey(value)) {
+            if (factTypeFieldsMap.containsKey(value.getSimpleTypeName())) {
                 toRemove.add(key);
-                toPopulate.addExpandableProperty(key, factTypeFieldsMap.get(value).getFactName());
+                toPopulate.addExpandableProperty(key, factTypeFieldsMap.get(value.getSimpleTypeName()).getFactName());
             }
         });
         toRemove.forEach(toPopulate::removeSimpleProperty);
