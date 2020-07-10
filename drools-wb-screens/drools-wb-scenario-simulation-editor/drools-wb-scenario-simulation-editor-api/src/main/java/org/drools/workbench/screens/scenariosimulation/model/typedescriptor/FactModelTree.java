@@ -181,6 +181,8 @@ public class FactModelTree {
         private Optional<String> baseTypeName;
 
         public PropertyTypeName() {
+            typeName = null;
+            baseTypeName = Optional.empty();
         }
 
         public PropertyTypeName(String typeName) {
