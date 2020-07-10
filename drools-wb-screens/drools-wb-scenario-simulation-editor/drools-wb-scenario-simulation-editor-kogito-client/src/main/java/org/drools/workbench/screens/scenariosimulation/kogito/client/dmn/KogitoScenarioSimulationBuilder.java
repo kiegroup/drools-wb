@@ -386,14 +386,14 @@ public class KogitoScenarioSimulationBuilder {
         else {
             for (Map.Entry<String, FactModelTree.PropertyTypeName> entry : factModelTree.getSimpleProperties().entrySet()) {
                 String factName = entry.getKey();
-                FactModelTree.PropertyTypeName factType = entry.getValue();
+                String factTypeName = entry.getValue().getTypeName();
 
-                FactMapping factMapping = factMappingExtractor.getFactMapping(factModelTree, factName, previousSteps, factType.getTypeName());
+                FactMapping factMapping = factMappingExtractor.getFactMapping(factModelTree, factName, previousSteps, factTypeName);
 
-                if (ScenarioSimulationSharedUtils.isList(factType.getTypeName())) {
+                if (ScenarioSimulationSharedUtils.isList(factTypeName)) {
                     factMapping.setGenericTypes(factModelTree.getGenericTypeInfo(factName));
                 }
-                factMapping.addExpressionElement(factName, factType.getTypeName());
+                factMapping.addExpressionElement(factName, factTypeName);
             }
 
             for (Map.Entry<String, String> entry : factModelTree.getExpandableProperties().entrySet()) {

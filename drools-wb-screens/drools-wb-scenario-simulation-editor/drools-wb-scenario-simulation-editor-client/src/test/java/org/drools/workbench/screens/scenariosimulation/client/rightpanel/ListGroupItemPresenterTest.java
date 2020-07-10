@@ -171,7 +171,7 @@ public class ListGroupItemPresenterTest extends AbstractTestToolsTest {
         Map<String, FactModelTree.PropertyTypeName> simpleProperties = FACT_MODEL_TREE.getSimpleProperties();
         for (String key : simpleProperties.keySet()) {
             FactModelTree.PropertyTypeName value = simpleProperties.get(key);
-            verify(fieldItemPresenterSpy, times(1)).getLIElement(eq(FACT_MODEL_TREE.getFactName()), eq(FACT_MODEL_TREE.getFactName()), eq(key), eq(value.getTypeName()),eq(value.getPropertyTypeNameToVisualize()));
+            verify(fieldItemPresenterSpy, times(1)).getLIElement(eq(FACT_MODEL_TREE.getFactName()), eq(FACT_MODEL_TREE.getFactName()), eq(key), eq(value.getTypeName()), eq(value.getPropertyTypeNameToVisualize()));
         }
         verify(listGroupItemViewMock, times(simpleProperties.size())).addFactField(anyObject());
         reset(listGroupItemViewMock);
