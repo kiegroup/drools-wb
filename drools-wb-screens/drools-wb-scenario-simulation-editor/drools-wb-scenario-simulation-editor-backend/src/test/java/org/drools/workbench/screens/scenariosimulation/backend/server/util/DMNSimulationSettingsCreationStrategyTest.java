@@ -123,7 +123,7 @@ public class DMNSimulationSettingsCreationStrategyTest extends AbstractDMNTest {
     }
 
     @Test
-    public void createSettings() throws Exception {
+    public void createSettings() {
         final String dmnFilePath = "test";
         final Path pathMock = mock(Path.class);
         final Settings retrieved = dmnSimulationCreationStrategy.createSettings(pathMock, dmnFilePath);
@@ -333,7 +333,10 @@ public class DMNSimulationSettingsCreationStrategyTest extends AbstractDMNTest {
         FactModelTree factModelTree = new FactModelTree(name, "", simpleFields, new HashMap<>(), fmType);
         for (Map.Entry<String, DMNType> entry : type.getFields().entrySet()) {
             if (!entry.getValue().isComposite()) {
-                simpleFields.put(entry.getKey(), new FactModelTree.PropertyTypeName(entry.getValue().getName()));
+                FactModelTree.PropertyTypeName propertyTypeName = entry.getValue().getBaseType() != null ?
+                        new FactModelTree.PropertyTypeName(entry.getValue().getName(), entry.getValue().getBaseType().getName()) :
+                        new FactModelTree.PropertyTypeName(entry.getValue().getName());
+                simpleFields.put(entry.getKey(), propertyTypeName);
             } else {
                 String expandableId = path + "." + entry.getKey();
                 factModelTree.addExpandableProperty(entry.getKey(), expandableId);

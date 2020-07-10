@@ -233,6 +233,13 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractScenar
         assertNotNull(retrieved);
         assertEquals(TestProperties.FACT_NAME, retrieved.getFactName());
         assertEquals(TestProperties.FULL_PACKAGE, retrieved.getFullPackage());
+        assertFalse(retrieved.getSimpleProperties().isEmpty());
+        retrieved.getSimpleProperties().entrySet().forEach(
+            entry -> {
+                assertFalse(entry.getValue().getBaseTypeName().isPresent());
+                assertEquals(entry.getValue().getTypeName(), entry.getValue().getPropertyTypeNameToVisualize());
+            }
+        );
     }
 
     @Test
@@ -240,12 +247,14 @@ public class BusinessCentralDMODataManagementStrategyTest extends AbstractScenar
         final ModelField[] modelFields = {};
         Map<String, String> superTypesMap = new HashMap<>();
         superTypesMap.put(TestProperties.FACT_NAME, Enum.class.getCanonicalName());
-        final FactModelTree retrieved = businessCentralDmoDataManagementStrategySpy.getFactModelTree(TestProperties.FACT_NAME,superTypesMap, modelFields);
+        final FactModelTree retrieved = businessCentralDmoDataManagementStrategySpy.getFactModelTree(TestProperties.FACT_NAME, superTypesMap, modelFields);
         assertNotNull(retrieved);
         assertEquals(TestProperties.FACT_NAME, retrieved.getFactName());
         assertEquals(TestProperties.FULL_PACKAGE, retrieved.getFullPackage());
         assertTrue(retrieved.getSimpleProperties().containsKey(TestProperties.LOWER_CASE_VALUE));
         assertEquals(TestProperties.FULL_CLASS_NAME, retrieved.getSimpleProperties().get(TestProperties.LOWER_CASE_VALUE));
+        assertFalse(retrieved.getSimpleProperties().get(TestProperties.LOWER_CASE_VALUE).getBaseTypeName().isPresent());
+        assertEquals(TestProperties.FULL_CLASS_NAME, retrieved.getSimpleProperties().get(TestProperties.LOWER_CASE_VALUE).getPropertyTypeNameToVisualize());
     }
 
     @Test

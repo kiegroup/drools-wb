@@ -43,6 +43,7 @@ import org.mockito.Captor;
 import org.uberfire.backend.vfs.ObservablePath;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
@@ -104,6 +105,8 @@ public class AbstractDataManagementStrategyTest extends AbstractScenarioSimulati
             FactModelTree.PropertyTypeName simplePropertyValue = simpleProperties.get(TestProperties.LOWER_CASE_VALUE);
             assertNotNull(simplePropertyValue);
             assertEquals(fullName, simplePropertyValue.getTypeName());
+            assertEquals(fullName, simplePropertyValue.getPropertyTypeNameToVisualize());
+            assertFalse(simplePropertyValue.getBaseTypeName().isPresent());
         }
     }
 
