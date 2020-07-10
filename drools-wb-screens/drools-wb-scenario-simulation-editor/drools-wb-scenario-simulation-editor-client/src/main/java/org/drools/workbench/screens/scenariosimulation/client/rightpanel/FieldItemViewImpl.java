@@ -49,15 +49,15 @@ public class FieldItemViewImpl implements FieldItemView {
     private String factName;
     private String fieldName;
     private String className;
-    private String baseClassName;
+    private String classTypeName;
 
     @Override
-    public void setFieldData(String fullPath, String factName, String fieldName, String className, String baseClassName) {
+    public void setFieldData(String fullPath, String factName, String fieldName, String className, String classTypeName) {
         String innerHtml = new StringBuilder()
                 .append("<a>")
                 .append(fieldName)
                 .append("</a> [")
-                .append(baseClassName)
+                .append(classTypeName)
                 .append("]")
                 .toString();
         fieldNameElement.setInnerHTML(innerHtml);
@@ -69,7 +69,7 @@ public class FieldItemViewImpl implements FieldItemView {
         this.fieldName = fieldName;
         this.className = className;
         this.fullPath = fullPath;
-        this.baseClassName = baseClassName;
+        this.classTypeName = classTypeName;
     }
 
     @Override
@@ -93,8 +93,8 @@ public class FieldItemViewImpl implements FieldItemView {
     }
 
     @Override
-    public String getBaseClassName() {
-        return baseClassName;
+    public String getClassTypeName() {
+        return classTypeName;
     }
 
     @Override
@@ -162,12 +162,12 @@ public class FieldItemViewImpl implements FieldItemView {
                 Objects.equals(getFactName(), that.getFactName()) &&
                 Objects.equals(getFieldName(), that.getFieldName()) &&
                 Objects.equals(getClassName(), that.getClassName()) &&
-                Objects.equals(getBaseClassName(), that.getBaseClassName());
+                Objects.equals(getClassTypeName(), that.getClassTypeName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getFullPath(), getFactName(), getFieldName(), getClassName(), getBaseClassName());
+        return Objects.hash(getFullPath(), getFactName(), getFieldName(), getClassName(), getClassTypeName());
     }
 
     @Override
@@ -177,7 +177,7 @@ public class FieldItemViewImpl implements FieldItemView {
                 ", factName='" + factName + '\'' +
                 ", fieldName='" + fieldName + '\'' +
                 ", className='" + className + '\'' +
-                ", classNameShown='" + baseClassName + '\'' +
+                ", classNameShown='" + classTypeName + '\'' +
                 '}';
     }
 }

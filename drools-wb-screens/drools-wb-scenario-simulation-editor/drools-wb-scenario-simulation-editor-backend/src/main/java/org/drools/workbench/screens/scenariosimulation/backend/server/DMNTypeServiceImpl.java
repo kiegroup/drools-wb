@@ -201,7 +201,6 @@ public class DMNTypeServiceImpl
             throw new WrongDMNTypeException();
         }
         Map<String, FactModelTree.PropertyTypeName> simpleFields = new HashMap<>();
-
         FactModelTree toReturn = new FactModelTree(name, "", simpleFields, genericTypeInfoMap, fmType);
         for (Map.Entry<String, DMNType> entry : type.getFields().entrySet()) {
             String expandablePropertyName = fullPropertyPath + "." + entry.getKey();
