@@ -167,14 +167,21 @@ public class FactModelTree {
     }
 
     /**
-     * Nested DTO which holds a Property name.
-     * - typeName: It is the real DMNType name;
-     * - baseTypeName: It represents the baseType
+     * Nested DTO which holds a Property name. This is required in case of DMN Type scenario, where, if a DMNType
+     * contains a baseType, it takes the type name from its baseType.
+     * This is to manage DMN Simple Types and Anonymous inner types (please refer to DMN documentation for further info)
+     * For all other cases, typeName is the name to use and show.
+     * - typeName: It is the real type name;
+     * - baseTypeName: Optional, it represents the baseType of a DMNType. If is present, this should be shown in UI but
+     *                 ignored on all other steps.
      */
     public static class PropertyTypeName {
 
         private String typeName;
         private Optional<String> baseTypeName;
+
+        public PropertyTypeName() {
+        }
 
         public PropertyTypeName(String typeName) {
             this.typeName = typeName;
@@ -194,6 +201,18 @@ public class FactModelTree {
             return baseTypeName;
         }
 
+        public void setTypeName(String typeName) {
+            this.typeName = typeName;
+        }
+
+        public void setBaseTypeName(Optional<String> baseTypeName) {
+            this.baseTypeName = baseTypeName;
+        }
+
+        /**
+         * This method returns the correct <b>type</b> name of the property to be visualized in UI.
+         * @return
+         */
         public String getPropertyTypeNameToVisualize() {
             return baseTypeName.orElse(typeName);
         }
