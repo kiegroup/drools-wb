@@ -27,10 +27,10 @@ public interface FieldItemView {
          * @param factName
          * @param fieldName
          * @param className
-         * @param classNameToShow
+         * @param classTypeName
          * @return
          */
-        LIElement getLIElement(String parentPath, String factName, String fieldName, String className, String classNameToShow);
+        LIElement getLIElement(String parentPath, String factName, String fieldName, String className, String classTypeName);
 
         void onFieldElementClick(FieldItemView selected);
 
