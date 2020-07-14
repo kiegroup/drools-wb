@@ -207,8 +207,8 @@ public class FactModelTree {
             this.typeName = typeName;
         }
 
-        public void setBaseTypeName(Optional<String> baseTypeName) {
-            this.baseTypeName = baseTypeName;
+        public void setBaseTypeName(String baseTypeName) {
+            this.baseTypeName = Optional.ofNullable(baseTypeName);
         }
 
         /**

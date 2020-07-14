@@ -19,9 +19,25 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class PropertyTypeNameTest {
+
+    @Test
+    public void propertyTypeNameEmpty() {
+        String typeName = "typeName";
+        String baseTypeName = "baseTypeName";
+        FactModelTree.PropertyTypeName propertyTypeNameTest = new FactModelTree.PropertyTypeName();
+        assertNull(propertyTypeNameTest.getTypeName());
+        assertFalse(propertyTypeNameTest.getBaseTypeName().isPresent());
+        propertyTypeNameTest.setTypeName(typeName);
+        assertEquals(typeName, propertyTypeNameTest.getPropertyTypeNameToVisualize());
+        propertyTypeNameTest.setBaseTypeName(baseTypeName);
+        assertTrue(propertyTypeNameTest.getBaseTypeName().isPresent());
+        assertEquals(typeName, propertyTypeNameTest.getTypeName());
+        assertEquals(baseTypeName, propertyTypeNameTest.getPropertyTypeNameToVisualize());
+    }
 
     @Test
     public void propertyTypeNameNoBaseType() {
