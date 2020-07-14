@@ -33,8 +33,8 @@ public class ScenarioCsvDownloadReport {
     protected static final String[] RULE_OVERALL_STATS_HEADER = {"AVAILABLE RULES", "RULES FIRED", "PERCENTAGE OF RULES FIRED"};
     protected static final String[] DMN_COUNTER_HEADER = {"DECISION", "NUMBER OF TIMES"};
     protected static final String[] RULE_COUNTER_HEADER = {"RULE", "NUMBER OF TIMES"};
-    protected static final String[] DMN_AUDIT_HEADER = {"TEST SCENARIO INDEX", "TEST SCENARIO NAME", "DECISION INDEX", "EVALUATED DECISION", "LEVEL"};
-    protected static final String[] RULE_AUDIT_HEADER = {"TEST SCENARIO INDEX", "TEST SCENARIO NAME", "RULE INDEX", "FIRED RULE", "LEVEL"};
+    protected static final String[] DMN_AUDIT_HEADER = {"TEST SCENARIO INDEX", "TEST SCENARIO NAME", "DECISION INDEX", "EVALUATED DECISION", "RESULT"};
+    protected static final String[] RULE_AUDIT_HEADER = {"TEST SCENARIO INDEX", "TEST SCENARIO NAME", "RULE INDEX", "FIRED RULE", "RESULT"};
 
     /**
      * @param simulationRunMetadata the <code>SimulationRunMetadata</code> to print out
@@ -114,8 +114,8 @@ public class ScenarioCsvDownloadReport {
         printer.print(toPrint.getScenarioIndex());
         printer.print(toPrint.getScenario());
         printer.print(toPrint.getExecutionIndex());
-        printer.print(toPrint.getMessage());
-        printer.print(toPrint.getLevel());
+        printer.print(toPrint.getDecisionOrRuleName());
+        printer.print(toPrint.getResult());
         printer.println();
     }
 }

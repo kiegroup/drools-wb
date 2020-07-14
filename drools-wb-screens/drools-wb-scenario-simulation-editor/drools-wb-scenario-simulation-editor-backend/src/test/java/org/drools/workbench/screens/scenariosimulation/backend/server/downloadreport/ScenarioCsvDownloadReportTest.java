@@ -78,7 +78,7 @@ public class ScenarioCsvDownloadReportTest {
         commonCheckHeader(auditHeader, retrievedLines[6]);
         for (int i = 7; i < retrievedLines.length; i++) {
             AuditLogLine auditLogLine = auditLog.getAuditLogLines().get(i - 7);
-            List<String> auditData = Arrays.asList(String.valueOf(auditLogLine.getScenarioIndex()), "\"" + auditLogLine.getScenario() + "\"", String.valueOf(auditLogLine.getExecutionIndex()), "\"" + auditLogLine.getMessage() + "\"", auditLogLine.getLevel());
+            List<String> auditData = Arrays.asList(String.valueOf(auditLogLine.getScenarioIndex()), "\"" + auditLogLine.getScenario() + "\"", String.valueOf(auditLogLine.getExecutionIndex()), "\"" + auditLogLine.getDecisionOrRuleName() + "\"", auditLogLine.getResult());
             commonCheckRetrievedString(retrievedLines[i], auditData);
         }
     }
@@ -172,7 +172,7 @@ public class ScenarioCsvDownloadReportTest {
         AuditLogLine auditLogLine = getAuditLogLine();
         scenarioCsvDownloadReport.printAuditLogLine(auditLogLine, printer);
         String retrieved = stringBuilder.toString();
-        List<String> data = Arrays.asList(String.valueOf(auditLogLine.getScenarioIndex()), "\"" + auditLogLine.getScenario() + "\"", String.valueOf(auditLogLine.getExecutionIndex()), "\"" + auditLogLine.getMessage() + "\"", auditLogLine.getLevel());
+        List<String> data = Arrays.asList(String.valueOf(auditLogLine.getScenarioIndex()), "\"" + auditLogLine.getScenario() + "\"", String.valueOf(auditLogLine.getExecutionIndex()), "\"" + auditLogLine.getDecisionOrRuleName() + "\"", auditLogLine.getResult());
         commonCheckRetrievedString(retrieved, data);
     }
 
