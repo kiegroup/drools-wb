@@ -506,10 +506,10 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
         presenter.populateCoverageReport(modelType, simulationRunMetadata);
         if (simulationRunMetadata != null && simulationRunMetadata.getAuditLog() != null) {
             presenter.setDownloadReportCommand(() -> onDownloadReportToCsv(
-                    scenarioSimulationEditorPresenter.getExportCallBack(),
-                    new ScenarioSimulationHasBusyIndicatorDefaultErrorCallback(scenarioSimulationEditorPresenter.getView()),
-                    simulationRunMetadata,
-                    modelType));
+                scenarioSimulationEditorPresenter.getExportCallBack(),
+                new ScenarioSimulationHasBusyIndicatorDefaultErrorCallback(scenarioSimulationEditorPresenter.getView()),
+                simulationRunMetadata,
+                modelType));
         }
     }
 }
