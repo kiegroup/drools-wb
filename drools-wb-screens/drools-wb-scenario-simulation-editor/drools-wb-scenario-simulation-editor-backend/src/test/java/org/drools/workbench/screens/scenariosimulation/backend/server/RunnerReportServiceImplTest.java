@@ -15,7 +15,6 @@
  */
 package org.drools.workbench.screens.scenariosimulation.backend.server;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,18 +35,18 @@ import static org.junit.Assert.assertTrue;
 
 public class RunnerReportServiceImplTest {
 
-    private RunnerReportServiceImpl runnerReportServiceImplSpy;
+    private RunnerReportServiceImpl runnerReportServiceImpl;
 
     @Before
     public void setup() {
-        runnerReportServiceImplSpy = new RunnerReportServiceImpl();
+        runnerReportServiceImpl = new RunnerReportServiceImpl();
     }
 
     @Test
     public void getReportRULE() {
         AuditLog auditLog = new AuditLog();
         IntStream.range(0, 6).forEach(index -> auditLog.addAuditLogLine(getAuditLogLine()));
-        String report = runnerReportServiceImplSpy.getReport(getSimulationRunMetadata(auditLog), ScenarioSimulationModel.Type.RULE);
+        String report = runnerReportServiceImpl.getReport(getSimulationRunMetadata(auditLog), ScenarioSimulationModel.Type.RULE);
         assertNotNull(report);
         assertFalse(report.isEmpty());
         String[] reportLine = report.split("\\r\\n");
@@ -63,7 +62,7 @@ public class RunnerReportServiceImplTest {
     public void getReportDMN() {
         AuditLog auditLog = new AuditLog();
         IntStream.range(0, 6).forEach(index -> auditLog.addAuditLogLine(getAuditLogLine()));
-        String report = runnerReportServiceImplSpy.getReport(getSimulationRunMetadata(auditLog), ScenarioSimulationModel.Type.DMN);
+        String report = runnerReportServiceImpl.getReport(getSimulationRunMetadata(auditLog), ScenarioSimulationModel.Type.DMN);
         assertNotNull(report);
         assertFalse(report.isEmpty());
         String[] reportLine = report.split("\\r\\n");
