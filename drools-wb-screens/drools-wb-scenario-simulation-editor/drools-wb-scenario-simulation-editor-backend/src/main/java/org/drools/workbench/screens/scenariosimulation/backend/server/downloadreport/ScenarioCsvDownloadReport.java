@@ -45,7 +45,7 @@ public class ScenarioCsvDownloadReport {
     public String getReport(SimulationRunMetadata simulationRunMetadata, ScenarioSimulationModel.Type modelType) {
         StringBuilder stringBuilder = new StringBuilder();
 
-        try (CSVPrinter printer = new CSVPrinter(stringBuilder, CSVFormat.DEFAULT)) {
+        try (CSVPrinter printer = new CSVPrinter(stringBuilder, CSVFormat.DEFAULT.withNullString(""))) {
             generateOverallStatsHeader(printer, modelType);
             printOverallStatsLine(printer,
                                   simulationRunMetadata.getAvailable(),
@@ -116,6 +116,7 @@ public class ScenarioCsvDownloadReport {
         printer.print(toPrint.getExecutionIndex());
         printer.print(toPrint.getDecisionOrRuleName());
         printer.print(toPrint.getResult());
+        printer.print(toPrint.getMessage().orElse(""));
         printer.println();
     }
 }

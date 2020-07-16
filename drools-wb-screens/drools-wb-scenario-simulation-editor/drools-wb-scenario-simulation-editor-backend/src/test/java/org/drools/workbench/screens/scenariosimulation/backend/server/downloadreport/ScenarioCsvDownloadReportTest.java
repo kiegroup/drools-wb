@@ -78,7 +78,7 @@ public class ScenarioCsvDownloadReportTest {
         commonCheckHeader(auditHeader, retrievedLines[6]);
         for (int i = 7; i < retrievedLines.length; i++) {
             AuditLogLine auditLogLine = auditLog.getAuditLogLines().get(i - 7);
-            List<String> auditData = Arrays.asList(String.valueOf(auditLogLine.getScenarioIndex()), "\"" + auditLogLine.getScenario() + "\"", String.valueOf(auditLogLine.getExecutionIndex()), "\"" + auditLogLine.getDecisionOrRuleName() + "\"", auditLogLine.getResult());
+            List<String> auditData = Arrays.asList(String.valueOf(auditLogLine.getScenarioIndex()), "\"" + auditLogLine.getScenario() + "\"", String.valueOf(auditLogLine.getExecutionIndex()), "\"" + auditLogLine.getDecisionOrRuleName() + "\"", auditLogLine.getResult(), auditLogLine.getMessage().orElse(""));
             commonCheckRetrievedString(retrievedLines[i], auditData);
         }
     }
@@ -164,7 +164,6 @@ public class ScenarioCsvDownloadReportTest {
         commonCheckHeader(DMN_AUDIT_HEADER, retrieved);
     }
 
-
     @Test
     public void printAuditLogLine() throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
@@ -172,7 +171,7 @@ public class ScenarioCsvDownloadReportTest {
         AuditLogLine auditLogLine = getAuditLogLine();
         scenarioCsvDownloadReport.printAuditLogLine(auditLogLine, printer);
         String retrieved = stringBuilder.toString();
-        List<String> data = Arrays.asList(String.valueOf(auditLogLine.getScenarioIndex()), "\"" + auditLogLine.getScenario() + "\"", String.valueOf(auditLogLine.getExecutionIndex()), "\"" + auditLogLine.getDecisionOrRuleName() + "\"", auditLogLine.getResult());
+        List<String> data = Arrays.asList(String.valueOf(auditLogLine.getScenarioIndex()), "\"" + auditLogLine.getScenario() + "\"", String.valueOf(auditLogLine.getExecutionIndex()), "\"" + auditLogLine.getDecisionOrRuleName() + "\"", auditLogLine.getResult(), auditLogLine.getMessage().orElse(""));
         commonCheckRetrievedString(retrieved, data);
     }
 
@@ -189,7 +188,7 @@ public class ScenarioCsvDownloadReportTest {
     private void commonCheckRetrievedString(String toCheck, List<String> rowData) {
         assertNotNull(toCheck);
         toCheck = toCheck.replace("\r\n", "");
-
+        System.out.println(toCheck);
         for (String data : rowData) {
             assertTrue(toCheck.contains(String.valueOf(data)));
             toCheck = toCheck.replaceFirst(String.valueOf(data), "");
@@ -200,12 +199,13 @@ public class ScenarioCsvDownloadReportTest {
     }
 
     private CSVPrinter getCSVPrinter(StringBuilder stringBuilder) throws IOException {
-        return new CSVPrinter(stringBuilder, CSVFormat.DEFAULT);
+        return new CSVPrinter(stringBuilder, CSVFormat.DEFAULT.withNullString(""));
     }
 
     private AuditLogLine getAuditLogLine() {
         Random random = new Random();
-        return new AuditLogLine(random.nextInt(3), "sce,nario-" + random.nextInt(5), random.nextInt(6), "Ru,le-" + random.nextInt(), "INFO");
+        String message = random.nextBoolean() ? "WARN: Error during evaluation" : null;
+        return new AuditLogLine(random.nextInt(3), "sce,nario-" + random.nextInt(5), random.nextInt(6), "Ru,le-" + random.nextInt(), "INFO", message);
     }
 
     private SimulationRunMetadata getSimulationRunMetadata(AuditLog auditLog) {
