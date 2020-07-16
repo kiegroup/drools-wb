@@ -30,7 +30,7 @@ public class RunnerReportServiceImpl implements RunnerReportService {
     protected ScenarioCsvDownloadReport scenarioCsvDownloadReport = new ScenarioCsvDownloadReport();
 
     @Override
-    public Object getReport(SimulationRunMetadata scenarioRunMetadata, ScenarioSimulationModel.Type modelType) {
+    public String getReport(SimulationRunMetadata scenarioRunMetadata, ScenarioSimulationModel.Type modelType) {
         return scenarioCsvDownloadReport.getReport(scenarioRunMetadata, modelType);
     }
 }

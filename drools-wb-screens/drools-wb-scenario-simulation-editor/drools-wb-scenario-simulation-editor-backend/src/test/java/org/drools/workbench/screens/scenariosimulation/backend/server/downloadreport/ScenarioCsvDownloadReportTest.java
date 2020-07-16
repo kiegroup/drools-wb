@@ -188,7 +188,6 @@ public class ScenarioCsvDownloadReportTest {
     private void commonCheckRetrievedString(String toCheck, List<String> rowData) {
         assertNotNull(toCheck);
         toCheck = toCheck.replace("\r\n", "");
-        System.out.println(toCheck);
         for (String data : rowData) {
             assertTrue(toCheck.contains(String.valueOf(data)));
             toCheck = toCheck.replaceFirst(String.valueOf(data), "");

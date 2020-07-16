@@ -32,6 +32,6 @@ public interface RunnerReportService {
      * @param modelType
      * @return
      */
-    Object getReport(SimulationRunMetadata scenarioRunMetadata, ScenarioSimulationModel.Type modelType);
+    String getReport(SimulationRunMetadata scenarioRunMetadata, ScenarioSimulationModel.Type modelType);
 
 }

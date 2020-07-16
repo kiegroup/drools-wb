@@ -214,12 +214,13 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     }
 
     @Override
-    public void onExportToCsv(RemoteCallback<Object> exportCallBack, ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback, AbstractScesimModel<? extends AbstractScesimData> scesimModel) {
+    public void onExportToCsv(RemoteCallback<String> exportCallBack, ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback, AbstractScesimModel<? extends AbstractScesimData> scesimModel) {
         importExportService.call(exportCallBack, scenarioSimulationHasBusyIndicatorDefaultErrorCallback)
                 .exportScesimModel(CSV, scesimModel);
     }
 
-    public void onDownloadReportToCsv(RemoteCallback<Object> exportCallBack,
+    @Override
+    public void onDownloadReportToCsv(RemoteCallback<String> exportCallBack,
                                       ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback,
                                       SimulationRunMetadata simulationRunMetadata,
                                       ScenarioSimulationModel.Type modelType) {

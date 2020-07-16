@@ -169,7 +169,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     @Mock
     private SimulationRunMetadata simulationRunMetadataMock;
     @Mock
-    private RemoteCallback<Object> exportCallBackMock;
+    private RemoteCallback<String> exportCallBackMock;
     @Mock
     private CoverageReportPresenter coverageReportPresenterMock;
     @Mock
@@ -301,7 +301,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
 
     @Test
     public void onExportToCSV() {
-        RemoteCallback<Object> remoteCallback = mock(RemoteCallback.class);
+        RemoteCallback<String> remoteCallback = mock(RemoteCallback.class);
         ScenarioSimulationHasBusyIndicatorDefaultErrorCallback errorCallback = mock(ScenarioSimulationHasBusyIndicatorDefaultErrorCallback.class);
         scenarioSimulationEditorBusinessClientWrapper.onExportToCsv(remoteCallback, errorCallback, simulationMock);
         verify(importExportCaller, times(1)).call(eq(remoteCallback), eq(errorCallback));
@@ -310,7 +310,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
 
     @Test
     public void onDownloadReportToCSV() {
-        RemoteCallback<Object> remoteCallback = mock(RemoteCallback.class);
+        RemoteCallback<String> remoteCallback = mock(RemoteCallback.class);
         ScenarioSimulationHasBusyIndicatorDefaultErrorCallback errorCallback = mock(ScenarioSimulationHasBusyIndicatorDefaultErrorCallback.class);
         scenarioSimulationEditorBusinessClientWrapper.onDownloadReportToCsv(remoteCallback, errorCallback, simulationRunMetadataMock, RULE);
         verify(runnerReportServiceCaller, times(1)).call(eq(remoteCallback), eq(errorCallback));
