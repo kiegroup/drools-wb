@@ -535,7 +535,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
             throw new IllegalStateException(WRONG_DMN_MESSAGE);
         }
         Map<String, FactModelTree.PropertyTypeName> simpleFields = new HashMap<>();
-        FactModelTree toReturn = new FactModelTree(name, "", simpleFields,  genericTypeInfoMap, fmType);
+        FactModelTree toReturn = new FactModelTree(name, "", simpleFields, genericTypeInfoMap, fmType);
         for (Map.Entry<String, ClientDMNType> entry : type.getFields().entrySet()) {
             String expandablePropertyName = fullPropertyPath + "." + entry.getKey();
             if (isToBeManagedAsCollection(entry.getValue())) {  // if it is a collection, generate the generic and add as hidden fact a simple or composite fact model tree
