@@ -33,8 +33,8 @@ public class ScenarioCsvDownloadReport {
     protected static final String[] RULE_OVERALL_STATS_HEADER = {"AVAILABLE RULES", "RULES FIRED", "PERCENTAGE OF RULES FIRED"};
     protected static final String[] DMN_COUNTER_HEADER = {"DECISION", "NUMBER OF TIMES"};
     protected static final String[] RULE_COUNTER_HEADER = {"RULE", "NUMBER OF TIMES"};
-    protected static final String[] DMN_AUDIT_HEADER = {"TEST SCENARIO INDEX", "TEST SCENARIO NAME", "DECISION INDEX", "EVALUATED DECISION", "RESULT", "MESSAGE"};
-    protected static final String[] RULE_AUDIT_HEADER = {"TEST SCENARIO INDEX", "TEST SCENARIO NAME", "RULE INDEX", "FIRED RULE", "RESULT", "MESSAGE"};
+    protected static final String[] DMN_AUDIT_HEADER = {"TEST SCENARIO INDEX", "TEST SCENARIO NAME", "DECISION INDEX", "EVALUATED DECISION", "DECISION STATUS", "MESSAGE"};
+    protected static final String[] RULE_AUDIT_HEADER = {"TEST SCENARIO INDEX", "TEST SCENARIO NAME", "RULE INDEX", "FIRED RULE", "RULE STATUS", "MESSAGE"};
 
     /**
      * @param simulationRunMetadata the <code>SimulationRunMetadata</code> to print out
