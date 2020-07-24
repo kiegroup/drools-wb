@@ -395,6 +395,7 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
         DataManagementStrategy dataManagementStrategy;
         if (ScenarioSimulationModel.Type.RULE.equals(model.getSettings().getType())) {
             scenarioSimulationEditorPresenter.sendNotification(ScenarioSimulationEditorConstants.INSTANCE.ruleScenarioNotSupportedNotification(),
+                                                               false,
                                                                NotificationEvent.NotificationType.WARNING);
             dataManagementStrategy = new KogitoDMODataManagementStrategy(kogitoOracle);
         } else {
