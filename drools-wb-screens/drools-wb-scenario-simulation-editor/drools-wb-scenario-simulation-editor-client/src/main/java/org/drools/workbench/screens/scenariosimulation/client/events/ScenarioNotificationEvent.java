@@ -36,7 +36,7 @@ public class ScenarioNotificationEvent extends GwtEvent<ScenarioNotificationEven
         this.autoHide = true;
     }
 
-    public ScenarioNotificationEvent(String message, boolean autoHide, NotificationEvent.NotificationType type) {
+    public ScenarioNotificationEvent(String message, NotificationEvent.NotificationType type, boolean autoHide) {
         this.message = message;
         this.notificationType = type;
         this.autoHide = autoHide;

@@ -728,7 +728,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
 
     @Test
     public void sendNotificationAutoHide() {
-        presenterSpy.sendNotification("message", false, NotificationEvent.NotificationType.ERROR);
+        presenterSpy.sendNotification("message", NotificationEvent.NotificationType.ERROR, false);
         verify(eventBusMock, times(1)).fireEvent(scenarioNotificationEventArgumentCaptor.capture());
         assertEquals("message", scenarioNotificationEventArgumentCaptor.getValue().getMessage());
         assertEquals(NotificationEvent.NotificationType.ERROR, scenarioNotificationEventArgumentCaptor.getValue().getNotificationType());
