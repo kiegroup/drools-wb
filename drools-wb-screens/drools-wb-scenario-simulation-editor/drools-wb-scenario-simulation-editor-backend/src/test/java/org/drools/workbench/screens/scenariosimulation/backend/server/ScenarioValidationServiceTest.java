@@ -66,7 +66,7 @@ public class ScenarioValidationServiceTest {
             }
 
             @Override
-            protected KieContainer getKieContainer(Path path) {
+            protected KieContainer getKieContainerClone(Path path) {
                 return kieContainerMock;
             }
         });
