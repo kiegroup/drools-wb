@@ -379,21 +379,21 @@ public class KogitoScenarioSimulationBuilder {
         List<String> previousSteps = new ArrayList<>(readOnlyPreviousSteps);
         // if is a simple type it generates a single column
         if (factModelTree.isSimple()) {
-            String factType = factModelTree.getSimpleProperties().get(VALUE);
-            factMappingExtractor.getFactMapping(factModelTree, VALUE, previousSteps, factType);
+            FactModelTree.PropertyTypeName factType = factModelTree.getSimpleProperties().get(VALUE);
+            factMappingExtractor.getFactMapping(factModelTree, VALUE, previousSteps, factType.getTypeName());
         }
         // otherwise it adds a column for each simple properties direct or nested
         else {
             factModelTree.getSimpleProperties().entrySet().stream().sorted(Map.Entry.comparingByKey()).forEach(entry -> {
                 String factName = entry.getKey();
-                String factType = entry.getValue();
+                String factTypeName = entry.getValue().getTypeName();
 
-                FactMapping factMapping = factMappingExtractor.getFactMapping(factModelTree, factName, previousSteps, factType);
-                if (ScenarioSimulationSharedUtils.isList(factType)) {
+                FactMapping factMapping = factMappingExtractor.getFactMapping(factModelTree, factName, previousSteps, factTypeName);
+                if (ScenarioSimulationSharedUtils.isList(factTypeName)) {
                     factMapping.setGenericTypes(factModelTree.getGenericTypeInfo(factName));
                 }
-                factMapping.addExpressionElement(factName, factType);
-            });
+                factMapping.addExpressionElement(factName, factTypeName);
+           });
 
             factModelTree.getExpandableProperties().entrySet().stream().sorted(Map.Entry.comparingByValue()).forEach(entry -> {
                 String factType = entry.getValue();

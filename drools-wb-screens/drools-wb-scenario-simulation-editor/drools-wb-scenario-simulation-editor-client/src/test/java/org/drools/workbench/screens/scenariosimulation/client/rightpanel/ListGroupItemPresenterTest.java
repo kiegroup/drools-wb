@@ -23,6 +23,7 @@ import java.util.Optional;
 
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -169,13 +170,13 @@ public class ListGroupItemPresenterTest extends AbstractTestToolsTest {
     public void populateListGroupItemView() {
         listGroupItemPresenter.populateListGroupItemView(listGroupItemViewMock, "", FACT_MODEL_TREE.getFactName(), FACT_MODEL_TREE);
         verify(listGroupItemViewMock, times(1)).setFactName(eq(FACT_MODEL_TREE.getFactName()));
-        Map<String, String> simpleProperties = FACT_MODEL_TREE.getSimpleProperties();
+        Map<String, FactModelTree.PropertyTypeName> simpleProperties = FACT_MODEL_TREE.getSimpleProperties();
         InOrder inOrder = inOrder(fieldItemPresenterSpy);
         simpleProperties.keySet().stream().sorted().forEach(key -> {
-            String value = simpleProperties.get(key);
-            inOrder.verify(fieldItemPresenterSpy, times(1)).getLIElement(eq(FACT_MODEL_TREE.getFactName()), eq(FACT_MODEL_TREE.getFactName()), eq(key), eq(value));
+            FactModelTree.PropertyTypeName value = simpleProperties.get(key);
+            inOrder.verify(fieldItemPresenterSpy, times(1)).getLIElement(eq(FACT_MODEL_TREE.getFactName()), eq(FACT_MODEL_TREE.getFactName()), eq(key), eq(value.getTypeName()), eq(value.getPropertyTypeNameToVisualize()));
         });
-        verify(listGroupItemViewMock, times(simpleProperties.size())).addFactField((anyObject()));
+        verify(listGroupItemViewMock, times(simpleProperties.size())).addFactField(anyObject());
         reset(listGroupItemViewMock);
         Map<String, String> expandableProperties = FACT_MODEL_TREE.getExpandableProperties();
         expandableProperties.entrySet().stream().sorted().forEach(entry -> inOrder.verify(listGroupItemPresenter, times(1)).getDivElement(eq(""), eq(entry.getKey()), eq(entry.getValue())));
