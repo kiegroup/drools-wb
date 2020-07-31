@@ -153,6 +153,16 @@ public abstract class AbstractDMNTest {
         return simpleCollectionString;
     }
 
+    protected CompositeTypeImpl  getSingleCompositeWithBaseTypeField() {
+        // Complex object retrieve
+        CompositeTypeImpl toReturn = new CompositeTypeImpl("compositeNameSpace", COMPOSITE_TYPE_NAME, null);
+
+        toReturn.addField("gender", getSimpleNoCollectionWithBaseType());
+        toReturn.addField("name", new SimpleTypeImpl(null, SIMPLE_TYPE_NAME, null));
+
+        return toReturn;
+    }
+
     /**
      * Returns a <b>single</b>  <b>person</b> <code>CompositeTypeImpl</code> that in turns contains other <code>CompositeTypeImpl</code>s properties
      * @return
@@ -175,16 +185,6 @@ public abstract class AbstractDMNTest {
         toReturn.addField(EXPANDABLE_PROPERTY_PHONENUMBERS, phoneNumberComposite);
         toReturn.addField(EXPANDABLE_PROPERTY_DETAILS, detailsComposite);
         toReturn.addField("name", nameSimple);
-
-        return toReturn;
-    }
-
-    protected CompositeTypeImpl getSingleCompositeWithBaseTypeField() {
-        // Complex object retrieve
-        CompositeTypeImpl toReturn = new CompositeTypeImpl("compositeNameSpace", COMPOSITE_TYPE_NAME, null);
-
-        toReturn.addField("gender", getSimpleNoCollectionWithBaseType());
-        toReturn.addField("name", new SimpleTypeImpl(null, SIMPLE_TYPE_NAME, null));
 
         return toReturn;
     }
