@@ -674,7 +674,7 @@ public class DTCellValueWidgetFactory {
         final DatePicker datePicker = new DatePicker(allowEmptyValues);
 
         // Wire up update handler
-        datePicker.addChangeDateHandler((e) -> value.setDateValue(datePicker.getValue()));
+        datePicker.addChangeDateHandler(e -> value.setDateValue(datePicker.getValue()));
 
         datePicker.setFormat(DATE_FORMAT);
         datePicker.setValue(value.getDateValue());
@@ -693,7 +693,7 @@ public class DTCellValueWidgetFactory {
         final DatePicker datePicker = new DatePicker(allowEmptyValues);
 
         // Wire up update handler
-        datePicker.addChangeDateHandler((e) -> value.setLocalDateValue(format.format(datePicker.getValue())));
+        datePicker.addChangeDateHandler(e -> value.setLocalDateValue(format.format(datePicker.getValue())));
 
         datePicker.setFormat(DATE_FORMAT);
         datePicker.setValue(value.getLocalDateValue() != null ? format.parse(value.getLocalDateValue()) : null);

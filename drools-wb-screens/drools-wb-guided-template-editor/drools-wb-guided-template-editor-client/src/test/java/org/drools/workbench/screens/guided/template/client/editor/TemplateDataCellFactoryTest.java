@@ -79,7 +79,7 @@ public class TemplateDataCellFactoryTest {
     public void testGetCell() throws Exception {
         final String factType = "org.kiegroup.Car";
         final String factField = "color";
-        final String dataType = DataType.DataTypes.STRING.name();
+        final String dataType = DataType.TYPE_STRING;
 
         doReturn(factType).when(column).getFactType();
         doReturn(factField).when(column).getFactField();
@@ -90,6 +90,23 @@ public class TemplateDataCellFactoryTest {
 
         verify(testedFactory, never()).makeSelectionEnumCell(factType, factField, "==", dataType);
         verify(testedFactory).makeTextCellWrapper();
+    }
+
+    @Test
+    public void testGetCellForLocalDate() throws Exception {
+        final String factType = "org.kiegroup.Car";
+        final String factField = "service";
+        final String dataType = DataType.TYPE_LOCAL_DATE;
+
+        doReturn(factType).when(column).getFactType();
+        doReturn(factField).when(column).getFactField();
+        doReturn(dataType).when(column).getDataType();
+        doReturn("==").when(column).getOperator();
+
+        testedFactory.getCell(column);
+
+        verify(testedFactory, never()).makeSelectionEnumCell(factType, factField, "==", dataType);
+        verify(testedFactory).makeUniversalDateCellWrapper();
     }
 
     @Test

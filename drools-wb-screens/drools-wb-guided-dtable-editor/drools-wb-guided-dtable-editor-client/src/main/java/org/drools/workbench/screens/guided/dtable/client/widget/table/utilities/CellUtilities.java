@@ -90,7 +90,7 @@ public class CellUtilities {
                 dcv.setDateValue(convertToDate(dcv));
                 break;
             case LOCAL_DATE:
-                dcv.setLocalDateValue(convertToString(dcv));
+                dcv.setLocalDateValue(convertToLocalDate(dcv));
                 break;
             case BOOLEAN:
                 dcv.setBooleanValue(convertToBoolean(dcv));

@@ -74,7 +74,7 @@ public class LocalDatePickerSingletonDOMElementFactory extends SingleValueSingle
 
     @Override
     protected String getValue() {
-        if (getWidget() != null) {
+        if (getWidget() != null && getWidget().getValue() != null) {
             return FORMATTER.format(getWidget().getValue());
         }
         return null;
@@ -95,7 +95,7 @@ public class LocalDatePickerSingletonDOMElementFactory extends SingleValueSingle
 
     @Override
     public void registerHandlers(final DatePicker widget, final LocalDatePickerDOMElement widgetDomElement) {
-        widget.addChangeDateHandler((e) -> doValueUpdate());
+        widget.addChangeDateHandler(e -> doValueUpdate());
         widget.addDomHandler(new KeyDownHandlerDatePicker(gridPanel,
                                                           gridLayer,
                                                           gridWidget,

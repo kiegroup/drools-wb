@@ -21,10 +21,14 @@ import java.util.HashMap;
 
 import com.ait.lienzo.test.LienzoMockitoTestRunner;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTableView;
+import org.gwtbootstrap3.extras.datepicker.client.ui.base.events.ChangeDateEvent;
+import org.gwtbootstrap3.extras.datepicker.client.ui.base.events.ChangeDateHandler;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.workbench.common.services.shared.preferences.ApplicationPreferences;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.uberfire.ext.widgets.common.client.common.DatePicker;
 import org.uberfire.ext.wires.core.grids.client.widget.layer.GridLayer;
@@ -35,7 +39,9 @@ import static org.kie.workbench.common.services.shared.preferences.ApplicationPr
 import static org.kie.workbench.common.services.shared.preferences.ApplicationPreferences.KIE_TIMEZONE_OFFSET;
 import static org.kie.workbench.common.widgets.client.util.TimeZoneUtils.FORMATTER;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(LienzoMockitoTestRunner.class)
@@ -54,6 +60,12 @@ public class LocalDatePickerSingletonDOMElementFactoryTest {
 
     @Mock
     private DatePicker datePicker;
+
+    @Mock
+    private LocalDatePickerDOMElement datePickerDOMElement;
+
+    @Captor
+    private ArgumentCaptor<ChangeDateHandler> dateChangeHandlerCaptor;
 
     @BeforeClass
     public static void setupStatic() {
@@ -85,6 +97,25 @@ public class LocalDatePickerSingletonDOMElementFactoryTest {
         final String actualDate = factory.getValue();
 
         assertEquals(dateStringValue, actualDate);
+    }
+
+    @Test
+    public void testConvert() {
+        assertEquals("05-01-2020", makeFactory().convert("05-01-2020"));
+    }
+
+    @Test
+    public void testRegisterHandlers() {
+        final LocalDatePickerSingletonDOMElementFactory factory = spy(makeFactory());
+        factory.registerHandlers(datePicker, datePickerDOMElement);
+
+        verify(datePicker).addChangeDateHandler(dateChangeHandlerCaptor.capture());
+        dateChangeHandlerCaptor.getValue().onChangeDate(mock(ChangeDateEvent.class));
+
+        verify(factory).flush();
+        verify(factory).destroyResources();
+        verify(gridLayer).batch();
+        verify(gridPanel).setFocus(true);
     }
 
     private LocalDatePickerSingletonDOMElementFactory makeFactory() {

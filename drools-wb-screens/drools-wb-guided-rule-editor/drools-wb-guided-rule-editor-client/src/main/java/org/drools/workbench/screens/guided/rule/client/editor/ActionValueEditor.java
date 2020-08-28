@@ -291,13 +291,10 @@ public class ActionValueEditor extends Composite {
             final DatePicker datePicker = new DatePicker(false);
 
             // Wire up update handler
-            datePicker.addValueChangeHandler(new ValueChangeHandler<Date>() {
-                @Override
-                public void onValueChange(ValueChangeEvent<Date> event) {
-                    final Date date = datePicker.getValue();
-                    final String sDate = (date == null ? null : DATE_FORMATTER.format(datePicker.getValue()));
-                    value.setValue(sDate);
-                }
+            datePicker.addValueChangeHandler(event -> {
+                final Date date = datePicker.getValue();
+                final String sDate = (date == null ? null : DATE_FORMATTER.format(datePicker.getValue()));
+                value.setValue(sDate);
             });
 
             datePicker.setFormat(DATE_FORMAT);

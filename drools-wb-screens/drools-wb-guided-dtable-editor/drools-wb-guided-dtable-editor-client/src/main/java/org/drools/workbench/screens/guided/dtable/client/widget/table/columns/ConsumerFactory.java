@@ -46,7 +46,7 @@ public class ConsumerFactory {
      */
     public static <T, W extends TextBox, E extends SingleValueDOMElement<T, W>, F extends SingleValueSingletonDOMElementFactory<T, W, E>> Consumer<E> makeOnCreationCallback(final F factory,
                                                                                                                                                                              final GridCell<T> cell) {
-        return (e) -> {
+        return e -> {
             if (hasValue(cell)) {
                 e.getWidget().setValue(factory.convert(cell.getValue().getValue()));
             } else {
@@ -60,7 +60,7 @@ public class ConsumerFactory {
      * @return
      */
     public static <T, W extends TextBox, E extends SingleValueDOMElement<T, W>> Consumer<E> makeOnDisplayTextBoxCallback() {
-        return (e) -> e.getWidget().setFocus(true);
+        return e -> e.getWidget().setFocus(true);
     }
 
     /**
@@ -72,7 +72,7 @@ public class ConsumerFactory {
     public static <T, W extends ListBox, E extends MultiValueDOMElement<T, W>, F extends MultiValueSingletonDOMElementFactory<T, W, E>> Consumer<E> makeOnCreationCallback(final F factory,
                                                                                                                                                                            final GridCell<T> cell,
                                                                                                                                                                            final Map<String, String> enumLookups) {
-        return (e) -> {
+        return e -> {
             final W widget = e.getWidget();
 
             if (widget.isMultipleSelect()) {
@@ -94,7 +94,7 @@ public class ConsumerFactory {
      * @return
      */
     public static <T, W extends ListBox, E extends MultiValueDOMElement<T, W>> Consumer<E> makeOnDisplayListBoxCallback() {
-        return (e) -> e.getWidget().setFocus(true);
+        return e -> e.getWidget().setFocus(true);
     }
 
     /**
@@ -103,7 +103,7 @@ public class ConsumerFactory {
      * @return
      */
     public static <E extends SingleValueDOMElement<Date, DatePicker>> Consumer<E> makeOnCreationCallback(final GridCell<Date> cell) {
-        return (e) -> {
+        return e -> {
             final DatePicker widget = e.getWidget();
             final Date value;
             if (hasValue(cell)) {
@@ -120,7 +120,7 @@ public class ConsumerFactory {
      * This is method needs to be used for LocalDate cells as LocalDate has no GWT support in client modules
      */
     public static <E extends SingleValueDOMElement<String, DatePicker>> Consumer<E> makeOnCreationCallbackLocalDate(final GridCell<String> cell) {
-        return (e) -> {
+        return e -> {
             final DatePicker widget = e.getWidget();
             final Date value;
             if (hasValue(cell)) {
@@ -137,7 +137,7 @@ public class ConsumerFactory {
      * @return
      */
     public static <E extends SingleValueDOMElement<Date, DatePicker>> Consumer<E> makeOnDisplayDatePickerCallback() {
-        return (e) -> e.getWidget().setFocus(true);
+        return e -> e.getWidget().setFocus(true);
     }
 
     /**
@@ -145,7 +145,7 @@ public class ConsumerFactory {
      * This is method needs to be used for LocalDate cells as LocalDate has no GWT support in client modules
      */
     public static <E extends SingleValueDOMElement<String, DatePicker>> Consumer<E> makeOnDisplayDatePickerCallbackLocalDate() {
-        return (e) -> e.getWidget().setFocus(true);
+        return e -> e.getWidget().setFocus(true);
     }
 
     private static <T> boolean hasValue(final GridCell<T> cell) {

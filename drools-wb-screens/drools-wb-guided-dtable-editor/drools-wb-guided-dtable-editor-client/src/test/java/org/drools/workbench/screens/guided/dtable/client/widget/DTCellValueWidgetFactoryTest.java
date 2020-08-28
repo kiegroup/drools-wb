@@ -21,6 +21,7 @@ import java.util.HashMap;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import com.google.gwtmockito.WithClassesToStub;
 import org.drools.workbench.models.guided.dtable.shared.model.ActionInsertFactCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.BRLActionVariableColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.BRLConditionVariableColumn;
@@ -32,9 +33,11 @@ import org.gwtbootstrap3.client.ui.TextBox;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.kie.soup.project.datamodel.oracle.DataType;
 import org.kie.workbench.common.services.shared.preferences.ApplicationPreferences;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
 import org.mockito.Mock;
+import org.uberfire.ext.widgets.common.client.common.DatePicker;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -44,6 +47,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
+@WithClassesToStub(DatePicker.class)
 public class DTCellValueWidgetFactoryTest {
 
     @Mock
@@ -97,6 +101,19 @@ public class DTCellValueWidgetFactoryTest {
                                           cellValue);
 
         assertTrue(widget instanceof ListBox);
+    }
+
+    @Test
+    public void testGetWidgetForLocalDate() throws Exception {
+        insertFactCol52.setFactType("Person");
+        insertFactCol52.setFactField("born");
+        when(oracle.hasEnums("Person",
+                             "born")).thenReturn(false);
+        when(oracle.getFieldType("Person", "born")).thenReturn(DataType.TYPE_LOCAL_DATE);
+        Widget widget = factory.getWidget(insertFactCol52,
+                                          cellValue);
+
+        assertTrue(widget instanceof DatePicker);
     }
 
     @Test

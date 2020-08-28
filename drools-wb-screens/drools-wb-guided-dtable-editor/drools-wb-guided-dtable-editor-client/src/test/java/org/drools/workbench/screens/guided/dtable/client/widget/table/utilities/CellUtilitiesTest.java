@@ -107,4 +107,11 @@ public class CellUtilitiesTest {
         assertEquals(DataType.DataTypes.STRING,
                      dcv.getDataType());
     }
+
+    @Test
+    public void testAsString() {
+        final DTCellValue52 value = new DTCellValue52();
+        value.setLocalDateValue("28-08-2020");
+        assertEquals("28-08-2020", cellUtilities.asString(value));
+    }
 }

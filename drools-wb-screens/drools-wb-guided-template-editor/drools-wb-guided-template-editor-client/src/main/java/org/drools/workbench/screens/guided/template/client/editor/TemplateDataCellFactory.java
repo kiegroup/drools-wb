@@ -85,7 +85,7 @@ public class TemplateDataCellFactory
             if (column.getDataType().equals(DataType.TYPE_BOOLEAN)) {
                 return makeBooleanCell();
             } else if (DataType.isDate(column.getDataType())) {
-                return makeUniversalDateCell();
+                return makeUniversalDateCellWrapper();
             } else if (dataType.equals(DataType.TYPE_NUMERIC)) {
                 return makeNumericCell();
             } else if (dataType.equals(DataType.TYPE_NUMERIC_BIGDECIMAL)) {
@@ -235,9 +235,13 @@ public class TemplateDataCellFactory
     }
 
     /**
-     * Wrapper method due to a test purpose
+     * Wrapper methods due to a test purpose
      */
     protected DecoratedGridCellValueAdaptor<String> makeTextCellWrapper() {
         return makeTextCell();
+    }
+
+    protected DecoratedGridCellValueAdaptor<String> makeUniversalDateCellWrapper() {
+        return makeUniversalDateCell();
     }
 }
