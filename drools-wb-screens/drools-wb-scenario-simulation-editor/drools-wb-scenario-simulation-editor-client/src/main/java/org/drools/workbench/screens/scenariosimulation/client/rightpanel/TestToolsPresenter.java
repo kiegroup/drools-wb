@@ -369,12 +369,12 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
                                                        fullPackage + "." + className,
                                                        FactMappingValueType.EXPRESSION)));
             } else if (selectedFieldItemView != null) {
-                String baseClass = selectedFieldItemView.getFullPath().split("\\.")[0];
-                String value = isSimple(baseClass) ?
-                        selectedFieldItemView.getFullPath() :
-                        selectedFieldItemView.getFullPath() + "." + selectedFieldItemView.getFieldName();
-                List<String> propertyNameElements = Collections.unmodifiableList(Arrays.asList(value.split("\\.")));
-                getFullPackage(baseClass).ifPresent(fullPackage -> eventBus.fireEvent(new SetPropertyHeaderEvent(gridWidget, fullPackage,
+                String baseClass = selectedFieldItemView.getFullPath();
+                List<String> propertyNameElements = isSimple(baseClass) ?
+                        Collections.unmodifiableList(Arrays.asList(selectedFieldItemView.getFullPath())) :
+                        Collections.unmodifiableList(Arrays.asList(selectedFieldItemView.getFullPath() + "." + selectedFieldItemView.getFieldName()));               ;
+                getFullPackage(baseClass).ifPresent(fullPackage -> eventBus.fireEvent(new SetPropertyHeaderEvent(gridWidget,
+                                                                                                                 fullPackage,
                                                                                                                  propertyNameElements,
                                                                                                                  selectedFieldItemView.getClassName(),
                                                                                                                  FactMappingValueType.NOT_EXPRESSION)));
