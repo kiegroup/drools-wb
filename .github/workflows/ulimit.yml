@@ -1,0 +1,17 @@
+name: Ulimit Test
+
+on: [pull_request]
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu-latest
+      options: --privileged --ulimit core=-1 --security-opt seccomp=unconfined
+    steps:
+      - name: Core Dump
+        run: |
+          ulimit -n
+          ulimit -c unlimited
+          echo '/tmp/core.%h.%e.%t' > /proc/sys/kernel/core_pattern
