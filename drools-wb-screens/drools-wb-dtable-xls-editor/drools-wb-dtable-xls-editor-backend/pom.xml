@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.drools</groupId>
     <artifactId>drools-wb-dtable-xls-editor</artifactId>
-    <version>7.43.0.Final</version>
+    <version>7.43.1.Final</version>
   </parent>
 
   <artifactId>drools-wb-dtable-xls-editor-backend</artifactId>
