@@ -134,10 +134,8 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandler extends AbstractSce
     }
 
     protected void setupPopupPresenter(final FactMappingValue toManage, final  int uiRowIndex, final int uiColumnIndex, final int xPosition,final  int yPosition,final  PopoverView.Position position) {
-        /* Parameters for the error message */
         final Object expectedValue = toManage.getRawValue();
         final Object errorValue = toManage.getErrorValue();
-        /* It shows the popover, the view depends on failed type (ERROR or EXCEPTION) */
         if (FactMappingValueStatus.FAILED_WITH_ERROR == toManage.getStatus()) {
             errorReportPopupPresenter.setup(ScenarioSimulationEditorConstants.INSTANCE.errorReason(),
                                             ScenarioSimulationEditorConstants.INSTANCE.errorPopoverMessageFailedWithError(
@@ -154,13 +152,17 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandler extends AbstractSce
                                             yPosition,
                                             position);
         } else {
-            errorReportPopupPresenter.setup(ScenarioSimulationEditorConstants.INSTANCE.errorReason(),
-                                            ScenarioSimulationEditorConstants.INSTANCE.errorPopoverMessageFailedWithException(
-                                                    toManage.getExceptionMessage()),
-                                            ScenarioSimulationEditorConstants.INSTANCE.close(),
-                                            xPosition,
-                                            yPosition,
-                                            position);
+            if (toManage.getDetailsMessage() != null) {
+                errorReportPopupPresenter.setup(ScenarioSimulationEditorConstants.INSTANCE.errorReason(),
+                                                ScenarioSimulationEditorConstants.INSTANCE.errorPopoverMessageFailedWithException(
+                                                        toManage.getExceptionMessage()),
+                                                ScenarioSimulationEditorConstants.INSTANCE.close(),
+                                                "See Details",
+                                                toManage.getDetailsMessage(),
+                                                xPosition,
+                                                yPosition,
+                                                position);
+            }
         }
     }
 

@@ -55,6 +55,15 @@ public interface ErrorReportPopover extends PopoverView {
                final int my,
                final Position position);
 
+    void setupWithDetails(final String errorTitleText,
+                          final String errorContentText,
+                          final String keepText,
+                          final String detailsButtonText,
+                          final Command detailsCommand,
+                          final int mx,
+                          final int my,
+                          final Position position);
+
     /**
      * Makes this popover container(and the main content along with it) invisible. Has no effect if the popover is not
      * already showing.
@@ -105,6 +114,15 @@ public interface ErrorReportPopover extends PopoverView {
         void setup(final String errorTitleText,
                    final String errorContentText,
                    final String keepText,
+                   final int mx,
+                   final int my,
+                   final Position position);
+
+        void setup(final String errorTitleText,
+                   final String errorContentText,
+                   final String keepText,
+                   final String detailsButtonText,
+                   final String detailsContent,
                    final int mx,
                    final int my,
                    final Position position);
