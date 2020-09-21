@@ -38,16 +38,11 @@ public class ErrorReportPopoverView extends AbstractPopoverView implements Error
 
     protected Command applyCommand;
 
-    protected Command detailsCommand;
-
     @DataField("keepButton")
-    protected ButtonElement keepButton = Document.get().createPushButtonElement();
+    protected ButtonElement keepButton = Document.get().createButtonElement();
 
     @DataField("applyButton")
-    protected ButtonElement applyButton = Document.get().createPushButtonElement();
-
-    @DataField("detailsButton")
-    protected ButtonElement detailsButton = Document.get().createPushButtonElement();
+    protected ButtonElement applyButton = Document.get().createButtonElement();
 
     @DataField("errorContent")
     protected Div errorContent;
@@ -83,8 +78,6 @@ public class ErrorReportPopoverView extends AbstractPopoverView implements Error
         keepButton.setInnerText(keepText);
         applyButton.setInnerText(applyText);
         applyButton.getStyle().setDisplay(Style.Display.INLINE);
-        detailsButton.getStyle().setDisplay(Style.Display.NONE);
-        detailsCommand = () -> {throw new UnsupportedOperationException();};
         super.setup(Optional.of(errorTitleText), mx, my, position);
     }
 
@@ -98,28 +91,7 @@ public class ErrorReportPopoverView extends AbstractPopoverView implements Error
         errorContent.setTextContent(errorContentText);
         keepButton.setInnerText(keepText);
         applyButton.getStyle().setDisplay(Style.Display.NONE);
-        detailsButton.getStyle().setDisplay(Style.Display.NONE);
         applyCommand = () -> {throw new UnsupportedOperationException();};
-        detailsCommand = () -> {throw new UnsupportedOperationException();};
-        super.setup(Optional.of(errorTitleText), mx, my, position);
-    }
-
-    @Override
-    public void setupWithDetails(final String errorTitleText,
-                                 final String errorContentText,
-                                 final String keepText,
-                                 final String detailsButtonText,
-                                 final Command detailsCommand,
-                                 final int mx,
-                                 final int my,
-                                 final Position position) {
-        errorContent.setTextContent(errorContentText);
-        keepButton.setInnerText(keepText);
-        applyButton.getStyle().setDisplay(Style.Display.NONE);
-        detailsButton.setInnerText(detailsButtonText);
-        detailsButton.getStyle().setDisplay(Style.Display.INLINE);
-        applyCommand = () -> {throw new UnsupportedOperationException();};
-        this.detailsCommand = detailsCommand;
         super.setup(Optional.of(errorTitleText), mx, my, position);
     }
 
@@ -133,11 +105,4 @@ public class ErrorReportPopoverView extends AbstractPopoverView implements Error
         applyCommand.execute();
         hide();
     }
-
-    @EventHandler("detailsButton")
-    public void onDetailsButtonClicked(ClickEvent clickEvent) {
-        detailsCommand.execute();
-        hide();
-    }
-
 }

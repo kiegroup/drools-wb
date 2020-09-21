@@ -149,7 +149,7 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandlerTest extends Abstrac
         verify(simulationDescriptorMock, never()).getFactMappingByIndex(isA(Integer.class));
         verify(scenarioMock, never()).getFactMappingValue(any());
         verify(mouseMoveHandler, never()).retrieveCellMiddleXYPosition(any(), isA(Integer.class));
-        //verify(errorReportPopupPresenterMock, never()).setup(any(), any(), any(), any(), any(), isA(Integer.class), isA(Integer.class), any());
+        verify(errorReportPopupPresenterMock, never()).setup(any(), any(), any(), any(), any(), isA(Integer.class), isA(Integer.class), any());
         assertFalse(inGrid);
     }
 
