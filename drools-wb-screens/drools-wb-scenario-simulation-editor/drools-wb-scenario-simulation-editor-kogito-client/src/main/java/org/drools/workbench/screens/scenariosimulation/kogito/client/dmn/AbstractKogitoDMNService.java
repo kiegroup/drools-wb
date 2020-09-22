@@ -136,15 +136,6 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
         return Collections.unmodifiableMap(dmnDataTypesMap);
     }
 
-    ClientDMNType getDMNType(final String requiredType,
-                             final Map<String, ClientDMNType> createdTypes) {
-        if (createdTypes.containsKey(requiredType)) {
-            return createdTypes.get(requiredType);
-        } else {
-            throw new IllegalStateException("Type '" + requiredType + "' not found.");
-        }
-    }
-
     /**
      * It checks if the given *requiredType*'s <code>ClientDMNType</code> is already present into given createdTypes
      * map If yes, it return it. It creates it otherwise.
@@ -225,7 +216,8 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
                 itemDefinitionDMNType.addFields(superDmnType.getFields());
                 itemDefinitionDMNType.setCollection(superDmnType.isCollection() || itemDefinitionDMNType.isCollection());
                 itemDefinitionDMNType.setIsComposite(superDmnType.isComposite() || itemDefinitionDMNType.isComposite());
-                itemDefinitionDMNType.setFeelType(superDmnType.getFeelType() != null ? superDmnType.getFeelType() : null);
+                itemDefinitionDMNType.setFeelType(superDmnType.getFeelType());
+                itemDefinitionDMNType.setBaseType(getBaseTypeForItemDefinition(itemDefinition, superDmnType));
             } else {
                 throw new IllegalStateException(
                         "Item: " + itemDefinition.getName() + " refers to typeRef: " + itemDefinition.getTypeRef()
@@ -240,6 +232,12 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
 
         return itemDefinitionDMNType;
    }
+
+    private ClientDMNType getBaseTypeForItemDefinition(JSITItemDefinition itemDefinition, ClientDMNType superDmnType) {
+        final boolean hasAllowedValues = itemDefinition.getAllowedValues() != null
+                && !itemDefinition.getAllowedValues().getText().isEmpty();
+        return hasAllowedValues ? superDmnType : superDmnType.getBaseType();
+    }
 
     /**
      * This method aim is to populate all fields and subfields present in a given <code>JSITItemDefinitionItem</code>
@@ -265,26 +263,18 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
                 final String typeRef = jsitItemDefinitionField.getTypeRef();
                 final List<JSITItemDefinition> subfields = jsitItemDefinitionField.getItemComponent();
                 final boolean hasSubFields = subfields != null && !subfields.isEmpty();
-                final boolean hasAllowedValues = jsitItemDefinitionField.getAllowedValues() != null
-                        && !jsitItemDefinitionField.getAllowedValues().getText().isEmpty();
-
                 ClientDMNType fieldDMNType;
                 /* Retrieving field ClientDMNType */
-                if (typeRef != null && !hasSubFields && !hasAllowedValues) {
-                    /* The field refers to a DMType which must be present in dmnTypesMap */
-                    fieldDMNType = getDMNType(typeRef, dmnTypesMap);
-                } else if (typeRef != null && !hasSubFields && hasAllowedValues) {
-                    /* This case requires to create a new "Anonymous" DMNType to handle the allowed values.
-                       Effective type is put inside baseType field */
-                    fieldDMNType = createDMNType(allItemDefinitions, jsitItemDefinitionField, namespace, dmnTypesMap);
-                    fieldDMNType.setBaseType(getDMNType(typeRef, dmnTypesMap));
+                if (typeRef != null && !hasSubFields) {
+                    /* The field refers to a DMType which is present in dmnTypesMap or needs to be created */
+                    fieldDMNType = getOrCreateDMNType(allItemDefinitions, typeRef, namespace, dmnTypesMap);
                 } else if (typeRef == null && hasSubFields) {
                     /* In this case we are handling an "Anonymous" type not defined in allItemDefinition list.
                      * Therefore, a new DMNType must be created and then it manages its defined subfields in recursive way */
                     fieldDMNType = createDMNType(allItemDefinitions, jsitItemDefinitionField, namespace, dmnTypesMap);
                 } else {
-                    /* All remaining cases  are not managed, because invalid eg. typeRef empty and no subfields OR typeRef
-                     * empty and at least one subfield. hasAllowedValues can be true only if typeRef is not empty */
+                    /* Remaining cases are not managed, because invalid. Eg typeRef empty and no subfields OR typeRef
+                     * empty and at least one subfield */
                     continue;
                 }
 
