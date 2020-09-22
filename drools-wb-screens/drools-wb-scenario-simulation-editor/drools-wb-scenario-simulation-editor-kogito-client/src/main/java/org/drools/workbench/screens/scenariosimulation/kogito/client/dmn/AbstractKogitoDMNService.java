@@ -136,6 +136,15 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
         return Collections.unmodifiableMap(dmnDataTypesMap);
     }
 
+    ClientDMNType getDMNType(final String requiredType,
+                             final Map<String, ClientDMNType> createdTypes) {
+        if (createdTypes.containsKey(requiredType)) {
+            return createdTypes.get(requiredType);
+        } else {
+            throw new IllegalStateException("Type '" + requiredType + "' not found.");
+        }
+    }
+
     /**
      * It checks if the given *requiredType*'s <code>ClientDMNType</code> is already present into given createdTypes
      * map If yes, it return it. It creates it otherwise.
@@ -256,18 +265,26 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
                 final String typeRef = jsitItemDefinitionField.getTypeRef();
                 final List<JSITItemDefinition> subfields = jsitItemDefinitionField.getItemComponent();
                 final boolean hasSubFields = subfields != null && !subfields.isEmpty();
+                final boolean hasAllowedValues = jsitItemDefinitionField.getAllowedValues() != null
+                        && !jsitItemDefinitionField.getAllowedValues().getText().isEmpty();
+
                 ClientDMNType fieldDMNType;
                 /* Retrieving field ClientDMNType */
-                if (typeRef != null && !hasSubFields) {
+                if (typeRef != null && !hasSubFields && !hasAllowedValues) {
                     /* The field refers to a DMType which must be present in dmnTypesMap */
-                    fieldDMNType = getOrCreateDMNType(allItemDefinitions, typeRef, namespace, dmnTypesMap);
+                    fieldDMNType = getDMNType(typeRef, dmnTypesMap);
+                } else if (typeRef != null && !hasSubFields && hasAllowedValues) {
+                    /* This case requires to create a new "Anonymous" DMNType to handle the allowed values.
+                       Effective type is put inside baseType field */
+                    fieldDMNType = createDMNType(allItemDefinitions, jsitItemDefinitionField, namespace, dmnTypesMap);
+                    fieldDMNType.setBaseType(getDMNType(typeRef, dmnTypesMap));
                 } else if (typeRef == null && hasSubFields) {
-                    /* In this case we are handling an "in place" Structure type not defined in allItemDefinition list.
+                    /* In this case we are handling an "Anonymous" type not defined in allItemDefinition list.
                      * Therefore, a new DMNType must be created and then it manages its defined subfields in recursive way */
                     fieldDMNType = createDMNType(allItemDefinitions, jsitItemDefinitionField, namespace, dmnTypesMap);
                 } else {
-                    /* The following case are not managed, because invalid typeRef empty and no subfields OR typeRef
-                     * empty and at least one subfield */
+                    /* All remaining cases  are not managed, because invalid eg. typeRef empty and no subfields OR typeRef
+                     * empty and at least one subfield. hasAllowedValues can be true only if typeRef is not empty */
                     continue;
                 }
 
@@ -551,8 +568,11 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
                         hiddenFacts.put(typeName, fact);
                     }
                     toReturn.addExpandableProperty(entry.getKey(), typeName);
-                } else {  // a simple type is just name -> type
-                    simpleFields.put(entry.getKey(), new FactModelTree.PropertyTypeName(typeName));
+                } else {
+                    FactModelTree.PropertyTypeName propertyTypeName = entry.getValue().getBaseType() != null ?
+                            new FactModelTree.PropertyTypeName(typeName, entry.getValue().getBaseType().getName()) :
+                            new FactModelTree.PropertyTypeName(typeName);
+                    simpleFields.put(entry.getKey(), propertyTypeName);
                 }
             }
         }
