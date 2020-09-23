@@ -774,6 +774,31 @@ public class AbstractKogitoDMNServiceTest {
         assertFalse(clientDmnType.isComposite());
         assertTrue(clientDmnType.getFields().isEmpty());
         assertEquals(BuiltInType.STRING, clientDmnType.getFeelType());
+        assertNull(clientDmnType.getBaseType());
+        assertTrue(defaultTypesMap.containsKey(TYPE_NAME));
+        assertTrue(defaultTypesMap.containsValue(clientDmnType));
+    }
+
+    @Test
+    public void createDMNTypeItemDefinitionSimpleTypeRefNoFieldsWithAllowedValues() {
+        Map<String, ClientDMNType> defaultTypesMap = new HashMap<>(abstractKogitoDMNServiceSpy.getDMNDataTypesMap(Collections.emptyList(), NAMESPACE));
+        allDefinitions = abstractKogitoDMNServiceSpy.indexDefinitionsByName(Arrays.asList(jsitItemDefinitionMock));
+        when(jsitItemDefinitionMock.getItemComponent()).thenReturn(new ArrayList<>());
+        when(jsitItemDefinitionMock.getTypeRef()).thenReturn(BuiltInType.STRING.getName());
+        JSITUnaryTests jsitUnaryTestsMock = mock(JSITUnaryTests.class);
+        when(jsitUnaryTestsMock.getText()).thenReturn("value1, value2, value3");
+        when(jsitItemDefinitionMock.getAllowedValues()).thenReturn(jsitUnaryTestsMock);
+        ClientDMNType clientDmnType = abstractKogitoDMNServiceSpy.createDMNType(allDefinitions,
+                                                                                jsitItemDefinitionMock,
+                                                                                NAMESPACE,
+                                                                                defaultTypesMap);
+        assertEquals(NAMESPACE, clientDmnType.getNamespace());
+        assertEquals(TYPE_NAME, clientDmnType.getName());
+        assertFalse(clientDmnType.isCollection());
+        assertFalse(clientDmnType.isComposite());
+        assertTrue(clientDmnType.getFields().isEmpty());
+        assertEquals(BuiltInType.STRING, clientDmnType.getFeelType());
+        assertEquals("string", clientDmnType.getBaseType().getName());
         assertTrue(defaultTypesMap.containsKey(TYPE_NAME));
         assertTrue(defaultTypesMap.containsValue(clientDmnType));
     }
