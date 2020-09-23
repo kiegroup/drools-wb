@@ -975,6 +975,27 @@ public class AbstractKogitoDMNServiceTest {
     }
 
     @Test
+    public void createTopLevelFactModelTreeCompositeNoCollectionBaseType() {
+        // Single property retrieve
+        ClientDMNType composite = getSingleCompositeWithBaseTypeField();
+        FactModelTree retrieved = abstractKogitoDMNServiceSpy.createTopLevelFactModelTree("testPath", composite, new TreeMap<>(), FactModelTree.Type.INPUT);
+        assertNotNull(retrieved);
+        assertEquals("testPath", retrieved.getFactName());
+        assertEquals(2, retrieved.getSimpleProperties().size());
+        assertTrue(retrieved.getSimpleProperties().containsKey("name"));
+        assertEquals(TYPE_NAME, retrieved.getSimpleProperties().get("name").getTypeName());
+        assertFalse(retrieved.getSimpleProperties().get("name").getBaseTypeName().isPresent());
+        assertEquals(TYPE_NAME, retrieved.getSimpleProperties().get("name").getPropertyTypeNameToVisualize());
+        //
+        assertTrue(retrieved.getSimpleProperties().containsKey("gender"));
+        assertEquals("gender", retrieved.getSimpleProperties().get("gender").getTypeName());
+        assertEquals("string", retrieved.getSimpleProperties().get("gender").getBaseTypeName().get());
+        assertEquals("string", retrieved.getSimpleProperties().get("gender").getPropertyTypeNameToVisualize());
+        assertTrue(retrieved.getExpandableProperties().isEmpty());
+        assertTrue(retrieved.getGenericTypesMap().isEmpty());
+    }
+
+    @Test
     public void createTopLevelFactModelTreeCompositeNoCollection() {
         // Single property retrieve
         ClientDMNType compositePerson = getSingleCompositeWithSimpleCollection();
@@ -1076,5 +1097,17 @@ public class AbstractKogitoDMNServiceTest {
         compositePersonField.put("name", nameSimple);
 
         return new ClientDMNType(NAMESPACE, TYPE_NAME, null, true, true, compositePersonField, null);
+    }
+
+    private ClientDMNType getSingleCompositeWithBaseTypeField() {
+        // Complex object retrieve
+        ClientDMNType toReturn = new ClientDMNType(null, "tComposite", null, false, true);
+        ClientDMNType genderDMNType = new ClientDMNType(null, "gender", null, false, null);
+        genderDMNType.setBaseType(new ClientDMNType(null, "string", null, false, null));
+
+        toReturn.addField("gender", genderDMNType);
+        toReturn.addField("name", new ClientDMNType(null, TYPE_NAME, null, false, null));
+
+        return toReturn;
     }
 }
