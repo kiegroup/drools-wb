@@ -41,6 +41,7 @@ import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSIT
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITInformationItem;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITInputData;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITItemDefinition;
+import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITUnaryTests;
 import org.mockito.Mock;
 import org.uberfire.backend.vfs.Path;
 
@@ -842,6 +843,36 @@ public class AbstractKogitoDMNServiceTest {
         assertEquals(BuiltInType.STRING, clientDmnType.getFields().get("tNested").getFeelType());
         assertFalse(clientDmnType.getFields().get("tNested").isCollection());
         assertFalse(clientDmnType.getFields().get("tNested").isComposite());
+        assertNull(clientDmnType.getFields().get("tNested").getBaseType());
+        assertNull(clientDmnType.getFeelType());
+        assertFalse(defaultTypesMap.containsKey(TYPE_NAME));
+        assertFalse(defaultTypesMap.containsValue(clientDmnType));
+    }
+
+    @Test
+    public void createDMNTypeItemComponentWithFieldWithAllowedValues() {
+        Map<String, ClientDMNType> defaultTypesMap = new HashMap<>(abstractKogitoDMNServiceSpy.getDMNDataTypesMap(Collections.emptyList(), NAMESPACE));
+        when(jsitItemDefinitionMock.getItemComponent()).thenReturn(Arrays.asList(jsitItemDefinitionNestedMock));
+        when(jsitItemDefinitionNestedMock.getName()).thenReturn("tNested");
+        when(jsitItemDefinitionNestedMock.getId()).thenReturn(ID);
+        when(jsitItemDefinitionNestedMock.getTypeRef()).thenReturn(BuiltInType.STRING.getName());
+        JSITUnaryTests jsitUnaryTestsMock = mock(JSITUnaryTests.class);
+        when(jsitUnaryTestsMock.getText()).thenReturn("value1, value2, value3");
+        when(jsitItemDefinitionNestedMock.getAllowedValues()).thenReturn(jsitUnaryTestsMock);
+        ClientDMNType clientDmnType = abstractKogitoDMNServiceSpy.createDMNType(allDefinitions,
+                                                                                jsitItemDefinitionMock,
+                                                                                NAMESPACE,
+                                                                                defaultTypesMap);
+        assertEquals(NAMESPACE, clientDmnType.getNamespace());
+        assertEquals(TYPE_NAME, clientDmnType.getName());
+        assertFalse(clientDmnType.isCollection());
+        assertTrue(clientDmnType.isComposite());
+        assertNotNull(clientDmnType.getFields());
+        assertTrue(clientDmnType.getFields().size() == 1);
+        assertEquals(BuiltInType.STRING, clientDmnType.getFields().get("tNested").getFeelType());
+        assertFalse(clientDmnType.getFields().get("tNested").isCollection());
+        assertFalse(clientDmnType.getFields().get("tNested").isComposite());
+        assertEquals("string", clientDmnType.getFields().get("tNested").getBaseType().getName());
         assertNull(clientDmnType.getFeelType());
         assertFalse(defaultTypesMap.containsKey(TYPE_NAME));
         assertFalse(defaultTypesMap.containsValue(clientDmnType));

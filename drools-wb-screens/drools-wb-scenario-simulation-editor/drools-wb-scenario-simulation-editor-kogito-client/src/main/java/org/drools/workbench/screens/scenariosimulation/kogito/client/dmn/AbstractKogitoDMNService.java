@@ -233,7 +233,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
         return itemDefinitionDMNType;
    }
 
-    private ClientDMNType getBaseTypeForItemDefinition(JSITItemDefinition itemDefinition, ClientDMNType superDmnType) {
+    protected ClientDMNType getBaseTypeForItemDefinition(JSITItemDefinition itemDefinition, ClientDMNType superDmnType) {
         final boolean hasAllowedValues = itemDefinition.getAllowedValues() != null
                 && !itemDefinition.getAllowedValues().getText().isEmpty();
         return hasAllowedValues ? superDmnType : superDmnType.getBaseType();
@@ -263,11 +263,17 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
                 final String typeRef = jsitItemDefinitionField.getTypeRef();
                 final List<JSITItemDefinition> subfields = jsitItemDefinitionField.getItemComponent();
                 final boolean hasSubFields = subfields != null && !subfields.isEmpty();
+                final boolean hasAllowedValues = jsitItemDefinitionField.getAllowedValues() != null
+                        && !jsitItemDefinitionField.getAllowedValues().getText().isEmpty();
+
                 ClientDMNType fieldDMNType;
                 /* Retrieving field ClientDMNType */
-                if (typeRef != null && !hasSubFields) {
+                if (typeRef != null && !hasSubFields && !hasAllowedValues) {
                     /* The field refers to a DMType which is present in dmnTypesMap or needs to be created */
                     fieldDMNType = getOrCreateDMNType(allItemDefinitions, typeRef, namespace, dmnTypesMap);
+                } else if (typeRef != null && !hasSubFields && hasAllowedValues) {
+                    /* This case requires to create a new "Anonymous" DMNType to handle the allowed values */
+                    fieldDMNType = createDMNType(allItemDefinitions, jsitItemDefinitionField, namespace, dmnTypesMap);
                 } else if (typeRef == null && hasSubFields) {
                     /* In this case we are handling an "Anonymous" type not defined in allItemDefinition list.
                      * Therefore, a new DMNType must be created and then it manages its defined subfields in recursive way */
