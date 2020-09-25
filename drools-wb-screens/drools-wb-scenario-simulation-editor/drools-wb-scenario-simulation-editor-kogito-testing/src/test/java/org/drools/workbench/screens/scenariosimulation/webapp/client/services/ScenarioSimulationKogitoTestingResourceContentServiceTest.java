@@ -17,7 +17,6 @@ package org.drools.workbench.screens.scenariosimulation.webapp.client.services;
 
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

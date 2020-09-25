@@ -57,6 +57,7 @@ import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.stra
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.strategies.KogitoDMODataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.handlers.ScenarioSimulationKogitoDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.popup.ScenarioSimulationKogitoCreationPopupPresenter;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.services.ScenarioSimulationKogitoDMNMarshallerService;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
 import org.gwtbootstrap3.client.ui.TabListItem;
 import org.jboss.errai.common.client.api.ErrorCallback;
@@ -107,6 +108,7 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     protected ScenarioSimulationKogitoCreationPopupPresenter scenarioSimulationKogitoCreationPopupPresenter;
     protected KogitoScenarioSimulationBuilder scenarioSimulationBuilder;
     protected ScenarioSimulationKogitoDocksHandler scenarioSimulationKogitoDocksHandler;
+    protected ScenarioSimulationKogitoDMNMarshallerService scenarioSimulationKogitoDMNMarshallerService;
 
     public ScenarioSimulationEditorKogitoWrapper() {
         //Zero-parameter constructor for CDI proxies
@@ -125,7 +127,8 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
             final TranslationService translationService,
             final ScenarioSimulationKogitoCreationPopupPresenter scenarioSimulationKogitoCreationPopupPresenter,
             final KogitoScenarioSimulationBuilder scenarioSimulationBuilder,
-            final ScenarioSimulationKogitoDocksHandler scenarioSimulationKogitoDocksHandler) {
+            final ScenarioSimulationKogitoDocksHandler scenarioSimulationKogitoDocksHandler,
+            final ScenarioSimulationKogitoDMNMarshallerService scenarioSimulationKogitoDMNMarshallerService) {
         super(scenarioSimulationEditorPresenter.getView(), placeManager, multiPageEditorContainerView);
         this.scenarioSimulationEditorPresenter = scenarioSimulationEditorPresenter;
         this.fileMenuBuilder = fileMenuBuilder;
@@ -137,6 +140,7 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
         this.scenarioSimulationBuilder = scenarioSimulationBuilder;
         this.scenarioSimulationKogitoCreationPopupPresenter = scenarioSimulationKogitoCreationPopupPresenter;
         this.scenarioSimulationKogitoDocksHandler = scenarioSimulationKogitoDocksHandler;
+        this.scenarioSimulationKogitoDMNMarshallerService = scenarioSimulationKogitoDMNMarshallerService;
     }
 
     @Override
@@ -399,13 +403,16 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
                                                                false);
             dataManagementStrategy = new KogitoDMODataManagementStrategy(kogitoOracle);
         } else {
-            dataManagementStrategy = new KogitoDMNDataManagementStrategy(scenarioSimulationEditorPresenter.getEventBus(), dmnDataManager);
+            dataManagementStrategy = new KogitoDMNDataManagementStrategy(scenarioSimulationEditorPresenter.getEventBus(),
+                                                                         dmnDataManager,
+                                                                         scenarioSimulationKogitoDMNMarshallerService);
         }
         dataManagementStrategy.setModel(model);
         setOriginalContentHash(scenarioSimulationEditorPresenter.getJsonModel(model).hashCode());
         scenarioSimulationEditorPresenter.getModelSuccessCallbackMethod(dataManagementStrategy, model);
         scenarioSimulationEditorPresenter.showDocks(PlaceStatus.CLOSE);
     }
+
 
     protected void onBackgroundTabSelected() {
         scenarioSimulationEditorPresenter.onBackgroundTabSelected();

@@ -92,7 +92,7 @@ public class ScenarioSimulationKogitoDMNMarshallerService {
                     }
                 });
 
-                definitions.getItemDefinition().addAll(itemDefinitions);
+                definitions.addAllItemDefinition(itemDefinitions.toArray(new JSITItemDefinition[itemDefinitions.size()]));
                 callback.callback(definitions);
             }
         };

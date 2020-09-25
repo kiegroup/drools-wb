@@ -20,12 +20,9 @@ import com.google.gwt.event.shared.EventBus;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
-import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioNotificationEvent;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.ScenarioSimulationKogitoDMNDataManager;
-import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,7 +31,6 @@ import org.uberfire.backend.vfs.Path;
 import org.uberfire.backend.vfs.PathFactory;
 
 import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -59,7 +55,7 @@ public class KogitoDMNDataManagementStrategyTest {
 
     @Before
     public void setup() {
-        kogitoDMNDataManagementStrategySpy = spy(new KogitoDMNDataManagementStrategy(eventBusMock, kogitoDMNServiceMock));
+       // kogitoDMNDataManagementStrategySpy = spy(new KogitoDMNDataManagementStrategy(eventBusMock, kogitoDMNServiceMock, scenarioSimulationKogitoDMNMarshallerService));
     }
 
     @Test

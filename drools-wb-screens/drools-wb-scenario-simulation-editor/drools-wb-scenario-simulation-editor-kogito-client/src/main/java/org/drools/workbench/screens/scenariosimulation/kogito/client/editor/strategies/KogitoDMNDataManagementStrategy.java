@@ -30,11 +30,14 @@ import org.uberfire.backend.vfs.PathFactory;
 public class KogitoDMNDataManagementStrategy extends AbstractDMNDataManagementStrategy {
 
     private ScenarioSimulationKogitoDMNDataManager dmnDataManager;
-    private ScenarioSimulationKogitoDMNMarshallerService dmnMarshallerService; //TODO not instaintiatd
+    private ScenarioSimulationKogitoDMNMarshallerService dmnMarshallerService;
 
-    public KogitoDMNDataManagementStrategy(EventBus eventBus, ScenarioSimulationKogitoDMNDataManager dmnDataManager) {
+    public KogitoDMNDataManagementStrategy(EventBus eventBus,
+                                           ScenarioSimulationKogitoDMNDataManager dmnDataManager,
+                                           ScenarioSimulationKogitoDMNMarshallerService dmnMarshallerService) {
         super(eventBus);
         this.dmnDataManager = dmnDataManager;
+        this.dmnMarshallerService = dmnMarshallerService;
     }
 
     @Override

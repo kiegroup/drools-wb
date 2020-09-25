@@ -49,6 +49,17 @@ public class ScenarioSimulationKogitoDMNDataManager {
     public static final String WRONG_DMN_MESSAGE = "Wrong DMN Type";
     protected static final QName TYPEREF_QNAME = new QName("", "typeRef", "");
 
+   /* @Inject
+    private ScenarioSimulationKogitoDMNMarshallerService dmnMarshallerService;
+
+    public void retrieveData(final Callback<FactModelTuple> callback,
+                             final Path dmnFilePath) {
+        dmnMarshallerService.retrieveDMNData(jsitDefinitions -> {
+            final FactModelTuple factModelTuple = getFactModelTuple(jsitDefinitions);
+            callback.callback(factModelTuple);
+        },  dmnFilePath);
+    }*/
+
     public FactModelTuple getFactModelTuple(final JSITDefinitions jsitDefinitions) {
         SortedMap<String, FactModelTree> visibleFacts = new TreeMap<>();
         SortedMap<String, FactModelTree> hiddenFacts = new TreeMap<>();
