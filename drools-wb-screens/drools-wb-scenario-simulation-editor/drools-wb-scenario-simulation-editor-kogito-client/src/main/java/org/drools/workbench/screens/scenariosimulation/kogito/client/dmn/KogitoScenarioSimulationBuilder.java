@@ -17,12 +17,14 @@ package org.drools.workbench.screens.scenariosimulation.kogito.client.dmn;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -57,6 +59,7 @@ import org.jboss.errai.common.client.api.RemoteCallback;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.MainJs;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.callbacks.DMN12UnmarshallCallback;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITDefinitions;
+import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITItemDefinition;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.backend.vfs.PathFactory;
 
@@ -168,7 +171,7 @@ public class KogitoScenarioSimulationBuilder {
         String dmnFileName = dmnFilePath.substring(dmnFilePath.lastIndexOf('/') + 1);
         final Path dmnPath = PathFactory.newPath(dmnFileName, dmnFilePath);
         dmnTypeService.getDMNContent(dmnPath, dmnContent -> {
-            DMN12UnmarshallCallback dmn12UnmarshallCallback = getDMN12UnmarshallCallback(toPopulate, dmnFilePath, callback);
+            DMN12UnmarshallCallback dmn12UnmarshallCallback = getDMN12UnmarshallCallback(toPopulate, dmnPath, callback);
             MainJs.unmarshall(dmnContent, "", dmn12UnmarshallCallback);
         },
                                      (message, throwable) -> {
@@ -298,13 +301,72 @@ public class KogitoScenarioSimulationBuilder {
         return remoteCallback::callback;
     }
 
-    private DMN12UnmarshallCallback getDMN12UnmarshallCallback(final ScenarioSimulationModel toPopulate, final String dmnFilePath, final RemoteCallback<String> callback) {
+    private DMN12UnmarshallCallback getDMN12UnmarshallCallback(final ScenarioSimulationModel toPopulate,
+                                                               final Path dmnFilePath,
+                                                               final RemoteCallback<String> callback) {
         return dmn12 -> {
             final JSITDefinitions jsitDefinitions = Js.uncheckedCast(JsUtils.getUnwrappedElement(dmn12));
-            final FactModelTuple factModelTuple = dmnTypeService.getFactModelTuple(jsitDefinitions);
-            toPopulate.setSimulation(createDMNSimulation(factModelTuple));
-            toPopulate.setSettings(createDMNSettings(jsitDefinitions.getName(), jsitDefinitions.getNamespace(), dmnFilePath));
-            convertScenarioSimulationModel(toPopulate, callback);
+
+            if (jsitDefinitions.getImport() != null && !jsitDefinitions.getImport().isEmpty()) {
+                final Map<String, Path> includedDMNImportsPaths = jsitDefinitions.getImport().stream()
+                        .filter(jsitImport -> jsitImport.getLocationURI().endsWith(".dmn"))
+                        .collect(Collectors.toMap(jsitImport -> jsitImport.getName(),
+                                                  jsitImport -> PathFactory.newPath(jsitImport.getLocationURI(), dmnFilePath.toURI().replace(dmnFilePath.getFileName(), jsitImport.getLocationURI()))));
+
+                for (Map.Entry<String, Path> importPath : includedDMNImportsPaths.entrySet()) {
+                    final Map<String, JSITDefinitions> importedItemDefinitions = new HashMap<>();
+                    dmnTypeService.getDMNContent(importPath.getValue(), getDMNImportContentRemoteCallback(callback, toPopulate, dmnFilePath, importPath.getKey(), jsitDefinitions, importedItemDefinitions, includedDMNImportsPaths.size()), null);
+
+                }
+            }
+        };
+    }
+
+    protected RemoteCallback<String> getDMNImportContentRemoteCallback(final RemoteCallback<String> callback,
+                                                                       final ScenarioSimulationModel toPopulate,
+                                                                       final Path dmnFilePath,
+                                                                       final String importName,
+                                                                       final JSITDefinitions definitions,
+                                                                       final Map<String, JSITDefinitions> importedDefinitions,
+                                                                       final int importsNumber) {
+        return dmnContent -> {
+            DMN12UnmarshallCallback dmn12UnmarshallCallback = getDMN12ImportsUnmarshallCallback(callback, toPopulate, dmnFilePath, importName, definitions, importedDefinitions, importsNumber);
+            MainJs.unmarshall(dmnContent, "", dmn12UnmarshallCallback);
+        };
+    }
+
+    protected DMN12UnmarshallCallback getDMN12ImportsUnmarshallCallback(final RemoteCallback<String> callback,
+                                                                        final ScenarioSimulationModel toPopulate,
+                                                                        final Path dmnFilePath,
+                                                                        final String importName,
+                                                                        final JSITDefinitions definitions,
+                                                                        final Map<String, JSITDefinitions> importedDefinitions,
+                                                                        final int importsNumber) {
+        return dmn12 -> {
+            final JSITDefinitions jsitDefinitions = Js.uncheckedCast(JsUtils.getUnwrappedElement(dmn12));
+            importedDefinitions.put(importName, jsitDefinitions);
+
+            if (importsNumber == importedDefinitions.size()) {
+                List<JSITItemDefinition> itemDefinitions = new ArrayList<>();
+
+                importedDefinitions.entrySet().stream().forEach(entry -> {
+                    final JSITDefinitions def = Js.uncheckedCast(entry.getValue());
+                    List<JSITItemDefinition> itemDefinitionsRaw = def.getItemDefinition();
+                    String prefix = entry.getKey();
+
+                    for (int i = 0; i < itemDefinitionsRaw.size(); i++) {
+                        JSITItemDefinition value = Js.uncheckedCast(itemDefinitionsRaw.get(i));
+                        value.setName(prefix + "." + value.getName());
+                        itemDefinitions.add(value);
+                    }
+
+                });
+
+                final FactModelTuple factModelTuple = dmnTypeService.getFactModelTuple(definitions, itemDefinitions);
+                toPopulate.setSimulation(createDMNSimulation(factModelTuple));
+                toPopulate.setSettings(createDMNSettings(jsitDefinitions.getName(), jsitDefinitions.getNamespace(), dmnFilePath.toURI()));
+                convertScenarioSimulationModel(toPopulate, callback);
+            }
         };
     }
 

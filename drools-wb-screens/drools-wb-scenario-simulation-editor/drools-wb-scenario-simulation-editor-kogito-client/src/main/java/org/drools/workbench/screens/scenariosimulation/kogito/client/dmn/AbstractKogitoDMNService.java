@@ -55,11 +55,13 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
     protected static final QName TYPEREF_QNAME = new QName("", "typeRef", "");
 
     @Override
-    public FactModelTuple getFactModelTuple(final JSITDefinitions jsitDefinitions) {
+    public FactModelTuple getFactModelTuple(final JSITDefinitions jsitDefinitions, final List<JSITItemDefinition> importedItemDefinitions) {
         SortedMap<String, FactModelTree> visibleFacts = new TreeMap<>();
         SortedMap<String, FactModelTree> hiddenFacts = new TreeMap<>();
         ErrorHolder errorHolder = new ErrorHolder();
-        Map<String, ClientDMNType> dmnTypesMap = getDMNDataTypesMap(jsitDefinitions.getItemDefinition(), jsitDefinitions.getNamespace());
+        List<JSITItemDefinition> allItemsDefinitons = jsitDefinitions.getItemDefinition();
+        allItemsDefinitons.addAll(importedItemDefinitions);
+        Map<String, ClientDMNType> dmnTypesMap = getDMNDataTypesMap(allItemsDefinitons, jsitDefinitions.getNamespace());
         final List<JSITDRGElement> jsitdrgElements = jsitDefinitions.getDrgElement();
         for (int i = 0; i < jsitdrgElements.size(); i++) {
             final JSITDRGElement jsitdrgElement = Js.uncheckedCast(jsitdrgElements.get(i));

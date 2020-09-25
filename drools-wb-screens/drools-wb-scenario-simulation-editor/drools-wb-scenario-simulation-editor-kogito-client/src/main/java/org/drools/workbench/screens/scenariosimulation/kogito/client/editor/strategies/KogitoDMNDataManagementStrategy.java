@@ -15,6 +15,12 @@
  */
 package org.drools.workbench.screens.scenariosimulation.kogito.client.editor.strategies;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import com.google.gwt.event.shared.EventBus;
 import jsinterop.base.Js;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.mapper.JsUtils;
@@ -31,6 +37,8 @@ import org.jboss.errai.common.client.api.RemoteCallback;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.MainJs;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.callbacks.DMN12UnmarshallCallback;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITDefinitions;
+
+import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITItemDefinition;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.backend.vfs.PathFactory;
 import org.uberfire.workbench.events.NotificationEvent;
@@ -49,16 +57,16 @@ public class KogitoDMNDataManagementStrategy extends AbstractDMNDataManagementSt
         RemoteCallback<FactModelTuple> callback = getSuccessCallback(testToolsPresenter, context, gridWidget);
         String fileName = dmnFilePath.substring(dmnFilePath.lastIndexOf('/') + 1);
         final Path dmnPath = PathFactory.newPath(fileName, dmnFilePath);
-        dmnTypeService.getDMNContent(dmnPath, getDMNContentRemoteCallback(callback), getDMNContentErrorCallback(dmnFilePath));
+        dmnTypeService.getDMNContent(dmnPath, getDMNContentRemoteCallback(callback, dmnPath), getDMNContentErrorCallback(dmnFilePath));
     }
 
-    protected RemoteCallback<String> getDMNContentRemoteCallback(RemoteCallback<FactModelTuple> callback) {
+    protected RemoteCallback<String> getDMNContentRemoteCallback(final RemoteCallback<FactModelTuple> callback,
+                                                                 final Path dmnPath) {
         return dmnContent -> {
-            DMN12UnmarshallCallback dmn12UnmarshallCallback = getDMN12UnmarshallCallback(callback);
+            DMN12UnmarshallCallback dmn12UnmarshallCallback = getDMN12UnmarshallCallback(callback, dmnPath);
             MainJs.unmarshall(dmnContent, "", dmn12UnmarshallCallback);
         };
     }
-
 
     protected ErrorCallback<Object> getDMNContentErrorCallback(String dmnFilePath) {
         return (message, throwable) -> {
@@ -68,11 +76,66 @@ public class KogitoDMNDataManagementStrategy extends AbstractDMNDataManagementSt
         };
     }
 
-    protected DMN12UnmarshallCallback getDMN12UnmarshallCallback(final RemoteCallback<FactModelTuple> callback) {
+    protected DMN12UnmarshallCallback getDMN12UnmarshallCallback(final RemoteCallback<FactModelTuple> callback,
+                                                                 final Path dmnFilePath) {
         return dmn12 -> {
             final JSITDefinitions jsitDefinitions = Js.uncheckedCast(JsUtils.getUnwrappedElement(dmn12));
-            final FactModelTuple factModelTuple = dmnTypeService.getFactModelTuple(jsitDefinitions);
-            callback.callback(factModelTuple);
+
+            if (jsitDefinitions.getImport() != null && !jsitDefinitions.getImport().isEmpty()) {
+                final Map<String, Path> includedDMNImportsPaths = jsitDefinitions.getImport().stream()
+                        .filter(jsitImport -> jsitImport.getLocationURI().endsWith(".dmn"))
+                        .collect(Collectors.toMap(jsitImport -> jsitImport.getName(),
+                                                  jsitImport -> PathFactory.newPath(jsitImport.getLocationURI(), dmnFilePath.toURI().replace(dmnFilePath.getFileName(), jsitImport.getLocationURI()))));
+
+
+                for (Map.Entry<String, Path> importPath : includedDMNImportsPaths.entrySet()) {
+                    final Map<String, JSITDefinitions> importedItemDefinitions = new HashMap<>();
+                    dmnTypeService.getDMNContent(importPath.getValue(), getDMNImportContentRemoteCallback(callback, jsitDefinitions, importedItemDefinitions, importPath.getKey(), includedDMNImportsPaths.size()), null);
+                }
+            }
         };
     }
+
+    protected RemoteCallback<String> getDMNImportContentRemoteCallback(final RemoteCallback<FactModelTuple> callback,
+                                                                       final JSITDefinitions definitions,
+                                                                       final Map<String, JSITDefinitions> importedDefinitions,
+                                                                       final String importName,
+                                                                       final int importsNumber) {
+        return dmnContent -> {
+            DMN12UnmarshallCallback dmn12UnmarshallCallback = getDMN12ImportsUnmarshallCallback(callback, definitions, importedDefinitions, importName, importsNumber);
+            MainJs.unmarshall(dmnContent, "", dmn12UnmarshallCallback);
+        };
+    }
+
+    protected DMN12UnmarshallCallback getDMN12ImportsUnmarshallCallback(final RemoteCallback<FactModelTuple> callback,
+                                                                        final JSITDefinitions definitions,
+                                                                        final Map<String, JSITDefinitions> importedDefinitions,
+                                                                        final String importName,
+                                                                        final int importsNumber) {
+        return dmn12 -> {
+            final JSITDefinitions jsitDefinitions = Js.uncheckedCast(JsUtils.getUnwrappedElement(dmn12));
+            importedDefinitions.put(importName, jsitDefinitions);
+
+            if (importsNumber == importedDefinitions.size()) {
+                List<JSITItemDefinition> itemDefinitions = new ArrayList<>();
+
+                importedDefinitions.entrySet().stream().forEach(entry -> {
+                    final JSITDefinitions def = Js.uncheckedCast(entry.getValue());
+                    List<JSITItemDefinition> itemDefinitionsRaw = def.getItemDefinition();
+                    String prefix = entry.getKey();
+
+                    for (int i = 0; i < itemDefinitionsRaw.size(); i++) {
+                        JSITItemDefinition value = Js.uncheckedCast(itemDefinitionsRaw.get(i));
+                        value.setName(prefix + "." + value.getName());
+                        itemDefinitions.add(value);
+                    }
+
+                });
+
+                final FactModelTuple factModelTuple = dmnTypeService.getFactModelTuple(definitions, itemDefinitions);
+                callback.callback(factModelTuple);
+            }
+        };
+    }
+
 }

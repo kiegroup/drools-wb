@@ -15,10 +15,13 @@
  */
 package org.drools.workbench.screens.scenariosimulation.kogito.client.dmn;
 
+import java.util.List;
+
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
 import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITDefinitions;
+import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITItemDefinition;
 import org.uberfire.backend.vfs.Path;
 
 /**
@@ -29,5 +32,5 @@ public interface KogitoDMNService {
 
     void getDMNContent(final Path path, final RemoteCallback<String> remoteCallback, final ErrorCallback<Object> errorCallback);
 
-    FactModelTuple getFactModelTuple(final JSITDefinitions jsitDefinitions);
+    FactModelTuple getFactModelTuple(final JSITDefinitions jsitDefinitions, final List<JSITItemDefinition> importedItemDefinitions);
 }
