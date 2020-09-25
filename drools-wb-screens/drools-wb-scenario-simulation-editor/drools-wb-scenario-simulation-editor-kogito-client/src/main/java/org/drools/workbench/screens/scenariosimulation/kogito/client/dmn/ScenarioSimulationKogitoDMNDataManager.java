@@ -43,25 +43,17 @@ import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSIT
 
 import static org.drools.scenariosimulation.api.utils.ConstantsHolder.VALUE;
 
-/**
- * Abstract class to provide methods shared by <b>runtime</b> and <b>testing</b> environments.
- * <p>
- * Most of this code is cloned/adapted from ScenarioSimulation backend and dmn core
- */
-public abstract class AbstractKogitoDMNService implements KogitoDMNService {
+public class ScenarioSimulationKogitoDMNDataManager {
 
     public static final String URI_FEEL = "http://www.omg.org/spec/DMN/20180521/FEEL/";
     public static final String WRONG_DMN_MESSAGE = "Wrong DMN Type";
     protected static final QName TYPEREF_QNAME = new QName("", "typeRef", "");
 
-    @Override
-    public FactModelTuple getFactModelTuple(final JSITDefinitions jsitDefinitions, final List<JSITItemDefinition> importedItemDefinitions) {
+    public FactModelTuple getFactModelTuple(final JSITDefinitions jsitDefinitions) {
         SortedMap<String, FactModelTree> visibleFacts = new TreeMap<>();
         SortedMap<String, FactModelTree> hiddenFacts = new TreeMap<>();
         ErrorHolder errorHolder = new ErrorHolder();
-        List<JSITItemDefinition> allItemsDefinitons = jsitDefinitions.getItemDefinition();
-        allItemsDefinitons.addAll(importedItemDefinitions);
-        Map<String, ClientDMNType> dmnTypesMap = getDMNDataTypesMap(allItemsDefinitons, jsitDefinitions.getNamespace());
+        Map<String, ClientDMNType> dmnTypesMap = getDMNDataTypesMap(jsitDefinitions.getItemDefinition(), jsitDefinitions.getNamespace());
         final List<JSITDRGElement> jsitdrgElements = jsitDefinitions.getDrgElement();
         for (int i = 0; i < jsitdrgElements.size(); i++) {
             final JSITDRGElement jsitdrgElement = Js.uncheckedCast(jsitdrgElements.get(i));

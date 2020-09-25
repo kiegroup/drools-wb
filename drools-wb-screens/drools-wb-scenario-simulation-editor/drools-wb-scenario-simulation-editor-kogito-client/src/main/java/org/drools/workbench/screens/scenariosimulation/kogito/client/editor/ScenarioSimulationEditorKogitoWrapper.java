@@ -50,8 +50,8 @@ import org.drools.workbench.screens.scenariosimulation.client.handlers.AbstractS
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ScenarioSimulationHasBusyIndicatorDefaultErrorCallback;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridWidget;
-import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.KogitoDMNService;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.KogitoScenarioSimulationBuilder;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.ScenarioSimulationKogitoDMNDataManager;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.dmo.KogitoAsyncPackageDataModelOracle;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.strategies.KogitoDMNDataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.strategies.KogitoDMODataManagementStrategy;
@@ -101,7 +101,7 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     protected SCESIM scesimContainer;
     protected Promises promises;
     protected Path currentPath;
-    protected KogitoDMNService dmnTypeService;
+    protected ScenarioSimulationKogitoDMNDataManager dmnDataManager;
     protected KogitoAsyncPackageDataModelOracle kogitoOracle;
     protected TranslationService translationService;
     protected ScenarioSimulationKogitoCreationPopupPresenter scenarioSimulationKogitoCreationPopupPresenter;
@@ -120,7 +120,7 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
             final MultiPageEditorContainerView multiPageEditorContainerView,
             final AuthoringEditorDock authoringWorkbenchDocks,
             final Promises promises,
-            final KogitoDMNService dmnTypeService,
+            final ScenarioSimulationKogitoDMNDataManager dmnDataManager,
             final KogitoAsyncPackageDataModelOracle kogitoOracle,
             final TranslationService translationService,
             final ScenarioSimulationKogitoCreationPopupPresenter scenarioSimulationKogitoCreationPopupPresenter,
@@ -131,7 +131,7 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
         this.fileMenuBuilder = fileMenuBuilder;
         this.authoringWorkbenchDocks = authoringWorkbenchDocks;
         this.promises = promises;
-        this.dmnTypeService = dmnTypeService;
+        this.dmnDataManager = dmnDataManager;
         this.kogitoOracle = kogitoOracle;
         this.translationService = translationService;
         this.scenarioSimulationBuilder = scenarioSimulationBuilder;
@@ -399,7 +399,7 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
                                                                false);
             dataManagementStrategy = new KogitoDMODataManagementStrategy(kogitoOracle);
         } else {
-            dataManagementStrategy = new KogitoDMNDataManagementStrategy(scenarioSimulationEditorPresenter.getEventBus(), dmnTypeService);
+            dataManagementStrategy = new KogitoDMNDataManagementStrategy(scenarioSimulationEditorPresenter.getEventBus(), dmnDataManager);
         }
         dataManagementStrategy.setModel(model);
         setOriginalContentHash(scenarioSimulationEditorPresenter.getJsonModel(model).hashCode());
