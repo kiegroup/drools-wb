@@ -25,6 +25,7 @@ import javax.inject.Inject;
 
 import jsinterop.base.Js;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.mapper.JsUtils;
+import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.MainJs;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.callbacks.DMN12UnmarshallCallback;
@@ -43,14 +44,13 @@ public class ScenarioSimulationKogitoDMNMarshallerService {
 
     public void retrieveDMNData(final Path dmnFilePath,
                                 final Callback<JSITDefinitions> callback) {
-        resourceContentService.getFileContent(dmnFilePath, dmnContent -> {
-            DMN12UnmarshallCallback dmn12UnmarshallCallback = getDMN12UnmarshallCallback(callback,
-                                                                                         dmnFilePath);
-            MainJs.unmarshall(dmnContent, "", dmn12UnmarshallCallback);
-        }, (message, throwable) -> {
-            ErrorPopup.showMessage("Error " + message);
-            return false;
-        });
+        resourceContentService.getFileContent(dmnFilePath,
+                                              dmnContent -> {
+                                                  DMN12UnmarshallCallback dmn12UnmarshallCallback =
+                                                          getDMN12UnmarshallCallback(callback,dmnFilePath);
+                                                  MainJs.unmarshall(dmnContent, "", dmn12UnmarshallCallback);
+                                              },
+                                              getErrorCallback());
     }
 
     private DMN12UnmarshallCallback getDMN12UnmarshallCallback(final Callback<JSITDefinitions> callback,
@@ -73,11 +73,7 @@ public class ScenarioSimulationKogitoDMNMarshallerService {
                                                                                             jsitDefinitions,
                                                                                             importedItemDefinitions,
                                                                                             includedDMNImportsPaths.size()),
-                                                          (message, throwable) -> {
-                                                              ErrorPopup.showMessage("Error " + message);
-                                                              return false;
-                                                          });
-
+                                                          getErrorCallback());
                 }
             }
         };
@@ -89,7 +85,11 @@ public class ScenarioSimulationKogitoDMNMarshallerService {
                                                                               final Map<String, JSITDefinitions> importedDefinitions,
                                                                               final int importsNumber) {
         return dmnContent -> {
-            DMN12UnmarshallCallback dmn12UnmarshallCallback = getDMN12ImportsUnmarshallCallback(callback, importName, definitions, importedDefinitions, importsNumber);
+            DMN12UnmarshallCallback dmn12UnmarshallCallback = getDMN12ImportsUnmarshallCallback(callback,
+                                                                                                importName,
+                                                                                                definitions,
+                                                                                                importedDefinitions,
+                                                                                                importsNumber);
             MainJs.unmarshall(dmnContent, "", dmn12UnmarshallCallback);
         };
     }
@@ -121,6 +121,13 @@ public class ScenarioSimulationKogitoDMNMarshallerService {
                 definitions.addAllItemDefinition(itemDefinitions.toArray(new JSITItemDefinition[itemDefinitions.size()]));
                 callback.callback(definitions);
             }
+        };
+    }
+
+    private ErrorCallback<String> getErrorCallback() {
+        return (error, exception) -> {
+            ErrorPopup.showMessage(exception.getMessage());
+            return false;
         };
     }
 
