@@ -31,6 +31,7 @@ import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.MainJs;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.callbacks.DMN12UnmarshallCallback;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITDefinitions;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITItemDefinition;
+import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITNamedElement;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.backend.vfs.PathFactory;
 import org.uberfire.client.callbacks.Callback;
@@ -40,32 +41,40 @@ public class ScenarioSimulationKogitoDMNMarshallerService {
     @Inject
     private ScenarioSimulationKogitoResourceContentService resourceContentService;
 
-    public void retrieveDMNData(final Callback<JSITDefinitions> callback,
-                                final Path dmnFilePath) {
+    public void retrieveDMNData(final Path dmnFilePath,
+                                final Callback<JSITDefinitions> callback) {
         resourceContentService.getFileContent(dmnFilePath, dmnContent -> {
-            DMN12UnmarshallCallback dmn12UnmarshallCallback = getDMN12UnmarshallCallback(callback, dmnFilePath);
+            DMN12UnmarshallCallback dmn12UnmarshallCallback = getDMN12UnmarshallCallback(callback,
+                                                                                         dmnFilePath);
             MainJs.unmarshall(dmnContent, "", dmn12UnmarshallCallback);
         }, (message, throwable) -> {
             //TODO Thrown exception here
-          GWT.log("Error " + message, throwable);
-          return false;
-      });
+            GWT.log("Error " + message, throwable);
+            return false;
+        });
     }
 
     private DMN12UnmarshallCallback getDMN12UnmarshallCallback(final Callback<JSITDefinitions> callback,
                                                                final Path dmnFilePath) {
         return dmn12 -> {
             final JSITDefinitions jsitDefinitions = Js.uncheckedCast(JsUtils.getUnwrappedElement(dmn12));
-
             if (jsitDefinitions.getImport() != null && !jsitDefinitions.getImport().isEmpty()) {
                 final Map<String, Path> includedDMNImportsPaths = jsitDefinitions.getImport().stream()
                         .filter(jsitImport -> jsitImport.getLocationURI().endsWith(".dmn"))
-                        .collect(Collectors.toMap(jsitImport -> jsitImport.getName(),
-                                                  jsitImport -> PathFactory.newPath(jsitImport.getLocationURI(), dmnFilePath.toURI().replace(dmnFilePath.getFileName(), jsitImport.getLocationURI()))));
+                        .collect(Collectors.toMap(JSITNamedElement::getName,
+                                                  jsitImport -> PathFactory.newPath(jsitImport.getLocationURI(),
+                                                                                    dmnFilePath.toURI().replace(dmnFilePath.getFileName(),
+                                                                                                                jsitImport.getLocationURI()))));
 
                 for (Map.Entry<String, Path> importPath : includedDMNImportsPaths.entrySet()) {
                     final Map<String, JSITDefinitions> importedItemDefinitions = new HashMap<>();
-                    resourceContentService.getFileContent(importPath.getValue(), getDMNImportContentRemoteCallback(callback, importPath.getKey(), jsitDefinitions, importedItemDefinitions, includedDMNImportsPaths.size()), null);
+                    resourceContentService.getFileContent(importPath.getValue(),
+                                                          getDMNImportContentRemoteCallback(callback,
+                                                                                            importPath.getKey(),
+                                                                                            jsitDefinitions,
+                                                                                            importedItemDefinitions,
+                                                                                            includedDMNImportsPaths.size()),
+                                                          null);
 
                 }
             }

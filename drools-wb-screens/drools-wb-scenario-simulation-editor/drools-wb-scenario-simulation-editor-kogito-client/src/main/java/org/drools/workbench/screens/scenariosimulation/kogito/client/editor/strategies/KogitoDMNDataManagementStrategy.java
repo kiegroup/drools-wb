@@ -41,13 +41,17 @@ public class KogitoDMNDataManagementStrategy extends AbstractDMNDataManagementSt
     }
 
     @Override
-    protected void retrieveFactModelTuple(TestToolsView.Presenter testToolsPresenter, ScenarioSimulationContext context, GridWidget gridWidget, String dmnFilePath) {
+    protected void retrieveFactModelTuple(final TestToolsView.Presenter testToolsPresenter,
+                                          final ScenarioSimulationContext context,
+                                          final GridWidget gridWidget,
+                                          final String dmnFilePath) {
         String dmnFileName = dmnFilePath.substring(dmnFilePath.lastIndexOf('/') + 1);
         final Path dmnPath = PathFactory.newPath(dmnFileName, dmnFilePath);
-        dmnMarshallerService.retrieveDMNData(jsitDefinitions -> {
-            final FactModelTuple factModelTuple = dmnDataManager.getFactModelTuple(jsitDefinitions);
-            getSuccessCallback(testToolsPresenter, context, gridWidget).callback(factModelTuple);
-        },  dmnPath);
+        dmnMarshallerService.retrieveDMNData(dmnPath,
+                                             jsitDefinitions -> {
+                                                 final FactModelTuple factModelTuple = dmnDataManager.getFactModelTuple(jsitDefinitions);
+                                                 getSuccessCallback(testToolsPresenter, context, gridWidget).callback(factModelTuple);
+                                             });
    }
 
 }
