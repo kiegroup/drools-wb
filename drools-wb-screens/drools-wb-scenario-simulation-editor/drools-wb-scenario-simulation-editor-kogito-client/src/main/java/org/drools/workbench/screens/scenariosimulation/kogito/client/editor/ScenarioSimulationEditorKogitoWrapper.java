@@ -429,10 +429,10 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
 
     /**
      * It creates the command launched when a user wants to create a new Scenario Simulation file.
-     * @param path The part where the scesim file is located
+     * @param scesimPath The part where the scesim file is located
      * @return A <code>Command</code> which will be launched pressing the 'Create' new scesim file button
      */
-    protected Command createNewFileCommand(Path path) {
+    protected Command createNewFileCommand(Path scesimPath) {
         return () -> {
             final ScenarioSimulationModel.Type selectedType = scenarioSimulationKogitoCreationPopupPresenter.getSelectedType();
             if (selectedType == null) {
@@ -449,12 +449,10 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
                     return;
                 }
             }
+            gotoPath(scesimPath);
             scenarioSimulationBuilder.populateScenarioSimulationModel(selectedType,
                                                                       dmnPath,
-                                                                      model -> {
-                                                                          gotoPath(path);
-                                                                          onModelSuccessCallbackMethod(model);
-                                                                      });
+                                                                      this::onModelSuccessCallbackMethod);
         };
     }
 

@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
-import com.google.gwt.core.client.GWT;
 import jsinterop.base.Js;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.mapper.JsUtils;
 import org.jboss.errai.common.client.api.RemoteCallback;
@@ -35,6 +34,7 @@ import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSIT
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.backend.vfs.PathFactory;
 import org.uberfire.client.callbacks.Callback;
+import org.uberfire.ext.widgets.common.client.common.popups.errors.ErrorPopup;
 
 public class ScenarioSimulationKogitoDMNMarshallerService {
 
@@ -48,8 +48,7 @@ public class ScenarioSimulationKogitoDMNMarshallerService {
                                                                                          dmnFilePath);
             MainJs.unmarshall(dmnContent, "", dmn12UnmarshallCallback);
         }, (message, throwable) -> {
-            //TODO Thrown exception here
-            GWT.log("Error " + message, throwable);
+            ErrorPopup.showMessage("Error " + message);
             return false;
         });
     }
@@ -74,7 +73,10 @@ public class ScenarioSimulationKogitoDMNMarshallerService {
                                                                                             jsitDefinitions,
                                                                                             importedItemDefinitions,
                                                                                             includedDMNImportsPaths.size()),
-                                                          null);
+                                                          (message, throwable) -> {
+                                                              ErrorPopup.showMessage("Error " + message);
+                                                              return false;
+                                                          });
 
                 }
             }
