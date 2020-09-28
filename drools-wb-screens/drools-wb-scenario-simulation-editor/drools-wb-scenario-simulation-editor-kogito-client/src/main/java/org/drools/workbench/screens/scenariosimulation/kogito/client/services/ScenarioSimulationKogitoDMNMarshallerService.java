@@ -31,7 +31,6 @@ import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.MainJs;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.callbacks.DMN12UnmarshallCallback;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITDefinitions;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITItemDefinition;
-import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITNamedElement;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.backend.vfs.PathFactory;
 import org.uberfire.client.callbacks.Callback;
@@ -60,7 +59,7 @@ public class ScenarioSimulationKogitoDMNMarshallerService {
             if (jsitDefinitions.getImport() != null && !jsitDefinitions.getImport().isEmpty()) {
                 final Map<String, Path> includedDMNImportsPaths = jsitDefinitions.getImport().stream()
                         .filter(jsitImport -> jsitImport.getLocationURI().endsWith(".dmn"))
-                        .collect(Collectors.toMap(JSITNamedElement::getName,
+                        .collect(Collectors.toMap(jsitImport -> jsitImport.getName(),
                                                   jsitImport -> PathFactory.newPath(jsitImport.getLocationURI(),
                                                                                     dmnFilePath.toURI().replace(dmnFilePath.getFileName(),
                                                                                                                 jsitImport.getLocationURI()))));
