@@ -31,7 +31,7 @@ import org.uberfire.backend.vfs.Path;
 import org.uberfire.backend.vfs.PathFactory;
 
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.spy;
+//import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 

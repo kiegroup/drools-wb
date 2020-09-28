@@ -440,21 +440,20 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
                                                                    NotificationEvent.NotificationType.ERROR);
                 return;
             }
-            String value = "";
+            String dmnPath = "";
             if (ScenarioSimulationModel.Type.DMN.equals(selectedType)) {
-                value = scenarioSimulationKogitoCreationPopupPresenter.getSelectedPath();
-                if (value == null || value.isEmpty()) {
+                dmnPath = scenarioSimulationKogitoCreationPopupPresenter.getSelectedPath();
+                if (dmnPath == null || dmnPath.isEmpty()) {
                     scenarioSimulationEditorPresenter.sendNotification(ScenarioSimulationEditorConstants.INSTANCE.missingDmnPath(),
                                                                        NotificationEvent.NotificationType.ERROR);
                     return;
                 }
             }
-            scenarioSimulationBuilder.populateScenarioSimulationModel(new ScenarioSimulationModel(),
-                                                                      selectedType,
-                                                                      value,
-                                                                      content -> {
+            scenarioSimulationBuilder.populateScenarioSimulationModel(selectedType,
+                                                                      dmnPath,
+                                                                      model -> {
                                                                           gotoPath(path);
-                                                                          unmarshallContent(content);
+                                                                          onModelSuccessCallbackMethod(model);
                                                                       });
         };
     }
