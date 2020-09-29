@@ -19,13 +19,19 @@ import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.editor.strategies.AbstractDMNDataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
+import org.drools.workbench.screens.scenariosimulation.client.events.ScenarioNotificationEvent;
+import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.ScenarioSimulationKogitoDMNDataManager;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.services.ScenarioSimulationKogitoDMNMarshallerService;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
 
+import org.jboss.errai.common.client.api.ErrorCallback;
+import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITDefinitions;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.backend.vfs.PathFactory;
+import org.uberfire.client.callbacks.Callback;
+import org.uberfire.workbench.events.NotificationEvent;
 
 public class KogitoDMNDataManagementStrategy extends AbstractDMNDataManagementStrategy {
 
@@ -47,11 +53,27 @@ public class KogitoDMNDataManagementStrategy extends AbstractDMNDataManagementSt
                                           final String dmnFilePath) {
         String dmnFileName = dmnFilePath.substring(dmnFilePath.lastIndexOf('/') + 1);
         final Path dmnPath = PathFactory.newPath(dmnFileName, dmnFilePath);
-        dmnMarshallerService.retrieveDMNData(dmnPath,
-                                             jsitDefinitions -> {
-                                                 final FactModelTuple factModelTuple = dmnDataManager.getFactModelTuple(jsitDefinitions);
-                                                 getSuccessCallback(testToolsPresenter, context, gridWidget).callback(factModelTuple);
-                                             });
+        dmnMarshallerService.retrieveDMNContent(dmnPath,
+                                                getDMNContentCallback(testToolsPresenter, context, gridWidget),
+                                                getDMNContentErrorCallback(dmnFilePath));
    }
+
+   private Callback<JSITDefinitions> getDMNContentCallback(final TestToolsView.Presenter testToolsPresenter,
+                                                           final ScenarioSimulationContext context,
+                                                           final GridWidget gridWidget) {
+       return jsitDefinitions -> {
+           final FactModelTuple factModelTuple = dmnDataManager.getFactModelTuple(jsitDefinitions);
+           getSuccessCallback(testToolsPresenter, context, gridWidget).callback(factModelTuple);
+       };
+   }
+
+    private ErrorCallback<String> getDMNContentErrorCallback(String dmnFilePath) {
+        return (message, throwable) -> {
+            eventBus.fireEvent(new ScenarioNotificationEvent(ScenarioSimulationEditorConstants.INSTANCE.dmnPathErrorDetailedLabel(dmnFilePath)
+                                                                     + ": " + message,
+                                                             NotificationEvent.NotificationType.ERROR));
+            return false;
+        };
+    }
 
 }

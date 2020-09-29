@@ -139,15 +139,15 @@ public class KogitoScenarioSimulationBuilder {
                                                   final Callback<ScenarioSimulationModel> populateEditorCommand) {
         String dmnFileName = dmnFilePath.substring(dmnFilePath.lastIndexOf('/') + 1);
         final Path dmnPath = PathFactory.newPath(dmnFileName, dmnFilePath);
-        dmnMarshallerService.retrieveDMNData(dmnPath,
-                                             jsitDefinitions -> {
-                                                 final FactModelTuple factModelTuple = dmnDataManager.getFactModelTuple(jsitDefinitions);
-                                                 toPopulate.setSimulation(createDMNSimulation(factModelTuple));
-                                                 toPopulate.setSettings(createDMNSettings(jsitDefinitions.getName(),
-                                                                                          jsitDefinitions.getNamespace(),
-                                                                                          dmnPath.toURI()));
-                                                 populateEditorCommand.callback(toPopulate);
-                                             });
+        dmnMarshallerService.retrieveDMNContent(dmnPath,
+                                                jsitDefinitions -> {
+                                                    final FactModelTuple factModelTuple = dmnDataManager.getFactModelTuple(jsitDefinitions);
+                                                    toPopulate.setSimulation(createDMNSimulation(factModelTuple));
+                                                    toPopulate.setSettings(createDMNSettings(jsitDefinitions.getName(),
+                                                                                             jsitDefinitions.getNamespace(),
+                                                                                             dmnPath.toURI()));
+                                                    populateEditorCommand.callback(toPopulate);
+                                                }, null);
     }
 
     private Background createBackground() {

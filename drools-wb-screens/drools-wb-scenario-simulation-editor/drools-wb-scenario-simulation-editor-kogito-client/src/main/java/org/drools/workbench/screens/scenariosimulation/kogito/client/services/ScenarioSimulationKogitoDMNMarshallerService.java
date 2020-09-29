@@ -33,26 +33,27 @@ import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSIT
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.backend.vfs.PathFactory;
 import org.uberfire.client.callbacks.Callback;
-import org.uberfire.ext.widgets.common.client.common.popups.errors.ErrorPopup;
 
 public class ScenarioSimulationKogitoDMNMarshallerService {
 
     @Inject
     private ScenarioSimulationKogitoResourceContentService resourceContentService;
 
-    public void retrieveDMNData(final Path dmnFilePath,
-                                final Callback<JSITDefinitions> callback) {
+    public void retrieveDMNContent(final Path dmnFilePath,
+                                   final Callback<JSITDefinitions> callback,
+                                   final ErrorCallback<String> errorCallback) {
         resourceContentService.getFileContent(dmnFilePath,
                                               dmnContent -> {
                                                   DMN12UnmarshallCallback dmn12UnmarshallCallback =
-                                                          getDMN12UnmarshallCallback(callback,dmnFilePath);
+                                                          getDMN12UnmarshallCallback(dmnFilePath, callback, errorCallback);
                                                   MainJs.unmarshall(dmnContent, "", dmn12UnmarshallCallback);
                                               },
-                                              getErrorCallback());
+                                              errorCallback);
     }
 
-    private DMN12UnmarshallCallback getDMN12UnmarshallCallback(final Callback<JSITDefinitions> callback,
-                                                               final Path dmnFilePath) {
+    private DMN12UnmarshallCallback getDMN12UnmarshallCallback(final Path dmnFilePath,
+                                                               final Callback<JSITDefinitions> callback,
+                                                               final ErrorCallback<String> errorCallback) {
         return dmn12 -> {
             final JSITDefinitions jsitDefinitions = Js.uncheckedCast(JsUtils.getUnwrappedElement(dmn12));
             if (jsitDefinitions.getImport() != null && !jsitDefinitions.getImport().isEmpty()) {
@@ -70,7 +71,7 @@ public class ScenarioSimulationKogitoDMNMarshallerService {
                                                                                             jsitDefinitions,
                                                                                             importedItemDefinitions,
                                                                                             includedDMNImportsPaths.size()),
-                                                          getErrorCallback());
+                                                          errorCallback);
                 }
             }
         };
@@ -114,12 +115,4 @@ public class ScenarioSimulationKogitoDMNMarshallerService {
             }
         };
     }
-
-    private ErrorCallback<String> getErrorCallback() {
-        return (error, exception) -> {
-            ErrorPopup.showMessage(exception.getMessage());
-            return false;
-        };
-    }
-
 }
