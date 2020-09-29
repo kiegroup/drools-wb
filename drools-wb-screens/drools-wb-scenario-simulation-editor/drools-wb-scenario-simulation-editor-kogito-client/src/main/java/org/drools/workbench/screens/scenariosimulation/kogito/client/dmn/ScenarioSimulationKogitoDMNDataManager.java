@@ -86,7 +86,7 @@ public class ScenarioSimulationKogitoDMNDataManager {
      */
     protected ClientDMNType getDMNTypeFromMaps(final Map<String, ClientDMNType> dmnTypesMap,
                                                final Map<QName, String> source) {
-        String typeRef = source.get(TYPEREF_QNAME);
+        String typeRef = retrieveTypeRef(source.get(TYPEREF_QNAME));
         if (typeRef == null) {
             typeRef = BuiltInType.ANY.getName();
         }
@@ -202,7 +202,7 @@ public class ScenarioSimulationKogitoDMNDataManager {
         String typeRef = itemDefinition.getTypeRef();
         if (typeRef != null) {
             final ClientDMNType superDmnType = getOrCreateDMNType(allDefinitions,
-                                                                  typeRef,
+                                                                  retrieveTypeRef(typeRef),
                                                                   namespace,
                                                                   dmnTypesDataMap);
             if (superDmnType != null) {
@@ -254,7 +254,7 @@ public class ScenarioSimulationKogitoDMNDataManager {
                 /* Retrieving field ClientDMNType */
                 if (typeRef != null && !hasSubFields) {
                     /* The field refers to a DMType which must be present in dmnTypesMap */
-                    fieldDMNType = getOrCreateDMNType(allItemDefinitions, typeRef, namespace, dmnTypesMap);
+                    fieldDMNType = getOrCreateDMNType(allItemDefinitions, retrieveTypeRef(typeRef), namespace, dmnTypesMap);
                 } else if (typeRef == null && hasSubFields) {
                     /* In this case we are handling an "in place" Structure type not defined in allItemDefinition list.
                      * Therefore, a new DMNType must be created and then it manages its defined subfields in recursive way */
@@ -551,6 +551,14 @@ public class ScenarioSimulationKogitoDMNDataManager {
             }
         }
         return toReturn;
+    }
+
+    private String retrieveTypeRef(String typeRef) {
+        if (typeRef.contains(".")) {
+            return typeRef.substring(typeRef.lastIndexOf('.') + 1);
+        } else {
+            return typeRef;
+        }
     }
 
     // Indirection required for tests

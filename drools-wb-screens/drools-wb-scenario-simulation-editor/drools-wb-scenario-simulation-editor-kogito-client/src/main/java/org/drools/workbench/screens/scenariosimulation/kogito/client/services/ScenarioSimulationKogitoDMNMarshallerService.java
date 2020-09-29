@@ -16,7 +16,6 @@
 package org.drools.workbench.screens.scenariosimulation.kogito.client.services;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -65,10 +64,9 @@ public class ScenarioSimulationKogitoDMNMarshallerService {
                                                                                                                 jsitImport.getLocationURI()))));
 
                 for (Map.Entry<String, Path> importPath : includedDMNImportsPaths.entrySet()) {
-                    final Map<String, JSITDefinitions> importedItemDefinitions = new HashMap<>();
+                    final List<JSITDefinitions> importedItemDefinitions = new ArrayList<>();
                     resourceContentService.getFileContent(importPath.getValue(),
                                                           getDMNImportContentRemoteCallback(callback,
-                                                                                            importPath.getKey(),
                                                                                             jsitDefinitions,
                                                                                             importedItemDefinitions,
                                                                                             includedDMNImportsPaths.size()),
@@ -79,13 +77,11 @@ public class ScenarioSimulationKogitoDMNMarshallerService {
     }
 
     private RemoteCallback<String> getDMNImportContentRemoteCallback(final Callback<JSITDefinitions> callback,
-                                                                              final String importName,
-                                                                              final JSITDefinitions definitions,
-                                                                              final Map<String, JSITDefinitions> importedDefinitions,
-                                                                              final int importsNumber) {
+                                                                     final JSITDefinitions definitions,
+                                                                     final List<JSITDefinitions> importedDefinitions,
+                                                                     final int importsNumber) {
         return dmnContent -> {
             DMN12UnmarshallCallback dmn12UnmarshallCallback = getDMN12ImportsUnmarshallCallback(callback,
-                                                                                                importName,
                                                                                                 definitions,
                                                                                                 importedDefinitions,
                                                                                                 importsNumber);
@@ -94,30 +90,26 @@ public class ScenarioSimulationKogitoDMNMarshallerService {
     }
 
     private DMN12UnmarshallCallback getDMN12ImportsUnmarshallCallback(final Callback<JSITDefinitions> callback,
-                                                                        final String importName,
-                                                                        final JSITDefinitions definitions,
-                                                                        final Map<String, JSITDefinitions> importedDefinitions,
-                                                                        final int importsNumber) {
+                                                                      final JSITDefinitions definitions,
+                                                                      final List<JSITDefinitions> importedDefinitions,
+                                                                      final int importsNumber) {
         return dmn12 -> {
             final JSITDefinitions jsitDefinitions = Js.uncheckedCast(JsUtils.getUnwrappedElement(dmn12));
-            importedDefinitions.put(importName, jsitDefinitions);
+            importedDefinitions.add(jsitDefinitions);
 
             if (importsNumber == importedDefinitions.size()) {
-                List<JSITItemDefinition> itemDefinitions = new ArrayList<>();
 
-                importedDefinitions.entrySet().stream().forEach(entry -> {
-                    final JSITDefinitions def = Js.uncheckedCast(entry.getValue());
-                    List<JSITItemDefinition> itemDefinitionsRaw = def.getItemDefinition();
-                    String prefix = entry.getKey();
+                for (int i = 0; i < importedDefinitions.size(); i++) {
 
-                    for (int i = 0; i < itemDefinitionsRaw.size(); i++) {
-                        JSITItemDefinition value = Js.uncheckedCast(itemDefinitionsRaw.get(i));
-                        value.setName(prefix + "." + value.getName());
-                        itemDefinitions.add(value);
+                    final JSITDefinitions jsitDefinitions1 = Js.uncheckedCast(importedDefinitions.get(i));
+                    List<JSITItemDefinition> itemDefinitionsRaw = jsitDefinitions1.getItemDefinition();
+
+                    for (int j = 0; j< itemDefinitionsRaw.size(); j++) {
+                        JSITItemDefinition value = Js.uncheckedCast(itemDefinitionsRaw.get(j));
+                        definitions.addItemDefinition(value);
                     }
-                });
+                }
 
-                definitions.addAllItemDefinition(itemDefinitions.toArray(new JSITItemDefinition[itemDefinitions.size()]));
                 callback.callback(definitions);
             }
         };
