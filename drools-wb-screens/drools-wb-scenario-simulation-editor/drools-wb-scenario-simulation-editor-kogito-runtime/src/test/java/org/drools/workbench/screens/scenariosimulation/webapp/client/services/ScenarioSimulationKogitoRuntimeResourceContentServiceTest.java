@@ -33,8 +33,7 @@ import static org.mockito.Mockito.verify;
 public class ScenarioSimulationKogitoRuntimeResourceContentServiceTest {
 
     @InjectMocks
-    ScenarioSimulationKogitoRuntimeResourceContentService scenarioSimulationKogitoRuntimeResourceContentService
-            = new ScenarioSimulationKogitoRuntimeResourceContentService();
+    private ScenarioSimulationKogitoRuntimeResourceContentService scenarioSimulationKogitoRuntimeResourceContentService;
     @Mock
     private KogitoResourceContentService kogitoResourceContentService;
     @Mock
