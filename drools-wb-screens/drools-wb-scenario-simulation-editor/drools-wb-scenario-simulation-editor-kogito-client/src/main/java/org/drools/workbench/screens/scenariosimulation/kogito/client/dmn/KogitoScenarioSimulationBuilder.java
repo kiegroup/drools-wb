@@ -45,6 +45,8 @@ import org.drools.scenariosimulation.api.utils.ScenarioSimulationSharedUtils;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.services.ScenarioSimulationKogitoDMNMarshallerService;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
+import org.jboss.errai.common.client.api.ErrorCallback;
+import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITDefinitions;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.backend.vfs.PathFactory;
 import org.uberfire.client.callbacks.Callback;
@@ -85,13 +87,14 @@ public class KogitoScenarioSimulationBuilder {
      */
     public void populateScenarioSimulationModel(final ScenarioSimulationModel.Type type,
                                                 final String value,
-                                                final Callback<ScenarioSimulationModel> populateEditorCommand) {
+                                                final Callback<ScenarioSimulationModel> populateEditorCommand,
+                                                final ErrorCallback<String> dmnContentErrorCallback) {
         switch (type) {
             case RULE:
                 populateRULE(value, populateEditorCommand);
                 break;
             case DMN:
-                populateDMN(value, populateEditorCommand);
+                populateDMN(value, populateEditorCommand, dmnContentErrorCallback);
                 break;
             default:
                 throw new IllegalArgumentException("Impossible to map");
@@ -108,10 +111,11 @@ public class KogitoScenarioSimulationBuilder {
     }
 
     private void populateDMN(final String dmnFilePath,
-                             final Callback<ScenarioSimulationModel> populateEditorCommand) {
+                             final Callback<ScenarioSimulationModel> populateEditorCommand,
+                             final ErrorCallback<String> dmnContentErrorCallback) {
         ScenarioSimulationModel model = new ScenarioSimulationModel();
         model.setBackground(createBackground());
-        populateDMNSimulationAndSettings(model, dmnFilePath, populateEditorCommand);
+        populateDMNSimulationAndSettings(model, dmnFilePath, populateEditorCommand, dmnContentErrorCallback);
     }
 
     protected Simulation createRULESimulation() {
@@ -136,18 +140,26 @@ public class KogitoScenarioSimulationBuilder {
 
     private void populateDMNSimulationAndSettings(final ScenarioSimulationModel toPopulate,
                                                   final String dmnFilePath,
-                                                  final Callback<ScenarioSimulationModel> populateEditorCommand) {
+                                                  final Callback<ScenarioSimulationModel> populateEditorCommand,
+                                                  final ErrorCallback<String> dmnContentErrorCallback) {
         String dmnFileName = dmnFilePath.substring(dmnFilePath.lastIndexOf('/') + 1);
         final Path dmnPath = PathFactory.newPath(dmnFileName, dmnFilePath);
         dmnMarshallerService.retrieveDMNContent(dmnPath,
-                                                jsitDefinitions -> {
-                                                    final FactModelTuple factModelTuple = dmnDataManager.getFactModelTuple(jsitDefinitions);
-                                                    toPopulate.setSimulation(createDMNSimulation(factModelTuple));
-                                                    toPopulate.setSettings(createDMNSettings(jsitDefinitions.getName(),
-                                                                                             jsitDefinitions.getNamespace(),
-                                                                                             dmnPath.toURI()));
-                                                    populateEditorCommand.callback(toPopulate);
-                                                }, null);
+                                                getDMNContentCallback(toPopulate, populateEditorCommand, dmnPath),
+                                                dmnContentErrorCallback);
+    }
+
+    private Callback<JSITDefinitions> getDMNContentCallback(final ScenarioSimulationModel toPopulate,
+                                                            final Callback<ScenarioSimulationModel> populateEditorCommand,
+                                                            final Path dmnPath) {
+        return jsitDefinitions -> {
+            final FactModelTuple factModelTuple = dmnDataManager.getFactModelTuple(jsitDefinitions);
+            toPopulate.setSimulation(createDMNSimulation(factModelTuple));
+            toPopulate.setSettings(createDMNSettings(jsitDefinitions.getName(),
+                                                     jsitDefinitions.getNamespace(),
+                                                     dmnPath.toURI()));
+            populateEditorCommand.callback(toPopulate);
+        };
     }
 
     private Background createBackground() {
