@@ -414,7 +414,8 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
         verify(scenarioSimulationKogitoCreationPopupPresenterMock, times(1)).getSelectedType();
         verify(scenarioSimulationEditorPresenterMock, times(1)).sendNotification(eq(ScenarioSimulationEditorConstants.INSTANCE.missingSelectedType()),
                                                                                                       eq(NotificationEvent.NotificationType.ERROR));
-        verify(kogitoScenarioSimulationBuilderMock, never()).populateScenarioSimulationModel(any(), any(), any(), any());
+        verify(kogitoScenarioSimulationBuilderMock, never()).populateScenarioSimulationModelDMN(any(), any(), any());
+        verify(kogitoScenarioSimulationBuilderMock, never()).populateScenarioSimulationModelRULE(any(), any());
     }
 
     @Test
@@ -426,7 +427,8 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
         verify(scenarioSimulationKogitoCreationPopupPresenterMock, times(1)).getSelectedType();
         verify(scenarioSimulationEditorPresenterMock, times(1)).sendNotification(eq(ScenarioSimulationEditorConstants.INSTANCE.missingDmnPath()),
                                                                                                       eq(NotificationEvent.NotificationType.ERROR));
-        verify(kogitoScenarioSimulationBuilderMock, never()).populateScenarioSimulationModel(any(), any(), any(), any());
+        verify(kogitoScenarioSimulationBuilderMock, never()).populateScenarioSimulationModelDMN(any(), any(), any());
+        verify(kogitoScenarioSimulationBuilderMock, never()).populateScenarioSimulationModelRULE(any(), any());
     }
 
     @Test
@@ -438,10 +440,8 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
         command.execute();
         verify(scenarioSimulationKogitoCreationPopupPresenterMock, times(1)).getSelectedType();
         verify(scenarioSimulationEditorKogitoWrapperSpy, times(1)).gotoPath(eq(path));
-        verify(kogitoScenarioSimulationBuilderMock, times(1)).populateScenarioSimulationModel(eq(ScenarioSimulationModel.Type.RULE),
-                                                                                              eq(""),
-                                                                                              callbackArgumentCaptor.capture(),
-                                                                                              errorCallbackArgumentCaptor.capture());
+        verify(kogitoScenarioSimulationBuilderMock, times(1)).populateScenarioSimulationModelRULE(eq(""),
+                                                                                                                        callbackArgumentCaptor.capture());
         callbackArgumentCaptor.getValue().callback(model);
         verify(scenarioSimulationEditorKogitoWrapperSpy, times(1)).onModelSuccessCallbackMethod(eq(model));
     }
@@ -455,12 +455,13 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
         command.execute();
         verify(scenarioSimulationKogitoCreationPopupPresenterMock, times(1)).getSelectedType();
         verify(scenarioSimulationEditorKogitoWrapperSpy, times(1)).gotoPath(eq(path));
-        verify(kogitoScenarioSimulationBuilderMock, times(1)).populateScenarioSimulationModel(eq(ScenarioSimulationModel.Type.DMN),
-                                                                                                                    eq("selected"),
-                                                                                                                    callbackArgumentCaptor.capture(),
-                                                                                                                    errorCallbackArgumentCaptor.capture());
+        verify(kogitoScenarioSimulationBuilderMock, times(1)).populateScenarioSimulationModelDMN(eq("selected"),
+                                                                                                                       callbackArgumentCaptor.capture(),
+                                                                                                                       errorCallbackArgumentCaptor.capture());
         callbackArgumentCaptor.getValue().callback(model);
         verify(scenarioSimulationEditorKogitoWrapperSpy, times(1)).onModelSuccessCallbackMethod(eq(model));
+        errorCallbackArgumentCaptor.getValue().error("message", new Exception());
+        verify(scenarioSimulationEditorPresenterMock, times(1)).sendNotification(eq(ScenarioSimulationEditorConstants.INSTANCE.dmnPathErrorDetailedLabel("selected", "message")), eq(NotificationEvent.NotificationType.ERROR));
     }
 
     @Test

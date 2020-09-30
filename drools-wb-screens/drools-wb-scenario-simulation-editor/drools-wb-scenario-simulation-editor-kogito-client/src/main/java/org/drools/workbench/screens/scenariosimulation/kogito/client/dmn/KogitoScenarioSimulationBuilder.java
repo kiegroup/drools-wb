@@ -80,43 +80,19 @@ public class KogitoScenarioSimulationBuilder {
         }
     }
 
-    /**
-     * Populate the given <code>ScenarioSimulationModel</code> and returns it inn the given <code>callback</code>
-     * @param type
-     * @param value
-     * @param populateEditorCommand
-     * @param dmnContentErrorCallback
-     */
-    public void populateScenarioSimulationModel(final ScenarioSimulationModel.Type type,
-                                                final String value,
-                                                final Callback<ScenarioSimulationModel> populateEditorCommand,
-                                                final ErrorCallback<String> dmnContentErrorCallback) {
+    public void populateScenarioSimulationModelRULE(final String dmoSession,
+                                                    final Callback<ScenarioSimulationModel> populateEditorCommand) {
         ScenarioSimulationModel model = new ScenarioSimulationModel();
-        switch (type) {
-            case RULE:
-                populateRULE(model, value, populateEditorCommand);
-                break;
-            case DMN:
-                populateDMN(model, value, populateEditorCommand, dmnContentErrorCallback);
-                break;
-            default:
-                throw new IllegalArgumentException("Impossible to map");
-        }
-    }
-
-    protected void populateRULE(final ScenarioSimulationModel model,
-                                final String dmoSession,
-                                final Callback<ScenarioSimulationModel> populateEditorCommand) {
         model.setSimulation(createRULESimulation());
         model.setBackground(createBackground());
         model.setSettings(createRULESettings(dmoSession));
         populateEditorCommand.callback(model);
     }
 
-    protected void populateDMN(final ScenarioSimulationModel model,
-                               final String dmnFilePath,
-                               final Callback<ScenarioSimulationModel> populateEditorCommand,
-                               final ErrorCallback<String> dmnContentErrorCallback) {
+    public void populateScenarioSimulationModelDMN(final String dmnFilePath,
+                                                   final Callback<ScenarioSimulationModel> populateEditorCommand,
+                                                   final ErrorCallback<String> dmnContentErrorCallback) {
+        ScenarioSimulationModel model = new ScenarioSimulationModel();
         model.setBackground(createBackground());
         populateDMNSimulationAndSettings(model, dmnFilePath, populateEditorCommand, dmnContentErrorCallback);
     }

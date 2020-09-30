@@ -51,7 +51,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -75,9 +74,11 @@ public class KogitoScenarioSimulationBuilderTest {
     @Mock
     private ScenarioSimulationKogitoDMNMarshallerService dmnMarshallerServiceMock;
     @Captor
+    private ArgumentCaptor<Callback<JSITDefinitions>> callbackArgumentCaptor;
+    @Captor
     private ArgumentCaptor<Path> pathArgumentCaptor;
     @Captor
-    private ArgumentCaptor<Callback<JSITDefinitions>> callbackArgumentCaptor;
+    private ArgumentCaptor<ScenarioSimulationModel> scenarioSimulationModelArgumentCaptor;
 
     @Before
     public void setup() {
@@ -87,35 +88,21 @@ public class KogitoScenarioSimulationBuilderTest {
     }
 
     @Test
-    public void populateScenarioSimulationModelRULE() {
-        kogitoScenarioSimulationBuilderSpy.populateScenarioSimulationModel(ScenarioSimulationModel.Type.RULE, "value", callbackMock, errorCallbackMock);
-        verify(kogitoScenarioSimulationBuilderSpy, times(1)).populateRULE(isA(ScenarioSimulationModel.class),eq("value"), eq(callbackMock));
-    }
-
-    @Test
-    public void populateScenarioSimulationModelDMN() {
-        kogitoScenarioSimulationBuilderSpy.populateScenarioSimulationModel(ScenarioSimulationModel.Type.DMN, "value", callbackMock, errorCallbackMock);
-        verify(kogitoScenarioSimulationBuilderSpy, times(1)).populateDMN(isA(ScenarioSimulationModel.class), eq("value"), eq(callbackMock), eq(errorCallbackMock));
-    }
-
-    @Test
     public void populateRule() {
-        ScenarioSimulationModel model = new ScenarioSimulationModel();
-        kogitoScenarioSimulationBuilderSpy.populateRULE(model, "session", callbackMock);
+        kogitoScenarioSimulationBuilderSpy.populateScenarioSimulationModelRULE("session", callbackMock);
         verify(kogitoScenarioSimulationBuilderSpy, times(1)).createRULESimulation();
         verify(kogitoScenarioSimulationBuilderSpy, times(1)).createBackground();
         verify(kogitoScenarioSimulationBuilderSpy, times(1)).createRULESettings(eq("session"));
-        verify(callbackMock, times(1)).callback(eq(model));
-        assertNotNull(model);
-        assertNotNull(model.getBackground());
-        assertNotNull(model.getSimulation());
-        assertNotNull(model.getSettings());
+        verify(callbackMock, times(1)).callback(scenarioSimulationModelArgumentCaptor.capture());
+        assertNotNull(scenarioSimulationModelArgumentCaptor.getValue());
+        assertNotNull(scenarioSimulationModelArgumentCaptor.getValue().getBackground());
+        assertNotNull(scenarioSimulationModelArgumentCaptor.getValue().getSimulation());
+        assertNotNull(scenarioSimulationModelArgumentCaptor.getValue().getSettings());
     }
 
     @Test
     public void populateDMN() {
-        ScenarioSimulationModel model = new ScenarioSimulationModel();
-        kogitoScenarioSimulationBuilderSpy.populateDMN(model, "src/file.dmn", callbackMock, errorCallbackMock);
+        kogitoScenarioSimulationBuilderSpy.populateScenarioSimulationModelDMN("src/file.dmn", callbackMock, errorCallbackMock);
         verify(kogitoScenarioSimulationBuilderSpy, times(1)).createBackground();
         verify(dmnMarshallerServiceMock, times(1)).retrieveDMNContent(pathArgumentCaptor.capture(), callbackArgumentCaptor.capture(), eq(errorCallbackMock));
         assertEquals("file.dmn", pathArgumentCaptor.getValue().getFileName());
@@ -124,10 +111,10 @@ public class KogitoScenarioSimulationBuilderTest {
         verify(kogitoDMNDataManagerMock, times(1)).getFactModelTuple(eq(jsitDefinitionsMock));
         verify(kogitoScenarioSimulationBuilderSpy, times(1)).createDMNSimulation(eq(factModelTupleMock));
         verify(kogitoScenarioSimulationBuilderSpy, times(1)).createDMNSettings(eq("name"), eq("namespace"), eq("src/file.dmn"));
-        verify(callbackMock, times(1)).callback(eq(model));
-        assertNotNull(model);
-        assertNotNull(model.getBackground());
-        assertNotNull(model.getSimulation());
+        verify(callbackMock, times(1)).callback(scenarioSimulationModelArgumentCaptor.capture());
+        assertNotNull(scenarioSimulationModelArgumentCaptor.getValue());
+        assertNotNull(scenarioSimulationModelArgumentCaptor.getValue().getBackground());
+        assertNotNull(scenarioSimulationModelArgumentCaptor.getValue().getSimulation());
     }
 
     @Test
@@ -197,7 +184,6 @@ public class KogitoScenarioSimulationBuilderTest {
         assertEquals(ExpressionIdentifier.create("1|2", FactMappingType.EXPECT), modelDescriptor.getFactMappingByIndex(3).getExpressionIdentifier());
         assertEquals(FactMappingValueType.NOT_EXPRESSION, modelDescriptor.getFactMappingByIndex(3).getFactMappingValueType());
     }
-
 
     @Test
     public void getColumn() {

@@ -439,28 +439,29 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
                                                                    NotificationEvent.NotificationType.ERROR);
                 return;
             }
-            String dmnPath = "";
+            gotoPath(scesimPath);
             if (ScenarioSimulationModel.Type.DMN.equals(selectedType)) {
-                dmnPath = scenarioSimulationKogitoCreationPopupPresenter.getSelectedPath();
+                String dmnPath = scenarioSimulationKogitoCreationPopupPresenter.getSelectedPath();
                 if (dmnPath == null || dmnPath.isEmpty()) {
                     scenarioSimulationEditorPresenter.sendNotification(ScenarioSimulationEditorConstants.INSTANCE.missingDmnPath(),
                                                                        NotificationEvent.NotificationType.ERROR);
                     return;
                 }
+                scenarioSimulationBuilder.populateScenarioSimulationModelDMN(dmnPath,
+                                                                             this::onModelSuccessCallbackMethod,
+                                                                             getDMNContentErrorCallback(dmnPath));
+            } else {
+                scenarioSimulationBuilder.populateScenarioSimulationModelRULE("",
+                                                                              this::onModelSuccessCallbackMethod);
             }
-            gotoPath(scesimPath);
-            scenarioSimulationBuilder.populateScenarioSimulationModel(selectedType,
-                                                                      dmnPath,
-                                                                      this::onModelSuccessCallbackMethod,
-                                                                      getDMNContentErrorCallback(dmnPath));
         };
     }
 
     private ErrorCallback<String> getDMNContentErrorCallback(String dmnFilePath) {
         return (message, throwable) -> {
-            scenarioSimulationEditorPresenter.sendNotification(ScenarioSimulationEditorConstants.INSTANCE.dmnPathErrorDetailedLabel(dmnFilePath)
-                                                                     + ": " + message,
-                                                             NotificationEvent.NotificationType.ERROR);
+            scenarioSimulationEditorPresenter.sendNotification(ScenarioSimulationEditorConstants.INSTANCE.dmnPathErrorDetailedLabel(dmnFilePath,
+                                                                                                                                    message),
+                                                               NotificationEvent.NotificationType.ERROR);
             return false;
         };
     }
