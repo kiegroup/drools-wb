@@ -139,10 +139,10 @@ public class KogitoScenarioSimulationBuilder {
         return toReturn;
     }
 
-    protected void populateDMNSimulationAndSettings(final ScenarioSimulationModel toPopulate,
-                                                    final String dmnFilePath,
-                                                    final Callback<ScenarioSimulationModel> populateEditorCommand,
-                                                    final ErrorCallback<String> dmnContentErrorCallback) {
+    private void populateDMNSimulationAndSettings(final ScenarioSimulationModel toPopulate,
+                                                  final String dmnFilePath,
+                                                  final Callback<ScenarioSimulationModel> populateEditorCommand,
+                                                  final ErrorCallback<String> dmnContentErrorCallback) {
         String dmnFileName = dmnFilePath.substring(dmnFilePath.lastIndexOf('/') + 1);
         final Path dmnPath = PathFactory.newPath(dmnFileName, dmnFilePath);
         dmnMarshallerService.retrieveDMNContent(dmnPath,
@@ -185,7 +185,7 @@ public class KogitoScenarioSimulationBuilder {
         return toReturn;
     }
 
-    private Settings createDMNSettings(final String name, final String nameSpace, final String dmnFilePath) {
+    protected Settings createDMNSettings(final String name, final String nameSpace, final String dmnFilePath) {
         Settings toReturn = new Settings();
         toReturn.setType(ScenarioSimulationModel.Type.DMN);
         toReturn.setDmnFilePath(dmnFilePath);

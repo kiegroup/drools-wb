@@ -34,11 +34,16 @@ import org.drools.workbench.screens.scenariosimulation.kogito.client.services.Sc
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
 import org.jboss.errai.common.client.api.ErrorCallback;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITDefinitions;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
+import org.uberfire.backend.vfs.Path;
 import org.uberfire.client.callbacks.Callback;
 
 import static org.junit.Assert.assertEquals;
@@ -58,15 +63,28 @@ public class KogitoScenarioSimulationBuilderTest {
     @InjectMocks @Spy
     private KogitoScenarioSimulationBuilder kogitoScenarioSimulationBuilderSpy;
     @Mock
-    private ScenarioSimulationKogitoDMNDataManager kogitoDMNDataManagerMock;
-    @Mock
-    private ScenarioSimulationKogitoDMNMarshallerService dmnMarshallerServiceMock;
-    @Mock
-    private ScenarioSimulationModel scenarioSimulationModelMock;
-    @Mock
     private Callback<ScenarioSimulationModel> callbackMock;
     @Mock
     private ErrorCallback<String> errorCallbackMock;
+    @Mock
+    private FactModelTuple factModelTupleMock;
+    @Mock
+    private JSITDefinitions jsitDefinitionsMock;
+    @Mock
+    private ScenarioSimulationKogitoDMNDataManager kogitoDMNDataManagerMock;
+    @Mock
+    private ScenarioSimulationKogitoDMNMarshallerService dmnMarshallerServiceMock;
+    @Captor
+    private ArgumentCaptor<Path> pathArgumentCaptor;
+    @Captor
+    private ArgumentCaptor<Callback<JSITDefinitions>> callbackArgumentCaptor;
+
+    @Before
+    public void setup() {
+        when(kogitoDMNDataManagerMock.getFactModelTuple(eq(jsitDefinitionsMock))).thenReturn(factModelTupleMock);
+        when(jsitDefinitionsMock.getNamespace()).thenReturn("namespace");
+        when(jsitDefinitionsMock.getName()).thenReturn("name");
+    }
 
     @Test
     public void populateScenarioSimulationModelRULE() {
@@ -92,6 +110,24 @@ public class KogitoScenarioSimulationBuilderTest {
         assertNotNull(model.getBackground());
         assertNotNull(model.getSimulation());
         assertNotNull(model.getSettings());
+    }
+
+    @Test
+    public void populateDMN() {
+        ScenarioSimulationModel model = new ScenarioSimulationModel();
+        kogitoScenarioSimulationBuilderSpy.populateDMN(model, "src/file.dmn", callbackMock, errorCallbackMock);
+        verify(kogitoScenarioSimulationBuilderSpy, times(1)).createBackground();
+        verify(dmnMarshallerServiceMock, times(1)).retrieveDMNContent(pathArgumentCaptor.capture(), callbackArgumentCaptor.capture(), eq(errorCallbackMock));
+        assertEquals("file.dmn", pathArgumentCaptor.getValue().getFileName());
+        assertEquals("src/file.dmn", pathArgumentCaptor.getValue().toURI());
+        callbackArgumentCaptor.getValue().callback(jsitDefinitionsMock);
+        verify(kogitoDMNDataManagerMock, times(1)).getFactModelTuple(eq(jsitDefinitionsMock));
+        verify(kogitoScenarioSimulationBuilderSpy, times(1)).createDMNSimulation(eq(factModelTupleMock));
+        verify(kogitoScenarioSimulationBuilderSpy, times(1)).createDMNSettings(eq("name"), eq("namespace"), eq("src/file.dmn"));
+        verify(callbackMock, times(1)).callback(eq(model));
+        assertNotNull(model);
+        assertNotNull(model.getBackground());
+        assertNotNull(model.getSimulation());
     }
 
     @Test
