@@ -413,7 +413,6 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
         scenarioSimulationEditorPresenter.showDocks(PlaceStatus.CLOSE);
     }
 
-
     protected void onBackgroundTabSelected() {
         scenarioSimulationEditorPresenter.onBackgroundTabSelected();
     }

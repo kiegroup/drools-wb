@@ -84,6 +84,8 @@ public class KogitoScenarioSimulationBuilder {
      * Populate the given <code>ScenarioSimulationModel</code> and returns it inn the given <code>callback</code>
      * @param type
      * @param value
+     * @param populateEditorCommand
+     * @param dmnContentErrorCallback
      */
     public void populateScenarioSimulationModel(final ScenarioSimulationModel.Type type,
                                                 final String value,
