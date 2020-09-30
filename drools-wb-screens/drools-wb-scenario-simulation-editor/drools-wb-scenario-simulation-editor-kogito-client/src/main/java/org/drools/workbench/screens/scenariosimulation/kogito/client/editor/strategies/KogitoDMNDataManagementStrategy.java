@@ -53,9 +53,9 @@ public class KogitoDMNDataManagementStrategy extends AbstractDMNDataManagementSt
                                           final String dmnFilePath) {
         String dmnFileName = dmnFilePath.substring(dmnFilePath.lastIndexOf('/') + 1);
         final Path dmnPath = PathFactory.newPath(dmnFileName, dmnFilePath);
-        dmnMarshallerService.retrieveDMNContent(dmnPath,
-                                                getDMNContentCallback(testToolsPresenter, context, gridWidget),
-                                                getDMNContentErrorCallback(dmnFilePath));
+        dmnMarshallerService.getDMNContent(dmnPath,
+                                           getDMNContentCallback(testToolsPresenter, context, gridWidget),
+                                           getDMNContentErrorCallback(dmnFilePath));
    }
 
    private Callback<JSITDefinitions> getDMNContentCallback(final TestToolsView.Presenter testToolsPresenter,

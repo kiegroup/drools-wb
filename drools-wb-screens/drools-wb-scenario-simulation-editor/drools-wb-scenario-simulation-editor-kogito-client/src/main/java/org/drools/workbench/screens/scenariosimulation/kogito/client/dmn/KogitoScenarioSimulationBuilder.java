@@ -123,9 +123,9 @@ public class KogitoScenarioSimulationBuilder {
                                                   final ErrorCallback<String> dmnContentErrorCallback) {
         String dmnFileName = dmnFilePath.substring(dmnFilePath.lastIndexOf('/') + 1);
         final Path dmnPath = PathFactory.newPath(dmnFileName, dmnFilePath);
-        dmnMarshallerService.retrieveDMNContent(dmnPath,
-                                                getDMNContentCallback(toPopulate, populateEditorCommand, dmnPath),
-                                                dmnContentErrorCallback);
+        dmnMarshallerService.getDMNContent(dmnPath,
+                                           getDMNContentCallback(toPopulate, populateEditorCommand, dmnPath),
+                                           dmnContentErrorCallback);
     }
 
     private Callback<JSITDefinitions> getDMNContentCallback(final ScenarioSimulationModel toPopulate,

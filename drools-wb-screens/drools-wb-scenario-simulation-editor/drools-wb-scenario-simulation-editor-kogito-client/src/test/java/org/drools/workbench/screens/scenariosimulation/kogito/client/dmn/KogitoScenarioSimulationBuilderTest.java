@@ -104,7 +104,7 @@ public class KogitoScenarioSimulationBuilderTest {
     public void populateDMN() {
         kogitoScenarioSimulationBuilderSpy.populateScenarioSimulationModelDMN("src/file.dmn", callbackMock, errorCallbackMock);
         verify(kogitoScenarioSimulationBuilderSpy, times(1)).createBackground();
-        verify(dmnMarshallerServiceMock, times(1)).retrieveDMNContent(pathArgumentCaptor.capture(), callbackArgumentCaptor.capture(), eq(errorCallbackMock));
+        verify(dmnMarshallerServiceMock, times(1)).getDMNContent(pathArgumentCaptor.capture(), callbackArgumentCaptor.capture(), eq(errorCallbackMock));
         assertEquals("file.dmn", pathArgumentCaptor.getValue().getFileName());
         assertEquals("src/file.dmn", pathArgumentCaptor.getValue().toURI());
         callbackArgumentCaptor.getValue().callback(jsitDefinitionsMock);

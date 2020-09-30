@@ -28,6 +28,7 @@ import org.jboss.errai.common.client.api.ErrorCallback;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.MainJs;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.callbacks.DMN12UnmarshallCallback;
+import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.DMN12;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITDefinitions;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITItemDefinition;
 import org.uberfire.backend.vfs.Path;
@@ -39,23 +40,25 @@ public class ScenarioSimulationKogitoDMNMarshallerService {
     @Inject
     private ScenarioSimulationKogitoResourceContentService resourceContentService;
 
-    public void retrieveDMNContent(final Path dmnFilePath,
-                                   final Callback<JSITDefinitions> callback,
-                                   final ErrorCallback<String> errorCallback) {
+    public void getDMNContent(final Path dmnFilePath,
+                              final Callback<JSITDefinitions> callback,
+                              final ErrorCallback<String> errorCallback) {
         resourceContentService.getFileContent(dmnFilePath,
-                                              dmnContent -> {
-                                                  DMN12UnmarshallCallback dmn12UnmarshallCallback =
-                                                          getDMN12UnmarshallCallback(dmnFilePath, callback, errorCallback);
-                                                  MainJs.unmarshall(dmnContent, "", dmn12UnmarshallCallback);
-                                              },
+                                              getDMNFileContentCallback(dmnFilePath, callback, errorCallback),
                                               errorCallback);
     }
 
-    private DMN12UnmarshallCallback getDMN12UnmarshallCallback(final Path dmnFilePath,
-                                                               final Callback<JSITDefinitions> callback,
-                                                               final ErrorCallback<String> errorCallback) {
+    private RemoteCallback<String> getDMNFileContentCallback(final Path dmnFilePath,
+                                                             final Callback<JSITDefinitions> callback,
+                                                             final ErrorCallback<String> errorCallback) {
+       return dmnContent -> unmarshallDMN(dmnContent, getDMN12UnmarshallCallback(dmnFilePath, callback, errorCallback));
+    }
+
+    protected DMN12UnmarshallCallback getDMN12UnmarshallCallback(final Path dmnFilePath,
+                                                                 final Callback<JSITDefinitions> callback,
+                                                                 final ErrorCallback<String> errorCallback) {
         return dmn12 -> {
-            final JSITDefinitions jsitDefinitions = Js.uncheckedCast(JsUtils.getUnwrappedElement(dmn12));
+            final JSITDefinitions jsitDefinitions = uncheckedCast(dmn12);
             if (jsitDefinitions.getImport() != null && !jsitDefinitions.getImport().isEmpty()) {
                 final Map<String, Path> includedDMNImportsPaths = jsitDefinitions.getImport().stream()
                         .filter(jsitImport -> jsitImport.getLocationURI().endsWith(".dmn"))
@@ -73,14 +76,16 @@ public class ScenarioSimulationKogitoDMNMarshallerService {
                                                                                             includedDMNImportsPaths.size()),
                                                           errorCallback);
                 }
+            } else {
+                callback.callback(jsitDefinitions);
             }
         };
     }
 
-    private RemoteCallback<String> getDMNImportContentRemoteCallback(final Callback<JSITDefinitions> callback,
-                                                                     final JSITDefinitions definitions,
-                                                                     final List<JSITDefinitions> importedDefinitions,
-                                                                     final int importsNumber) {
+    protected RemoteCallback<String> getDMNImportContentRemoteCallback(final Callback<JSITDefinitions> callback,
+                                                                       final JSITDefinitions definitions,
+                                                                       final List<JSITDefinitions> importedDefinitions,
+                                                                       final int importsNumber) {
         return dmnContent -> {
             DMN12UnmarshallCallback dmn12UnmarshallCallback = getDMN12ImportsUnmarshallCallback(callback,
                                                                                                 definitions,
@@ -95,7 +100,7 @@ public class ScenarioSimulationKogitoDMNMarshallerService {
                                                                       final List<JSITDefinitions> importedDefinitions,
                                                                       final int importsNumber) {
         return dmn12 -> {
-            final JSITDefinitions jsitDefinitions = Js.uncheckedCast(JsUtils.getUnwrappedElement(dmn12));
+            final JSITDefinitions jsitDefinitions = uncheckedCast(dmn12);
             importedDefinitions.add(jsitDefinitions);
 
             if (importsNumber == importedDefinitions.size()) {
@@ -114,5 +119,15 @@ public class ScenarioSimulationKogitoDMNMarshallerService {
                 callback.callback(definitions);
             }
         };
+    }
+
+    // Indirection for tests
+    protected void unmarshallDMN(String dmnContent, DMN12UnmarshallCallback dmn12UnmarshallCallback) {
+        MainJs.unmarshall(dmnContent, "", dmn12UnmarshallCallback);
+    }
+
+    // Indirection for tests
+    protected JSITDefinitions uncheckedCast(DMN12 dmn12) {
+        return Js.uncheckedCast(JsUtils.getUnwrappedElement(dmn12));
     }
 }
