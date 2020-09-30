@@ -28,7 +28,6 @@ import javax.xml.namespace.QName;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.dmn.feel.BuiltInType;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
-//import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,6 +39,7 @@ import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSIT
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITInputData;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITItemDefinition;
 import org.mockito.Mock;
+import org.mockito.Spy;
 
 import static junit.framework.TestCase.assertNotNull;
 import static org.drools.scenariosimulation.api.utils.ConstantsHolder.VALUE;
@@ -53,7 +53,6 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-//import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -64,6 +63,8 @@ public class ScenarioSimulationKogitoDMNDataManagerTest {
     public static final String TYPE_NAME = "name";
     public static final String ID = "id";
 
+    @Spy
+    private ScenarioSimulationKogitoDMNDataManager scenarioSimulationKogitoDMNDataManagerSpy;
     @Mock
     private JSITItemDefinition jsitItemDefinitionMock;
     @Mock
@@ -79,7 +80,6 @@ public class ScenarioSimulationKogitoDMNDataManagerTest {
     @Mock
     private JSITInformationItem jsiITInformationItemDecisionMock;
 
-    private ScenarioSimulationKogitoDMNDataManager scenarioSimulationKogitoDMNDataManagerSpy;
     private List<JSITItemDefinition> jstiItemDefinitions;
     private List<JSITDRGElement> jsitdrgElements;
     private List<JSITDRGElement> drgElements;
@@ -94,13 +94,8 @@ public class ScenarioSimulationKogitoDMNDataManagerTest {
         drgElements = new ArrayList<>();
         attributesMapInput = new HashMap<>();
         attributesMapDecision = new HashMap<>();
-        allDefinitions = new HashMap<>();/*
-        abstractKogitoDMNServiceSpy = spy(new AbstractKogitoDMNService() {
-            @Override
-            public void getDMNContent(Path path, RemoteCallback<String> remoteCallback, ErrorCallback<Object> errorCallback) {
-                //Do nothing
-            }
-        });*/
+        allDefinitions = new HashMap<>();
+
         doReturn(true).when(scenarioSimulationKogitoDMNDataManagerSpy).isJSITInputData(eq(jsiITInputDataMock));
         doReturn(true).when(scenarioSimulationKogitoDMNDataManagerSpy).isJSITDecision(eq(jsiITDecisionMock));
         doReturn(attributesMapInput).when(scenarioSimulationKogitoDMNDataManagerSpy).getOtherAttributesMap(eq(jsiITInformationItemInputMock));

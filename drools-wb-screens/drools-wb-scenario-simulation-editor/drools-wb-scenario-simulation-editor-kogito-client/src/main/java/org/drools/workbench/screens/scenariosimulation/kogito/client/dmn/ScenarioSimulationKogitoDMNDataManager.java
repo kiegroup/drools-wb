@@ -554,7 +554,7 @@ public class ScenarioSimulationKogitoDMNDataManager {
     }
 
     private String retrieveTypeRef(String typeRef) {
-        if (typeRef.contains(".")) {
+        if (typeRef != null && typeRef.contains(".")) {
             return typeRef.substring(typeRef.lastIndexOf('.') + 1);
         } else {
             return typeRef;
