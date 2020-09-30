@@ -89,31 +89,32 @@ public class KogitoScenarioSimulationBuilder {
                                                 final String value,
                                                 final Callback<ScenarioSimulationModel> populateEditorCommand,
                                                 final ErrorCallback<String> dmnContentErrorCallback) {
+        ScenarioSimulationModel model = new ScenarioSimulationModel();
         switch (type) {
             case RULE:
-                populateRULE(value, populateEditorCommand);
+                populateRULE(model, value, populateEditorCommand);
                 break;
             case DMN:
-                populateDMN(value, populateEditorCommand, dmnContentErrorCallback);
+                populateDMN(model, value, populateEditorCommand, dmnContentErrorCallback);
                 break;
             default:
                 throw new IllegalArgumentException("Impossible to map");
         }
     }
 
-    private void populateRULE(final String dmoSession,
-                              final Callback<ScenarioSimulationModel> populateEditorCommand) {
-        ScenarioSimulationModel model = new ScenarioSimulationModel();
+    protected void populateRULE(final ScenarioSimulationModel model,
+                                final String dmoSession,
+                                final Callback<ScenarioSimulationModel> populateEditorCommand) {
         model.setSimulation(createRULESimulation());
         model.setBackground(createBackground());
         model.setSettings(createRULESettings(dmoSession));
         populateEditorCommand.callback(model);
     }
 
-    private void populateDMN(final String dmnFilePath,
-                             final Callback<ScenarioSimulationModel> populateEditorCommand,
-                             final ErrorCallback<String> dmnContentErrorCallback) {
-        ScenarioSimulationModel model = new ScenarioSimulationModel();
+    protected void populateDMN(final ScenarioSimulationModel model,
+                               final String dmnFilePath,
+                               final Callback<ScenarioSimulationModel> populateEditorCommand,
+                               final ErrorCallback<String> dmnContentErrorCallback) {
         model.setBackground(createBackground());
         populateDMNSimulationAndSettings(model, dmnFilePath, populateEditorCommand, dmnContentErrorCallback);
     }
@@ -138,10 +139,10 @@ public class KogitoScenarioSimulationBuilder {
         return toReturn;
     }
 
-    private void populateDMNSimulationAndSettings(final ScenarioSimulationModel toPopulate,
-                                                  final String dmnFilePath,
-                                                  final Callback<ScenarioSimulationModel> populateEditorCommand,
-                                                  final ErrorCallback<String> dmnContentErrorCallback) {
+    protected void populateDMNSimulationAndSettings(final ScenarioSimulationModel toPopulate,
+                                                    final String dmnFilePath,
+                                                    final Callback<ScenarioSimulationModel> populateEditorCommand,
+                                                    final ErrorCallback<String> dmnContentErrorCallback) {
         String dmnFileName = dmnFilePath.substring(dmnFilePath.lastIndexOf('/') + 1);
         final Path dmnPath = PathFactory.newPath(dmnFileName, dmnFilePath);
         dmnMarshallerService.retrieveDMNContent(dmnPath,
@@ -162,7 +163,7 @@ public class KogitoScenarioSimulationBuilder {
         };
     }
 
-    private Background createBackground() {
+    protected Background createBackground() {
         Background toReturn = new Background();
         ScesimModelDescriptor simulationDescriptor = toReturn.getScesimModelDescriptor();
         int index = toReturn.getUnmodifiableData().size() + 1;
@@ -177,8 +178,7 @@ public class KogitoScenarioSimulationBuilder {
                           simulationDescriptor.getFactMappings().size());
         return toReturn;
     }
-
-    private Settings createRULESettings(final String dmoSession) {
+    protected Settings createRULESettings(final String dmoSession) {
         Settings toReturn = new Settings();
         toReturn.setType(ScenarioSimulationModel.Type.RULE);
         toReturn.setDmoSession(dmoSession);

@@ -27,21 +27,27 @@ import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.scenariosimulation.api.model.FactMappingValueType;
+import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.ScesimModelDescriptor;
 import org.drools.scenariosimulation.api.model.Simulation;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.services.ScenarioSimulationKogitoDMNMarshallerService;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
-import org.junit.Before;
+import org.jboss.errai.common.client.api.ErrorCallback;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
+import org.uberfire.client.callbacks.Callback;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -49,11 +55,43 @@ import static org.mockito.Mockito.when;
 @RunWith(GwtMockitoTestRunner.class)
 public class KogitoScenarioSimulationBuilderTest {
 
-    public KogitoScenarioSimulationBuilder kogitoScenarioSimulationBuilderSpy;
+    @InjectMocks @Spy
+    private KogitoScenarioSimulationBuilder kogitoScenarioSimulationBuilderSpy;
+    @Mock
+    private ScenarioSimulationKogitoDMNDataManager kogitoDMNDataManagerMock;
+    @Mock
+    private ScenarioSimulationKogitoDMNMarshallerService dmnMarshallerServiceMock;
+    @Mock
+    private ScenarioSimulationModel scenarioSimulationModelMock;
+    @Mock
+    private Callback<ScenarioSimulationModel> callbackMock;
+    @Mock
+    private ErrorCallback<String> errorCallbackMock;
 
-    @Before
-    public void setup() {
-        kogitoScenarioSimulationBuilderSpy = spy(new KogitoScenarioSimulationBuilder());
+    @Test
+    public void populateScenarioSimulationModelRULE() {
+        kogitoScenarioSimulationBuilderSpy.populateScenarioSimulationModel(ScenarioSimulationModel.Type.RULE, "value", callbackMock, errorCallbackMock);
+        verify(kogitoScenarioSimulationBuilderSpy, times(1)).populateRULE(isA(ScenarioSimulationModel.class),eq("value"), eq(callbackMock));
+    }
+
+    @Test
+    public void populateScenarioSimulationModelDMN() {
+        kogitoScenarioSimulationBuilderSpy.populateScenarioSimulationModel(ScenarioSimulationModel.Type.DMN, "value", callbackMock, errorCallbackMock);
+        verify(kogitoScenarioSimulationBuilderSpy, times(1)).populateDMN(isA(ScenarioSimulationModel.class), eq("value"), eq(callbackMock), eq(errorCallbackMock));
+    }
+
+    @Test
+    public void populateRule() {
+        ScenarioSimulationModel model = new ScenarioSimulationModel();
+        kogitoScenarioSimulationBuilderSpy.populateRULE(model, "session", callbackMock);
+        verify(kogitoScenarioSimulationBuilderSpy, times(1)).createRULESimulation();
+        verify(kogitoScenarioSimulationBuilderSpy, times(1)).createBackground();
+        verify(kogitoScenarioSimulationBuilderSpy, times(1)).createRULESettings(eq("session"));
+        verify(callbackMock, times(1)).callback(eq(model));
+        assertNotNull(model);
+        assertNotNull(model.getBackground());
+        assertNotNull(model.getSimulation());
+        assertNotNull(model.getSettings());
     }
 
     @Test
