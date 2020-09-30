@@ -31,5 +31,6 @@ public class KogitoDMNServiceRuntimeImpl extends AbstractKogitoDMNService {
     @Override
     public void getDMNContent(Path path, RemoteCallback<String> remoteCallback, ErrorCallback<Object> errorCallback) {
         resourceContentService.loadFile(path.toURI(), remoteCallback, errorCallback);
+        System.out.println("Test");
     }
 }
