@@ -19,7 +19,6 @@
     <wildfly.home>${project.build.directory}/wildfly-${version.org.wildfly}</wildfly.home>
     <gwt.helper.includes>Client,Marshaller,KogitoEditor,WebappBase</gwt.helper.includes>
     <gwt.helper.rootDirectories>${project.parent.basedir}/</gwt.helper.rootDirectories>
-    <java.module.name>org.drools.wb.scenariosimulation.editor.kogito.runtime</java.module.name>
   </properties>
 
   <dependencies>
