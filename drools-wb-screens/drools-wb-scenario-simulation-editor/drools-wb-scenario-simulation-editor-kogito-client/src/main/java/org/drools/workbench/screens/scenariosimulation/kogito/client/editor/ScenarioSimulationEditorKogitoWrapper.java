@@ -436,7 +436,8 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
             final ScenarioSimulationModel.Type selectedType = scenarioSimulationKogitoCreationPopupPresenter.getSelectedType();
             if (selectedType == null) {
                 scenarioSimulationEditorPresenter.sendNotification(ScenarioSimulationEditorConstants.INSTANCE.missingSelectedType(),
-                                                                   NotificationEvent.NotificationType.ERROR);
+                                                                   NotificationEvent.NotificationType.ERROR,
+                                                                   false);
                 return;
             }
             gotoPath(scesimPath);
@@ -444,7 +445,8 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
                 String dmnPath = scenarioSimulationKogitoCreationPopupPresenter.getSelectedPath();
                 if (dmnPath == null || dmnPath.isEmpty()) {
                     scenarioSimulationEditorPresenter.sendNotification(ScenarioSimulationEditorConstants.INSTANCE.missingDmnPath(),
-                                                                       NotificationEvent.NotificationType.ERROR);
+                                                                       NotificationEvent.NotificationType.ERROR,
+                                                                       false);
                     return;
                 }
                 scenarioSimulationBuilder.populateScenarioSimulationModelDMN(dmnPath,
@@ -461,7 +463,8 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
         return (message, throwable) -> {
             scenarioSimulationEditorPresenter.sendNotification(ScenarioSimulationEditorConstants.INSTANCE.dmnPathErrorDetailedLabel(dmnFilePath,
                                                                                                                                     message.toString()),
-                                                               NotificationEvent.NotificationType.ERROR);
+                                                               NotificationEvent.NotificationType.ERROR,
+                                                               false);
             return false;
         };
     }
