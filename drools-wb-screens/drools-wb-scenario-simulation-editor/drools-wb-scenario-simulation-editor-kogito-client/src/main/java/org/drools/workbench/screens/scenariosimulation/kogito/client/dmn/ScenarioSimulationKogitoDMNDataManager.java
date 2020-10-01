@@ -86,7 +86,7 @@ public class ScenarioSimulationKogitoDMNDataManager {
      */
     protected ClientDMNType getDMNTypeFromMaps(final Map<String, ClientDMNType> dmnTypesMap,
                                                final Map<QName, String> source) {
-        String typeRef = retrieveTypeRef(source.get(TYPEREF_QNAME));
+        String typeRef = getFilteredTypeRef(source.get(TYPEREF_QNAME));
         if (typeRef == null) {
             typeRef = BuiltInType.ANY.getName();
         }
@@ -199,10 +199,10 @@ public class ScenarioSimulationKogitoDMNDataManager {
 
         /* Inheriting fields defined from item's typeRef, which represent its "super item" */
         /* This is required to define DMNType fields and isCollection / isComposite fields */
-        String typeRef = itemDefinition.getTypeRef();
+        String typeRef = getFilteredTypeRef(itemDefinition.getTypeRef());
         if (typeRef != null) {
             final ClientDMNType superDmnType = getOrCreateDMNType(allDefinitions,
-                                                                  retrieveTypeRef(typeRef),
+                                                                  typeRef,
                                                                   namespace,
                                                                   dmnTypesDataMap);
             if (superDmnType != null) {
@@ -247,14 +247,14 @@ public class ScenarioSimulationKogitoDMNDataManager {
 
             for (int i = 0; i < jsitItemDefinitionFields.size(); i++) {
                 final JSITItemDefinition jsitItemDefinitionField = Js.uncheckedCast(jsitItemDefinitionFields.get(i));
-                final String typeRef = jsitItemDefinitionField.getTypeRef();
+                final String typeRef = getFilteredTypeRef(jsitItemDefinitionField.getTypeRef());
                 final List<JSITItemDefinition> subfields = jsitItemDefinitionField.getItemComponent();
                 final boolean hasSubFields = subfields != null && !subfields.isEmpty();
                 ClientDMNType fieldDMNType;
                 /* Retrieving field ClientDMNType */
                 if (typeRef != null && !hasSubFields) {
                     /* The field refers to a DMType which must be present in dmnTypesMap */
-                    fieldDMNType = getOrCreateDMNType(allItemDefinitions, retrieveTypeRef(typeRef), namespace, dmnTypesMap);
+                    fieldDMNType = getOrCreateDMNType(allItemDefinitions, typeRef, namespace, dmnTypesMap);
                 } else if (typeRef == null && hasSubFields) {
                     /* In this case we are handling an "in place" Structure type not defined in allItemDefinition list.
                      * Therefore, a new DMNType must be created and then it manages its defined subfields in recursive way */
@@ -553,7 +553,14 @@ public class ScenarioSimulationKogitoDMNDataManager {
         return toReturn;
     }
 
-    private String retrieveTypeRef(String typeRef) {
+    /**
+     * In case of typeRef which points to an imported DMN model, eg. external.tType, the type is normalized
+     * to remove the prefix, in order to handle a DMNType without a prefix in Test Scenario Editor.
+     * This should be used everywhere a typeRef is retrieved
+     * @param typeRef
+     * @return
+     */
+    private String getFilteredTypeRef(String typeRef) {
         if (typeRef != null && typeRef.contains(".")) {
             return typeRef.substring(typeRef.lastIndexOf('.') + 1);
         } else {

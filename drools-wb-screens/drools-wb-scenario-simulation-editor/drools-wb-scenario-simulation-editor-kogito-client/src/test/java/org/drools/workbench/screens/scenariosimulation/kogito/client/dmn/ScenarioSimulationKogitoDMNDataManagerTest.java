@@ -393,6 +393,52 @@ public class ScenarioSimulationKogitoDMNDataManagerTest {
     }
 
     @Test
+    public void testGetCustomInheritsImportedSimpleCustomDMNTypes() {
+        // imported.tPeople[string]
+        // tMen[tPeople]
+
+        final JSITItemDefinition tPeople = mock(JSITItemDefinition.class);
+        final JSITItemDefinition tMen = mock(JSITItemDefinition.class);
+
+        final String tPeopleType = "tPeopleType";
+        final String importedtPeopleType = "imported.tPeopleType";
+
+        final String tMenType = "tMenType";
+
+        when(tMen.getName()).thenReturn(tMenType);
+        when(tMen.getTypeRef()).thenReturn(importedtPeopleType);
+
+        when(tPeople.getName()).thenReturn(tPeopleType);
+        when(tPeople.getTypeRef()).thenReturn(BuiltInType.STRING.getName());
+
+        final List<JSITItemDefinition> definitions = Arrays.asList(tPeople, tMen);
+
+        final Map<String, ClientDMNType> dmnTypesMap = scenarioSimulationKogitoDMNDataManagerSpy.getDMNDataTypesMap(definitions, "namespace");
+
+        assertTrue(dmnTypesMap.containsKey(tPeopleType));
+
+        final ClientDMNType dmnPeopleType = dmnTypesMap.get(tPeopleType);
+
+        assertTrue(dmnPeopleType.getFields().isEmpty());
+        assertEquals(BuiltInType.STRING, dmnPeopleType.getFeelType());
+        assertFalse(dmnPeopleType.isCollection());
+        assertFalse(dmnPeopleType.isComposite());
+
+        final ClientDMNType dmnMenType = dmnTypesMap.get(tMenType);
+
+        assertTrue(dmnMenType.getFields().isEmpty());
+        assertEquals((BuiltInType.STRING), dmnMenType.getFeelType());
+        assertFalse(dmnMenType.isCollection());
+        assertFalse(dmnMenType.isComposite());
+
+        // It must contains all elements defined in BuiltInType ENUM
+        assertTrue(dmnTypesMap.size() == 16);
+        for (BuiltInType builtInType : BuiltInType.values()) {
+            Arrays.stream(builtInType.getNames()).forEach(name -> assertNotNull(dmnTypesMap.get(name)));
+        }
+    }
+
+    @Test
     public void testGetCustomCollectionInheritsSimpleCustomDMNTypes() {
         // tPeople[string]
         // tMen[tPeople] isCollection
