@@ -41,6 +41,7 @@ import org.drools.workbench.scenariosimulation.kogito.marshaller.js.callbacks.SC
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.callbacks.SCESIMUnmarshallCallback;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.JSIScenarioSimulationModelType;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.js.model.SCESIM;
+import org.drools.workbench.scenariosimulation.kogito.marshaller.mapper.JSIName;
 import org.drools.workbench.scenariosimulation.kogito.marshaller.mapper.JsUtils;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorWrapper;
@@ -372,13 +373,27 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     }
 
     protected void marshallContent(ScenarioSimulationModel scenarioSimulationModel, Promise.PromiseExecutorCallbackFn.ResolveCallbackFn<String> resolveCallbackFn) {
-        final JSIScenarioSimulationModelType jsiScenarioSimulationModelType = getJSIScenarioSimulationModelType(scenarioSimulationModel);
-        JsUtils.setValueOnWrapped(scesimContainer, jsiScenarioSimulationModelType);
+        if (scesimContainer == null) {
+            scesimContainer = Js.uncheckedCast(JsUtils.newWrappedInstance());
+            JsUtils.setNameOnWrapped(scesimContainer, makeJSINameForSCESIM());
+        }
+        JsUtils.setValueOnWrapped(scesimContainer, getJSIScenarioSimulationModelType(scenarioSimulationModel));
         SCESIMMainJs.marshall(scesimContainer, null, getJSInteropMarshallCallback(resolveCallbackFn));
     }
 
     protected void unmarshallContent(String toUnmarshal) {
         SCESIMMainJs.unmarshall(toUnmarshal, SCESIM, getJSInteropUnmarshallCallback());
+    }
+
+    private JSIName makeJSINameForSCESIM() {
+        final JSIName jsiName = JSIScenarioSimulationModelType.getJSIName();
+        jsiName.setPrefix("");
+        jsiName.setLocalPart("ScenarioSimulationModel");
+        final String key = "{" + jsiName.getNamespaceURI() + "}" + jsiName.getLocalPart();
+        final String keyString = "{" + jsiName.getNamespaceURI() + "}" + jsiName.getPrefix() + ":" + jsiName.getLocalPart();
+        jsiName.setKey(key);
+        jsiName.setString(keyString);
+        return jsiName;
     }
 
     protected SCESIMMarshallCallback getJSInteropMarshallCallback(Promise.PromiseExecutorCallbackFn.ResolveCallbackFn<String> resolveCallbackFn) {
