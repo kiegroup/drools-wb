@@ -457,10 +457,10 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
         };
     }
 
-    private ErrorCallback<String> getDMNContentErrorCallback(String dmnFilePath) {
+    private ErrorCallback<Object> getDMNContentErrorCallback(String dmnFilePath) {
         return (message, throwable) -> {
             scenarioSimulationEditorPresenter.sendNotification(ScenarioSimulationEditorConstants.INSTANCE.dmnPathErrorDetailedLabel(dmnFilePath,
-                                                                                                                                    message),
+                                                                                                                                    message.toString()),
                                                                NotificationEvent.NotificationType.ERROR);
             return false;
         };

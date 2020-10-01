@@ -23,5 +23,5 @@ public interface ScenarioSimulationKogitoResourceContentService {
 
     void getFileContent(final Path path,
                         final RemoteCallback<String> remoteCallback,
-                        final ErrorCallback<String> errorCallback);
+                        final ErrorCallback<Object> errorCallback);
 }

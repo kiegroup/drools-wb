@@ -42,7 +42,7 @@ public class ScenarioSimulationKogitoDMNMarshallerService {
 
     public void getDMNContent(final Path dmnFilePath,
                               final Callback<JSITDefinitions> callback,
-                              final ErrorCallback<String> errorCallback) {
+                              final ErrorCallback<Object> errorCallback) {
         resourceContentService.getFileContent(dmnFilePath,
                                               getDMNFileContentCallback(dmnFilePath, callback, errorCallback),
                                               errorCallback);
@@ -50,13 +50,13 @@ public class ScenarioSimulationKogitoDMNMarshallerService {
 
     private RemoteCallback<String> getDMNFileContentCallback(final Path dmnFilePath,
                                                              final Callback<JSITDefinitions> callback,
-                                                             final ErrorCallback<String> errorCallback) {
+                                                             final ErrorCallback<Object> errorCallback) {
        return dmnContent -> unmarshallDMN(dmnContent, getDMN12UnmarshallCallback(dmnFilePath, callback, errorCallback));
     }
 
     protected DMN12UnmarshallCallback getDMN12UnmarshallCallback(final Path dmnFilePath,
                                                                  final Callback<JSITDefinitions> callback,
-                                                                 final ErrorCallback<String> errorCallback) {
+                                                                 final ErrorCallback<Object> errorCallback) {
         return dmn12 -> {
             final JSITDefinitions jsitDefinitions = uncheckedCast(dmn12);
             if (jsitDefinitions.getImport() != null && !jsitDefinitions.getImport().isEmpty()) {

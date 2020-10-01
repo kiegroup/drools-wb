@@ -67,10 +67,10 @@ public class KogitoDMNDataManagementStrategy extends AbstractDMNDataManagementSt
        };
    }
 
-    private ErrorCallback<String> getDMNContentErrorCallback(String dmnFilePath) {
+    private ErrorCallback<Object> getDMNContentErrorCallback(String dmnFilePath) {
         return (message, throwable) -> {
             eventBus.fireEvent(new ScenarioNotificationEvent(ScenarioSimulationEditorConstants.INSTANCE.dmnPathErrorDetailedLabel(dmnFilePath,
-                                                                                                                                          message),
+                                                                                                                                  message.toString()),
                                                              NotificationEvent.NotificationType.ERROR));
             return false;
         };

@@ -148,7 +148,7 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
     @Captor
     private ArgumentCaptor<Callback<ScenarioSimulationModel>> callbackArgumentCaptor;
     @Captor
-    private ArgumentCaptor<ErrorCallback<String>> errorCallbackArgumentCaptor;
+    private ArgumentCaptor<ErrorCallback<Object>> errorCallbackArgumentCaptor;
     @Captor
     private ArgumentCaptor<Path> pathArgumentCaptor;
     @Captor

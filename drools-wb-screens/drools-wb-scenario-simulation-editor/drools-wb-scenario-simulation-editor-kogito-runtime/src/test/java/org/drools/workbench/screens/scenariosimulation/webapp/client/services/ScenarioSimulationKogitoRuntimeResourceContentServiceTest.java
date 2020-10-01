@@ -39,7 +39,7 @@ public class ScenarioSimulationKogitoRuntimeResourceContentServiceTest {
     @Mock
     private RemoteCallback<String> callbackMock;
     @Mock
-    private ErrorCallback<String> errorCallBackMock;
+    private ErrorCallback<Object> errorCallBackMock;
 
     @Test
     public void getFileContent() {

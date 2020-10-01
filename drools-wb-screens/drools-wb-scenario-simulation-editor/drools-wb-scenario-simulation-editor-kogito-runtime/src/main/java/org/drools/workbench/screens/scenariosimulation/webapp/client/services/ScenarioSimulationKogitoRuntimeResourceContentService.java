@@ -31,7 +31,7 @@ public class ScenarioSimulationKogitoRuntimeResourceContentService implements Sc
     @Override
     public void getFileContent(final Path path,
                                final RemoteCallback<String> remoteCallback,
-                               final ErrorCallback<String> errorCallback) {
+                               final ErrorCallback<Object> errorCallback) {
         resourceContentService.loadFile(path.toURI(), remoteCallback, errorCallback);
     }
 

@@ -64,7 +64,7 @@ public class KogitoScenarioSimulationBuilderTest {
     @Mock
     private Callback<ScenarioSimulationModel> callbackMock;
     @Mock
-    private ErrorCallback<String> errorCallbackMock;
+    private ErrorCallback<Object> errorCallbackMock;
     @Mock
     private FactModelTuple factModelTupleMock;
     @Mock

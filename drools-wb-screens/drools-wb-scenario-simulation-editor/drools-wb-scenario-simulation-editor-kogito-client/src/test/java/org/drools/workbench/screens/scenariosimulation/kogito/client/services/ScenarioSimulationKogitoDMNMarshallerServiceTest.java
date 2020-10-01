@@ -63,7 +63,7 @@ public class ScenarioSimulationKogitoDMNMarshallerServiceTest {
     @Mock
     private DMN12 importedDmn12Mock;
     @Mock
-    private ErrorCallback<String> errorCallbackMock;
+    private ErrorCallback<Object> errorCallbackMock;
     @Mock
     private JSITDefinitions jsitDefinitionsMock;
     @Mock

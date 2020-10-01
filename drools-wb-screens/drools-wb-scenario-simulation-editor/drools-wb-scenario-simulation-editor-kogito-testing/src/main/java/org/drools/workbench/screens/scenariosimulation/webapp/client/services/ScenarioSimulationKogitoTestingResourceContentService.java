@@ -30,7 +30,7 @@ public class ScenarioSimulationKogitoTestingResourceContentService implements Sc
     @Override
     public void getFileContent(final Path path,
                                final RemoteCallback<String> remoteCallback,
-                               final ErrorCallback<String> errorCallback) {
+                               final ErrorCallback<Object> errorCallback) {
         testingVFSService.loadFile(path, remoteCallback, errorCallback);
     }
 

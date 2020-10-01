@@ -71,7 +71,7 @@ public class KogitoDMNDataManagementStrategyTest {
     @Captor
     private ArgumentCaptor<Callback<JSITDefinitions>> callbackArgumentCaptor;
     @Captor
-    private ArgumentCaptor<ErrorCallback<String>> errorCallbackArgumentCaptor;
+    private ArgumentCaptor<ErrorCallback<Object>> errorCallbackArgumentCaptor;
     @Captor
     private ArgumentCaptor<ScenarioNotificationEvent> scenarioNotificationEventArgumentCaptor;
 
