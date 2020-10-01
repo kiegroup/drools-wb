@@ -91,14 +91,13 @@ public class ScenarioSimulationKogitoDMNMarshallerService {
                                                                                                 definitions,
                                                                                                 importedDefinitions,
                                                                                                 importsNumber);
-            MainJs.unmarshall(dmnContent, "", dmn12UnmarshallCallback);
+            unmarshallDMN(dmnContent, dmn12UnmarshallCallback);
         };
     }
-
-    private DMN12UnmarshallCallback getDMN12ImportsUnmarshallCallback(final Callback<JSITDefinitions> callback,
-                                                                      final JSITDefinitions definitions,
-                                                                      final List<JSITDefinitions> importedDefinitions,
-                                                                      final int importsNumber) {
+    protected DMN12UnmarshallCallback getDMN12ImportsUnmarshallCallback(final Callback<JSITDefinitions> callback,
+                                                                        final JSITDefinitions definitions,
+                                                                        final List<JSITDefinitions> importedDefinitions,
+                                                                        final int importsNumber) {
         return dmn12 -> {
             final JSITDefinitions jsitDefinitions = uncheckedCast(dmn12);
             importedDefinitions.add(jsitDefinitions);
