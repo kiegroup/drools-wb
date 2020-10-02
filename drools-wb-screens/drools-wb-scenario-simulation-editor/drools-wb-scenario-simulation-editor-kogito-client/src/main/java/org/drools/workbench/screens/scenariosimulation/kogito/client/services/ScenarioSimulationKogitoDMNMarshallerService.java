@@ -16,6 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.kogito.client.services;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -59,14 +60,18 @@ public class ScenarioSimulationKogitoDMNMarshallerService {
                                                                  final ErrorCallback<Object> errorCallback) {
         return dmn12 -> {
             final JSITDefinitions jsitDefinitions = uncheckedCast(dmn12);
+            final Map<String, Path> includedDMNImportsPaths = new HashMap<>();
             if (jsitDefinitions.getImport() != null && !jsitDefinitions.getImport().isEmpty()) {
-                final Map<String, Path> includedDMNImportsPaths = jsitDefinitions.getImport().stream()
-                        .filter(jsitImport -> jsitImport.getLocationURI().endsWith(".dmn"))
-                        .collect(Collectors.toMap(jsitImport -> jsitImport.getName(),
-                                                  jsitImport -> PathFactory.newPath(jsitImport.getLocationURI(),
-                                                                                    dmnFilePath.toURI().replace(dmnFilePath.getFileName(),
-                                                                                                                jsitImport.getLocationURI()))));
-
+                includedDMNImportsPaths.putAll(jsitDefinitions.getImport().stream()
+                    .filter(jsitImport -> jsitImport.getLocationURI().endsWith(".dmn"))
+                    .collect(Collectors.toMap(jsitImport -> jsitImport.getName(),
+                                              jsitImport -> PathFactory.newPath(jsitImport.getLocationURI(),
+                                                                                dmnFilePath.toURI().replace(dmnFilePath.getFileName(),
+                                                                                                            jsitImport.getLocationURI())))));
+            }
+            if (includedDMNImportsPaths.isEmpty()) {
+                callback.callback(jsitDefinitions);
+            } else {
                 for (Map.Entry<String, Path> importPath : includedDMNImportsPaths.entrySet()) {
                     final List<JSITDefinitions> importedItemDefinitions = new ArrayList<>();
                     resourceContentService.getFileContent(importPath.getValue(),
@@ -76,8 +81,6 @@ public class ScenarioSimulationKogitoDMNMarshallerService {
                                                                                             includedDMNImportsPaths.size()),
                                                           errorCallback);
                 }
-            } else {
-                callback.callback(jsitDefinitions);
             }
         };
     }

@@ -130,6 +130,24 @@ public class ScenarioSimulationKogitoDMNMarshallerServiceTest {
         verify(jsitDefinitionsCallbackMock, times(1)).callback(jsitDefinitionsMock);
     }
 
+    @Test
+    public void getDMNContentWithImportsNotDMN() {
+        JSITImport jsitDMNImport = mock(JSITImport.class);
+        when(jsitDMNImport.getName()).thenReturn("testA");
+        when(jsitDMNImport.getLocationURI()).thenReturn("import1.pmml");
+        JSITImport jsitPMMLImport = mock(JSITImport.class);
+        when(jsitPMMLImport.getName()).thenReturn("testB");
+        when(jsitPMMLImport.getLocationURI()).thenReturn("import2.pmml");
+        List<JSITImport> imports = new ArrayList<>();
+        imports.add(jsitDMNImport);
+        imports.add(jsitPMMLImport);
+        doReturn(imports).when(jsitDefinitionsMock).getImport();
+        commonPreCallbackProcess();
+        verify(dmnMarshallerServiceSpy, times(1)).uncheckedCast(eq(dmn12Mock));
+        verify(jsitDefinitionsCallbackMock, times(1)).callback(jsitDefinitionsMock);
+        verify(dmnMarshallerServiceSpy, never()).getDMNImportContentRemoteCallback(any(), any(), any(), anyInt());
+    }
+
     private void commonPreCallbackProcess() {
         Path path = PathFactory.newPath("file.dmn", "src/file.dmn");
         dmnMarshallerServiceSpy.getDMNContent(path, jsitDefinitionsCallbackMock, errorCallbackMock);
