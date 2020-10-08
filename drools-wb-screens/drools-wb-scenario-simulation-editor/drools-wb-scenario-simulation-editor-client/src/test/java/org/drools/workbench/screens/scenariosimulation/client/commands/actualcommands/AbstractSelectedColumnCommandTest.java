@@ -331,7 +331,7 @@ public abstract class AbstractSelectedColumnCommandTest extends AbstractScenario
         verify(simulationDescriptorMock, times(1)).getFactMappingsByFactName(eq(factIdentifierMock.getName()));
         assertEquals(Optional.empty(), retrieved);
         List<FactMapping> factMappingList = new ArrayList<>();
-        when(simulationDescriptorMock.getFactMappingsByFactName(FACT_IDENTIFIER_NAME)).thenReturn(factMappingList);
+        when(simulationDescriptorMock.getFactMappingsByFactName(FACT_IDENTIFIER_NAME)).thenReturn(factMappingList.stream());
         factMappingList.add(factMappingMock);
         String EXPRESSION_ALIAS = "EXPRESSION_ALIAS";
         when(factMappingMock.getExpressionAlias()).thenReturn(EXPRESSION_ALIAS);
