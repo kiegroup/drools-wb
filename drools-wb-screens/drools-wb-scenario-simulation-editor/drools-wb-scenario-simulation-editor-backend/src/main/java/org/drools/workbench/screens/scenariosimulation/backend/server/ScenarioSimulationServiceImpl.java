@@ -124,6 +124,15 @@ public class ScenarioSimulationServiceImpl
     private SafeSessionInfo safeSessionInfo;
     private Properties props = new Properties();
 
+    {
+        String propertyFileName = "kie.properties";
+        try {
+            props.load(ScenarioSimulationServiceImpl.class.getClassLoader().getResourceAsStream(propertyFileName));
+        } catch (IOException e) {
+            throw new IllegalStateException("Impossible to retrieve property file " + propertyFileName, e);
+        }
+    }
+
     public ScenarioSimulationServiceImpl() {
     }
 
@@ -134,13 +143,6 @@ public class ScenarioSimulationServiceImpl
 
     @PostConstruct
     public void init() {
-        String propertyFileName = "kie.properties";
-        try {
-            props.load(ScenarioSimulationServiceImpl.class.getClassLoader().getResourceAsStream(propertyFileName));
-        } catch (IOException e) {
-            throw new IllegalStateException("Impossible to retrieve property file " + propertyFileName, e);
-        }
-
         saveAndRenameService.init(this);
     }
 
