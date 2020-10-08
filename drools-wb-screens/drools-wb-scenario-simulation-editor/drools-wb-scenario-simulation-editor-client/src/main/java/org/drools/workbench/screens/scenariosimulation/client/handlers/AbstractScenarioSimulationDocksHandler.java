@@ -97,6 +97,10 @@ public abstract class AbstractScenarioSimulationDocksHandler extends AbstractWor
         authoringWorkbenchDocks.expandAuthoringDock(toolsDock);
     }
 
+    public void expandSettingsDock() {
+        authoringWorkbenchDocks.expandAuthoringDock(settingsDock);
+    }
+
     public abstract void expandTestResultsDock();
 
     public void resetDocks() {

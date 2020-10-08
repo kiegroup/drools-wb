@@ -46,7 +46,7 @@ public class SetHeaderCellValueCommand extends AbstractScenarioGridCommand {
     }
 
     @Override
-    protected void internalExecute(ScenarioSimulationContext context) throws Exception {
+    protected void internalExecute(ScenarioSimulationContext context)  {
         final ScenarioSimulationContext.Status status = context.getStatus();
         String headerCellValue = status.getHeaderCellValue();
         if (isInstanceHeader) {
@@ -57,13 +57,13 @@ public class SetHeaderCellValueCommand extends AbstractScenarioGridCommand {
         context.getAbstractScesimGridModelByGridWidget(gridWidget).updateHeader(status.getColumnIndex(), status.getRowIndex(), headerCellValue);
     }
 
-    protected void validateInstanceHeader(ScenarioSimulationContext context, String headerCellValue, int columnIndex) throws Exception {
+    protected void validateInstanceHeader(ScenarioSimulationContext context, String headerCellValue, int columnIndex) {
         List<String> instanceNameElements = Collections.unmodifiableList(Arrays.asList(headerCellValue.split("\\.")));
         boolean isADataType = !headerCellValue.endsWith(".") && instanceNameElements.size() == 1 && context.getDataObjectFieldsMap().containsKey(instanceNameElements.get(0));
         context.getAbstractScesimGridModelByGridWidget(gridWidget).validateInstanceHeaderUpdate(headerCellValue, columnIndex, isADataType);
     }
 
-    protected void validatePropertyHeader(ScenarioSimulationContext context, String headerCellValue, int columnIndex) throws Exception {
+    protected void validatePropertyHeader(ScenarioSimulationContext context, String headerCellValue, int columnIndex) {
         List<String> propertyNameElements = Collections.unmodifiableList(Arrays.asList(headerCellValue.split("\\.")));
         final FactMapping factMappingByIndex = context.getAbstractScesimModelByGridWidget(gridWidget).getScesimModelDescriptor().getFactMappingByIndex(columnIndex);
         String className = factMappingByIndex.getFactIdentifier().getClassNameWithoutPackage();

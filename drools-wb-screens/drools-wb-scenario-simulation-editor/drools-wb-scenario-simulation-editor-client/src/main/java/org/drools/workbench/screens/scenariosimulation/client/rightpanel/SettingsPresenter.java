@@ -29,6 +29,7 @@ import com.google.gwt.event.shared.EventBus;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.workbench.screens.scenariosimulation.client.dropdown.SettingsScenarioSimulationDropdown;
+import org.drools.workbench.screens.scenariosimulation.client.events.UpdateSettingsDataEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ValidateSimulationEvent;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
@@ -47,8 +48,6 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
     public static final String IDENTIFIER = "org.drools.scenariosimulation.Settings";
 
     protected EventBus eventBus;
-
-    protected Settings settings;
 
     protected Command saveCommand;
 
@@ -76,7 +75,6 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
 
     @Override
     public void setScenarioType(ScenarioSimulationModel.Type scenarioType, Settings settings, String fileName) {
-        this.settings = settings;
         view.getScenarioType().setInnerText(scenarioType.name());
         view.getFileName().setValue(fileName);
         view.getSkipFromBuild().setChecked(settings.isSkipFromBuild());
@@ -122,45 +120,52 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
         view.getDmnNamespace().setValue(Optional.ofNullable(settings.getDmnNamespace()).orElse(""));
         view.getDmnFilePathErrorLabel().getStyle().setDisplay(Style.Display.NONE);
         view.getDmnFilePathErrorLabel().setInnerText("");
-        settingsScenarioSimulationDropdown.registerOnMissingValueHandler(this::setDmnErrorPath);
+        settingsScenarioSimulationDropdown.registerOnMissingValueHandler(() -> setDmnErrorPath(settings.getDmnFilePath()));
         settingsScenarioSimulationDropdown.registerOnChangeHandler(this::validateSimulation);
         settingsScenarioSimulationDropdown.loadAssets(settings.getDmnFilePath());
     }
 
     @Override
     public void syncDmoSession() {
-        settings.setDmoSession(getCleanValue(() -> view.getDmoSession().getValue()));
+        String dmoSession = getCleanValue(() -> view.getDmoSession().getValue());
+        eventBus.fireEvent(new UpdateSettingsDataEvent(settingsToUpdate -> settingsToUpdate.setDmoSession(dmoSession)));
     }
 
     @Override
     public void syncRuleFlowGroup() {
-        settings.setRuleFlowGroup(getCleanValue(() -> view.getRuleFlowGroup().getValue()));
+        String ruleFlow = getCleanValue(() -> view.getRuleFlowGroup().getValue());
+        eventBus.fireEvent(new UpdateSettingsDataEvent(settingsToUpdate -> settingsToUpdate.setDmoSession(ruleFlow)));
     }
 
     @Override
     public void syncStateless() {
-        settings.setStateless(view.getStateless().isChecked());
+        boolean isStateless = view.getStateless().isChecked();
+        eventBus.fireEvent(new UpdateSettingsDataEvent(settingsToUpdate -> settingsToUpdate.setStateless(isStateless)));
     }
 
     @Override
     public void syncDmnFilePath() {
-        String value = settingsScenarioSimulationDropdown.getValue().map(KieAssetsDropdownItem::getValue).orElse("");
-        settings.setDmnFilePath(getCleanValue(() -> value));
+        String dmnFilePath = getCleanValue(() -> settingsScenarioSimulationDropdown.getValue().map(KieAssetsDropdownItem::getValue).orElse(""));
+        eventBus.fireEvent(new UpdateSettingsDataEvent(settingsToUpdate -> {
+            settingsToUpdate.setDmnFilePath(dmnFilePath);
+            eventBus.fireEvent(new ValidateSimulationEvent());
+        }));
     }
 
     @Override
     public void syncSkipFromBuild() {
-        settings.setSkipFromBuild(view.getSkipFromBuild().isChecked());
+        boolean isSkipFromBuild = view.getSkipFromBuild().isChecked();
+        eventBus.fireEvent(new UpdateSettingsDataEvent(settingsToUpdate -> settingsToUpdate.setSkipFromBuild(isSkipFromBuild)));
     }
 
     /**
      * It sets an error message to <code>dmnPathErrorLabel</code> span element
      * This method should be called in case of INVALID DMN file path.
      */
-    protected void setDmnErrorPath() {
+    protected void setDmnErrorPath(String requiredDMNFilePath) {
         view.getDmnFilePathErrorLabel().getStyle().setDisplay(Style.Display.INLINE);
         view.getDmnFilePathErrorLabel().setInnerText(
-                ScenarioSimulationEditorConstants.INSTANCE.dmnPathErrorLabel(settings.getDmnFilePath()));
+                ScenarioSimulationEditorConstants.INSTANCE.dmnPathErrorLabel(requiredDMNFilePath));
     }
 
     /**
@@ -179,7 +184,6 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
             this.syncDmnFilePath();
             view.getDmnFilePathErrorLabel().getStyle().setDisplay(Style.Display.NONE);
             view.getDmnFilePathErrorLabel().setInnerText("");
-            eventBus.fireEvent(new ValidateSimulationEvent());
         }
     }
 

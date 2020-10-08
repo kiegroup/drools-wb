@@ -22,6 +22,7 @@ import java.util.Optional;
 import org.drools.scenariosimulation.api.model.Background;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMappingType;
+import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationViolation;
@@ -86,6 +87,7 @@ public abstract class AbstractScenarioGridCommand extends AbstractScenarioSimula
         try {
             final Simulation simulationToRestore = restorableStatus.getSimulation();
             final Background backgroundToRestore = restorableStatus.getBackground();
+            final Settings settingsToRestore = restorableStatus.getSettings();
             if (simulationToRestore == null) {
                 throw new IllegalStateException("Simulation is null in restorable status");
             }
@@ -95,10 +97,12 @@ public abstract class AbstractScenarioGridCommand extends AbstractScenarioSimula
             final ScenarioSimulationContext.Status originalStatus = context.getStatus().cloneStatus();
             context.getSimulationGrid().getModel().clearSelections();
             context.getBackgroundGrid().getModel().clearSelections();
-            context.getSimulationGrid().setContent(simulationToRestore, context.getSettings().getType());
+            context.getSimulationGrid().setContent(simulationToRestore, context.getStatus().getSettings().getType());
             context.getScenarioSimulationEditorPresenter().getModel().setSimulation(simulationToRestore);
-            context.getBackgroundGrid().setContent(backgroundToRestore, context.getSettings().getType());
+            context.getBackgroundGrid().setContent(backgroundToRestore, context.getStatus().getSettings().getType());
             context.getScenarioSimulationEditorPresenter().getModel().setBackground(backgroundToRestore);
+            context.getScenarioSimulationEditorPresenter().getModel().setSettings(settingsToRestore);
+            context.getScenarioSimulationEditorPresenter().reloadSettings();
             context.getScenarioSimulationEditorPresenter().reloadTestTools(true);
             context.setStatus(restorableStatus);
             restorableStatus = originalStatus;

@@ -16,6 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.dropdown;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -44,8 +45,10 @@ public class SettingsScenarioSimulationDropdown extends ScenarioSimulationDropdo
      * @param currentValue
      */
     public void loadAssets(String currentValue) {
-        this.currentValue = currentValue;
-        super.loadAssets();
+        if (!Objects.equals(this.currentValue, currentValue)) {
+            this.currentValue = currentValue;
+            super.loadAssets();
+        }
     }
 
     public void registerOnMissingValueHandler(final Command onMissingValueHandler) {

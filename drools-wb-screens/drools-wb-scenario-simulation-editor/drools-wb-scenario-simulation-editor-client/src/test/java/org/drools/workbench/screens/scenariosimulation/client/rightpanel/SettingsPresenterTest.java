@@ -86,7 +86,6 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
 
         this.settingsPresenterSpy = spy(new SettingsPresenter(settingsScenarioSimulationDropdownMock, settingsViewMock) {
             {
-                this.settings = settingsSpy;
                 this.settingsScenarioSimulationDropdown = settingsScenarioSimulationDropdownMock;
                 this.saveCommand = saveCommandMock;
                 this.eventBus = eventBusMock;
@@ -184,7 +183,7 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
 
     @Test
     public void setDmnErrorPath() {
-        settingsPresenterSpy.setDmnErrorPath();
+        settingsPresenterSpy.setDmnErrorPath("");
         verify(dmnFilePathErrorLabelStyleMock, times(1)).setDisplay(eq(Style.Display.INLINE));
         verify(dmnFilePathErrorLabelMock, times(1)).setInnerText(
                 eq(ScenarioSimulationEditorConstants.INSTANCE.dmnPathErrorLabel(settingsSpy.getDmnFilePath())));

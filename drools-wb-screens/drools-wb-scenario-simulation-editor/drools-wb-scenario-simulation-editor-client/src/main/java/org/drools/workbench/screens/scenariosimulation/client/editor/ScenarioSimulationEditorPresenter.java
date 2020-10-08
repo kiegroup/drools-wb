@@ -208,6 +208,10 @@ public class ScenarioSimulationEditorPresenter {
         abstractScenarioSimulationDocksHandler.expandToolsDock();
     }
 
+    public void expandSettingsDock() {
+        abstractScenarioSimulationDocksHandler.expandSettingsDock();
+    }
+
     public ScenarioSimulationView getView() {
         return view;
     }
@@ -231,6 +235,13 @@ public class ScenarioSimulationEditorPresenter {
         }
     }
 
+    /**
+     * To be called to force settings panel reload
+     */
+    public void reloadSettings() {
+        populateRightDocks(SettingsPresenter.IDENTIFIER);
+    }
+
     public void onRunScenario() {
         List<Integer> indexes = IntStream.range(0, context.getStatus().getSimulation().getUnmodifiableData().size())
                 .boxed()
@@ -241,8 +252,9 @@ public class ScenarioSimulationEditorPresenter {
     public void onRunScenario(List<Integer> indexOfScenarioToRun) {
         scenarioMainGridWidget.resetErrors();
         scenarioBackgroundGridWidget.resetErrors();
-        model.setSimulation(scenarioMainGridWidget.getScenarioSimulationContext().getStatus().getSimulation());
-        model.setBackground(scenarioMainGridWidget.getScenarioSimulationContext().getStatus().getBackground());
+        model.setSimulation(context.getStatus().getSimulation());
+        model.setBackground(context.getStatus().getBackground());
+        model.setSettings(context.getStatus().getSettings());
         Simulation simulation = model.getSimulation();
         List<ScenarioWithIndex> toRun = simulation.getScenarioWithIndex().stream()
                 .filter(elem -> indexOfScenarioToRun.contains(elem.getIndex() - 1))
@@ -251,7 +263,7 @@ public class ScenarioSimulationEditorPresenter {
         scenarioSimulationEditorWrapper.onRunScenario(getRefreshModelCallback(),
                                                       new ScenarioSimulationHasBusyIndicatorDefaultErrorCallback(view),
                                                       simulation.getScesimModelDescriptor(),
-                                                      context.getSettings(),
+                                                      model.getSettings(),
                                                       toRun,
                                                       model.getBackground());
     }
@@ -457,7 +469,7 @@ public class ScenarioSimulationEditorPresenter {
 
     public void validateSimulation() {
         scenarioSimulationEditorWrapper.validate(context.getStatus().getSimulation(),
-                                                 context.getSettings(),
+                                                 context.getStatus().getSettings(),
                                                  getValidationCallback());
     }
 
@@ -503,12 +515,12 @@ public class ScenarioSimulationEditorPresenter {
             cleanReadOnlyColumn(scesimModel);
             if (scesimModel instanceof Simulation) {
                 model.setSimulation((Simulation) scesimModel);
-                scenarioMainGridWidget.setContent(model.getSimulation(), context.getSettings().getType());
+                scenarioMainGridWidget.setContent(model.getSimulation(), model.getSettings().getType());
                 context.getStatus().setSimulation(model.getSimulation());
                 scenarioMainGridWidget.onResize();
             } else if (scesimModel instanceof Background) {
                 model.setBackground((Background) scesimModel);
-                scenarioBackgroundGridWidget.setContent(model.getBackground(), context.getSettings().getType());
+                scenarioBackgroundGridWidget.setContent(model.getBackground(), model.getSettings().getType());
                 context.getStatus().setBackground(model.getBackground());
                 scenarioBackgroundGridWidget.onResize();
             }
@@ -584,14 +596,14 @@ public class ScenarioSimulationEditorPresenter {
         this.dataManagementStrategy = dataManagementStrategy;
         this.model = model;
         scenarioSimulationEditorWrapper.addBackgroundPage(scenarioBackgroundGridWidget);
-        context.setSettings(model.getSettings());
-        scenarioBackgroundGridWidget.setContent(model.getBackground(), context.getSettings().getType());
+        context.getStatus().setSettings(model.getSettings());
+        context.getStatus().setSimulation(model.getSimulation());
+        context.getStatus().setBackground(model.getBackground());
+        scenarioMainGridWidget.setContent(model.getSimulation(), context.getStatus().getSettings().getType());
+        scenarioBackgroundGridWidget.setContent(model.getBackground(), context.getStatus().getSettings().getType());
         // NOTE: keep here initialization of docks related with model
         populateRightDocks(TestToolsPresenter.IDENTIFIER);
         populateRightDocks(SettingsPresenter.IDENTIFIER);
-        scenarioMainGridWidget.setContent(model.getSimulation(), context.getSettings().getType());
-        context.getStatus().setSimulation(model.getSimulation());
-        context.getStatus().setBackground(model.getBackground());
         CustomBusyPopup.close();
         // Selecting and focusing current selected widget after a data model load
         context.getSelectedScenarioGridWidget().ifPresent(ScenarioGridWidget::selectAndFocus);
@@ -622,7 +634,7 @@ public class ScenarioSimulationEditorPresenter {
     public void setSettings(SettingsView.Presenter presenter) {
         Type modelType = dataManagementStrategy instanceof AbstractDMODataManagementStrategy ? Type.RULE : Type.DMN;
         presenter.setEventBus(eventBus);
-        presenter.setScenarioType(modelType, context.getSettings(), path.getFileName());
+        presenter.setScenarioType(modelType, context.getStatus().getSettings(), path.getFileName());
     }
 
     public String getJsonModel(ScenarioSimulationModel model) {

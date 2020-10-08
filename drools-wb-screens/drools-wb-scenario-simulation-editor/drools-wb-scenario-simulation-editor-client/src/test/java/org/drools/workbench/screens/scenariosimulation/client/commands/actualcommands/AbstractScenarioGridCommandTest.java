@@ -94,9 +94,9 @@ public abstract class AbstractScenarioGridCommandTest extends AbstractScenarioSi
         assertEquals(CommandResult.Type.ERROR, retrieved.getType());
         verify(scenarioGridModelMock, never()).clearSelections();
         verify(backgroundGridModelMock, never()).clearSelections();
-        verify(scenarioGridMock, never()).setContent(eq(simulationMock), eq(scenarioSimulationContextLocal.getSettings().getType()));
+        verify(scenarioGridMock, never()).setContent(eq(simulationMock), eq(scenarioSimulationContextLocal.getStatus().getSettings().getType()));
         verify(scenarioSimulationModelMock, never()).setSimulation(eq(simulationMock));
-        verify(backgroundGridMock, never()).setContent(eq(simulationMock), eq(scenarioSimulationContextLocal.getSettings().getType()));
+        verify(backgroundGridMock, never()).setContent(eq(simulationMock), eq(scenarioSimulationContextLocal.getStatus().getSettings().getType()));
         verify(scenarioSimulationModelMock, never()).setBackground(eq(backgroundMock));
         verify(scenarioSimulationEditorPresenterMock, never()).reloadTestTools(eq(true));
         verify(commandSpy, never()).commonExecution(eq(scenarioSimulationContextLocal));
@@ -111,9 +111,9 @@ public abstract class AbstractScenarioGridCommandTest extends AbstractScenarioSi
         assertEquals(CommandResult.Type.INFO, retrieved.getType());
         verify(scenarioGridModelMock, times(1)).clearSelections();
         verify(backgroundGridModelMock, times(1)).clearSelections();
-        verify(scenarioGridMock, times(1)).setContent(eq(simulationMock), eq(scenarioSimulationContextLocal.getSettings().getType()));
+        verify(scenarioGridMock, times(1)).setContent(eq(simulationMock), eq(scenarioSimulationContextLocal.getStatus().getSettings().getType()));
         verify(scenarioSimulationModelMock, times(1)).setSimulation(eq(simulationMock));
-        verify(backgroundGridMock, times(1)).setContent(eq(backgroundMock), eq(scenarioSimulationContextLocal.getSettings().getType()));
+        verify(backgroundGridMock, times(1)).setContent(eq(backgroundMock), eq(scenarioSimulationContextLocal.getStatus().getSettings().getType()));
         verify(scenarioSimulationModelMock, times(1)).setBackground(eq(backgroundMock));
         verify(scenarioSimulationEditorPresenterMock, times(1)).reloadTestTools(eq(true));
         verify(commandSpy, times(1)).commonExecution(eq(scenarioSimulationContextLocal));

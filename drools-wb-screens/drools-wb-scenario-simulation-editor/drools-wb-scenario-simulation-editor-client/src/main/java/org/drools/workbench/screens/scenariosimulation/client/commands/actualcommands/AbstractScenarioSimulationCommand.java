@@ -64,9 +64,7 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
         }
     }
 
-
-
-    protected abstract void internalExecute(ScenarioSimulationContext context) throws Exception;
+    protected abstract void internalExecute(ScenarioSimulationContext context);
 
     protected CommandResult<ScenarioSimulationViolation> commonExecution(final ScenarioSimulationContext context) {
         context.getSelectedScenarioGridPanel().ifPresent(ScenarioGridPanel::onResize);

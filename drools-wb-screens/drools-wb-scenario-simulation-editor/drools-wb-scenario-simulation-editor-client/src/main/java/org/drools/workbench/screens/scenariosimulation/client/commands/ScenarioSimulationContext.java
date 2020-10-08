@@ -60,7 +60,6 @@ public class ScenarioSimulationContext {
     protected TestToolsView.Presenter testToolsPresenter;
     protected SortedMap<String, FactModelTree> dataObjectFieldsMap;
     protected Set<String> dataObjectsInstancesName;
-    protected Settings settings;
     protected Status status = new Status();
     protected PlaceManager placeManager;
     protected PlaceRequest testToolsRequest;
@@ -114,14 +113,6 @@ public class ScenarioSimulationContext {
 
     public void setDataObjectFieldsMap(SortedMap<String, FactModelTree> dataObjectFieldsMap) {
         this.dataObjectFieldsMap = dataObjectFieldsMap;
-    }
-
-    public Settings getSettings() {
-        return settings;
-    }
-
-    public void setSettings(Settings settings) {
-        this.settings = settings;
     }
 
     /**
@@ -290,6 +281,8 @@ public class ScenarioSimulationContext {
         protected Simulation simulation;
 
         protected Background background;
+
+        protected Settings settings;
 
         protected GridWidget currentGrid;
 
@@ -492,6 +485,14 @@ public class ScenarioSimulationContext {
             this.background = background;
         }
 
+        public Settings getSettings() {
+            return settings;
+        }
+
+        public void setSettings(Settings settings) {
+            this.settings = settings;
+        }
+
         public GridWidget getCurrentGrid() {
             return currentGrid;
         }
@@ -516,6 +517,7 @@ public class ScenarioSimulationContext {
             toReturn.rowIndex = this.rowIndex;
             toReturn.simulation = this.simulation.cloneModel();
             toReturn.background = this.background.cloneModel();
+            toReturn.settings = this.settings.cloneSettings();
             toReturn.currentGrid = this.currentGrid;
             return toReturn;
         }

@@ -331,12 +331,12 @@ public abstract class AbstractScenarioSimulationTest {
             }
 
             @Override
-            public void validateInstanceHeaderUpdate(String instanceHeaderCellValue, int columnIndex, boolean isADataType) throws Exception {
+            public void validateInstanceHeaderUpdate(String instanceHeaderCellValue, int columnIndex, boolean isADataType)  {
                 //
             }
 
             @Override
-            public void validatePropertyHeaderUpdate(String propertyHeaderCellValue, int columnIndex, boolean isPropertyType) throws Exception {
+            public void validatePropertyHeaderUpdate(String propertyHeaderCellValue, int columnIndex, boolean isPropertyType) {
                 //
             }
         });
@@ -372,7 +372,7 @@ public abstract class AbstractScenarioSimulationTest {
         scenarioSimulationContextLocal.getStatus().setFullPackage(FULL_PACKAGE);
         scenarioSimulationContextLocal.setScenarioSimulationEditorPresenter(scenarioSimulationEditorPresenterMock);
         scenarioSimulationContextLocal.setDataObjectFieldsMap(dataObjectFieldsMapMock);
-        scenarioSimulationContextLocal.setSettings(settingsLocal);
+        scenarioSimulationContextLocal.getStatus().setSettings(settingsLocal);
         when(backgroundGridWidgetSpy.getScenarioSimulationContext()).thenReturn(scenarioSimulationContextLocal);
         when(scenarioGridWidgetSpy.getScenarioSimulationContext()).thenReturn(scenarioSimulationContextLocal);
 

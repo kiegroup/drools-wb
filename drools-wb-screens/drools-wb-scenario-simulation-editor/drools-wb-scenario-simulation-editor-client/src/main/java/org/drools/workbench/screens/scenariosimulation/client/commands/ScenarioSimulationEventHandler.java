@@ -52,6 +52,7 @@ import org.drools.workbench.screens.scenariosimulation.client.commands.actualcom
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.SetHeaderCellValueCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.SetInstanceHeaderCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.SetPropertyHeaderCommand;
+import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.UpdateSettingsDataCommand;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.events.AppendColumnEvent;
@@ -78,6 +79,7 @@ import org.drools.workbench.screens.scenariosimulation.client.events.SetInstance
 import org.drools.workbench.screens.scenariosimulation.client.events.SetPropertyHeaderEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.UndoEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.UnsupportedDMNEvent;
+import org.drools.workbench.screens.scenariosimulation.client.events.UpdateSettingsDataEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ValidateSimulationEvent;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.AppendColumnEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.AppendRowEventHandler;
@@ -103,6 +105,7 @@ import org.drools.workbench.screens.scenariosimulation.client.handlers.SetInstan
 import org.drools.workbench.screens.scenariosimulation.client.handlers.SetPropertyHeaderEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.UndoEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.UnsupportedDMNEventHandler;
+import org.drools.workbench.screens.scenariosimulation.client.handlers.UpdateSettingsDataEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.handlers.ValidateSimulationEventHandler;
 import org.drools.workbench.screens.scenariosimulation.client.models.AbstractScesimGridModel;
 import org.drools.workbench.screens.scenariosimulation.client.popup.ConfirmPopupPresenter;
@@ -148,6 +151,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
                                                        SetPropertyHeaderEventHandler,
                                                        UndoEventHandler,
                                                        UnsupportedDMNEventHandler,
+                                                       UpdateSettingsDataEventHandler,
                                                        ValidateSimulationEventHandler {
 
     protected DeletePopupPresenter deletePopupPresenter;
@@ -452,6 +456,11 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
     }
 
     @Override
+    public void onEvent(UpdateSettingsDataEvent updateSettingsDataEvent) {
+        commonExecution(new UpdateSettingsDataCommand(updateSettingsDataEvent.getSettingsConsumer()), false);
+    }
+
+    @Override
     public void onEvent(ValidateSimulationEvent event) {
         scenarioSimulationEditorPresenter.validateSimulation();
     }
@@ -521,6 +530,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
         handlerRegistrationList.add(eventBus.addHandler(SetPropertyHeaderEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(UndoEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(UnsupportedDMNEvent.TYPE, this));
+        handlerRegistrationList.add(eventBus.addHandler(UpdateSettingsDataEvent.TYPE, this));
         handlerRegistrationList.add(eventBus.addHandler(ValidateSimulationEvent.TYPE, this));
     }
 }

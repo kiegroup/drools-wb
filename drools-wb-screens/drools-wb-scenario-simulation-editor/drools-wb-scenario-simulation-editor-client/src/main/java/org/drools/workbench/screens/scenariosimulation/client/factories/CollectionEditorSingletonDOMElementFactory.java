@@ -120,13 +120,13 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
         }
         String key = className + "#" + propertyName;
         String genericTypeName0 = genericTypes.get(0);
-        if (RULE.equals(scenarioSimulationContext.getSettings().getType()) && !isSimpleJavaType(genericTypeName0)) {
+        if (RULE.equals(scenarioSimulationContext.getStatus().getSettings().getType()) && !isSimpleJavaType(genericTypeName0)) {
             genericTypeName0 = getRuleComplexType(genericTypeName0);
         }
         if (ScenarioSimulationSharedUtils.isList(propertyClass)) {
-            manageList(collectionEditorView, key, genericTypeName0, scenarioSimulationContext.getSettings().getType());
+            manageList(collectionEditorView, key, genericTypeName0, scenarioSimulationContext.getStatus().getSettings().getType());
         } else {
-            manageMap(collectionEditorView, key, genericTypeName0, genericTypes.get(1), scenarioSimulationContext.getSettings().getType());
+            manageMap(collectionEditorView, key, genericTypeName0, genericTypes.get(1), scenarioSimulationContext.getStatus().getSettings().getType());
         }
     }
 
@@ -177,7 +177,7 @@ public class CollectionEditorSingletonDOMElementFactory extends BaseSingletonDOM
         if (isSimpleJavaType(typeName)) {
             return toReturn;
         }
-        boolean isRule = RULE.equals(scenarioSimulationContext.getSettings().getType());
+        boolean isRule = RULE.equals(scenarioSimulationContext.getStatus().getSettings().getType());
         final Map<String, String> expandableProperties = scenarioSimulationContext.getDataObjectFieldsMap().get(typeName).getExpandableProperties();
         expandableProperties.forEach((key, nestedTypeName) -> {
             if (isRule) {
