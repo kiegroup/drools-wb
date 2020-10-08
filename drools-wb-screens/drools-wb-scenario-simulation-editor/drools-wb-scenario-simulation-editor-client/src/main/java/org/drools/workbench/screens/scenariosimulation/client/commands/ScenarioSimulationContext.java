@@ -211,7 +211,7 @@ public class ScenarioSimulationContext {
      * Method to verify that <code>Status</code>' <b>simulation</b> is populated, since <code>Simulation</code>
      * is set inside the model <b>after</b> the creation ot the current instance
      */
-    public void setStatusSimulationIfEmpty() throws IllegalStateException {
+    public void setStatusSimulationIfEmpty() {
         if (status.getSimulation() == null) {
             final Optional<AbstractScesimModel> abstractScesimModel = simulationGridWidget.getModel().getAbstractScesimModel();
             status.setSimulation((Simulation) abstractScesimModel.orElseThrow(IllegalStateException::new));

@@ -29,7 +29,7 @@ import org.uberfire.mvp.Command;
 @Named(SettingsScenarioSimulationDropdown.BEAN_NAME)
 public class SettingsScenarioSimulationDropdown extends ScenarioSimulationDropdown {
 
-    final public static String BEAN_NAME = "SettingsDropdown";
+    public static final String BEAN_NAME = "SettingsDropdown";
 
     protected String currentValue;
     protected Command onMissingValueHandler = () -> {/*Nothing/*/};
