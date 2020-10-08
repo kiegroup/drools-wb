@@ -24,7 +24,7 @@ import org.kie.workbench.common.services.datamodel.model.PackageDataModelOracleB
 import org.uberfire.backend.vfs.Path;
 
 /**
- * Interface provide to emulate the "Oracle" implementation used inside Business Central
+ * It provides an emulatation to the "Oracle" implementation used inside Business Central
  */
 public abstract class KogitoAsyncPackageDataModelOracle {
 
