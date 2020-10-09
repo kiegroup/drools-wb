@@ -820,17 +820,17 @@ public class ScenarioSimulationKogitoDMNDataManagerTest {
 
     @Test
     public void createDMNTypeItemDefinitionSimpleTypeRefNoFieldsWithAllowedValues() {
-        Map<String, ClientDMNType> defaultTypesMap = new HashMap<>(abstractKogitoDMNServiceSpy.getDMNDataTypesMap(Collections.emptyList(), NAMESPACE));
-        allDefinitions = abstractKogitoDMNServiceSpy.indexDefinitionsByName(Arrays.asList(jsitItemDefinitionMock));
+        Map<String, ClientDMNType> defaultTypesMap = new HashMap<>(scenarioSimulationKogitoDMNDataManagerSpy.getDMNDataTypesMap(Collections.emptyList(), NAMESPACE));
+        allDefinitions = scenarioSimulationKogitoDMNDataManagerSpy.indexDefinitionsByName(Arrays.asList(jsitItemDefinitionMock));
         when(jsitItemDefinitionMock.getItemComponent()).thenReturn(new ArrayList<>());
         when(jsitItemDefinitionMock.getTypeRef()).thenReturn(BuiltInType.STRING.getName());
         JSITUnaryTests jsitUnaryTestsMock = mock(JSITUnaryTests.class);
         when(jsitUnaryTestsMock.getText()).thenReturn("value1, value2, value3");
         when(jsitItemDefinitionMock.getAllowedValues()).thenReturn(jsitUnaryTestsMock);
-        ClientDMNType clientDmnType = abstractKogitoDMNServiceSpy.createDMNType(allDefinitions,
-                                                                                jsitItemDefinitionMock,
-                                                                                NAMESPACE,
-                                                                                defaultTypesMap);
+        ClientDMNType clientDmnType = scenarioSimulationKogitoDMNDataManagerSpy.createDMNType(allDefinitions,
+                                                                                              jsitItemDefinitionMock,
+                                                                                              NAMESPACE,
+                                                                                              defaultTypesMap);
         assertEquals(NAMESPACE, clientDmnType.getNamespace());
         assertEquals(TYPE_NAME, clientDmnType.getName());
         assertFalse(clientDmnType.isCollection());
@@ -915,7 +915,7 @@ public class ScenarioSimulationKogitoDMNDataManagerTest {
 
     @Test
     public void createDMNTypeItemComponentWithFieldWithAllowedValues() {
-        Map<String, ClientDMNType> defaultTypesMap = new HashMap<>(abstractKogitoDMNServiceSpy.getDMNDataTypesMap(Collections.emptyList(), NAMESPACE));
+        Map<String, ClientDMNType> defaultTypesMap = new HashMap<>(scenarioSimulationKogitoDMNDataManagerSpy.getDMNDataTypesMap(Collections.emptyList(), NAMESPACE));
         when(jsitItemDefinitionMock.getItemComponent()).thenReturn(Arrays.asList(jsitItemDefinitionNestedMock));
         when(jsitItemDefinitionNestedMock.getName()).thenReturn("tNested");
         when(jsitItemDefinitionNestedMock.getId()).thenReturn(ID);
@@ -923,10 +923,10 @@ public class ScenarioSimulationKogitoDMNDataManagerTest {
         JSITUnaryTests jsitUnaryTestsMock = mock(JSITUnaryTests.class);
         when(jsitUnaryTestsMock.getText()).thenReturn("value1, value2, value3");
         when(jsitItemDefinitionNestedMock.getAllowedValues()).thenReturn(jsitUnaryTestsMock);
-        ClientDMNType clientDmnType = abstractKogitoDMNServiceSpy.createDMNType(allDefinitions,
-                                                                                jsitItemDefinitionMock,
-                                                                                NAMESPACE,
-                                                                                defaultTypesMap);
+        ClientDMNType clientDmnType = scenarioSimulationKogitoDMNDataManagerSpy.createDMNType(allDefinitions,
+                                                                                              jsitItemDefinitionMock,
+                                                                                              NAMESPACE,
+                                                                                              defaultTypesMap);
         assertEquals(NAMESPACE, clientDmnType.getNamespace());
         assertEquals(TYPE_NAME, clientDmnType.getName());
         assertFalse(clientDmnType.isCollection());
@@ -1072,7 +1072,7 @@ public class ScenarioSimulationKogitoDMNDataManagerTest {
     public void createTopLevelFactModelTreeCompositeNoCollectionBaseType() {
         // Single property retrieve
         ClientDMNType composite = getSingleCompositeWithBaseTypeField();
-        FactModelTree retrieved = abstractKogitoDMNServiceSpy.createTopLevelFactModelTree("testPath", composite, new TreeMap<>(), FactModelTree.Type.INPUT);
+        FactModelTree retrieved = scenarioSimulationKogitoDMNDataManagerSpy.createTopLevelFactModelTree("testPath", composite, new TreeMap<>(), FactModelTree.Type.INPUT);
         assertNotNull(retrieved);
         assertEquals("testPath", retrieved.getFactName());
         assertEquals(2, retrieved.getSimpleProperties().size());
