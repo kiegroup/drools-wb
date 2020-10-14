@@ -40,6 +40,7 @@ import org.uberfire.backend.vfs.Path;
 import org.uberfire.backend.vfs.PathFactory;
 import org.uberfire.client.callbacks.Callback;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
@@ -63,13 +64,19 @@ public class ScenarioSimulationKogitoDMNMarshallerServiceTest {
     @Mock
     private DMN12 importedDmn12Mock;
     @Mock
+    private DMN12 importedDmn12Mock2;
+    @Mock
     private ErrorCallback<Object> errorCallbackMock;
     @Mock
     private JSITDefinitions jsitDefinitionsMock;
     @Mock
     private JSITDefinitions jsitImportedDefinitionsMock;
     @Mock
+    private JSITDefinitions jsitImportedDefinitionsMock2;
+    @Mock
     private JSITItemDefinition importedItemDefinitionMock;
+    @Mock
+    private JSITItemDefinition importedItemDefinitionMock2;
     @Mock
     private ScenarioSimulationKogitoResourceContentService resourceContentServiceMock;
     @Captor
@@ -77,15 +84,23 @@ public class ScenarioSimulationKogitoDMNMarshallerServiceTest {
     @Captor
     private ArgumentCaptor<DMN12UnmarshallCallback> dmn12UnmarshallImportedCallbackArgumentCaptor;
     @Captor
+    private ArgumentCaptor<DMN12UnmarshallCallback> dmn12UnmarshallImportedCallbackArgumentCaptor2;
+    @Captor
     private ArgumentCaptor<RemoteCallback<String>> remoteCallbackArgumentCaptor;
     @Captor
     private ArgumentCaptor<RemoteCallback<String>> remoteCallbackImportedArgumentCaptor;
+    @Captor
+    private ArgumentCaptor<RemoteCallback<String>> remoteCallbackImportedArgumentCaptor2;
+    @Captor
+    private ArgumentCaptor<List<JSITDefinitions>> listArgumentCaptor ;
 
     @Before
     public void setup() {
         doReturn(jsitDefinitionsMock).when(dmnMarshallerServiceSpy).uncheckedCast(dmn12Mock);
         doReturn(jsitImportedDefinitionsMock).when(dmnMarshallerServiceSpy).uncheckedCast(importedDmn12Mock);
+        doReturn(jsitImportedDefinitionsMock2).when(dmnMarshallerServiceSpy).uncheckedCast(importedDmn12Mock2);
         doReturn(Arrays.asList(importedItemDefinitionMock)).when(jsitImportedDefinitionsMock).getItemDefinition();
+        doReturn(Arrays.asList(importedItemDefinitionMock2)).when(jsitImportedDefinitionsMock2).getItemDefinition();
     }
 
     @Test
@@ -122,11 +137,55 @@ public class ScenarioSimulationKogitoDMNMarshallerServiceTest {
         verify(dmnMarshallerServiceSpy, times(1)).getDMNImportContentRemoteCallback(eq(jsitDefinitionsCallbackMock), eq(jsitDefinitionsMock), isA(List.class), eq(1));
         verify(resourceContentServiceMock, times(1)).getFileContent(eq(PathFactory.newPath("import.dmn", "src/import.dmn")), remoteCallbackImportedArgumentCaptor.capture(), eq(errorCallbackMock));
         remoteCallbackImportedArgumentCaptor.getValue().callback("<xml>imported content</xml>");
-        verify(dmnMarshallerServiceSpy, times(1)).getDMN12ImportsUnmarshallCallback(eq(jsitDefinitionsCallbackMock), eq(jsitDefinitionsMock), isA(List.class), eq(1));
+        verify(dmnMarshallerServiceSpy, times(1)).getDMN12ImportsUnmarshallCallback(eq(jsitDefinitionsCallbackMock), eq(jsitDefinitionsMock), listArgumentCaptor.capture(), eq(1));
         verify(dmnMarshallerServiceSpy, times(1)).unmarshallDMN(eq("<xml>imported content</xml>"), dmn12UnmarshallImportedCallbackArgumentCaptor.capture());
+        assertEquals(0, listArgumentCaptor.getValue().size());
         dmn12UnmarshallImportedCallbackArgumentCaptor.getValue().callEvent(importedDmn12Mock);
+        assertEquals(1, listArgumentCaptor.getValue().size());
+        assertEquals(jsitImportedDefinitionsMock, listArgumentCaptor.getValue().get(0));
         verify(dmnMarshallerServiceSpy, times(1)).uncheckedCast(eq(importedDmn12Mock));
         verify(jsitDefinitionsMock, times(1)).addItemDefinition(eq(importedItemDefinitionMock));
+        verify(jsitDefinitionsCallbackMock, times(1)).callback(jsitDefinitionsMock);
+    }
+
+    @Test
+    public void getDMNContentWithMultipleImport() {
+        JSITImport jsitDMNImport = mock(JSITImport.class);
+        when(jsitDMNImport.getName()).thenReturn("testA");
+        when(jsitDMNImport.getLocationURI()).thenReturn("import.dmn");
+        JSITImport jsitDMN2Import = mock(JSITImport.class);
+        when(jsitDMN2Import.getName()).thenReturn("testB");
+        when(jsitDMN2Import.getLocationURI()).thenReturn("import2.dmn");
+        List<JSITImport> imports = new ArrayList<>();
+        imports.add(jsitDMNImport);
+        imports.add(jsitDMN2Import);
+        doReturn(imports).when(jsitDefinitionsMock).getImport();
+        commonPreCallbackProcess();
+        verify(dmnMarshallerServiceSpy, times(1)).uncheckedCast(eq(dmn12Mock));
+        verify(dmnMarshallerServiceSpy, times(2)).getDMNImportContentRemoteCallback(eq(jsitDefinitionsCallbackMock), eq(jsitDefinitionsMock), isA(List.class), eq(2));
+        verify(resourceContentServiceMock, times(1)).getFileContent(eq(PathFactory.newPath("import.dmn", "src/import.dmn")), remoteCallbackImportedArgumentCaptor.capture(), eq(errorCallbackMock));
+        remoteCallbackImportedArgumentCaptor.getValue().callback("<xml>imported content</xml>");
+        verify(dmnMarshallerServiceSpy, times(1)).getDMN12ImportsUnmarshallCallback(eq(jsitDefinitionsCallbackMock), eq(jsitDefinitionsMock), listArgumentCaptor.capture(), eq(2));
+        verify(dmnMarshallerServiceSpy, times(1)).unmarshallDMN(eq("<xml>imported content</xml>"), dmn12UnmarshallImportedCallbackArgumentCaptor.capture());
+        assertEquals(0, listArgumentCaptor.getValue().size());
+        dmn12UnmarshallImportedCallbackArgumentCaptor.getValue().callEvent(importedDmn12Mock);
+        verify(dmnMarshallerServiceSpy, times(1)).uncheckedCast(eq(importedDmn12Mock));
+        verify(jsitDefinitionsCallbackMock, times(0)).callback(jsitDefinitionsMock);
+        verify(jsitDefinitionsMock, times(0)).addItemDefinition(eq(importedItemDefinitionMock));
+        verify(jsitDefinitionsMock, times(0)).addItemDefinition(eq(importedItemDefinitionMock2));
+
+        verify(resourceContentServiceMock, times(1)).getFileContent(eq(PathFactory.newPath("import2.dmn", "src/import2.dmn")), remoteCallbackImportedArgumentCaptor2.capture(), eq(errorCallbackMock));
+        remoteCallbackImportedArgumentCaptor2.getValue().callback("<xml>imported content 2</xml>");
+        verify(dmnMarshallerServiceSpy, times(2)).getDMN12ImportsUnmarshallCallback(eq(jsitDefinitionsCallbackMock), eq(jsitDefinitionsMock), listArgumentCaptor.capture(), eq(2));
+        verify(dmnMarshallerServiceSpy, times(1)).unmarshallDMN(eq("<xml>imported content 2</xml>"), dmn12UnmarshallImportedCallbackArgumentCaptor2.capture());
+        assertEquals(1, listArgumentCaptor.getValue().size());
+        assertEquals(jsitImportedDefinitionsMock, listArgumentCaptor.getValue().get(0));
+        dmn12UnmarshallImportedCallbackArgumentCaptor2.getValue().callEvent(importedDmn12Mock2);
+        assertEquals(2, listArgumentCaptor.getValue().size());
+        assertEquals(jsitImportedDefinitionsMock2, listArgumentCaptor.getValue().get(1));
+        verify(dmnMarshallerServiceSpy, times(1)).uncheckedCast(eq(importedDmn12Mock2));
+        verify(jsitDefinitionsMock, times(1)).addItemDefinition(eq(importedItemDefinitionMock));
+        verify(jsitDefinitionsMock, times(1)).addItemDefinition(eq(importedItemDefinitionMock2));
         verify(jsitDefinitionsCallbackMock, times(1)).callback(jsitDefinitionsMock);
     }
 

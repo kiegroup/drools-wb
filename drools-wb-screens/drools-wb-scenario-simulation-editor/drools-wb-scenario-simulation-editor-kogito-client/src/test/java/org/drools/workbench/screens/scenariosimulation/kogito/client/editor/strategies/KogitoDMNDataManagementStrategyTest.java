@@ -79,7 +79,7 @@ public class KogitoDMNDataManagementStrategyTest {
 
     @Before
     public void setup() {
-       kogitoDMNDataManagementStrategySpy = spy(new KogitoDMNDataManagementStrategy(eventBusMock, kogitoDMNDataManagerMock, dmnMarshallerServiceMock));
+        kogitoDMNDataManagementStrategySpy = spy(new KogitoDMNDataManagementStrategy(eventBusMock, kogitoDMNDataManagerMock, dmnMarshallerServiceMock));
         when(kogitoDMNDataManagementStrategySpy.getSuccessCallback(eq(testToolsPresenterMock), eq(scenarioSimulationContextMock), eq(gridWidgetMock))).thenReturn(factModelTupleRemoteCallbackMock);
         when(kogitoDMNDataManagerMock.getFactModelTuple(eq(jsitDefinitionsMock))).thenReturn(factModelTupleMock);
     }
