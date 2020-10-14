@@ -17,6 +17,7 @@ package org.drools.workbench.screens.scenariosimulation.client.dropdown;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -45,7 +46,8 @@ public class SettingsScenarioSimulationDropdown extends ScenarioSimulationDropdo
      * @param currentValue
      */
     public void loadAssets(String currentValue) {
-        if (!Objects.equals(this.currentValue, currentValue)) {
+        Optional<KieAssetsDropdownItem> value = getValue();
+        if (!value.isPresent() || !Objects.equals(value.get().getValue(), currentValue)) {
             this.currentValue = currentValue;
             super.loadAssets();
         }

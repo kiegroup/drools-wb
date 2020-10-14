@@ -599,8 +599,8 @@ public class ScenarioSimulationEditorPresenter {
         context.getStatus().setSettings(model.getSettings());
         context.getStatus().setSimulation(model.getSimulation());
         context.getStatus().setBackground(model.getBackground());
-        scenarioMainGridWidget.setContent(model.getSimulation(), context.getStatus().getSettings().getType());
-        scenarioBackgroundGridWidget.setContent(model.getBackground(), context.getStatus().getSettings().getType());
+        scenarioMainGridWidget.setContent(model.getSimulation(), model.getSettings().getType());
+        scenarioBackgroundGridWidget.setContent(model.getBackground(), model.getSettings().getType());
         // NOTE: keep here initialization of docks related with model
         populateRightDocks(TestToolsPresenter.IDENTIFIER);
         populateRightDocks(SettingsPresenter.IDENTIFIER);

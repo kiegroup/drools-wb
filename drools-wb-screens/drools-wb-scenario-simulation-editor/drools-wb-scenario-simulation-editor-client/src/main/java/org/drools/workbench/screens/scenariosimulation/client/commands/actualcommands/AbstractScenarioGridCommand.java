@@ -102,9 +102,9 @@ public abstract class AbstractScenarioGridCommand extends AbstractScenarioSimula
             context.getBackgroundGrid().setContent(backgroundToRestore, context.getStatus().getSettings().getType());
             context.getScenarioSimulationEditorPresenter().getModel().setBackground(backgroundToRestore);
             context.getScenarioSimulationEditorPresenter().getModel().setSettings(settingsToRestore);
+            context.setStatus(restorableStatus);
             context.getScenarioSimulationEditorPresenter().reloadSettings();
             context.getScenarioSimulationEditorPresenter().reloadTestTools(true);
-            context.setStatus(restorableStatus);
             restorableStatus = originalStatus;
             return commonExecution(context);
         } catch (Exception e) {
