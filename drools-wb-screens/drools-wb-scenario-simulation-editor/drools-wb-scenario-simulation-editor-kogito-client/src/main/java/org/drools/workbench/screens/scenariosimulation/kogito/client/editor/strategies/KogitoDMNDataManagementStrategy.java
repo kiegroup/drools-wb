@@ -71,7 +71,8 @@ public class KogitoDMNDataManagementStrategy extends AbstractDMNDataManagementSt
         return (message, throwable) -> {
             eventBus.fireEvent(new ScenarioNotificationEvent(ScenarioSimulationEditorConstants.INSTANCE.dmnPathErrorDetailedLabel(dmnFilePath,
                                                                                                                                   message.toString()),
-                                                             NotificationEvent.NotificationType.ERROR));
+                                                             NotificationEvent.NotificationType.ERROR,
+                                                             false));
             return false;
         };
     }
