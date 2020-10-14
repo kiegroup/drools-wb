@@ -21,7 +21,7 @@ import java.util.Optional;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.appformer.client.stateControl.registry.impl.DefaultRegistryImpl;
 import org.drools.workbench.screens.scenariosimulation.client.AbstractScenarioSimulationTest;
-import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.AbstractScenarioGridCommand;
+import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.AbstractScenarioSimulationUndoableCommand;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,11 +46,11 @@ import static org.mockito.Mockito.verify;
 public class ScenarioCommandRegistryManagerTest extends AbstractScenarioSimulationTest {
 
     private ScenarioCommandRegistryManager scenarioCommandRegistryManagerSpy;
-    private DefaultRegistryImpl<AbstractScenarioGridCommand> doneCommandsRegistrySpy;
-    private DefaultRegistryImpl<AbstractScenarioGridCommand> undoneCommandsRegistrySpy;
+    private DefaultRegistryImpl<AbstractScenarioSimulationUndoableCommand> doneCommandsRegistrySpy;
+    private DefaultRegistryImpl<AbstractScenarioSimulationUndoableCommand> undoneCommandsRegistrySpy;
 
     @Mock
-    private AbstractScenarioGridCommand abstractScenarioGridCommandMock;
+    private AbstractScenarioSimulationUndoableCommand abstractScenarioGridCommandMock;
 
     @Before
     public void setup() {

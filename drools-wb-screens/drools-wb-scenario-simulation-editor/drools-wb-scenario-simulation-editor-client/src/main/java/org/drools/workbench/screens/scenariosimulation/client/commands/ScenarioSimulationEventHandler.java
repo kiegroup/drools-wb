@@ -31,8 +31,8 @@ import javax.enterprise.event.Event;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwt.event.shared.HandlerRegistration;
 import org.drools.scenariosimulation.api.model.FactMappingValueType;
-import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.AbstractScenarioGridCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.AbstractScenarioSimulationCommand;
+import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.AbstractScenarioSimulationUndoableCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.AppendColumnCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.AppendRowCommand;
 import org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands.DeleteColumnCommand;
@@ -485,8 +485,8 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
                     .append(" failure")
                     .toString();
             commonNotifyError(status, operation);
-        } else if (Objects.equals(CommandResultBuilder.SUCCESS, status) && (command instanceof AbstractScenarioGridCommand)) {
-            scenarioCommandRegistryManager.register(context, (AbstractScenarioGridCommand) command);
+        } else if (Objects.equals(CommandResultBuilder.SUCCESS, status) && (command instanceof AbstractScenarioSimulationUndoableCommand)) {
+            scenarioCommandRegistryManager.register(context, (AbstractScenarioSimulationUndoableCommand) command);
             if (focusGridAfterExecution && gridWidget.isPresent()) {
                 context.getScenarioGridPanelByGridWidget(gridWidget.get()).setFocus(true);
             }

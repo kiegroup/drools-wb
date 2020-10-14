@@ -15,6 +15,7 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
+import java.util.Collections;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -22,8 +23,10 @@ import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationViolation;
 import org.kie.workbench.common.command.client.CommandResult;
+import org.kie.workbench.common.command.client.CommandResultBuilder;
+import org.kie.workbench.common.command.client.impl.CommandResultImpl;
 
-public class UpdateSettingsDataCommand extends AbstractScenarioGridCommand {
+public class UpdateSettingsDataCommand extends AbstractScenarioSimulationUndoableCommand<Settings> {
 
     private final Consumer<Settings> settingsConsumer;
 
@@ -32,14 +35,36 @@ public class UpdateSettingsDataCommand extends AbstractScenarioGridCommand {
     }
 
     @Override
+    protected Settings setRestorableStatusPreExecution(ScenarioSimulationContext context) {
+        return context.getStatus().getSettings().cloneSettings();
+    }
+
+    @Override
+    public Optional<CommandResult<ScenarioSimulationViolation>> commonUndoRedoPreexecution(ScenarioSimulationContext context) {
+        context.getScenarioSimulationEditorPresenter().expandSettingsDock();
+        return Optional.of(CommandResultBuilder.SUCCESS);
+    }
+
+    protected CommandResult<ScenarioSimulationViolation> setCurrentContext(ScenarioSimulationContext context) {
+        try {
+            if (restorableStatus == null) {
+                throw new IllegalStateException("restorableSettings is null");
+            }
+            final Settings originalSettings = context.getStatus().getSettings().cloneSettings();
+            context.getScenarioSimulationEditorPresenter().getModel().setSettings(restorableStatus);
+            context.getStatus().setSettings(restorableStatus);
+            restorableStatus = originalSettings;
+            context.getScenarioSimulationEditorPresenter().reloadSettings();
+            return commonExecution(context);
+        } catch (Exception e) {
+            return new CommandResultImpl<>(CommandResult.Type.ERROR, Collections.singleton(new ScenarioSimulationViolation(e.getMessage())));
+        }
+    }
+
+    @Override
     protected void internalExecute(ScenarioSimulationContext context)  {
         settingsConsumer.accept(context.getStatus().getSettings());
         context.getScenarioSimulationEditorPresenter().reloadSettings();
     }
 
-
-    @Override
-    public Optional<CommandResult<ScenarioSimulationViolation>> commonUndoRedoPreexecution(ScenarioSimulationContext context) {
-        return Optional.empty();
-    }
 }

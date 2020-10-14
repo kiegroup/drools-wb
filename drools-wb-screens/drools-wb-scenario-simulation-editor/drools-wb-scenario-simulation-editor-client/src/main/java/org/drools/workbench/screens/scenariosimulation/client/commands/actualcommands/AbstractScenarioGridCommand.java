@@ -22,7 +22,6 @@ import java.util.Optional;
 import org.drools.scenariosimulation.api.model.Background;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMappingType;
-import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationViolation;
@@ -38,15 +37,9 @@ import org.kie.workbench.common.command.client.impl.CommandResultImpl;
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.getHeaderBuilder;
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ScenarioSimulationUtils.getScenarioGridColumn;
 
-public abstract class AbstractScenarioGridCommand extends AbstractScenarioSimulationCommand {
+public abstract class AbstractScenarioGridCommand extends AbstractScenarioSimulationUndoableCommand<ScenarioSimulationContext.Status> {
 
     protected GridWidget gridWidget;
-
-    /**
-     * The <code>ScenarioSimulationContext.Status</code> to restore when calling <b>undo/redo</b>.
-     * Needed only for <b>undoable</b> commands.
-     */
-    protected ScenarioSimulationContext.Status restorableStatus = null;
 
     /**
      * Calling this constructor will set the target <code>GridWidget</code>
@@ -61,33 +54,15 @@ public abstract class AbstractScenarioGridCommand extends AbstractScenarioSimula
     }
 
     @Override
-    public CommandResult<ScenarioSimulationViolation> execute(ScenarioSimulationContext context) {
-        restorableStatus = context.getStatus().cloneStatus();
-        return super.execute(context);
+    protected ScenarioSimulationContext.Status setRestorableStatusPreExecution(ScenarioSimulationContext context) {
+        return context.getStatus().cloneStatus();
     }
 
     @Override
-    public CommandResult<ScenarioSimulationViolation> undo(ScenarioSimulationContext context) {
-        if (restorableStatus == null) {
-            String message = this.getClass().getSimpleName() + "restorableStatus status is null";
-            throw new IllegalStateException(message);
-        }
-        return setCurrentContext(context);
-    }
-
-    public CommandResult<ScenarioSimulationViolation> redo(ScenarioSimulationContext context) {
-        if (restorableStatus == null) {
-            String message = this.getClass().getSimpleName() + "restorableStatus status is null";
-            throw new IllegalStateException(message);
-        }
-        return setCurrentContext(context);
-    }
-
     protected CommandResult<ScenarioSimulationViolation> setCurrentContext(ScenarioSimulationContext context) {
         try {
             final Simulation simulationToRestore = restorableStatus.getSimulation();
             final Background backgroundToRestore = restorableStatus.getBackground();
-            final Settings settingsToRestore = restorableStatus.getSettings();
             if (simulationToRestore == null) {
                 throw new IllegalStateException("Simulation is null in restorable status");
             }
@@ -101,10 +76,8 @@ public abstract class AbstractScenarioGridCommand extends AbstractScenarioSimula
             context.getScenarioSimulationEditorPresenter().getModel().setSimulation(simulationToRestore);
             context.getBackgroundGrid().setContent(backgroundToRestore, context.getStatus().getSettings().getType());
             context.getScenarioSimulationEditorPresenter().getModel().setBackground(backgroundToRestore);
-            context.getScenarioSimulationEditorPresenter().getModel().setSettings(settingsToRestore);
-            context.setStatus(restorableStatus);
-            context.getScenarioSimulationEditorPresenter().reloadSettings();
             context.getScenarioSimulationEditorPresenter().reloadTestTools(true);
+            context.setStatus(restorableStatus);
             restorableStatus = originalStatus;
             return commonExecution(context);
         } catch (Exception e) {
@@ -120,6 +93,7 @@ public abstract class AbstractScenarioGridCommand extends AbstractScenarioSimula
      * @return <code>Optional&lt;CommandResult&lt;ScenarioSimulationViolation&gt;&gt;</code> of <code>CommandResultBuilder.SUCCESS</code>
      * if a tab switch happened, otherwise <code>Optional.empty()</code>
      */
+    @Override
     public Optional<CommandResult<ScenarioSimulationViolation>> commonUndoRedoPreexecution(final ScenarioSimulationContext context) {
         final Optional<GridWidget> selectedGridWidgetOptional = context.getSelectedGridWidget();
         if (selectedGridWidgetOptional.isPresent() && Objects.equals(gridWidget, selectedGridWidgetOptional.get())) {
