@@ -72,8 +72,8 @@ public class ScenarioSimulationKogitoDMNMarshallerService {
             if (includedDMNImportsPaths.isEmpty()) {
                 callback.callback(jsitDefinitions);
             } else {
+                final List<JSITDefinitions> importedItemDefinitions = new ArrayList<>();
                 for (Map.Entry<String, Path> importPath : includedDMNImportsPaths.entrySet()) {
-                    final List<JSITDefinitions> importedItemDefinitions = new ArrayList<>();
                     resourceContentService.getFileContent(importPath.getValue(),
                                                           getDMNImportContentRemoteCallback(callback,
                                                                                             jsitDefinitions,
