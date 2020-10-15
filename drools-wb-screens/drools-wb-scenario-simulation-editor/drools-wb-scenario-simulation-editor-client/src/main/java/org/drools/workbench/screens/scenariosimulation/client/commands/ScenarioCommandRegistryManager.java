@@ -99,7 +99,7 @@ public class ScenarioCommandRegistryManager extends AbstractCommandRegistryManag
      */
     protected Optional<CommandResult<ScenarioSimulationViolation>> commonUndoRedoPreexecution(final ScenarioSimulationContext scenarioSimulationContext,
                                                                                               final AbstractScenarioSimulationUndoableCommand command) {
-        return command.commonUndoRedoPreexecution(scenarioSimulationContext);
+        return command.commonUndoRedoPreExecution(scenarioSimulationContext);
     }
 
     /**

@@ -252,9 +252,8 @@ public class ScenarioSimulationEditorPresenter {
     public void onRunScenario(List<Integer> indexOfScenarioToRun) {
         scenarioMainGridWidget.resetErrors();
         scenarioBackgroundGridWidget.resetErrors();
-        model.setSimulation(context.getStatus().getSimulation());
-        model.setBackground(context.getStatus().getBackground());
-        model.setSettings(context.getStatus().getSettings());
+        model.setSimulation(scenarioMainGridWidget.getScenarioSimulationContext().getStatus().getSimulation());
+        model.setBackground(scenarioMainGridWidget.getScenarioSimulationContext().getStatus().getBackground());
         Simulation simulation = model.getSimulation();
         List<ScenarioWithIndex> toRun = simulation.getScenarioWithIndex().stream()
                 .filter(elem -> indexOfScenarioToRun.contains(elem.getIndex() - 1))
@@ -468,8 +467,8 @@ public class ScenarioSimulationEditorPresenter {
     }
 
     public void validateSimulation() {
-        scenarioSimulationEditorWrapper.validate(context.getStatus().getSimulation(),
-                                                 context.getStatus().getSettings(),
+        scenarioSimulationEditorWrapper.validate(model.getSimulation(),
+                                                 model.getSettings(),
                                                  getValidationCallback());
     }
 
@@ -596,7 +595,6 @@ public class ScenarioSimulationEditorPresenter {
         this.dataManagementStrategy = dataManagementStrategy;
         this.model = model;
         scenarioSimulationEditorWrapper.addBackgroundPage(scenarioBackgroundGridWidget);
-        context.getStatus().setSettings(model.getSettings());
         context.getStatus().setSimulation(model.getSimulation());
         context.getStatus().setBackground(model.getBackground());
         scenarioMainGridWidget.setContent(model.getSimulation(), model.getSettings().getType());
@@ -634,7 +632,7 @@ public class ScenarioSimulationEditorPresenter {
     public void setSettings(SettingsView.Presenter presenter) {
         Type modelType = dataManagementStrategy instanceof AbstractDMODataManagementStrategy ? Type.RULE : Type.DMN;
         presenter.setEventBus(eventBus);
-        presenter.setScenarioType(modelType, context.getStatus().getSettings(), path.getFileName());
+        presenter.setScenarioType(modelType, model.getSettings(), path.getFileName());
     }
 
     public String getJsonModel(ScenarioSimulationModel model) {

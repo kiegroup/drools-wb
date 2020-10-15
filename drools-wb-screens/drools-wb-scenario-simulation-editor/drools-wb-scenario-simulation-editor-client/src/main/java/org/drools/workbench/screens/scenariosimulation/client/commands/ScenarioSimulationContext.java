@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.drools.scenariosimulation.api.model.AbstractScesimData;
 import org.drools.scenariosimulation.api.model.AbstractScesimModel;
 import org.drools.scenariosimulation.api.model.Background;
-import org.drools.scenariosimulation.api.model.Settings;
+import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.client.editor.ScenarioSimulationEditorPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
@@ -89,6 +89,10 @@ public class ScenarioSimulationContext {
 
     public void setScenarioSimulationEditorPresenter(ScenarioSimulationEditorPresenter scenarioSimulationEditorPresenter) {
         this.scenarioSimulationEditorPresenter = scenarioSimulationEditorPresenter;
+    }
+
+    public ScenarioSimulationModel getScenarioSimulationModel() {
+        return scenarioSimulationEditorPresenter.getModel();
     }
 
     public TestToolsView.Presenter getTestToolsPresenter() {
@@ -253,8 +257,6 @@ public class ScenarioSimulationContext {
         protected Simulation simulation;
 
         protected Background background;
-
-        protected Settings settings;
 
         protected GridWidget currentGrid;
 
@@ -457,14 +459,6 @@ public class ScenarioSimulationContext {
             this.background = background;
         }
 
-        public Settings getSettings() {
-            return settings;
-        }
-
-        public void setSettings(Settings settings) {
-            this.settings = settings;
-        }
-
         public GridWidget getCurrentGrid() {
             return currentGrid;
         }
@@ -489,7 +483,6 @@ public class ScenarioSimulationContext {
             toReturn.rowIndex = this.rowIndex;
             toReturn.simulation = this.simulation.cloneModel();
             toReturn.background = this.background.cloneModel();
-            toReturn.settings = this.settings.cloneSettings();
             toReturn.currentGrid = this.currentGrid;
             return toReturn;
         }

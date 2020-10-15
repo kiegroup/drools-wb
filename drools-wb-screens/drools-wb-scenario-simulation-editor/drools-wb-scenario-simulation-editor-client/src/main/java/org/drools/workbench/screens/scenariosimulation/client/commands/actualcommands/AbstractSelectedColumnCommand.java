@@ -159,7 +159,7 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioGrid
      * @return
      */
     protected FactIdentifier setEditableHeadersAndGetFactIdentifier(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn, String aliasName, String canonicalClassName) {
-        final ScenarioSimulationModel.Type simulationModelType = context.getStatus().getSettings().getType();
+        final ScenarioSimulationModel.Type simulationModelType = context.getScenarioSimulationModel().getSettings().getType();
         selectedColumn.setEditableHeaders(!(simulationModelType.equals(ScenarioSimulationModel.Type.DMN) || GridWidget.BACKGROUND.equals(gridWidget)));
         String nameToUseForCreation = simulationModelType.equals(ScenarioSimulationModel.Type.DMN) ? aliasName : selectedColumn.getInformationHeaderMetaData().getColumnId();
         return getFactIdentifierByColumnTitle(aliasName, context).orElseGet(() -> FactIdentifier.create(nameToUseForCreation, canonicalClassName));
@@ -253,7 +253,7 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioGrid
             manageCollectionProperty(context, selectedColumn, className, columnIndex, propertyNameElements);
         } else {
             selectedColumn.setFactory(context.getAbstractScesimGridModelByGridWidget(gridWidget).getDOMElementFactory(propertyClass,
-                                                                                                                      context.getStatus().getSettings().getType(),
+                                                                                                                      context.getScenarioSimulationModel().getSettings().getType(),
                                                                                                                       factMappingValueType));
         }
         if (context.getScenarioSimulationEditorPresenter() != null) {

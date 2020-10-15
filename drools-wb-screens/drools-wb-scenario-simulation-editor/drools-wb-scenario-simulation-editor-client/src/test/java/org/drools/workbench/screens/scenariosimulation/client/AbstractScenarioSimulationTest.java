@@ -373,7 +373,6 @@ public abstract class AbstractScenarioSimulationTest {
         scenarioSimulationContextLocal.getStatus().setFullPackage(FULL_PACKAGE);
         scenarioSimulationContextLocal.setScenarioSimulationEditorPresenter(scenarioSimulationEditorPresenterMock);
         scenarioSimulationContextLocal.setDataObjectFieldsMap(dataObjectFieldsMapMock);
-        scenarioSimulationContextLocal.getStatus().setSettings(settingsLocal);
         when(backgroundGridWidgetSpy.getScenarioSimulationContext()).thenReturn(scenarioSimulationContextLocal);
         when(scenarioGridWidgetSpy.getScenarioSimulationContext()).thenReturn(scenarioSimulationContextLocal);
 

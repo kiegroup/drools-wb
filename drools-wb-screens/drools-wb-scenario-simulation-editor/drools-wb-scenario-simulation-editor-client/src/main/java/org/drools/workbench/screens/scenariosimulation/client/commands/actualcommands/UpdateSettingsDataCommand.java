@@ -36,11 +36,11 @@ public class UpdateSettingsDataCommand extends AbstractScenarioSimulationUndoabl
 
     @Override
     protected Settings setRestorableStatusPreExecution(ScenarioSimulationContext context) {
-        return context.getStatus().getSettings().cloneSettings();
+        return context.getScenarioSimulationModel().getSettings().cloneSettings();
     }
 
     @Override
-    public Optional<CommandResult<ScenarioSimulationViolation>> commonUndoRedoPreexecution(ScenarioSimulationContext context) {
+    public Optional<CommandResult<ScenarioSimulationViolation>> commonUndoRedoPreExecution(ScenarioSimulationContext context) {
         context.getScenarioSimulationEditorPresenter().expandSettingsDock();
         return Optional.of(CommandResultBuilder.SUCCESS);
     }
@@ -50,9 +50,8 @@ public class UpdateSettingsDataCommand extends AbstractScenarioSimulationUndoabl
             if (restorableStatus == null) {
                 throw new IllegalStateException("restorableSettings is null");
             }
-            final Settings originalSettings = context.getStatus().getSettings().cloneSettings();
+            final Settings originalSettings = context.getScenarioSimulationModel().getSettings().cloneSettings();
             context.getScenarioSimulationEditorPresenter().getModel().setSettings(restorableStatus);
-            context.getStatus().setSettings(restorableStatus);
             restorableStatus = originalSettings;
             context.getScenarioSimulationEditorPresenter().reloadSettings();
             return commonExecution(context);
@@ -63,7 +62,7 @@ public class UpdateSettingsDataCommand extends AbstractScenarioSimulationUndoabl
 
     @Override
     protected void internalExecute(ScenarioSimulationContext context)  {
-        settingsConsumer.accept(context.getStatus().getSettings());
+        settingsConsumer.accept(context.getScenarioSimulationModel().getSettings());
         context.getScenarioSimulationEditorPresenter().reloadSettings();
     }
 

@@ -56,5 +56,5 @@ public abstract class AbstractScenarioSimulationUndoableCommand<S> extends Abstr
 
     protected abstract S setRestorableStatusPreExecution(ScenarioSimulationContext context);
 
-    public abstract Optional<CommandResult<ScenarioSimulationViolation>> commonUndoRedoPreexecution(ScenarioSimulationContext context);
+    public abstract Optional<CommandResult<ScenarioSimulationViolation>> commonUndoRedoPreExecution(ScenarioSimulationContext context);
 }

@@ -22,6 +22,7 @@ import java.util.Optional;
 import org.drools.scenariosimulation.api.model.Background;
 import org.drools.scenariosimulation.api.model.FactIdentifier;
 import org.drools.scenariosimulation.api.model.FactMappingType;
+import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationViolation;
@@ -70,11 +71,12 @@ public abstract class AbstractScenarioGridCommand extends AbstractScenarioSimula
                 throw new IllegalStateException("Background is null in restorable status");
             }
             final ScenarioSimulationContext.Status originalStatus = context.getStatus().cloneStatus();
+            ScenarioSimulationModel.Type type = context.getScenarioSimulationModel().getSettings().getType();
             context.getSimulationGrid().getModel().clearSelections();
             context.getBackgroundGrid().getModel().clearSelections();
-            context.getSimulationGrid().setContent(simulationToRestore, context.getStatus().getSettings().getType());
+            context.getSimulationGrid().setContent(simulationToRestore, type);
             context.getScenarioSimulationEditorPresenter().getModel().setSimulation(simulationToRestore);
-            context.getBackgroundGrid().setContent(backgroundToRestore, context.getStatus().getSettings().getType());
+            context.getBackgroundGrid().setContent(backgroundToRestore, type);
             context.getScenarioSimulationEditorPresenter().getModel().setBackground(backgroundToRestore);
             context.getScenarioSimulationEditorPresenter().reloadTestTools(true);
             context.setStatus(restorableStatus);
@@ -94,7 +96,7 @@ public abstract class AbstractScenarioGridCommand extends AbstractScenarioSimula
      * if a tab switch happened, otherwise <code>Optional.empty()</code>
      */
     @Override
-    public Optional<CommandResult<ScenarioSimulationViolation>> commonUndoRedoPreexecution(final ScenarioSimulationContext context) {
+    public Optional<CommandResult<ScenarioSimulationViolation>> commonUndoRedoPreExecution(final ScenarioSimulationContext context) {
         final Optional<GridWidget> selectedGridWidgetOptional = context.getSelectedGridWidget();
         if (selectedGridWidgetOptional.isPresent() && Objects.equals(gridWidget, selectedGridWidgetOptional.get())) {
             return Optional.empty();
