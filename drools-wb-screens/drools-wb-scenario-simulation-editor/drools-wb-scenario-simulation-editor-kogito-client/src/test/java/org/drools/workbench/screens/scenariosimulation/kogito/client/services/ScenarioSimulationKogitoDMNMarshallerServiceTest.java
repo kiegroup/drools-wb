@@ -125,9 +125,11 @@ public class ScenarioSimulationKogitoDMNMarshallerServiceTest {
         JSITImport jsitDMNImport = mock(JSITImport.class);
         when(jsitDMNImport.getName()).thenReturn("testA");
         when(jsitDMNImport.getLocationURI()).thenReturn("import.dmn");
+        when(jsitDMNImport.getImportType()).thenReturn("http://www.omg.org/spec/DMN/20180521/MODEL/");
         JSITImport jsitPMMLImport = mock(JSITImport.class);
         when(jsitPMMLImport.getName()).thenReturn("testB");
         when(jsitPMMLImport.getLocationURI()).thenReturn("import.pmml");
+        when(jsitPMMLImport.getImportType()).thenReturn("http://www.dmg.org/PMML-4_3)");
         List<JSITImport> imports = new ArrayList<>();
         imports.add(jsitDMNImport);
         imports.add(jsitPMMLImport);
@@ -153,9 +155,11 @@ public class ScenarioSimulationKogitoDMNMarshallerServiceTest {
         JSITImport jsitDMNImport = mock(JSITImport.class);
         when(jsitDMNImport.getName()).thenReturn("testA");
         when(jsitDMNImport.getLocationURI()).thenReturn("import.dmn");
+        when(jsitDMNImport.getImportType()).thenReturn("http://www.omg.org/spec/DMN/20180521/MODEL/");
         JSITImport jsitDMN2Import = mock(JSITImport.class);
         when(jsitDMN2Import.getName()).thenReturn("testB");
         when(jsitDMN2Import.getLocationURI()).thenReturn("import2.dmn");
+        when(jsitDMN2Import.getImportType()).thenReturn("http://www.omg.org/spec/dmn/20180521/MODEL/");
         List<JSITImport> imports = new ArrayList<>();
         imports.add(jsitDMNImport);
         imports.add(jsitDMN2Import);
@@ -191,15 +195,18 @@ public class ScenarioSimulationKogitoDMNMarshallerServiceTest {
 
     @Test
     public void getDMNContentWithImportsNotDMN() {
-        JSITImport jsitDMNImport = mock(JSITImport.class);
-        when(jsitDMNImport.getName()).thenReturn("testA");
-        when(jsitDMNImport.getLocationURI()).thenReturn("import1.pmml");
         JSITImport jsitPMMLImport = mock(JSITImport.class);
-        when(jsitPMMLImport.getName()).thenReturn("testB");
-        when(jsitPMMLImport.getLocationURI()).thenReturn("import2.pmml");
+        when(jsitPMMLImport.getName()).thenReturn("testA");
+        when(jsitPMMLImport.getLocationURI()).thenReturn("import1.pmml");
+        when(jsitPMMLImport.getImportType()).thenReturn("http://www.dmg.org/PMML-4_3)");
+        JSITImport jsitPMMLImport2 = mock(JSITImport.class);
+        when(jsitPMMLImport2.getName()).thenReturn("testB");
+        when(jsitPMMLImport2.getLocationURI()).thenReturn("import2.pmml");
+        when(jsitPMMLImport2.getImportType()).thenReturn("http://www.dmg.org/PMML-4_3)");
+
         List<JSITImport> imports = new ArrayList<>();
-        imports.add(jsitDMNImport);
         imports.add(jsitPMMLImport);
+        imports.add(jsitPMMLImport2);
         doReturn(imports).when(jsitDefinitionsMock).getImport();
         commonPreCallbackProcess();
         verify(dmnMarshallerServiceSpy, times(1)).uncheckedCast(eq(dmn12Mock));
