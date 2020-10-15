@@ -16,6 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.events;
 
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 import com.google.gwt.event.shared.GwtEvent;
 import org.drools.scenariosimulation.api.model.Settings;
@@ -26,9 +27,16 @@ public class UpdateSettingsDataEvent extends GwtEvent<UpdateSettingsDataEventHan
     public static final Type<UpdateSettingsDataEventHandler> TYPE = new Type<>();
 
     private final Consumer<Settings> settingsConsumer;
+    private final Predicate<Settings> settingsPredicate;
 
     public UpdateSettingsDataEvent(Consumer<Settings> settingsConsumer) {
         this.settingsConsumer = settingsConsumer;
+        this.settingsPredicate = settings -> true;
+    }
+
+    public UpdateSettingsDataEvent(final Consumer<Settings> settingsConsumer, final Predicate<Settings> settingsPredicate) {
+        this.settingsConsumer = settingsConsumer;
+        this.settingsPredicate = settingsPredicate;
     }
 
     @Override
@@ -43,5 +51,9 @@ public class UpdateSettingsDataEvent extends GwtEvent<UpdateSettingsDataEventHan
 
     public Consumer<Settings> getSettingsConsumer() {
         return settingsConsumer;
+    }
+
+    public Predicate<Settings> getSettingsPredicate() {
+        return settingsPredicate;
     }
 }

@@ -16,6 +16,7 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -128,13 +129,15 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
     @Override
     public void syncDmoSession() {
         String dmoSession = getCleanValue(() -> view.getDmoSession().getValue());
-        eventBus.fireEvent(new UpdateSettingsDataEvent(settingsToUpdate -> settingsToUpdate.setDmoSession(dmoSession)));
+        eventBus.fireEvent(new UpdateSettingsDataEvent(settingsToUpdate -> settingsToUpdate.setDmoSession(dmoSession),
+                                                       settingsToCheck -> Objects.equals(settingsToCheck.getDmoSession(), dmoSession)));
     }
 
     @Override
     public void syncRuleFlowGroup() {
         String ruleFlow = getCleanValue(() -> view.getRuleFlowGroup().getValue());
-        eventBus.fireEvent(new UpdateSettingsDataEvent(settingsToUpdate -> settingsToUpdate.setDmoSession(ruleFlow)));
+        eventBus.fireEvent(new UpdateSettingsDataEvent(settingsToUpdate -> settingsToUpdate.setRuleFlowGroup(ruleFlow),
+                                                       settingsToCheck -> Objects.equals(settingsToCheck.getRuleFlowGroup(), ruleFlow)));
     }
 
     @Override
@@ -147,9 +150,9 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
     public void syncDmnFilePath() {
         String dmnFilePath = getCleanValue(() -> settingsScenarioSimulationDropdown.getValue().map(KieAssetsDropdownItem::getValue).orElse(""));
         eventBus.fireEvent(new UpdateSettingsDataEvent(settingsToUpdate -> {
-            settingsToUpdate.setDmnFilePath(dmnFilePath);
-            eventBus.fireEvent(new ValidateSimulationEvent());
-        }));
+                                settingsToUpdate.setDmnFilePath(dmnFilePath);
+                                eventBus.fireEvent(new ValidateSimulationEvent());
+                           }));
     }
 
     @Override
