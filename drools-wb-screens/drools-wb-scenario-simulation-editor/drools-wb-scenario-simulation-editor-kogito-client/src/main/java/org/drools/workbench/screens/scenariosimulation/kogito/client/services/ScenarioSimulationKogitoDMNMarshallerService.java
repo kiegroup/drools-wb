@@ -63,7 +63,7 @@ public class ScenarioSimulationKogitoDMNMarshallerService {
             final Map<String, Path> includedDMNImportsPaths = new HashMap<>();
             if (jsitDefinitions.getImport() != null && !jsitDefinitions.getImport().isEmpty()) {
                 includedDMNImportsPaths.putAll(jsitDefinitions.getImport().stream()
-                    .filter(jsitImport -> jsitImport.getLocationURI().endsWith(".dmn"))
+                    .filter(jsitImport -> jsitImport.getImportType().toUpperCase().contains("DMN"))
                     .collect(Collectors.toMap(jsitImport -> jsitImport.getName(),
                                               jsitImport -> PathFactory.newPath(jsitImport.getLocationURI(),
                                                                                 dmnFilePath.toURI().replace(dmnFilePath.getFileName(),
