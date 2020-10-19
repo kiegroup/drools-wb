@@ -457,8 +457,8 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
 
     @Override
     public void onEvent(UpdateSettingsDataEvent updateSettingsDataEvent) {
-        if (updateSettingsDataEvent.getSettingsPredicate().test(context.getScenarioSimulationModel().getSettings())) {
-            commonExecution(new UpdateSettingsDataCommand(updateSettingsDataEvent.getSettingsConsumer()), false);
+        if (updateSettingsDataEvent.getSettingsValueChanged().test(context.getScenarioSimulationModel().getSettings())) {
+            commonExecution(new UpdateSettingsDataCommand(updateSettingsDataEvent.getSettingsChangeToApply()), false);
         }
     }
 

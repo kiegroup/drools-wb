@@ -26,17 +26,18 @@ public class UpdateSettingsDataEvent extends GwtEvent<UpdateSettingsDataEventHan
 
     public static final Type<UpdateSettingsDataEventHandler> TYPE = new Type<>();
 
-    private final Consumer<Settings> settingsConsumer;
-    private final Predicate<Settings> settingsPredicate;
+    private final Consumer<Settings> settingsChangeToApply;
+    private final Predicate<Settings> settingsValueChanged;
 
-    public UpdateSettingsDataEvent(Consumer<Settings> settingsConsumer) {
-        this.settingsConsumer = settingsConsumer;
-        this.settingsPredicate = settings -> true;
+    public UpdateSettingsDataEvent(final Consumer<Settings> settingsChangeToApply) {
+        this.settingsChangeToApply = settingsChangeToApply;
+        this.settingsValueChanged = settings -> true;
     }
 
-    public UpdateSettingsDataEvent(final Consumer<Settings> settingsConsumer, final Predicate<Settings> settingsPredicate) {
-        this.settingsConsumer = settingsConsumer;
-        this.settingsPredicate = settingsPredicate;
+    public UpdateSettingsDataEvent(final Consumer<Settings> settingsChangeToApply,
+                                   final Predicate<Settings> settingsValueChanged) {
+        this.settingsChangeToApply = settingsChangeToApply;
+        this.settingsValueChanged = settingsValueChanged;
     }
 
     @Override
@@ -49,11 +50,11 @@ public class UpdateSettingsDataEvent extends GwtEvent<UpdateSettingsDataEventHan
         handler.onEvent(this);
     }
 
-    public Consumer<Settings> getSettingsConsumer() {
-        return settingsConsumer;
+    public Consumer<Settings> getSettingsChangeToApply() {
+        return settingsChangeToApply;
     }
 
-    public Predicate<Settings> getSettingsPredicate() {
-        return settingsPredicate;
+    public Predicate<Settings> getSettingsValueChanged() {
+        return settingsValueChanged;
     }
 }

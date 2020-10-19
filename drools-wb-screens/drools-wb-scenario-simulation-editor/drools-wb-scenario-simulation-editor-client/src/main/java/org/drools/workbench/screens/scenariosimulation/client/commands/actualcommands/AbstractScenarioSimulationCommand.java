@@ -34,10 +34,9 @@ public abstract class AbstractScenarioSimulationCommand extends AbstractCommand<
     private static final AtomicLong COUNTER_ID = new AtomicLong();
 
     /**
-     * Auto-generated incremental identifier used  to uniquely identify each command
+     * Auto-generated incremental identifier used to uniquely identify each command
      */
     private final long id;
-
 
     protected AbstractScenarioSimulationCommand() {
         this.id = COUNTER_ID.getAndIncrement();
