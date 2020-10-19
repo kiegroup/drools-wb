@@ -83,14 +83,6 @@ public abstract class AbstractScenarioGridCommand extends AbstractScenarioSimula
         }
     }
 
-    /**
-     * Method called soon before actual <b>undo</b> and <b>redo</b> operations to preliminary execute a tab switch <b>without</b>
-     * altering the call stack.
-     * If the command change the status of a not shown grid, this switches the tab
-     * @param context
-     * @return <code>Optional&lt;CommandResult&lt;ScenarioSimulationViolation&gt;&gt;</code> of <code>CommandResultBuilder.SUCCESS</code>
-     * if a tab switch happened, otherwise <code>Optional.empty()</code>
-     */
     @Override
     public Optional<CommandResult<ScenarioSimulationViolation>> commonUndoRedoPreExecution(final ScenarioSimulationContext context) {
         final Optional<GridWidget> selectedGridWidgetOptional = context.getSelectedGridWidget();

@@ -21,6 +21,10 @@ import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioS
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationViolation;
 import org.kie.workbench.common.command.client.CommandResult;
 
+/**
+ * This abstract class defines a family of Commands which can be undo-able and redo-able.
+ * @param <S> defines the changing object status during the command execution
+ */
 public abstract class AbstractScenarioSimulationUndoableCommand<S> extends AbstractScenarioSimulationCommand {
 
     /**
@@ -29,22 +33,47 @@ public abstract class AbstractScenarioSimulationUndoableCommand<S> extends Abstr
      */
     protected S restorableStatus = null;
 
+    /**
+     * The action to perform when an UNDO or REDO is required on this command. Typically it restores the previous status
+     * and it stores the current one.
+     * @param context
+     * @return
+     */
+    protected abstract CommandResult<ScenarioSimulationViolation> setCurrentContext(ScenarioSimulationContext context);
+
+    /**
+     * It sets the status BEFORE the command is launched. Typically it clones the current status before changes are applied.
+     * @param context
+     * @return
+     */
+    protected abstract S setRestorableStatusPreExecution(ScenarioSimulationContext context);
+
+    /**
+     * Method called soon before actual <b>undo</b> and <b>redo</b> operations to preliminary execute a tab switch <b>without</b>
+     * altering the call stack.
+     * (eg If the command change the status of a not shown grid, this switches the tab)
+     * @param context
+     * @return <code>Optional&lt;CommandResult&lt;ScenarioSimulationViolation&gt;&gt;</code> of <code>CommandResultBuilder.SUCCESS</code>
+     * if a tab switch happened, otherwise <code>Optional.empty()</code>
+     */
+    public abstract Optional<CommandResult<ScenarioSimulationViolation>> commonUndoRedoPreExecution(ScenarioSimulationContext context);
+
     @Override
-    public CommandResult<ScenarioSimulationViolation> execute(ScenarioSimulationContext context) {
+    public CommandResult<ScenarioSimulationViolation> execute(final ScenarioSimulationContext context) {
         restorableStatus = setRestorableStatusPreExecution(context);
         return super.execute(context);
     }
 
     @Override
-    public CommandResult<ScenarioSimulationViolation> undo(ScenarioSimulationContext context) {
+    public CommandResult<ScenarioSimulationViolation> undo(final ScenarioSimulationContext context) {
         return commonUndoRedo(context);
     }
 
-    public CommandResult<ScenarioSimulationViolation> redo(ScenarioSimulationContext context) {
+    public CommandResult<ScenarioSimulationViolation> redo(final ScenarioSimulationContext context) {
         return commonUndoRedo(context);
     }
 
-    private CommandResult<ScenarioSimulationViolation> commonUndoRedo(ScenarioSimulationContext context) {
+    private CommandResult<ScenarioSimulationViolation> commonUndoRedo(final ScenarioSimulationContext context) {
         if (restorableStatus == null) {
             String message = this.getClass().getSimpleName() + "restorableStatus status is null";
             throw new IllegalStateException(message);
@@ -52,9 +81,4 @@ public abstract class AbstractScenarioSimulationUndoableCommand<S> extends Abstr
         return setCurrentContext(context);
     }
 
-    protected abstract CommandResult<ScenarioSimulationViolation> setCurrentContext(ScenarioSimulationContext context);
-
-    protected abstract S setRestorableStatusPreExecution(ScenarioSimulationContext context);
-
-    public abstract Optional<CommandResult<ScenarioSimulationViolation>> commonUndoRedoPreExecution(ScenarioSimulationContext context);
 }
