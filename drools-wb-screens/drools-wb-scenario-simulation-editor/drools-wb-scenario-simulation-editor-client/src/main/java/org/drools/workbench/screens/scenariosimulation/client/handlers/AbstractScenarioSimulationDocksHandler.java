@@ -136,11 +136,11 @@ public abstract class AbstractScenarioSimulationDocksHandler extends AbstractWor
         return settingsView.map(SettingsView::getPresenter);
     }
 
-    private PlaceRequest getSettingsPlaceManager() {
+    protected PlaceRequest getSettingsPlaceManager() {
         return getCurrentRightDockPlaceRequest(SettingsPresenter.IDENTIFIER);
     }
 
-    private PlaceRequest getTestToolsPlaceManager() {
+    protected PlaceRequest getTestToolsPlaceManager() {
         return getCurrentRightDockPlaceRequest(TestToolsPresenter.IDENTIFIER);
     }
 

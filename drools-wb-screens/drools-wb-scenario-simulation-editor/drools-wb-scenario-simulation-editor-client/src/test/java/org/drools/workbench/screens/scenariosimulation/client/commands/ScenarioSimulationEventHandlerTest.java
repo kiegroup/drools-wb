@@ -490,22 +490,22 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
     @Test
     public void onUpdateSettingDataEventChangedValue() {
         Predicate<Settings> predicateMock = mock(Predicate.class);
-        when(predicateMock.test(eq(settingsMock))).thenReturn(true);
+        when(predicateMock.test(eq(settingsLocal))).thenReturn(true);
         Consumer<Settings> consumerMock = mock(Consumer.class);
         UpdateSettingsDataEvent event = new UpdateSettingsDataEvent(consumerMock, predicateMock);
         scenarioSimulationEventHandler.onEvent(event);
-        verify(predicateMock, times(1)).test(eq(settingsMock));
+        verify(predicateMock, times(1)).test(eq(settingsLocal));
         verify(scenarioSimulationEventHandler, times(1)).commonExecution(isA(UpdateSettingsDataCommand.class), eq(false));
     }
 
     @Test
     public void onUpdateSettingDataEventNoChangedValue() {
         Predicate<Settings> predicateMock = mock(Predicate.class);
-        when(predicateMock.test(eq(settingsMock))).thenReturn(false);
+        when(predicateMock.test(eq(settingsLocal))).thenReturn(false);
         Consumer<Settings> consumerMock = mock(Consumer.class);
         UpdateSettingsDataEvent event = new UpdateSettingsDataEvent(consumerMock, predicateMock);
         scenarioSimulationEventHandler.onEvent(event);
-        verify(predicateMock, times(1)).test(eq(settingsMock));
+        verify(predicateMock, times(1)).test(eq(settingsLocal));
         verify(scenarioSimulationEventHandler, never()).commonExecution(isA(UpdateSettingsDataCommand.class), eq(false));
     }
 

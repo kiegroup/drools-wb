@@ -18,7 +18,6 @@ package org.drools.workbench.screens.scenariosimulation.client.commands.actualco
 import java.util.Date;
 import java.util.Map;
 
-
 import org.drools.scenariosimulation.api.model.FactMappingType;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;

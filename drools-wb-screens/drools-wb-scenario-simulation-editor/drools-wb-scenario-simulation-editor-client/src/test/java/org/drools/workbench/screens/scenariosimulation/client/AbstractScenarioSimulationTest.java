@@ -142,11 +142,6 @@ public abstract class AbstractScenarioSimulationTest {
     protected Background clonedBackgroundMock;
 
     @Mock
-    protected Settings settingsMock;
-    @Mock
-    protected Settings clonedSettingsMock;
-
-    @Mock
     protected ScenarioGridPanel backgroundGridPanelMock;
 
     @Mock
@@ -389,12 +384,11 @@ public abstract class AbstractScenarioSimulationTest {
 
         when(simulationMock.cloneModel()).thenReturn(clonedSimulationMock);
         when(backgroundMock.cloneModel()).thenReturn(clonedBackgroundMock);
-        when(settingsMock.cloneSettings()).thenReturn(clonedSettingsMock);
         scenarioSimulationContextLocal.getStatus().setSimulation(simulationMock);
 
         when(scenarioSimulationModelMock.getSimulation()).thenReturn(simulationMock);
         when(scenarioSimulationModelMock.getBackground()).thenReturn(backgroundMock);
-        when(scenarioSimulationModelMock.getSettings()).thenReturn(settingsMock);
+        when(scenarioSimulationModelMock.getSettings()).thenReturn(settingsLocal);
 
         when(scenarioCommandRegistryManagerMock.undo(scenarioSimulationContextLocal)).thenReturn(CommandResultBuilder.SUCCESS);
         when(scenarioCommandRegistryManagerMock.redo(scenarioSimulationContextLocal)).thenReturn(CommandResultBuilder.SUCCESS);
