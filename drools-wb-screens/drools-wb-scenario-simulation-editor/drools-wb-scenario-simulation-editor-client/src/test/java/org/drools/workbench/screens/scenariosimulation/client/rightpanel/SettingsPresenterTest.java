@@ -24,12 +24,15 @@ import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.workbench.screens.scenariosimulation.client.dropdown.SettingsScenarioSimulationDropdown;
+import org.drools.workbench.screens.scenariosimulation.client.events.UpdateSettingsDataEvent;
 import org.drools.workbench.screens.scenariosimulation.client.events.ValidateSimulationEvent;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.uberfire.mvp.Command;
 
@@ -42,7 +45,7 @@ import static org.drools.workbench.screens.scenariosimulation.client.TestPropert
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.SKIP_FROM_BUILD;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.STATELESS;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyString;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.never;
@@ -64,6 +67,9 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
 
     @Mock
     private EventBus eventBusMock;
+
+    @Captor
+    private ArgumentCaptor<UpdateSettingsDataEvent> updateSettingsDataEventArgumentCaptor;
 
     protected Settings settingsSpy;
 
@@ -183,7 +189,7 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
 
     @Test
     public void setDmnErrorPath() {
-        settingsPresenterSpy.setDmnErrorPath("");
+        settingsPresenterSpy.setDmnErrorPath(settingsSpy.getDmnFilePath());
         verify(dmnFilePathErrorLabelStyleMock, times(1)).setDisplay(eq(Style.Display.INLINE));
         verify(dmnFilePathErrorLabelMock, times(1)).setInnerText(
                 eq(ScenarioSimulationEditorConstants.INSTANCE.dmnPathErrorLabel(settingsSpy.getDmnFilePath())));
@@ -195,8 +201,7 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         verify(settingsScenarioSimulationDropdownMock, times(2)).getValue();
         verify(dmnFilePathErrorLabelStyleMock, times(1)).setDisplay(eq(Style.Display.NONE));
         verify(dmnFilePathErrorLabelMock, times(1)).setInnerText(eq(""));
-        verify(settingsSpy, times(1)).setDmnFilePath(DMN_FILE_PATH);
-        verify(eventBusMock, times(1)).fireEvent(isA(ValidateSimulationEvent.class));
+        verify(settingsPresenterSpy, times(1)).syncDmnFilePath();
     }
 
     @Test
@@ -207,37 +212,48 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         verify(settingsScenarioSimulationDropdownMock, times(1)).getValue();
         verify(dmnFilePathErrorLabelStyleMock, times(1)).setDisplay(eq(Style.Display.INLINE));
         verify(dmnFilePathErrorLabelMock, times(1)).setInnerText(eq(ScenarioSimulationEditorConstants.INSTANCE.chooseValidDMNAsset()));
-        verify(settingsSpy, never()).setDmnFilePath(anyString());
-        verify(eventBusMock, never()).fireEvent(isA(ValidateSimulationEvent.class));
+        verify(settingsPresenterSpy, never()).syncDmnFilePath();
     }
 
     @Test
     public void syncDmoSession() {
         settingsPresenterSpy.syncDmoSession();
+        verify(eventBusMock, times(1)).fireEvent(updateSettingsDataEventArgumentCaptor.capture());
+        updateSettingsDataEventArgumentCaptor.getValue().getSettingsChangeToApply().accept(settingsSpy);
         verify(settingsSpy, times(1)).setDmoSession(eq(DMO_SESSION));
     }
 
     @Test
     public void syncRuleFlowGroup() {
         settingsPresenterSpy.syncRuleFlowGroup();
+        verify(eventBusMock, times(1)).fireEvent(updateSettingsDataEventArgumentCaptor.capture());
+        updateSettingsDataEventArgumentCaptor.getValue().getSettingsChangeToApply().accept(settingsSpy);
         verify(settingsSpy, times(1)).setRuleFlowGroup(eq(RULE_FLOW_GROUP));
     }
 
     @Test
     public void syncStateless() {
         settingsPresenterSpy.syncStateless();
+        verify(eventBusMock, times(1)).fireEvent(updateSettingsDataEventArgumentCaptor.capture());
+        updateSettingsDataEventArgumentCaptor.getValue().getSettingsChangeToApply().accept(settingsSpy);
         verify(settingsSpy, times(1)).setStateless(eq(STATELESS));
     }
 
     @Test
     public void syncDmnFilePath() {
         settingsPresenterSpy.syncDmnFilePath();
+        verify(eventBusMock, times(1)).fireEvent(updateSettingsDataEventArgumentCaptor.capture());
+        updateSettingsDataEventArgumentCaptor.getValue().getSettingsChangeToApply().accept(settingsSpy);
         verify(settingsSpy, times(1)).setDmnFilePath(eq(DMN_FILE_PATH));
+        verify(eventBusMock, times(1)).fireEvent(isA(ValidateSimulationEvent.class));
+        assertTrue(updateSettingsDataEventArgumentCaptor.getValue().getSettingsValueChanged().test(settingsSpy));
     }
 
     @Test
     public void syncSkipFromBuild() {
         settingsPresenterSpy.syncSkipFromBuild();
+        verify(eventBusMock, times(1)).fireEvent(updateSettingsDataEventArgumentCaptor.capture());
+        updateSettingsDataEventArgumentCaptor.getValue().getSettingsChangeToApply().accept(settingsSpy);
         verify(settingsSpy, times(1)).setSkipFromBuild(eq(SKIP_FROM_BUILD));
     }
 }
