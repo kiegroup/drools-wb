@@ -19,8 +19,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import javax.enterprise.context.Dependent;
-
 import org.drools.scenariosimulation.api.model.FactMapping;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
@@ -29,7 +27,6 @@ import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.Fact
 /**
  * <code>Command</code> to to set the <i>value</i> of a header' cell
  */
-@Dependent
 public class SetHeaderCellValueCommand extends AbstractScenarioGridCommand {
 
     protected boolean isInstanceHeader;
@@ -39,10 +36,6 @@ public class SetHeaderCellValueCommand extends AbstractScenarioGridCommand {
         super(gridWidget);
         this.isInstanceHeader = isInstanceHeader;
         this.isPropertyHeader = isPropertyHeader;
-    }
-
-    private SetHeaderCellValueCommand() {
-        // CDI
     }
 
     @Override

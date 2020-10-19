@@ -26,6 +26,9 @@ import org.kie.workbench.common.command.client.CommandResult;
 import org.kie.workbench.common.command.client.CommandResultBuilder;
 import org.kie.workbench.common.command.client.impl.CommandResultImpl;
 
+/**
+ * Command which manages every changes applied to the SettingsDock.
+ */
 public class UpdateSettingsDataCommand extends AbstractScenarioSimulationUndoableCommand<Settings> {
 
     private final Consumer<Settings> settingsConsumer;

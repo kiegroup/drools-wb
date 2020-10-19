@@ -50,10 +50,6 @@ public abstract class AbstractScenarioGridCommand extends AbstractScenarioSimula
         this.gridWidget = gridWidget;
     }
 
-    protected AbstractScenarioGridCommand() {
-        // CDI
-    }
-
     @Override
     protected ScenarioSimulationContext.Status setRestorableStatusPreExecution(ScenarioSimulationContext context) {
         return context.getStatus().cloneStatus();

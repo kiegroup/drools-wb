@@ -53,14 +53,11 @@ import static org.drools.workbench.screens.scenariosimulation.client.utils.Scena
  */
 public abstract class AbstractSelectedColumnCommand extends AbstractScenarioGridCommand {
 
-    protected FactMappingValueType factMappingValueType = FactMappingValueType.NOT_EXPRESSION;
+    protected FactMappingValueType factMappingValueType;
 
     protected AbstractSelectedColumnCommand(GridWidget gridWidget, FactMappingValueType factMappingValueType) {
         super(gridWidget);
         this.factMappingValueType = factMappingValueType;
-    }
-
-    protected AbstractSelectedColumnCommand() {
     }
 
     protected abstract void executeIfSelectedColumn(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn);
