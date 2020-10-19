@@ -238,7 +238,7 @@ public class ScenarioSimulationEditorPresenter {
     /**
      * To be called to force settings panel reload
      */
-    public void reloadSettings() {
+    public void reloadSettingsDock() {
         populateRightDocks(SettingsPresenter.IDENTIFIER);
     }
 

@@ -45,7 +45,7 @@ import static org.drools.workbench.screens.scenariosimulation.client.TestPropert
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.SKIP_FROM_BUILD;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.STATELESS;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.never;
@@ -221,6 +221,7 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         verify(eventBusMock, times(1)).fireEvent(updateSettingsDataEventArgumentCaptor.capture());
         updateSettingsDataEventArgumentCaptor.getValue().getSettingsChangeToApply().accept(settingsSpy);
         verify(settingsSpy, times(1)).setDmoSession(eq(DMO_SESSION));
+        assertFalse(updateSettingsDataEventArgumentCaptor.getValue().getSettingsValueChanged().test(settingsSpy));
     }
 
     @Test
@@ -229,6 +230,8 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         verify(eventBusMock, times(1)).fireEvent(updateSettingsDataEventArgumentCaptor.capture());
         updateSettingsDataEventArgumentCaptor.getValue().getSettingsChangeToApply().accept(settingsSpy);
         verify(settingsSpy, times(1)).setRuleFlowGroup(eq(RULE_FLOW_GROUP));
+        assertFalse(updateSettingsDataEventArgumentCaptor.getValue().getSettingsValueChanged().test(settingsSpy));
+
     }
 
     @Test
@@ -246,7 +249,7 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         updateSettingsDataEventArgumentCaptor.getValue().getSettingsChangeToApply().accept(settingsSpy);
         verify(settingsSpy, times(1)).setDmnFilePath(eq(DMN_FILE_PATH));
         verify(eventBusMock, times(1)).fireEvent(isA(ValidateSimulationEvent.class));
-        assertTrue(updateSettingsDataEventArgumentCaptor.getValue().getSettingsValueChanged().test(settingsSpy));
+        assertFalse(updateSettingsDataEventArgumentCaptor.getValue().getSettingsValueChanged().test(settingsSpy));
     }
 
     @Test

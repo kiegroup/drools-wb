@@ -56,7 +56,7 @@ public class UpdateSettingsDataCommand extends AbstractScenarioSimulationUndoabl
             final Settings originalSettings = context.getScenarioSimulationModel().getSettings().cloneSettings();
             context.getScenarioSimulationEditorPresenter().getModel().setSettings(restorableStatus);
             restorableStatus = originalSettings;
-            context.getScenarioSimulationEditorPresenter().reloadSettings();
+            context.getScenarioSimulationEditorPresenter().reloadSettingsDock();
             return commonExecution(context);
         } catch (Exception e) {
             return new CommandResultImpl<>(CommandResult.Type.ERROR, Collections.singleton(new ScenarioSimulationViolation(e.getMessage())));
@@ -66,7 +66,7 @@ public class UpdateSettingsDataCommand extends AbstractScenarioSimulationUndoabl
     @Override
     protected void internalExecute(ScenarioSimulationContext context)  {
         settingsConsumer.accept(context.getScenarioSimulationModel().getSettings());
-        context.getScenarioSimulationEditorPresenter().reloadSettings();
+        context.getScenarioSimulationEditorPresenter().reloadSettingsDock();
     }
 
 }

@@ -734,4 +734,16 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         assertEquals(NotificationEvent.NotificationType.ERROR, scenarioNotificationEventArgumentCaptor.getValue().getNotificationType());
         assertFalse(scenarioNotificationEventArgumentCaptor.getValue().isAutoHide());
     }
+
+    @Test
+    public void expandSettingsDock() {
+        presenterSpy.expandSettingsDock();
+        verify(abstractScenarioSimulationDocksHandlerMock, times(1)).expandSettingsDock();
+    }
+
+    @Test
+    public void reloadSettingsDock() {
+        presenterSpy.reloadSettingsDock();
+        verify(presenterSpy, times(1)).populateRightDocks(eq(SettingsPresenter.IDENTIFIER));
+    }
 }

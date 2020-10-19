@@ -130,14 +130,14 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
     public void syncDmoSession() {
         String dmoSession = getCleanValue(() -> view.getDmoSession().getValue());
         eventBus.fireEvent(new UpdateSettingsDataEvent(settingsToUpdate -> settingsToUpdate.setDmoSession(dmoSession),
-                                                       settingsToCheck -> Objects.equals(settingsToCheck.getDmoSession(), dmoSession)));
+                                                       settingsToCheck -> !Objects.equals(settingsToCheck.getDmoSession(), dmoSession)));
     }
 
     @Override
     public void syncRuleFlowGroup() {
         String ruleFlow = getCleanValue(() -> view.getRuleFlowGroup().getValue());
         eventBus.fireEvent(new UpdateSettingsDataEvent(settingsToUpdate -> settingsToUpdate.setRuleFlowGroup(ruleFlow),
-                                                       settingsToCheck -> Objects.equals(settingsToCheck.getRuleFlowGroup(), ruleFlow)));
+                                                       settingsToCheck -> !Objects.equals(settingsToCheck.getRuleFlowGroup(), ruleFlow)));
     }
 
     @Override
@@ -150,9 +150,10 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
     public void syncDmnFilePath() {
         String dmnFilePath = getCleanValue(() -> settingsScenarioSimulationDropdown.getValue().map(KieAssetsDropdownItem::getValue).orElse(""));
         eventBus.fireEvent(new UpdateSettingsDataEvent(settingsToUpdate -> {
-                                settingsToUpdate.setDmnFilePath(dmnFilePath);
-                                eventBus.fireEvent(new ValidateSimulationEvent());
-                           }, settingsToCheck -> Objects.equals(settingsToCheck.getDmnFilePath(), dmnFilePath)));
+                                                            settingsToUpdate.setDmnFilePath(dmnFilePath);
+                                                            eventBus.fireEvent(new ValidateSimulationEvent());
+                                                       },
+                                                       settingsToCheck -> !Objects.equals(settingsToCheck.getDmnFilePath(), dmnFilePath)));
     }
 
     @Override
