@@ -152,7 +152,7 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
         eventBus.fireEvent(new UpdateSettingsDataEvent(settingsToUpdate -> {
                                 settingsToUpdate.setDmnFilePath(dmnFilePath);
                                 eventBus.fireEvent(new ValidateSimulationEvent());
-                           }));
+                           }, settingsToCheck -> Objects.equals(settingsToCheck.getDmnFilePath(), dmnFilePath)));
     }
 
     @Override
