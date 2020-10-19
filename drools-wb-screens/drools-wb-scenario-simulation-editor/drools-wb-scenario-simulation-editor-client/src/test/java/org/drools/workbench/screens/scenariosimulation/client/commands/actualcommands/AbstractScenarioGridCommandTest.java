@@ -29,6 +29,7 @@ import org.kie.workbench.common.command.client.CommandResult;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.eq;
@@ -47,16 +48,11 @@ public abstract class AbstractScenarioGridCommandTest extends AbstractScenarioSi
     }
 
     @Test
-    public void undoWithRestorable() {
-        commandSpy.restorableStatus = scenarioSimulationContextLocal.getStatus();
-        commandSpy.undo(scenarioSimulationContextLocal);
-        verify(commandSpy, times(1)).setCurrentContext(eq(scenarioSimulationContextLocal));
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void undoWithoutRestorable() {
-        commandSpy.restorableStatus = null;
-        commandSpy.undo(scenarioSimulationContextLocal);
+    public void setRestorableStatus() {
+        ScenarioSimulationContext.Status clonedStatus = commandSpy.setRestorableStatusPreExecution(scenarioSimulationContextLocal);
+        assertNotNull(clonedStatus);
+        assertEquals(clonedSimulationMock, clonedStatus.getSimulation());
+        assertEquals(clonedBackgroundMock, clonedStatus.getBackground());
     }
 
     @Test
@@ -76,6 +72,8 @@ public abstract class AbstractScenarioGridCommandTest extends AbstractScenarioSi
     public void execute() {
         final ScenarioSimulationContext.Status status = scenarioSimulationContextLocal.getStatus();
         commandSpy.execute(scenarioSimulationContextLocal);
+        assertEquals(clonedBackgroundMock, commandSpy.restorableStatus.getBackground());
+        assertEquals(clonedSimulationMock, commandSpy.restorableStatus.getSimulation());
         try {
             verify(commandSpy, times(1)).internalExecute(eq(scenarioSimulationContextLocal));
             assertNotEquals(status, commandSpy.restorableStatus);
