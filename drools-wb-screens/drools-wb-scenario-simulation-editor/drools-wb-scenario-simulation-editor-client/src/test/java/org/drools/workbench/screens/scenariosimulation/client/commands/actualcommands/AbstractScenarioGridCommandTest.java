@@ -56,6 +56,19 @@ public abstract class AbstractScenarioGridCommandTest extends AbstractScenarioSi
     }
 
     @Test
+    public void undoWithRestorable() {
+        commandSpy.restorableStatus = scenarioSimulationContextLocal.getStatus();
+        commandSpy.undo(scenarioSimulationContextLocal);
+        verify(commandSpy, times(1)).setCurrentContext(eq(scenarioSimulationContextLocal));
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void undoWithoutRestorable() {
+        commandSpy.restorableStatus = null;
+        commandSpy.undo(scenarioSimulationContextLocal);
+    }
+
+    @Test
     public void redoWithRestorable() {
         commandSpy.restorableStatus = scenarioSimulationContextLocal.getStatus();
         commandSpy.redo(scenarioSimulationContextLocal);

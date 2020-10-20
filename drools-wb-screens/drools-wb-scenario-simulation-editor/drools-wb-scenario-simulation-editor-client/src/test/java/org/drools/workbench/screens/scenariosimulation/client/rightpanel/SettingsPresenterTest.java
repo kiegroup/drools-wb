@@ -231,7 +231,6 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         updateSettingsDataEventArgumentCaptor.getValue().getSettingsChangeToApply().accept(settingsSpy);
         verify(settingsSpy, times(1)).setRuleFlowGroup(eq(RULE_FLOW_GROUP));
         assertFalse(updateSettingsDataEventArgumentCaptor.getValue().getSettingsValueChanged().test(settingsSpy));
-
     }
 
     @Test

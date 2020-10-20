@@ -545,6 +545,12 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         scenarioSimulationEventHandler.commonExecution(appendRowCommandMock, true);
         assertEquals(simulationMock, scenarioSimulationContextLocal.getStatus().getSimulation());
         verify(scenarioCommandRegistryManagerMock, never()).register(eq(scenarioSimulationContextLocal), eq(appendRowCommandMock));
+        //
+        reset(scenarioCommandRegistryManagerMock);
+        when(scenarioCommandManagerMock.execute(eq(scenarioSimulationContextLocal), eq(appendRowCommandMock))).thenReturn(CommandResultBuilder.SUCCESS);
+        EnableTestToolsCommand enableTestToolsCommandMock = mock(EnableTestToolsCommand.class);
+        scenarioSimulationEventHandler.commonExecution(enableTestToolsCommandMock, true);
+        verify(scenarioCommandRegistryManagerMock, never()).register(eq(scenarioSimulationContextLocal), eq(appendRowCommandMock));
     }
 
     @Test
@@ -594,6 +600,8 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         verify(handlerRegistrationListMock, times(1)).add(eq(setPropertyHeaderEventHandlerMock));
         verify(eventBusMock, times(1)).addHandler(eq(UndoEvent.TYPE), isA(UndoEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(undoEventHandlerRegistrationMock));
+        verify(eventBusMock, times(1)).addHandler(eq(UpdateSettingsDataEvent.TYPE), isA(UpdateSettingsDataEventHandler.class));
+        verify(handlerRegistrationListMock, times(1)).add(eq(updateSettingsDataRegistrationMock));
         verify(eventBusMock, times(1)).addHandler(eq(UnsupportedDMNEvent.TYPE), isA(UnsupportedDMNEventHandler.class));
         verify(handlerRegistrationListMock, times(1)).add(eq(unsupportedDMNEventHandlerRegistrationMock));
     }
