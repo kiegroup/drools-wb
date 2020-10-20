@@ -174,6 +174,15 @@ public abstract class AbstractScenarioGridCommandTest extends AbstractScenarioSi
             when(backgroundGridWidgetSpy.isSelected()).thenReturn(GridWidget.SIMULATION.equals(gridWidget));
             commandSpy.gridWidget = gridWidget;
             commandSpy.commonUndoRedoPreExecution(scenarioSimulationContextLocal);
+            if (GridWidget.SIMULATION.equals(gridWidget)) {
+                verify(scenarioSimulationEditorPresenterMock, times(1)).selectSimulationTab();
+                verify(scenarioGridPanelMock, times(1)).onResize();
+                verify(scenarioGridPanelMock, times(1)).select();
+            } else {
+                verify(scenarioSimulationEditorPresenterMock, times(1)).selectBackgroundTab();
+                verify(backgroundGridPanelMock, times(1)).onResize();
+                verify(backgroundGridPanelMock, times(1)).select();
+            }
         }
     }
 
