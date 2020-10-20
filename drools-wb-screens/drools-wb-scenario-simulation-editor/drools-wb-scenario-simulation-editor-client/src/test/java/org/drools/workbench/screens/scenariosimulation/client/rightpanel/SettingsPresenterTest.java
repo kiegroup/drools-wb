@@ -18,6 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
 import java.util.Optional;
 
+import com.google.gwt.dom.client.InputElement;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.shared.EventBus;
 import com.google.gwtmockito.GwtMockitoTestRunner;
@@ -46,8 +47,11 @@ import static org.drools.workbench.screens.scenariosimulation.client.TestPropert
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.STATELESS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -216,21 +220,47 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
     }
 
     @Test
-    public void syncDmoSession() {
+    public void syncDmoSessionSameValue() {
         settingsPresenterSpy.syncDmoSession();
         verify(eventBusMock, times(1)).fireEvent(updateSettingsDataEventArgumentCaptor.capture());
+        assertFalse(updateSettingsDataEventArgumentCaptor.getValue().getSettingsValueChanged().test(settingsSpy));
         updateSettingsDataEventArgumentCaptor.getValue().getSettingsChangeToApply().accept(settingsSpy);
         verify(settingsSpy, times(1)).setDmoSession(eq(DMO_SESSION));
-        assertFalse(updateSettingsDataEventArgumentCaptor.getValue().getSettingsValueChanged().test(settingsSpy));
     }
 
     @Test
-    public void syncRuleFlowGroup() {
+    public void syncDmoSessionChangedValue() {
+        InputElement inputElementMock = mock(InputElement.class);
+        when(inputElementMock.getValue()).thenReturn(DMO_SESSION + "2");
+        doReturn(inputElementMock).when(settingsViewMock).getDmoSession();
+        settingsPresenterSpy.syncDmoSession();
+        verify(eventBusMock, times(1)).fireEvent(updateSettingsDataEventArgumentCaptor.capture());
+        assertTrue(updateSettingsDataEventArgumentCaptor.getValue().getSettingsValueChanged().test(settingsSpy));
+        updateSettingsDataEventArgumentCaptor.getValue().getSettingsChangeToApply().accept(settingsSpy);
+        verify(settingsSpy, times(1)).setDmoSession(eq(DMO_SESSION + "2"));
+        assertEquals(DMO_SESSION + "2", settingsSpy.getDmoSession());
+    }
+
+    @Test
+    public void syncRuleFlowGroupSameValue() {
         settingsPresenterSpy.syncRuleFlowGroup();
         verify(eventBusMock, times(1)).fireEvent(updateSettingsDataEventArgumentCaptor.capture());
+        assertFalse(updateSettingsDataEventArgumentCaptor.getValue().getSettingsValueChanged().test(settingsSpy));
         updateSettingsDataEventArgumentCaptor.getValue().getSettingsChangeToApply().accept(settingsSpy);
         verify(settingsSpy, times(1)).setRuleFlowGroup(eq(RULE_FLOW_GROUP));
-        assertFalse(updateSettingsDataEventArgumentCaptor.getValue().getSettingsValueChanged().test(settingsSpy));
+    }
+
+    @Test
+    public void syncRuleFlowGroupChangedValue() {
+        InputElement inputElementMock = mock(InputElement.class);
+        when(inputElementMock.getValue()).thenReturn(RULE_FLOW_GROUP + "2");
+        doReturn(inputElementMock).when(settingsViewMock).getRuleFlowGroup();
+        settingsPresenterSpy.syncRuleFlowGroup();
+        verify(eventBusMock, times(1)).fireEvent(updateSettingsDataEventArgumentCaptor.capture());
+        assertTrue(updateSettingsDataEventArgumentCaptor.getValue().getSettingsValueChanged().test(settingsSpy));
+        updateSettingsDataEventArgumentCaptor.getValue().getSettingsChangeToApply().accept(settingsSpy);
+        verify(settingsSpy, times(1)).setRuleFlowGroup(eq(RULE_FLOW_GROUP + "2"));
+        assertEquals(RULE_FLOW_GROUP + "2", settingsSpy.getRuleFlowGroup());
     }
 
     @Test
@@ -242,13 +272,26 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
     }
 
     @Test
-    public void syncDmnFilePath() {
+    public void syncDmnFilePathSameValue() {
         settingsPresenterSpy.syncDmnFilePath();
         verify(eventBusMock, times(1)).fireEvent(updateSettingsDataEventArgumentCaptor.capture());
+        assertFalse(updateSettingsDataEventArgumentCaptor.getValue().getSettingsValueChanged().test(settingsSpy));
         updateSettingsDataEventArgumentCaptor.getValue().getSettingsChangeToApply().accept(settingsSpy);
         verify(settingsSpy, times(1)).setDmnFilePath(eq(DMN_FILE_PATH));
         verify(eventBusMock, times(1)).fireEvent(isA(ValidateSimulationEvent.class));
-        assertFalse(updateSettingsDataEventArgumentCaptor.getValue().getSettingsValueChanged().test(settingsSpy));
+    }
+
+    @Test
+    public void syncDmnFilePathChangedValue() {
+        KieAssetsDropdownItem item = new KieAssetsDropdownItem("DMNFile", "", DMN_FILE_PATH + "2", null);
+        when(settingsScenarioSimulationDropdownMock.getValue()).thenReturn(Optional.of(item));
+        settingsPresenterSpy.syncDmnFilePath();
+        verify(eventBusMock, times(1)).fireEvent(updateSettingsDataEventArgumentCaptor.capture());
+        assertTrue(updateSettingsDataEventArgumentCaptor.getValue().getSettingsValueChanged().test(settingsSpy));
+        updateSettingsDataEventArgumentCaptor.getValue().getSettingsChangeToApply().accept(settingsSpy);
+        verify(settingsSpy, times(1)).setDmnFilePath(eq(DMN_FILE_PATH + "2"));
+        verify(eventBusMock, times(1)).fireEvent(isA(ValidateSimulationEvent.class));
+        assertEquals(DMN_FILE_PATH + "2", settingsSpy.getDmnFilePath());
     }
 
     @Test
