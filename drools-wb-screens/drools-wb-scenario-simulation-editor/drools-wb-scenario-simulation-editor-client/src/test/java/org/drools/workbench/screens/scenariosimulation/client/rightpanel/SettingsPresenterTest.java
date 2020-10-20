@@ -165,6 +165,13 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         settingsPresenterSpy.setRuleSettings(settingsSpy);
         verify(dmnSettingsStyleMock, times(1)).setDisplay(eq(Style.Display.NONE));
         verify(ruleSettingsStyleMock, times(1)).setDisplay(eq(Style.Display.INLINE));
+        verify(settingsPresenterSpy, times(1)).updateRuleSettings(eq(settingsSpy));
+
+    }
+
+    @Test
+    public void updateRuleSettings() {
+        settingsPresenterSpy.updateRuleSettings(settingsSpy);
         verify(dmoSessionMock, times(1)).setValue(eq(DMO_SESSION));
         verify(ruleFlowGroupMock, times(1)).setValue(eq(RULE_FLOW_GROUP));
         verify(statelessMock, times(1)).setChecked(eq(settingsSpy.isStateless()));
@@ -175,13 +182,52 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         settingsPresenterSpy.setDMNSettings(settingsSpy);
         verify(ruleSettingsStyleMock, times(1)).setDisplay(eq(Style.Display.NONE));
         verify(dmnSettingsStyleMock, times(1)).setDisplay(eq(Style.Display.INLINE));
+        verify(settingsScenarioSimulationDropdownMock, times(1)).registerOnMissingValueHandler(isA(Command.class));
+        verify(settingsScenarioSimulationDropdownMock, times(1)).registerOnChangeHandler(isA(Command.class));
+        verify(settingsScenarioSimulationDropdownMock, times(1)).loadAssets(eq(DMN_FILE_PATH));
+        verify(settingsPresenterSpy, times(1)).updateDMNSettings(settingsSpy);
+    }
+
+    @Test
+    public void updateDMNSettings() {
+        settingsPresenterSpy.updateDMNSettings(settingsSpy);
         verify(dmnNameMock, times(1)).setValue(eq(DMN_NAME));
         verify(dmnNamespaceMock, times(1)).setValue(eq(DMN_NAMESPACE));
         verify(dmnFilePathErrorLabelStyleMock, times(1)).setDisplay(eq(Style.Display.NONE));
         verify(dmnFilePathErrorLabelMock, times(1)).setInnerText(eq(""));
-        verify(settingsScenarioSimulationDropdownMock, times(1)).registerOnMissingValueHandler(isA(Command.class));
-        verify(settingsScenarioSimulationDropdownMock, times(1)).registerOnChangeHandler(isA(Command.class));
-        verify(settingsScenarioSimulationDropdownMock, times(1)).loadAssets(eq(DMN_FILE_PATH));
+        verify(settingsScenarioSimulationDropdownMock, times(1)).updateValue(eq(DMN_FILE_PATH));
+    }
+
+    @Test
+    public void updateSettingsDataRule() {
+        settingsSpy.setType(ScenarioSimulationModel.Type.RULE);
+        when(ruleSettingsStyleMock.getDisplay()).thenReturn(Style.Display.INLINE.toString());
+        settingsPresenterSpy.updateSettingsData(settingsSpy);
+        verify(settingsPresenterSpy, times(1)).setRuleSettings(eq(settingsSpy));
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void updateSettingsDataRuleWrongState() {
+        settingsSpy.setType(ScenarioSimulationModel.Type.RULE);
+        when(ruleSettingsStyleMock.getDisplay()).thenReturn(Style.Display.NONE.toString());
+        settingsPresenterSpy.updateSettingsData(settingsSpy);
+        verify(settingsPresenterSpy, never()).setRuleSettings(eq(settingsSpy));
+    }
+
+    @Test
+    public void updateSettingsDataDMN() {
+        settingsSpy.setType(ScenarioSimulationModel.Type.DMN);
+        when(dmnSettingsStyleMock.getDisplay()).thenReturn(Style.Display.INLINE.toString());
+        settingsPresenterSpy.updateSettingsData(settingsSpy);
+        verify(settingsPresenterSpy, times(1)).setDMNSettings(eq(settingsSpy));
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void updateSettingsDataDMNWrongState() {
+        settingsSpy.setType(ScenarioSimulationModel.Type.DMN);
+        when(dmnSettingsStyleMock.getDisplay()).thenReturn(Style.Display.NONE.toString());
+        settingsPresenterSpy.updateSettingsData(settingsSpy);
+        verify(settingsPresenterSpy, never()).setDMNSettings(eq(settingsSpy));
     }
 
     @Test

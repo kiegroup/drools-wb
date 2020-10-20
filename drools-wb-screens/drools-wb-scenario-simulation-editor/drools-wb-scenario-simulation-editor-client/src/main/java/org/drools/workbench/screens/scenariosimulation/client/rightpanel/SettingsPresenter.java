@@ -37,6 +37,8 @@ import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdown
 import org.uberfire.client.annotations.WorkbenchScreen;
 import org.uberfire.mvp.Command;
 
+import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type.DMN;
+import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type.RULE;
 import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter.DEFAULT_PREFERRED_WIDHT;
 import static org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter.IDENTIFIER;
 
@@ -109,6 +111,10 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
     protected void setRuleSettings(Settings settings) {
         view.getDmnSettings().getStyle().setDisplay(Style.Display.NONE);
         view.getRuleSettings().getStyle().setDisplay(Style.Display.INLINE);
+        updateRuleSettings(settings);
+    }
+
+    protected void updateRuleSettings(Settings settings) {
         view.getDmoSession().setValue(Optional.ofNullable(settings.getDmoSession()).orElse(""));
         view.getRuleFlowGroup().setValue(Optional.ofNullable(settings.getRuleFlowGroup()).orElse(""));
         view.getStateless().setChecked(settings.isStateless());
@@ -117,13 +123,18 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
     protected void setDMNSettings(Settings settings) {
         view.getRuleSettings().getStyle().setDisplay(Style.Display.NONE);
         view.getDmnSettings().getStyle().setDisplay(Style.Display.INLINE);
+        settingsScenarioSimulationDropdown.registerOnMissingValueHandler(() -> setDmnErrorPath(settings.getDmnFilePath()));
+        settingsScenarioSimulationDropdown.registerOnChangeHandler(this::validateSimulation);
+        settingsScenarioSimulationDropdown.loadAssets(settings.getDmnFilePath());
+        updateDMNSettings(settings);
+    }
+
+    protected void updateDMNSettings(Settings settings) {
         view.getDmnName().setValue(Optional.ofNullable(settings.getDmnName()).orElse(""));
         view.getDmnNamespace().setValue(Optional.ofNullable(settings.getDmnNamespace()).orElse(""));
         view.getDmnFilePathErrorLabel().getStyle().setDisplay(Style.Display.NONE);
         view.getDmnFilePathErrorLabel().setInnerText("");
-        settingsScenarioSimulationDropdown.registerOnMissingValueHandler(() -> setDmnErrorPath(settings.getDmnFilePath()));
-        settingsScenarioSimulationDropdown.registerOnChangeHandler(this::validateSimulation);
-        settingsScenarioSimulationDropdown.loadAssets(settings.getDmnFilePath());
+        settingsScenarioSimulationDropdown.updateValue(settings.getDmnFilePath());
     }
 
     @Override
@@ -160,6 +171,23 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
     public void syncSkipFromBuild() {
         boolean isSkipFromBuild = view.getSkipFromBuild().isChecked();
         eventBus.fireEvent(new UpdateSettingsDataEvent(settingsToUpdate -> settingsToUpdate.setSkipFromBuild(isSkipFromBuild)));
+    }
+
+    @Override
+    public void updateSettingsData(Settings settings) {
+        if (!isSettingTypeValid(settings.getType())) {
+            throw new IllegalStateException("Trying to update a " + settings.getType() + " data ");
+        }
+        if (RULE.equals(settings.getType())) {
+            setRuleSettings(settings);
+        } else {
+            setDMNSettings(settings);
+        }
+    }
+
+    private boolean isSettingTypeValid(ScenarioSimulationModel.Type type) {
+        return (DMN.equals(type) && Style.Display.INLINE.toString().equals(view.getDmnSettings().getStyle().getDisplay())) ||
+                (RULE.equals(type) && Style.Display.INLINE.toString().equals(view.getRuleSettings().getStyle().getDisplay()));
     }
 
     /**

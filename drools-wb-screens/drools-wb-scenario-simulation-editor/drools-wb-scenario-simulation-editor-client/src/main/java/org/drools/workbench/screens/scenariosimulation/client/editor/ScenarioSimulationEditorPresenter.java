@@ -239,7 +239,7 @@ public class ScenarioSimulationEditorPresenter {
      * To be called to force settings panel reload
      */
     public void reloadSettingsDock() {
-        populateRightDocks(SettingsPresenter.IDENTIFIER);
+        abstractScenarioSimulationDocksHandler.getSettingsPresenter().ifPresent(this::updateSettings);
     }
 
     public void onRunScenario() {
@@ -633,6 +633,10 @@ public class ScenarioSimulationEditorPresenter {
         Type modelType = dataManagementStrategy instanceof AbstractDMODataManagementStrategy ? Type.RULE : Type.DMN;
         presenter.setEventBus(eventBus);
         presenter.setScenarioType(modelType, model.getSettings(), path.getFileName());
+    }
+
+    protected void updateSettings(SettingsView.Presenter presenter) {
+        presenter.updateSettingsData(model.getSettings());
     }
 
     public String getJsonModel(ScenarioSimulationModel model) {

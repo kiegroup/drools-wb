@@ -71,7 +71,7 @@ public class SettingsScenarioSimulationDropdownTest extends AbstractScenarioSimu
            initialize() method which represents the body of super.loadAssets() method   */
         verify(assetsDropdown, times(1)).clear();
         verify(assetsDropdown, times(1)).initializeDropdown();
-        assertEquals(((SettingsScenarioSimulationDropdown) assetsDropdown).currentValue, LOWER_CASE_VALUE);
+        assertEquals(LOWER_CASE_VALUE, ((SettingsScenarioSimulationDropdown) assetsDropdown).currentValue);
     }
 
     @Test
@@ -106,4 +106,21 @@ public class SettingsScenarioSimulationDropdownTest extends AbstractScenarioSimu
     public void isValuePresentInKieAssets_NotPresent() {
         assertFalse(((SettingsScenarioSimulationDropdown) assetsDropdown).isValuePresentInKieAssets("ANOTHER_VALUE"));
     }
+
+    @Test
+    public void updateValuePresent() {
+        ((SettingsScenarioSimulationDropdown) assetsDropdown).updateValue(DEFAULT_VALUE);
+        verify(((SettingsScenarioSimulationDropdown) assetsDropdown), times(1)).isValuePresentInKieAssets(eq(DEFAULT_VALUE));
+        verify(((SettingsScenarioSimulationDropdownView) viewMock)).initialize(eq(DEFAULT_VALUE));
+        verify(onMissingValueHandlerMock, never()).execute();
+    }
+
+    @Test
+    public void updateValueNotPresent() {
+        ((SettingsScenarioSimulationDropdown) assetsDropdown).updateValue(LOWER_CASE_VALUE);
+        verify(((SettingsScenarioSimulationDropdown) assetsDropdown), times(1)).isValuePresentInKieAssets(eq(LOWER_CASE_VALUE));
+        verify(((SettingsScenarioSimulationDropdownView) viewMock), times(1)).initialize();
+        verify(onMissingValueHandlerMock, times(1)).execute();
+    }
+
 }

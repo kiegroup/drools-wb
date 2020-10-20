@@ -166,6 +166,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         when(placeRequestMock.getPath()).thenReturn(pathMock);
         when(simulationMock.getUnmodifiableData()).thenReturn(Arrays.asList(new Scenario()));
         when(abstractScenarioSimulationDocksHandlerMock.getTestToolsPresenter()).thenReturn(Optional.ofNullable(testToolsPresenterMock));
+        when(abstractScenarioSimulationDocksHandlerMock.getSettingsPresenter()).thenReturn(Optional.ofNullable(settingsPresenterMock));
 
         this.presenterSpy = spy(new ScenarioSimulationEditorPresenter(abstractScenarioSimulationProducerMock,
                                                                       mock(ScenarioSimulationResourceType.class),
@@ -744,6 +745,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     @Test
     public void reloadSettingsDock() {
         presenterSpy.reloadSettingsDock();
-        verify(presenterSpy, times(1)).populateRightDocks(eq(SettingsPresenter.IDENTIFIER));
+        verify(abstractScenarioSimulationDocksHandlerMock, times(1)).getSettingsPresenter();
+        verify(presenterSpy, times(1)).updateSettings(settingsPresenterMock);
     }
 }
