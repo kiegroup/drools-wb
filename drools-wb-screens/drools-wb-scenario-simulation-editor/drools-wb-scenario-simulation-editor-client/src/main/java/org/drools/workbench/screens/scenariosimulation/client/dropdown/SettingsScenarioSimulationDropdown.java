@@ -16,6 +16,8 @@
 package org.drools.workbench.screens.scenariosimulation.client.dropdown;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -44,8 +46,11 @@ public class SettingsScenarioSimulationDropdown extends ScenarioSimulationDropdo
      * @param currentValue
      */
     public void loadAssets(String currentValue) {
-        this.currentValue = currentValue;
-        super.loadAssets();
+        Optional<KieAssetsDropdownItem> value = getValue();
+        if (!value.isPresent() || !Objects.equals(value.get().getValue(), currentValue)) {
+            this.currentValue = currentValue;
+            super.loadAssets();
+        }
     }
 
     public void registerOnMissingValueHandler(final Command onMissingValueHandler) {
@@ -63,15 +68,6 @@ public class SettingsScenarioSimulationDropdown extends ScenarioSimulationDropdo
             onMissingValueHandler.execute();
         }
         this.currentValue = null;
-    }
-
-    public void updateValue(String value) {
-        if (isValuePresentInKieAssets(value)) {
-            ((SettingsScenarioSimulationDropdownView) view).initialize(value);
-        } else {
-            view.initialize();
-            onMissingValueHandler.execute();
-        }
     }
 
     /**

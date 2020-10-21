@@ -37,6 +37,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(GwtMockitoTestRunner.class)
 public class SettingsScenarioSimulationDropdownTest extends AbstractScenarioSimulationDropdownTest {
@@ -75,6 +76,27 @@ public class SettingsScenarioSimulationDropdownTest extends AbstractScenarioSimu
     }
 
     @Test
+    public void loadAssetsSameValue() {
+        when(viewMock.getValue()).thenReturn(DEFAULT_VALUE);
+        ((SettingsScenarioSimulationDropdown) assetsDropdown).loadAssets(DEFAULT_VALUE);
+        /* Can't directly call super.loadAssets() method, so here it verifies clear() and
+           initialize() method which represents the body of super.loadAssets() method   */
+        verify(assetsDropdown, never()).clear();
+        verify(assetsDropdown, never()).initializeDropdown();
+    }
+
+    @Test
+    public void loadAssetsEmptyValue() {
+        when(viewMock.getValue()).thenReturn(null);
+        ((SettingsScenarioSimulationDropdown) assetsDropdown).loadAssets(DEFAULT_VALUE);
+        /* Can't directly call super.loadAssets() method, so here it verifies clear() and
+           initialize() method which represents the body of super.loadAssets() method   */
+        verify(assetsDropdown, times(1)).clear();
+        verify(assetsDropdown, times(1)).initializeDropdown();
+        assertEquals(DEFAULT_VALUE, ((SettingsScenarioSimulationDropdown) assetsDropdown).currentValue);
+    }
+
+    @Test
     public void assetListConsumerMethod_Present() {
         ((SettingsScenarioSimulationDropdown) assetsDropdown).assetListConsumerMethod(assetList);
         verify(assetsDropdown, times(ITEM_NUMBER)).addValue(isA(KieAssetsDropdownItem.class));
@@ -105,22 +127,6 @@ public class SettingsScenarioSimulationDropdownTest extends AbstractScenarioSimu
     @Test
     public void isValuePresentInKieAssets_NotPresent() {
         assertFalse(((SettingsScenarioSimulationDropdown) assetsDropdown).isValuePresentInKieAssets("ANOTHER_VALUE"));
-    }
-
-    @Test
-    public void updateValuePresent() {
-        ((SettingsScenarioSimulationDropdown) assetsDropdown).updateValue(DEFAULT_VALUE);
-        verify(((SettingsScenarioSimulationDropdown) assetsDropdown), times(1)).isValuePresentInKieAssets(eq(DEFAULT_VALUE));
-        verify(((SettingsScenarioSimulationDropdownView) viewMock)).initialize(eq(DEFAULT_VALUE));
-        verify(onMissingValueHandlerMock, never()).execute();
-    }
-
-    @Test
-    public void updateValueNotPresent() {
-        ((SettingsScenarioSimulationDropdown) assetsDropdown).updateValue(LOWER_CASE_VALUE);
-        verify(((SettingsScenarioSimulationDropdown) assetsDropdown), times(1)).isValuePresentInKieAssets(eq(LOWER_CASE_VALUE));
-        verify(((SettingsScenarioSimulationDropdownView) viewMock), times(1)).initialize();
-        verify(onMissingValueHandlerMock, times(1)).execute();
     }
 
 }

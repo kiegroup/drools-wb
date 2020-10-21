@@ -195,13 +195,13 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         verify(dmnNamespaceMock, times(1)).setValue(eq(DMN_NAMESPACE));
         verify(dmnFilePathErrorLabelStyleMock, times(1)).setDisplay(eq(Style.Display.NONE));
         verify(dmnFilePathErrorLabelMock, times(1)).setInnerText(eq(""));
-        verify(settingsScenarioSimulationDropdownMock, times(1)).updateValue(eq(DMN_FILE_PATH));
+        verify(settingsScenarioSimulationDropdownMock, times(1)).loadAssets(eq(DMN_FILE_PATH));
     }
 
     @Test
     public void updateSettingsDataRule() {
         settingsSpy.setType(ScenarioSimulationModel.Type.RULE);
-        when(ruleSettingsStyleMock.getDisplay()).thenReturn(Style.Display.INLINE.toString());
+        when(ruleSettingsStyleMock.getDisplay()).thenReturn(Style.Display.INLINE.getCssName());
         settingsPresenterSpy.updateSettingsData(settingsSpy);
         verify(settingsPresenterSpy, times(1)).setRuleSettings(eq(settingsSpy));
     }
@@ -209,7 +209,7 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
     @Test(expected = IllegalStateException.class)
     public void updateSettingsDataRuleWrongState() {
         settingsSpy.setType(ScenarioSimulationModel.Type.RULE);
-        when(ruleSettingsStyleMock.getDisplay()).thenReturn(Style.Display.NONE.toString());
+        when(ruleSettingsStyleMock.getDisplay()).thenReturn(Style.Display.NONE.getCssName());
         settingsPresenterSpy.updateSettingsData(settingsSpy);
         verify(settingsPresenterSpy, never()).setRuleSettings(eq(settingsSpy));
     }
@@ -217,7 +217,7 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
     @Test
     public void updateSettingsDataDMN() {
         settingsSpy.setType(ScenarioSimulationModel.Type.DMN);
-        when(dmnSettingsStyleMock.getDisplay()).thenReturn(Style.Display.INLINE.toString());
+        when(dmnSettingsStyleMock.getDisplay()).thenReturn(Style.Display.INLINE.getCssName());
         settingsPresenterSpy.updateSettingsData(settingsSpy);
         verify(settingsPresenterSpy, times(1)).setDMNSettings(eq(settingsSpy));
     }
@@ -225,7 +225,7 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
     @Test(expected = IllegalStateException.class)
     public void updateSettingsDataDMNWrongState() {
         settingsSpy.setType(ScenarioSimulationModel.Type.DMN);
-        when(dmnSettingsStyleMock.getDisplay()).thenReturn(Style.Display.NONE.toString());
+        when(dmnSettingsStyleMock.getDisplay()).thenReturn(Style.Display.NONE.getCssName());
         settingsPresenterSpy.updateSettingsData(settingsSpy);
         verify(settingsPresenterSpy, never()).setDMNSettings(eq(settingsSpy));
     }

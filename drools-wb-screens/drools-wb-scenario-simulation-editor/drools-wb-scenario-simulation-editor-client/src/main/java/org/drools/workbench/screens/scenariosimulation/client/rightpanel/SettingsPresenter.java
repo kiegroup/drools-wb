@@ -125,7 +125,6 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
         view.getDmnSettings().getStyle().setDisplay(Style.Display.INLINE);
         settingsScenarioSimulationDropdown.registerOnMissingValueHandler(() -> setDmnErrorPath(settings.getDmnFilePath()));
         settingsScenarioSimulationDropdown.registerOnChangeHandler(this::validateSimulation);
-        settingsScenarioSimulationDropdown.loadAssets(settings.getDmnFilePath());
         updateDMNSettings(settings);
     }
 
@@ -134,7 +133,7 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
         view.getDmnNamespace().setValue(Optional.ofNullable(settings.getDmnNamespace()).orElse(""));
         view.getDmnFilePathErrorLabel().getStyle().setDisplay(Style.Display.NONE);
         view.getDmnFilePathErrorLabel().setInnerText("");
-        settingsScenarioSimulationDropdown.updateValue(settings.getDmnFilePath());
+        settingsScenarioSimulationDropdown.loadAssets(settings.getDmnFilePath());
     }
 
     @Override
@@ -178,6 +177,7 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
         if (!isSettingTypeValid(settings.getType())) {
             throw new IllegalStateException("Trying to update a " + settings.getType() + " data ");
         }
+        view.getSkipFromBuild().setChecked(settings.isSkipFromBuild());
         if (RULE.equals(settings.getType())) {
             setRuleSettings(settings);
         } else {
@@ -186,8 +186,8 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
     }
 
     private boolean isSettingTypeValid(ScenarioSimulationModel.Type type) {
-        return (DMN.equals(type) && Style.Display.INLINE.toString().equals(view.getDmnSettings().getStyle().getDisplay())) ||
-                (RULE.equals(type) && Style.Display.INLINE.toString().equals(view.getRuleSettings().getStyle().getDisplay()));
+        return (DMN.equals(type) && Style.Display.INLINE.getCssName().equals(view.getDmnSettings().getStyle().getDisplay())) ||
+                (RULE.equals(type) && Style.Display.INLINE.getCssName().equals(view.getRuleSettings().getStyle().getDisplay()));
     }
 
     /**
