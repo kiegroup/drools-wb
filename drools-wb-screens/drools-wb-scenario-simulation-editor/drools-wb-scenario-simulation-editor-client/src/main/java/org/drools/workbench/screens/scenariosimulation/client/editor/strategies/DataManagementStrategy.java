@@ -15,6 +15,7 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.editor.strategies;
 
+import java.math.BigDecimal;
 import java.util.AbstractMap;
 import java.util.Collections;
 import java.util.Map;
@@ -28,6 +29,8 @@ import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToo
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.uberfire.backend.vfs.ObservablePath;
 
+import static org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder.LOCALDATETIME_CANONICAL_NAME;
+import static org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder.LOCALDATETIME_SIMPLE_NAME;
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder.LOCALDATE_CANONICAL_NAME;
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder.LOCALDATE_SIMPLE_NAME;
 
@@ -44,8 +47,10 @@ public interface DataManagementStrategy {
             new AbstractMap.SimpleEntry<>(Number.class.getSimpleName(), new SimpleClassEntry(Number.class)),
             new AbstractMap.SimpleEntry<>(String.class.getSimpleName(), new SimpleClassEntry(String.class)),
             new AbstractMap.SimpleEntry<>(Object.class.getSimpleName(), new SimpleClassEntry(Object.class)),
-            // LocalDate is not supported by GWT
-            new AbstractMap.SimpleEntry<>(LOCALDATE_SIMPLE_NAME, new SimpleClassEntry(LOCALDATE_SIMPLE_NAME, LOCALDATE_CANONICAL_NAME))).
+            new AbstractMap.SimpleEntry<>(BigDecimal.class.getSimpleName(), new SimpleClassEntry(BigDecimal.class)),
+            // java.time (JSR-310) is not supported by GWT, therefore LocalDate and LocaleDateTime are not natively
+            new AbstractMap.SimpleEntry<>(LOCALDATE_SIMPLE_NAME, new SimpleClassEntry(LOCALDATE_SIMPLE_NAME, LOCALDATE_CANONICAL_NAME)),
+            new AbstractMap.SimpleEntry<>(LOCALDATETIME_SIMPLE_NAME, new SimpleClassEntry(LOCALDATETIME_SIMPLE_NAME, LOCALDATETIME_CANONICAL_NAME))).
             collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue)));
 
     void populateTestTools(final TestToolsView.Presenter testToolsPresenter, final ScenarioSimulationContext context, final GridWidget gridWidget);
