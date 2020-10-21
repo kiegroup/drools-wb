@@ -252,6 +252,7 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         verify(dmnFilePathErrorLabelStyleMock, times(1)).setDisplay(eq(Style.Display.NONE));
         verify(dmnFilePathErrorLabelMock, times(1)).setInnerText(eq(""));
         verify(settingsPresenterSpy, times(1)).syncDmnFilePath();
+        verify(eventBusMock, times(1)).fireEvent(isA(ValidateSimulationEvent.class));
     }
 
     @Test
@@ -263,6 +264,7 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         verify(dmnFilePathErrorLabelStyleMock, times(1)).setDisplay(eq(Style.Display.INLINE));
         verify(dmnFilePathErrorLabelMock, times(1)).setInnerText(eq(ScenarioSimulationEditorConstants.INSTANCE.chooseValidDMNAsset()));
         verify(settingsPresenterSpy, never()).syncDmnFilePath();
+        verify(eventBusMock, never()).fireEvent(isA(ValidateSimulationEvent.class));
     }
 
     @Test
@@ -324,7 +326,6 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         assertFalse(updateSettingsDataEventArgumentCaptor.getValue().getSettingsValueChanged().test(settingsSpy));
         updateSettingsDataEventArgumentCaptor.getValue().getSettingsChangeToApply().accept(settingsSpy);
         verify(settingsSpy, times(1)).setDmnFilePath(eq(DMN_FILE_PATH));
-        verify(eventBusMock, times(1)).fireEvent(isA(ValidateSimulationEvent.class));
     }
 
     @Test
@@ -336,7 +337,6 @@ public class SettingsPresenterTest extends AbstractSettingsTest {
         assertTrue(updateSettingsDataEventArgumentCaptor.getValue().getSettingsValueChanged().test(settingsSpy));
         updateSettingsDataEventArgumentCaptor.getValue().getSettingsChangeToApply().accept(settingsSpy);
         verify(settingsSpy, times(1)).setDmnFilePath(eq(DMN_FILE_PATH + "2"));
-        verify(eventBusMock, times(1)).fireEvent(isA(ValidateSimulationEvent.class));
         assertEquals(DMN_FILE_PATH + "2", settingsSpy.getDmnFilePath());
     }
 

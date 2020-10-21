@@ -159,10 +159,7 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
     @Override
     public void syncDmnFilePath() {
         String dmnFilePath = getCleanValue(() -> settingsScenarioSimulationDropdown.getValue().map(KieAssetsDropdownItem::getValue).orElse(""));
-        eventBus.fireEvent(new UpdateSettingsDataEvent(settingsToUpdate -> {
-                                                            settingsToUpdate.setDmnFilePath(dmnFilePath);
-                                                            eventBus.fireEvent(new ValidateSimulationEvent());
-                                                       },
+        eventBus.fireEvent(new UpdateSettingsDataEvent(settingsToUpdate -> settingsToUpdate.setDmnFilePath(dmnFilePath),
                                                        settingsToCheck -> !Objects.equals(settingsToCheck.getDmnFilePath(), dmnFilePath)));
     }
 
@@ -216,6 +213,7 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
             this.syncDmnFilePath();
             view.getDmnFilePathErrorLabel().getStyle().setDisplay(Style.Display.NONE);
             view.getDmnFilePathErrorLabel().setInnerText("");
+            eventBus.fireEvent(new ValidateSimulationEvent());
         }
     }
 
