@@ -41,6 +41,8 @@ public class ConstantHolder {
     // java.time (JSR-310) is not supported by GWT, therefore LocalDate and LocaleDateTime are not native
     public static final String LOCALDATE_SIMPLE_NAME = "LocalDate";
     public static final String LOCALDATE_CANONICAL_NAME = "java.time.LocalDate";
+    public static final String LOCALTIME_SIMPLE_NAME = "LocalTime";
+    public static final String LOCALTIME_CANONICAL_NAME = "java.time.LocalTime";
     public static final String LOCALDATETIME_SIMPLE_NAME = "LocalDateTime";
     public static final String LOCALDATETIME_CANONICAL_NAME = "java.time.LocalDateTime";
     public static final String DMN_DATE = "date";

@@ -16,6 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.editor.strategies;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.AbstractMap;
 import java.util.Collections;
 import java.util.Map;
@@ -33,6 +34,7 @@ import static org.drools.workbench.screens.scenariosimulation.client.utils.Const
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder.LOCALDATETIME_SIMPLE_NAME;
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder.LOCALDATE_CANONICAL_NAME;
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder.LOCALDATE_SIMPLE_NAME;
+import static org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder.LOCALTIME_SIMPLE_NAME;
 
 /**
  * The <b>Strategy</b> to use to manage/modify/save data inside the editor.
@@ -41,15 +43,22 @@ import static org.drools.workbench.screens.scenariosimulation.client.utils.Const
 public interface DataManagementStrategy {
 
     Map<String, SimpleClassEntry> SIMPLE_CLASSES_MAP = Collections.unmodifiableMap(Stream.of(
-            new AbstractMap.SimpleEntry<>(Boolean.class.getSimpleName(), new SimpleClassEntry(Boolean.class)),
-            new AbstractMap.SimpleEntry<>(Double.class.getSimpleName(), new SimpleClassEntry(Double.class)),
-            new AbstractMap.SimpleEntry<>(Integer.class.getSimpleName(), new SimpleClassEntry(Integer.class)),
-            new AbstractMap.SimpleEntry<>(Number.class.getSimpleName(), new SimpleClassEntry(Number.class)),
-            new AbstractMap.SimpleEntry<>(String.class.getSimpleName(), new SimpleClassEntry(String.class)),
-            new AbstractMap.SimpleEntry<>(Object.class.getSimpleName(), new SimpleClassEntry(Object.class)),
             new AbstractMap.SimpleEntry<>(BigDecimal.class.getSimpleName(), new SimpleClassEntry(BigDecimal.class)),
+            new AbstractMap.SimpleEntry<>(BigInteger.class.getSimpleName(), new SimpleClassEntry(BigInteger.class)),
+            new AbstractMap.SimpleEntry<>(Boolean.class.getSimpleName(), new SimpleClassEntry(Boolean.class)),
+            new AbstractMap.SimpleEntry<>(Byte.class.getSimpleName(), new SimpleClassEntry(Byte.class)),
+            new AbstractMap.SimpleEntry<>(Character.class.getSimpleName(), new SimpleClassEntry(Character.class)),
+            new AbstractMap.SimpleEntry<>(Double.class.getSimpleName(), new SimpleClassEntry(Double.class)),
+            new AbstractMap.SimpleEntry<>(Float.class.getSimpleName(), new SimpleClassEntry(Float.class)),
+            new AbstractMap.SimpleEntry<>(Integer.class.getSimpleName(), new SimpleClassEntry(Integer.class)),
+            new AbstractMap.SimpleEntry<>(Long.class.getSimpleName(), new SimpleClassEntry(Long.class)),
+            new AbstractMap.SimpleEntry<>(Number.class.getSimpleName(), new SimpleClassEntry(Number.class)),
+            new AbstractMap.SimpleEntry<>(Object.class.getSimpleName(), new SimpleClassEntry(Object.class)),
+            new AbstractMap.SimpleEntry<>(Short.class.getSimpleName(), new SimpleClassEntry(Short.class)),
+            new AbstractMap.SimpleEntry<>(String.class.getSimpleName(), new SimpleClassEntry(String.class)),
             // java.time (JSR-310) is not supported by GWT, therefore LocalDate and LocaleDateTime are not natively
             new AbstractMap.SimpleEntry<>(LOCALDATE_SIMPLE_NAME, new SimpleClassEntry(LOCALDATE_SIMPLE_NAME, LOCALDATE_CANONICAL_NAME)),
+            new AbstractMap.SimpleEntry<>(LOCALTIME_SIMPLE_NAME, new SimpleClassEntry(LOCALTIME_SIMPLE_NAME, LOCALTIME_SIMPLE_NAME)),
             new AbstractMap.SimpleEntry<>(LOCALDATETIME_SIMPLE_NAME, new SimpleClassEntry(LOCALDATETIME_SIMPLE_NAME, LOCALDATETIME_CANONICAL_NAME))).
             collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue)));
 
