@@ -34,6 +34,7 @@ import static org.drools.workbench.screens.scenariosimulation.client.utils.Const
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder.LOCALDATETIME_SIMPLE_NAME;
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder.LOCALDATE_CANONICAL_NAME;
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder.LOCALDATE_SIMPLE_NAME;
+import static org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder.LOCALTIME_CANONICAL_NAME;
 import static org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder.LOCALTIME_SIMPLE_NAME;
 
 /**
@@ -58,7 +59,7 @@ public interface DataManagementStrategy {
             new AbstractMap.SimpleEntry<>(String.class.getSimpleName(), new SimpleClassEntry(String.class)),
             // java.time (JSR-310) is not supported by GWT, therefore LocalDate and LocaleDateTime are not natively
             new AbstractMap.SimpleEntry<>(LOCALDATE_SIMPLE_NAME, new SimpleClassEntry(LOCALDATE_SIMPLE_NAME, LOCALDATE_CANONICAL_NAME)),
-            new AbstractMap.SimpleEntry<>(LOCALTIME_SIMPLE_NAME, new SimpleClassEntry(LOCALTIME_SIMPLE_NAME, LOCALTIME_SIMPLE_NAME)),
+            new AbstractMap.SimpleEntry<>(LOCALTIME_SIMPLE_NAME, new SimpleClassEntry(LOCALTIME_SIMPLE_NAME, LOCALTIME_CANONICAL_NAME)),
             new AbstractMap.SimpleEntry<>(LOCALDATETIME_SIMPLE_NAME, new SimpleClassEntry(LOCALDATETIME_SIMPLE_NAME, LOCALDATETIME_CANONICAL_NAME))).
             collect(Collectors.toMap(AbstractMap.SimpleEntry::getKey, AbstractMap.SimpleEntry::getValue)));
 
