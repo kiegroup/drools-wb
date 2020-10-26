@@ -46,7 +46,7 @@ import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.Fact
 public class ScenarioSimulationContext {
 
     private static final AtomicLong STATUS_COUNTER_ID = new AtomicLong();
-    private static final String ILLEGAL_WIDGET_MESSAGE = "Illegal GridWidget ";
+    private static final String ILLEGAL_WIDGET_MESSAGE_PREFIX = "Illegal GridWidget ";
 
     protected final ScenarioGridWidget simulationGridWidget;
     protected final ScenarioGridWidget backgroundGridWidget;
@@ -149,7 +149,7 @@ public class ScenarioSimulationContext {
             case BACKGROUND:
                 return backgroundGridWidget.getScenarioGridPanel();
             default:
-                throw new IllegalArgumentException(ILLEGAL_WIDGET_MESSAGE + gridWidget);
+                throw new IllegalArgumentException(ILLEGAL_WIDGET_MESSAGE_PREFIX + gridWidget);
         }
     }
 
@@ -160,7 +160,7 @@ public class ScenarioSimulationContext {
             case BACKGROUND:
                 return backgroundGridWidget.getModel();
             default:
-                throw new IllegalArgumentException(ILLEGAL_WIDGET_MESSAGE + gridWidget);
+                throw new IllegalArgumentException(ILLEGAL_WIDGET_MESSAGE_PREFIX + gridWidget);
         }
     }
 
@@ -171,7 +171,7 @@ public class ScenarioSimulationContext {
             case BACKGROUND:
                 return (AbstractScesimModel<T>) status.getBackground();
             default:
-                throw new IllegalArgumentException(ILLEGAL_WIDGET_MESSAGE + gridWidget);
+                throw new IllegalArgumentException(ILLEGAL_WIDGET_MESSAGE_PREFIX + gridWidget);
         }
     }
 

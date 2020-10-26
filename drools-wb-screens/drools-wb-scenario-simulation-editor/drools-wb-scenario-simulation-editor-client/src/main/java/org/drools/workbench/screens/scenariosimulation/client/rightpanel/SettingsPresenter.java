@@ -172,7 +172,8 @@ public class SettingsPresenter extends AbstractSubDockPresenter<SettingsView> im
     @Override
     public void updateSettingsData(Settings settings) {
         if (!isSettingTypeValid(settings.getType())) {
-            throw new IllegalStateException("Trying to update a " + settings.getType() + " data ");
+            throw new IllegalStateException("Trying to update a wrong settings set for this Test Scenario, which is not of "
+                                                    + settings.getType() + " type.");
         }
         view.getSkipFromBuild().setChecked(settings.isSkipFromBuild());
         if (RULE.equals(settings.getType())) {

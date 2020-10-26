@@ -51,7 +51,7 @@ public class UpdateSettingsDataCommand extends AbstractScenarioSimulationUndoabl
     protected CommandResult<ScenarioSimulationViolation> setCurrentContext(ScenarioSimulationContext context) {
         try {
             if (restorableStatus == null) {
-                throw new IllegalStateException("restorableSettings is null");
+                throw new IllegalStateException("restorableStatus is null");
             }
             final Settings originalSettings = context.getScenarioSimulationModel().getSettings().cloneSettings();
             context.getScenarioSimulationEditorPresenter().getModel().setSettings(restorableStatus);

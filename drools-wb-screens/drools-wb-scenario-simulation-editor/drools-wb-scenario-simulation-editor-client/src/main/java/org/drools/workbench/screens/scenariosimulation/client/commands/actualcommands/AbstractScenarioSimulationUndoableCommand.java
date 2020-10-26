@@ -75,7 +75,7 @@ public abstract class AbstractScenarioSimulationUndoableCommand<S> extends Abstr
 
     private CommandResult<ScenarioSimulationViolation> commonUndoRedo(final ScenarioSimulationContext context) {
         if (restorableStatus == null) {
-            String message = this.getClass().getSimpleName() + "restorableStatus status is null";
+            String message = this.getClass().getSimpleName() + " restorableStatus status is null";
             throw new IllegalStateException(message);
         }
         return setCurrentContext(context);
