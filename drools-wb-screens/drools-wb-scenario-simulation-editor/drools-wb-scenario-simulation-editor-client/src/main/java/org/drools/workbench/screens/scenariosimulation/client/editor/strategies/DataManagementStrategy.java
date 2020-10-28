@@ -17,8 +17,10 @@ package org.drools.workbench.screens.scenariosimulation.client.editor.strategies
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.OffsetDateTime;
 import java.util.AbstractMap;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -49,12 +51,14 @@ public interface DataManagementStrategy {
             new AbstractMap.SimpleEntry<>(Boolean.class.getSimpleName(), new SimpleClassEntry(Boolean.class)),
             new AbstractMap.SimpleEntry<>(Byte.class.getSimpleName(), new SimpleClassEntry(Byte.class)),
             new AbstractMap.SimpleEntry<>(Character.class.getSimpleName(), new SimpleClassEntry(Character.class)),
+            new AbstractMap.SimpleEntry<>(Date.class.getSimpleName(), new SimpleClassEntry(Date.class)),
             new AbstractMap.SimpleEntry<>(Double.class.getSimpleName(), new SimpleClassEntry(Double.class)),
             new AbstractMap.SimpleEntry<>(Float.class.getSimpleName(), new SimpleClassEntry(Float.class)),
             new AbstractMap.SimpleEntry<>(Integer.class.getSimpleName(), new SimpleClassEntry(Integer.class)),
             new AbstractMap.SimpleEntry<>(Long.class.getSimpleName(), new SimpleClassEntry(Long.class)),
             new AbstractMap.SimpleEntry<>(Number.class.getSimpleName(), new SimpleClassEntry(Number.class)),
             new AbstractMap.SimpleEntry<>(Object.class.getSimpleName(), new SimpleClassEntry(Object.class)),
+            new AbstractMap.SimpleEntry<>(OffsetDateTime.class.getSimpleName(), new SimpleClassEntry(OffsetDateTime.class)),
             new AbstractMap.SimpleEntry<>(Short.class.getSimpleName(), new SimpleClassEntry(Short.class)),
             new AbstractMap.SimpleEntry<>(String.class.getSimpleName(), new SimpleClassEntry(String.class)),
             // java.time (JSR-310) is not supported by GWT, therefore LocalDate and LocaleDateTime are not natively
