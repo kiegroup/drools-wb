@@ -45,5 +45,7 @@ public class ConstantHolder {
     public static final String LOCALTIME_CANONICAL_NAME = "java.time.LocalTime";
     public static final String LOCALDATETIME_SIMPLE_NAME = "LocalDateTime";
     public static final String LOCALDATETIME_CANONICAL_NAME = "java.time.LocalDateTime";
+    public static final String OFFSETDATETIME_SIMPLE_NAME = "OffsetDateTime";
+    public static final String OFFSETDATETIME_CANONICAL_NAME = "java.time.OffsetDateTime";
     public static final String DMN_DATE = "date";
 }
