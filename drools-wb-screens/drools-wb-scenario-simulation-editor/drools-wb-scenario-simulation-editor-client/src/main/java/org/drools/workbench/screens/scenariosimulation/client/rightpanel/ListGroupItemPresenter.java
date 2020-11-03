@@ -187,7 +187,7 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
     /**
      * Populate the "Assets" list. When
      * @param toPopulate
-     * @param parentPath
+     * @param parentPath It represents the parents fact of the current FactName, typically when this is an expandable Fact Field.
      * @param factName
      * @param factModelTree the <code>FactModelTree</code> with all properties of a given type
      */

@@ -216,7 +216,8 @@ public class FactModelTree {
          * @return
          */
         public String getPropertyTypeNameToVisualize() {
-            return baseTypeName.orElse(typeName);
+            String typeName2 = typeName.replace('$', '.');
+            return baseTypeName.orElse(typeName2);
         }
     }
 }
