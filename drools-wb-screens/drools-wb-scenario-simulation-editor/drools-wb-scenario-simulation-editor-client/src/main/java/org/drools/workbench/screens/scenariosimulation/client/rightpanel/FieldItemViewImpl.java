@@ -47,12 +47,13 @@ public class FieldItemViewImpl implements FieldItemView {
 
     private String fullPath;
     private String factName;
+    private String rootFactName;
     private String fieldName;
     private String className;
     private String classTypeName;
 
     @Override
-    public void setFieldData(String fullPath, String factName, String fieldName, String className, String classTypeName) {
+    public void setFieldData(String fullPath, String factName, String rootFactName, String fieldName, String className, String classTypeName) {
         String innerHtml = new StringBuilder()
                 .append("<a>")
                 .append(fieldName)
@@ -66,6 +67,7 @@ public class FieldItemViewImpl implements FieldItemView {
         fieldNameElement.setAttribute("className", className);
         fieldNameElement.setAttribute("fullPath", fullPath);
         this.factName = factName;
+        this.rootFactName = rootFactName;
         this.fieldName = fieldName;
         this.className = className;
         this.fullPath = fullPath;
@@ -80,6 +82,11 @@ public class FieldItemViewImpl implements FieldItemView {
     @Override
     public String getFactName() {
         return factName;
+    }
+
+    @Override
+    public String getRootFactName() {
+        return rootFactName;
     }
 
     @Override

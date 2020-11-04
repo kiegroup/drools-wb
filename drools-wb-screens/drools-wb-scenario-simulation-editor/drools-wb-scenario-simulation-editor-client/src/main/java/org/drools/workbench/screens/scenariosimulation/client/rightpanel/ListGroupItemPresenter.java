@@ -128,14 +128,14 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
     @Override
     public DivElement getDivElement(String factName, FactModelTree factModelTree) {
         final ListGroupItemView listGroupItemView = commonGetListGroupItemView("", factName, false);
-        populateListGroupItemView(listGroupItemView, "", factName, factModelTree);
+        populateListGroupItemView(listGroupItemView, "", factName, factName, factModelTree);
         return listGroupItemView.getListGroupItem();
     }
 
     @Override
-    public DivElement getDivElement(String fullPath, String factName, String factModelTreeClass) {
+    public DivElement getDivElement(String fullPath, String factName, String rootFactName, String factModelTreeClass) {
         final ListGroupItemView listGroupItemView = commonGetListGroupItemView(fullPath, factName, true);
-        populateListGroupItemView(listGroupItemView, factName, factModelTreeClass);
+        populateListGroupItemView(listGroupItemView, factName, rootFactName, factModelTreeClass);
         return listGroupItemView.getListGroupExpansion();
     }
 
@@ -152,7 +152,7 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
                         testToolsPresenter.getFactModelTreeFromFactTypeMap(listGroupItemView.getFactType())
                                 .orElseGet(() -> testToolsPresenter.getFactModelTreeFromHiddenMap(listGroupItemView.getFactType()));
                 if (factModelTree != null) {
-                    populateListGroupItemView(listGroupItemView, listGroupItemView.getParentPath(), listGroupItemView.getFactName(), factModelTree);
+                    populateListGroupItemView(listGroupItemView, listGroupItemView.getParentPath(), listGroupItemView.getFactName(), listGroupItemView.getRootFactName(), factModelTree);
                     listGroupItemView.setToExpand(false);
                 }
             }
@@ -191,7 +191,7 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
      * @param factName
      * @param factModelTree the <code>FactModelTree</code> with all properties of a given type
      */
-    protected void populateListGroupItemView(ListGroupItemView toPopulate, String parentPath, String factName, FactModelTree factModelTree) {
+    protected void populateListGroupItemView(ListGroupItemView toPopulate, String parentPath, String factName, String rootFactName, FactModelTree factModelTree) {
         if (factName.equals(factModelTree.getFactName())) {  // the name of the property equals the type of the factModelTree: this means that we are populating the "root" of the class
             toPopulate.setFactName(factName);
         } else {
@@ -199,9 +199,9 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
         }
         String fullPath = parentPath.isEmpty() ? factName : parentPath + "." + factName;
         factModelTree.getSimpleProperties().entrySet().stream().sorted(Map.Entry.comparingByKey()).forEach(entry ->
-                toPopulate.addFactField(fieldItemPresenter.getLIElement(fullPath, factName, entry.getKey(), entry.getValue().getTypeName(), entry.getValue().getPropertyTypeNameToVisualize())));
+                toPopulate.addFactField(fieldItemPresenter.getLIElement(fullPath, factName, rootFactName, entry.getKey(), entry.getValue().getTypeName(), entry.getValue().getPropertyTypeNameToVisualize())));
         factModelTree.getExpandableProperties().entrySet().stream().sorted(Map.Entry.comparingByValue()).forEach(entry ->
-                 toPopulate.addExpandableFactField(getDivElement(fullPath, entry.getKey(), entry.getValue())));
+                 toPopulate.addExpandableFactField(getDivElement(fullPath, entry.getKey(), rootFactName, entry.getValue())));
     }
 
     /**
@@ -210,8 +210,9 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
      * @param factName the property' name
      * @param factType the property' type
      */
-    protected void populateListGroupItemView(ListGroupItemView toPopulate, String factName, String factType) {
+    protected void populateListGroupItemView(ListGroupItemView toPopulate, String factName, String rootFactName, String factType) {
         toPopulate.setFactNameAndType(factName, factType);
+        toPopulate.setRootFactName(rootFactName);
     }
 
     /**
