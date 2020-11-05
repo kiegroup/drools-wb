@@ -295,7 +295,7 @@ public abstract class AbstractSelectedColumnCommandTest extends AbstractScenario
         SortedMap<String, FactModelTree> sortedMap = spy(new TreeMap<>());
         sortedMap.put("Book", book);
         sortedMap.put("Author", author);
-        List<String> elements = Arrays.asList("Book", "author", "firstBook", "name");
+        List<String> elements = Arrays.asList("Book", "author", "firstBook", "topics");
         FactModelTree target = ((AbstractSelectedColumnCommand) commandSpy).navigateComplexObject(book, elements, sortedMap);
         assertEquals(target, book);
         verify(sortedMap, times(1)).get("Author");
