@@ -161,6 +161,7 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
         if (fullFactClassName != null && fullFactClassName.contains(".")) {
             factPackageName = fullFactClassName.substring(0, fullFactClassName.lastIndexOf('.'));
         }
+        String factClassName = fullFactClassName.substring(fullFactClassName.lastIndexOf('.') + 1); //TODO Nullable
         if (ScenarioSimulationSharedUtils.isEnumCanonicalName(superTypeMap.get(factName))) {
             simpleProperties.put(ConstantsHolder.VALUE, new FactModelTree.PropertyTypeName(fullFactClassName));
             return getSimpleClassFactModelTree(factName, fullFactClassName);
@@ -175,7 +176,7 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
                 }
             }
         }
-        return new FactModelTree(factName, factPackageName, simpleProperties, genericTypesMap);
+        return new FactModelTree(factName, factPackageName, simpleProperties, genericTypesMap, factClassName);
     }
 
     protected String defineClassNameField(String modelFieldClassName, Map<String, String> superTypesMap) {

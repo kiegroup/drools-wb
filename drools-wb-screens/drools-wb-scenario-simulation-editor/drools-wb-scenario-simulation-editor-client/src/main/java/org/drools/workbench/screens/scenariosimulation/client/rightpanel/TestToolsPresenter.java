@@ -362,11 +362,12 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
         if (editingColumnEnabled) {
             if (selectedListGroupItemView != null) {
                 String className = selectedListGroupItemView.getActualClassName();
+                String simpleClassName = selectedListGroupItemView.getRootClassName();
                 getFullPackage(className).ifPresent(fullPackage -> eventBus.fireEvent(
                             new SetPropertyHeaderEvent(gridWidget,
                                                        fullPackage,
                                                        Arrays.asList(className),
-                                                       fullPackage + "." + className,
+                                                       fullPackage + "." + simpleClassName,
                                                        FactMappingValueType.EXPRESSION)));
             } else if (selectedFieldItemView != null) {
                 String rootFactName = selectedFieldItemView.getRootFactName();

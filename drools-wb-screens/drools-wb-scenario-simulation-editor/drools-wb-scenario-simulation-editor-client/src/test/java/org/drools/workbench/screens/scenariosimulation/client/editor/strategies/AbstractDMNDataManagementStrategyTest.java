@@ -114,11 +114,11 @@ public class AbstractDMNDataManagementStrategyTest extends AbstractScenarioSimul
         visibleFactsLocal.clear();
         hiddenFactsLocal.clear();
         commonIsADataType("TEST", false);
-        visibleFactsLocal.put("TEST", new FactModelTree());
+        //visibleFactsLocal.put("TEST", new FactModelTree());
         commonIsADataType("TOAST", false);
         commonIsADataType("TEST", true);
         visibleFactsLocal.clear();
-        hiddenFactsLocal.put("TEST", new FactModelTree());
+        //hiddenFactsLocal.put("TEST", new FactModelTree());
         commonIsADataType("TOAST", false);
         commonIsADataType("TEST", true);
     }

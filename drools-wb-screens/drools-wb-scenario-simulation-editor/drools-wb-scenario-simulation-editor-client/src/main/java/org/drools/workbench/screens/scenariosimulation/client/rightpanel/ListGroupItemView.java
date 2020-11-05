@@ -83,6 +83,10 @@ public interface ListGroupItemView extends IsWidget,
 
     void setRootFactName(String rootFactName);
 
+    String getRootClassName();
+
+    void setRootClassName(String fullClassName);
+
     interface Presenter {
 
         /**
@@ -115,7 +119,7 @@ public interface ListGroupItemView extends IsWidget,
          * @param factName the property' name
          * @param factModelTreeClass the property' type
          */
-        DivElement getDivElement(String parentPath, String factName, String rootFactName, String factModelTreeClass);
+        DivElement getDivElement(String parentPath, String factName, String factModelTreeClass, String rootFactName, String rootClassName);
 
         void onToggleRowExpansion(ListGroupItemView listGroupItemView, boolean currentlyShown);
 
