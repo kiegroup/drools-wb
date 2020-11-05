@@ -147,7 +147,6 @@ public class ListGroupItemViewImpl implements ListGroupItemView {
     @Override
     public void setFactName(String factName) {
         this.factName = factName;
-        this.factType = factName;
         fullClassName.setInnerText(factName);
         listGroupItem.setAttribute("id", "listGroupItem-" + factName);
     }
