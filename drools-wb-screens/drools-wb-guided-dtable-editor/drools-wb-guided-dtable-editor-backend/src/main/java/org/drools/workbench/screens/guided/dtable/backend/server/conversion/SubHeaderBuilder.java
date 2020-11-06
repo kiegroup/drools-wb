@@ -368,6 +368,8 @@ public class SubHeaderBuilder {
             return "==";
         } else if (Objects.equals("!= null", column.getOperator())) {
             return "!=";
+        } else if (column instanceof BRLConditionVariableColumn) {
+            return columnContext.getVariableOperators().getOperator(((BRLConditionVariableColumn) column).getVarName());
         } else {
             return column.getOperator();
         }

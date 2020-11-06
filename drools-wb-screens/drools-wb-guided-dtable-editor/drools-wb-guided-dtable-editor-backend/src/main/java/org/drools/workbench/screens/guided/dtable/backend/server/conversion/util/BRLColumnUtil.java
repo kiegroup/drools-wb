@@ -18,6 +18,7 @@ package org.drools.workbench.screens.guided.dtable.backend.server.conversion.uti
 import org.drools.workbench.models.datamodel.rule.ActionFieldList;
 import org.drools.workbench.models.datamodel.rule.ActionFieldValue;
 import org.drools.workbench.models.datamodel.rule.BaseSingleFieldConstraint;
+import org.drools.workbench.models.datamodel.rule.CompositeFieldConstraint;
 import org.drools.workbench.models.datamodel.rule.FactPattern;
 import org.drools.workbench.models.datamodel.rule.FieldConstraint;
 import org.drools.workbench.models.datamodel.rule.FieldNatureType;
@@ -67,10 +68,10 @@ public class BRLColumnUtil {
             if (acceptOnlySingleFieldConstraints(constraint)) {
                 return true;
             }
-            if (useOfExpressionsIsNotAllowed((SingleFieldConstraint) constraint)) {
+            if (useOfExpressionsIsNotAllowed(constraint)) {
                 return true;
             }
-            if (onlyAllowedConstraintValueTypeIsTemplateType((SingleFieldConstraint) constraint)) {
+            if (onlyAllowedConstraintValueTypeIsTemplateType(constraint)) {
                 return true;
             }
         }
@@ -89,15 +90,27 @@ public class BRLColumnUtil {
         return !(iPattern instanceof FactPattern);
     }
 
-    private static boolean onlyAllowedConstraintValueTypeIsTemplateType(final SingleFieldConstraint fieldConstraint) {
-        return fieldConstraint.getConstraintValueType() != BaseSingleFieldConstraint.TYPE_TEMPLATE;
+    private static boolean onlyAllowedConstraintValueTypeIsTemplateType(final FieldConstraint fieldConstraint) {
+        return fieldConstraint instanceof SingleFieldConstraint
+                && ((SingleFieldConstraint) fieldConstraint).getConstraintValueType() != BaseSingleFieldConstraint.TYPE_TEMPLATE;
     }
 
-    private static boolean useOfExpressionsIsNotAllowed(final SingleFieldConstraint fieldConstraint) {
-        return !fieldConstraint.getExpressionValue().isEmpty();
+    private static boolean useOfExpressionsIsNotAllowed(final FieldConstraint fieldConstraint) {
+        return fieldConstraint instanceof SingleFieldConstraint
+                && !((SingleFieldConstraint) fieldConstraint).getExpressionValue().isEmpty();
     }
 
     private static boolean acceptOnlySingleFieldConstraints(final FieldConstraint constraint) {
-        return !(constraint instanceof SingleFieldConstraint);
+        if (constraint instanceof CompositeFieldConstraint) {
+            for (final FieldConstraint fieldConstraint : ((CompositeFieldConstraint) constraint).getConstraints()) {
+                if (!acceptOnlySingleFieldConstraints(fieldConstraint)) {
+                    return false;
+                }
+            }
+        } else if ((constraint instanceof SingleFieldConstraint)) {
+            return false;
+        }
+
+        return true;
     }
 }
