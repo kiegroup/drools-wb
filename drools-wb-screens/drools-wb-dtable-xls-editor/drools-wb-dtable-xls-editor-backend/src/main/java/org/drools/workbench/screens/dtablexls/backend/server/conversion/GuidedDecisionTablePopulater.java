@@ -220,7 +220,8 @@ public class GuidedDecisionTablePopulater {
                                             rhsBuilders);
         final RuleModel rm = RuleModelDRLPersistenceImpl.getInstance().unmarshal(rule,
                                                                                  Collections.emptyList(),
-                                                                                 dmo);
+                                                                                 dmo,
+                                                                                 true);
 
         if (rm.rhs != null) {
             for (IAction action : rm.rhs) {

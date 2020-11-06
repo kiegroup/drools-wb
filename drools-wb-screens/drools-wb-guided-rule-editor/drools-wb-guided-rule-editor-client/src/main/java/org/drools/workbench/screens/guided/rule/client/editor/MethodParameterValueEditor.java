@@ -223,6 +223,22 @@ public class MethodParameterValueEditor
                                   new InfoPopup(GuidedRuleEditorResources.CONSTANTS.Literal(),
                                                 GuidedRuleEditorResources.CONSTANTS.LiteralValTip())));
 
+        if (modeller.isTemplate()) {
+            Button templateButton = new Button(GuidedRuleEditorResources.CONSTANTS.TemplateKey());
+            templateButton.addClickHandler(new ClickHandler() {
+                public void onClick(ClickEvent event) {
+                    methodParameter.setNature(FieldNatureType.TYPE_TEMPLATE);
+                    methodParameter.setValue("");
+                    refresh();
+                    form.hide();
+                }
+            });
+            form.addAttributeWithHelp(GuidedRuleEditorResources.CONSTANTS.TemplateKey(),
+                                      GuidedRuleEditorResources.CONSTANTS.TemplateKey(),
+                                      GuidedRuleEditorResources.CONSTANTS.TemplateKeyTip(),
+                                      templateButton);
+        }
+
         canTheVariableButtonBeShown(new Callback<Boolean>() {
             @Override
             public void callback(Boolean result) {

@@ -24,13 +24,10 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.drools.workbench.models.datamodel.rule.ActionFieldList;
 import org.drools.workbench.models.datamodel.rule.ActionFieldValue;
-import org.drools.workbench.models.datamodel.rule.BaseSingleFieldConstraint;
 import org.drools.workbench.models.datamodel.rule.FactPattern;
-import org.drools.workbench.models.datamodel.rule.FieldConstraint;
 import org.drools.workbench.models.datamodel.rule.FieldNatureType;
 import org.drools.workbench.models.datamodel.rule.IAction;
 import org.drools.workbench.models.datamodel.rule.IPattern;
-import org.drools.workbench.models.datamodel.rule.SingleFieldConstraint;
 import org.drools.workbench.models.guided.dtable.shared.model.BRLActionColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.BRLColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.BRLConditionColumn;
@@ -43,6 +40,7 @@ public class ColumnContext {
 
     private final Map<BRLColumn, List<FromTo>> map = new HashMap<>();
     private final Map<IPattern, List<String>> conditionVariablesByDefinition = new HashMap<>();
+    private final VariableOperators variableOperators = new VariableOperators();
 
     public void put(final BRLColumn brlColumn,
                     final FromTo childColumn) {
@@ -97,14 +95,9 @@ public class ColumnContext {
 
         if (iPattern instanceof FactPattern) {
             addBoundName(((FactPattern) iPattern).getBoundName());
-
-            for (final FieldConstraint constraint : ((FactPattern) iPattern).getConstraintList().getConstraints()) {
-                if (constraint instanceof SingleFieldConstraint && ((SingleFieldConstraint) constraint).getConstraintValueType() == BaseSingleFieldConstraint.TYPE_TEMPLATE) {
-                    final String variable = ((SingleFieldConstraint) constraint).getValue();
-                    result.add(variable);
-                    conditionVariablesByDefinition.get(iPattern).add(variable);
-                }
-            }
+            result.addAll(new ConstraintVisitor(iPattern,
+                                                conditionVariablesByDefinition,
+                                                variableOperators).visit());
         }
         return result;
     }
@@ -129,5 +122,9 @@ public class ColumnContext {
 
     public String getNextFreeColumnFactName() {
         return "brlColumnFact" + brlActionColumnCount++;
+    }
+
+    public VariableOperators getVariableOperators() {
+        return variableOperators;
     }
 }
