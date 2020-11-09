@@ -30,7 +30,7 @@ public interface FieldItemView {
          * @param classTypeName
          * @return
          */
-        LIElement getLIElement(String parentPath, String factName, String rootFactName, String rootClassName, String fieldName, String className, String classTypeName);
+        LIElement getLIElement(String parentPath, String factName, String rootFactName, String fieldName, String className, String classTypeName);
 
         void onFieldElementClick(FieldItemView selected);
 
@@ -48,8 +48,6 @@ public interface FieldItemView {
     String getFactName();
 
     String getRootFactName();
-
-    String getRootClassName();
 
     String getFieldName();
 
@@ -71,7 +69,7 @@ public interface FieldItemView {
      * @param className
      * @param classTypeName
      */
-    void setFieldData(String fullPath, String factName, String rootFactName, String rootClassName, String fieldName, String className, String classTypeName);
+    void setFieldData(String fullPath, String factName, String rootFactName, String fieldName, String className, String classTypeName);
 
     LIElement getLIElement();
 

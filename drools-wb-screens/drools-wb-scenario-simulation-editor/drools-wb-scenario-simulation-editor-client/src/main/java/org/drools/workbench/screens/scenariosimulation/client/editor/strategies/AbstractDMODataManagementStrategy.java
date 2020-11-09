@@ -156,12 +156,13 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
     public FactModelTree getFactModelTree(String factName, Map<String, String> superTypeMap, ModelField[] modelFields) {
         Map<String, FactModelTree.PropertyTypeName> simpleProperties = new HashMap<>();
         Map<String, List<String>> genericTypesMap = new HashMap<>();
-        String factPackageName = packageName;
         String fullFactClassName = getFQCNByFactName(factName);
+        String factPackageName = packageName;
+        String factClassName = fullFactClassName;
         if (fullFactClassName != null && fullFactClassName.contains(".")) {
             factPackageName = fullFactClassName.substring(0, fullFactClassName.lastIndexOf('.'));
+            factClassName = fullFactClassName.substring(fullFactClassName.lastIndexOf('.') + 1);
         }
-        String factClassName = fullFactClassName.substring(fullFactClassName.lastIndexOf('.') + 1); //TODO Nullable
         if (ScenarioSimulationSharedUtils.isEnumCanonicalName(superTypeMap.get(factName))) {
             simpleProperties.put(ConstantsHolder.VALUE, new FactModelTree.PropertyTypeName(fullFactClassName));
             return getSimpleClassFactModelTree(factName, fullFactClassName);

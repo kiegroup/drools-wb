@@ -362,24 +362,24 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
         if (editingColumnEnabled) {
             if (selectedListGroupItemView != null) {
                 String className = selectedListGroupItemView.getActualClassName();
-                String simpleClassName = selectedListGroupItemView.getRootClassName();
-                getFullPackage(className).ifPresent(fullPackage -> eventBus.fireEvent(
-                            new SetPropertyHeaderEvent(gridWidget,
-                                                       fullPackage,
-                                                       Arrays.asList(className),
-                                                       fullPackage + "." + simpleClassName,
-                                                       FactMappingValueType.EXPRESSION)));
+                getFactModelTreeFromMaps(className).ifPresent(factModelTree -> eventBus.fireEvent(
+                        new SetPropertyHeaderEvent(gridWidget,
+                                                   factModelTree.getFullPackage(),
+                                                   Arrays.asList(className),
+                                                   factModelTree.getFullTypeName(),
+                                                   FactMappingValueType.EXPRESSION)));
             } else if (selectedFieldItemView != null) {
                 String rootFactName = selectedFieldItemView.getRootFactName();
                 String pathToProperty = isSimple(rootFactName) ?
                         selectedFieldItemView.getFullPath() :
                         selectedFieldItemView.getFullPath() + "." + selectedFieldItemView.getFieldName();
                 List<String> pathToPropertyElements = createPathToPropertyList(rootFactName, pathToProperty);
-                getFullPackage(rootFactName).ifPresent(fullPackage -> eventBus.fireEvent(new SetPropertyHeaderEvent(gridWidget,
-                                                                                                                    fullPackage,
-                                                                                                                    pathToPropertyElements,
-                                                                                                                    selectedFieldItemView.getClassName(),
-                                                                                                                    FactMappingValueType.NOT_EXPRESSION)));
+                getFullPackage(rootFactName).ifPresent(fullPackage -> eventBus.fireEvent(
+                        new SetPropertyHeaderEvent(gridWidget,
+                                                   fullPackage,
+                                                   pathToPropertyElements,
+                                                   selectedFieldItemView.getClassName(),
+                                                   FactMappingValueType.NOT_EXPRESSION)));
             }
         }
     }
