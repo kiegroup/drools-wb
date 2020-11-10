@@ -71,6 +71,7 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
             // Retrieve the relevant facttypes
             List<String> factTypes = getFactTypes();
 
+
             // Split the DMO from the Simple Java types
             final Map<Boolean, List<String>> partitionedFactTypes = factTypes.stream()
                     .collect(Collectors.partitioningBy(factType -> SIMPLE_CLASSES_MAP.keySet().contains(factType)));

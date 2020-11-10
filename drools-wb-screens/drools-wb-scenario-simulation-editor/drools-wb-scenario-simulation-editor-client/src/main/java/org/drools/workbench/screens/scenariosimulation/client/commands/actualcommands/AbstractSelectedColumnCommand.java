@@ -186,7 +186,7 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioGrid
      */
     protected void setPropertyHeader(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn, List<String> propertyNameElements, String propertyClass) {
         String instanceAliasName = propertyNameElements.get(0);
-        String canonicalClassName = getFullPackage(context) + instanceAliasName;
+        String canonicalClassName = getFullPackage(context) + instanceAliasName.replace(".", "$");
         final FactIdentifier factIdentifier = setEditableHeadersAndGetFactIdentifier(context, selectedColumn, instanceAliasName, canonicalClassName);
         String propertyTitle = getPropertyHeaderTitle(context, propertyNameElements, factIdentifier);
         this.setPropertyHeader(context, selectedColumn, factIdentifier, propertyNameElements, propertyClass, propertyTitle);
@@ -202,7 +202,7 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioGrid
      */
     protected void setPropertyHeader(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn, List<String> propertyNameElements, String propertyClass, String propertyTitle) {
         String instanceAliasName = propertyNameElements.get(0);
-        String canonicalClassName = getFullPackage(context) + instanceAliasName;
+        String canonicalClassName = getFullPackage(context) + instanceAliasName.replace(".", "$");
         final FactIdentifier factIdentifier = setEditableHeadersAndGetFactIdentifier(context, selectedColumn, instanceAliasName, canonicalClassName);
         this.setPropertyHeader(context, selectedColumn, factIdentifier, propertyNameElements, propertyClass, propertyTitle);
     }
@@ -247,7 +247,8 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioGrid
         context.getAbstractScesimGridModelByGridWidget(gridWidget).updateColumnProperty(columnIndex,
                                                                                         selectedColumn,
                                                                                         propertyNameElements,
-                                                                                        propertyClass, context.getStatus().isKeepData(),
+                                                                                        propertyClass,
+                                                                                        context.getStatus().isKeepData(),
                                                                                         factMappingValueType);
         if (ScenarioSimulationSharedUtils.isCollection(propertyClass) && factMappingValueType.equals(FactMappingValueType.NOT_EXPRESSION)) {
             manageCollectionProperty(context, selectedColumn, className, columnIndex, propertyNameElements);

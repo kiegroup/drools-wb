@@ -195,8 +195,10 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
         if (factName.equals(factModelTree.getFactName())) {  // the name of the property equals the type of the factModelTree: this means that we are populating the "root" of the class
             toPopulate.setFactName(factName);
             toPopulate.setRootFactName(factName);
+        } else {
+            toPopulate.setFactNameAndType(factName, factModelTree.getFactName()); // the name of the property differ from the type of the factModelTree: this means that we are populating children of the class
         }
-        String rootFactName = toPopulate.getRootFactName();
+        String rootFactName = factName;
         String fullPath = parentPath.isEmpty() ? factName : parentPath + "." + factName;
         factModelTree.getSimpleProperties().entrySet().stream().sorted(Map.Entry.comparingByKey()).forEach(entry ->
                 toPopulate.addFactField(fieldItemPresenter.getLIElement(fullPath, factName, rootFactName, entry.getKey(), entry.getValue().getTypeName(), entry.getValue().getPropertyTypeNameToVisualize())));
