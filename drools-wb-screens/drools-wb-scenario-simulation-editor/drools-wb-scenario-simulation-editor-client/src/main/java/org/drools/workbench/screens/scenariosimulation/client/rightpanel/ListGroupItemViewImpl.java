@@ -79,8 +79,6 @@ public class ListGroupItemViewImpl implements ListGroupItemView {
 
     protected String factType;
 
-    private String rootFactName;
-
     protected boolean toExpand = false;
 
     protected boolean instanceAssigned = false;
@@ -240,16 +238,6 @@ public class ListGroupItemViewImpl implements ListGroupItemView {
     @Override
     public boolean isInstanceAssigned() {
         return instanceAssigned;
-    }
-
-    @Override
-    public String getRootFactName() {
-        return rootFactName;
-    }
-
-    @Override
-    public void setRootFactName(String rootFactName) {
-        this.rootFactName = rootFactName;
     }
 
     @Override

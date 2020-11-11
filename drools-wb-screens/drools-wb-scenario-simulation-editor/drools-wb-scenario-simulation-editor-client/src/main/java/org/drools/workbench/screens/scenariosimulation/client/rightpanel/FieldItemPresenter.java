@@ -36,11 +36,11 @@ public class FieldItemPresenter implements FieldItemView.Presenter {
     protected Map<String, FieldItemView> fieldItemMap = new HashMap<>();
 
     @Override
-    public LIElement getLIElement(String parentPath, String factName, String rootFactName, String fieldName, String className, String classTypeName) {
+    public LIElement getLIElement(String parentPath, String factName, String fieldName, String className, String classTypeName) {
         String key = parentPath  + "." + fieldName;
         if (!fieldItemMap.containsKey(key)) {
             FieldItemView fieldItemView = viewsProvider.getFieldItemView();
-            fieldItemView.setFieldData(parentPath, factName, rootFactName, fieldName, className, classTypeName);
+            fieldItemView.setFieldData(parentPath, factName, fieldName, className, classTypeName);
             fieldItemView.setPresenter(this);
             fieldItemMap.put(key, fieldItemView);
         }

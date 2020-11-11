@@ -133,9 +133,9 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
     }
 
     @Override
-    public DivElement getDivElement(String fullPath, String factName, String factModelTreeClass, String rootFactName) {
+    public DivElement getDivElement(String fullPath, String factName, String factModelTreeClass) {
         final ListGroupItemView listGroupItemView = commonGetListGroupItemView(fullPath, factName, true);
-        populateListGroupItemView(listGroupItemView, factName, factModelTreeClass, rootFactName);
+        populateListGroupItemView(listGroupItemView, factName, factModelTreeClass);
         return listGroupItemView.getListGroupExpansion();
     }
 
@@ -187,23 +187,21 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
     /**
      * Populate the "Assets" list. When
      * @param toPopulate
-     * @param parentPath It represents the parents fact of the current FactName, typically when this is an expandable Fact Field.
+     * @param parentPath
      * @param factName
      * @param factModelTree the <code>FactModelTree</code> with all properties of a given type
      */
     protected void populateListGroupItemView(ListGroupItemView toPopulate, String parentPath, String factName, FactModelTree factModelTree) {
         if (factName.equals(factModelTree.getFactName())) {  // the name of the property equals the type of the factModelTree: this means that we are populating the "root" of the class
             toPopulate.setFactName(factName);
-            toPopulate.setRootFactName(factName);
         } else {
             toPopulate.setFactNameAndType(factName, factModelTree.getFactName()); // the name of the property differ from the type of the factModelTree: this means that we are populating children of the class
         }
-        String rootFactName = factName;
         String fullPath = parentPath.isEmpty() ? factName : parentPath + "." + factName;
         factModelTree.getSimpleProperties().entrySet().stream().sorted(Map.Entry.comparingByKey()).forEach(entry ->
-                toPopulate.addFactField(fieldItemPresenter.getLIElement(fullPath, factName, rootFactName, entry.getKey(), entry.getValue().getTypeName(), entry.getValue().getPropertyTypeNameToVisualize())));
+                toPopulate.addFactField(fieldItemPresenter.getLIElement(fullPath, factName, entry.getKey(), entry.getValue().getTypeName(), entry.getValue().getPropertyTypeNameToVisualize())));
         factModelTree.getExpandableProperties().entrySet().stream().sorted(Map.Entry.comparingByValue()).forEach(entry ->
-                 toPopulate.addExpandableFactField(getDivElement(fullPath, entry.getKey(), entry.getValue(), rootFactName)));
+                 toPopulate.addExpandableFactField(getDivElement(fullPath, entry.getKey(), entry.getValue())));
     }
 
     /**
@@ -212,9 +210,8 @@ public class ListGroupItemPresenter implements ListGroupItemView.Presenter {
      * @param factName the property' name
      * @param factType the property' type
      */
-    protected void populateListGroupItemView(ListGroupItemView toPopulate, String factName, String factType, String rootFactName) {
+    protected void populateListGroupItemView(ListGroupItemView toPopulate, String factName, String factType) {
         toPopulate.setFactNameAndType(factName, factType);
-        toPopulate.setRootFactName(rootFactName);
     }
 
     /**

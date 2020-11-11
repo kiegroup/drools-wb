@@ -106,7 +106,7 @@ public class DuplicateInstanceCommandTest extends AbstractScenarioGridCommandTes
         super.setup();
         commandSpy = spy(new DuplicateInstanceCommand(GridWidget.SIMULATION) {
             @Override
-            protected void setInstanceHeader(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn, String alias, String typeName) {
+            protected void setInstanceHeader(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn, String alias, String fullClassName) {
                 //Do nothing
             }
 
