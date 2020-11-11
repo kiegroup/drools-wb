@@ -38,7 +38,6 @@ public class FactModelTree {
 
     private String factName;  // The name of the asset
     private String fullPackage;  // The package of the asset
-    private String typeName; // The type of the asset. In rule case, it's the class name. In dmn it's the full fact name (eg. with prefix)
     private boolean isSimple = false;
     /**
      * Map of the simple properties: key = property name, value = property' type name
@@ -69,10 +68,6 @@ public class FactModelTree {
         this(factName, fullPackage, simpleProperties, genericTypesMap, Type.UNDEFINED);
     }
 
-    public FactModelTree(String factName, String fullPackage, Map<String, PropertyTypeName> simpleProperties, Map<String, List<String>> genericTypesMap, String typeName) {
-        this(factName, fullPackage, simpleProperties, genericTypesMap, Type.UNDEFINED, typeName);
-    }
-
     /**
      * Call this constructor to specify the <code>FactModelTree</code>' <code>Type</code>
      * @param factName
@@ -82,17 +77,11 @@ public class FactModelTree {
      * @param type
      */
     public FactModelTree(String factName, String fullPackage, Map<String, PropertyTypeName> simpleProperties, Map<String, List<String>> genericTypesMap, Type type) {
-        this(factName, fullPackage, simpleProperties, genericTypesMap, type, null);
-
-    }
-
-    public FactModelTree(String factName, String fullPackage, Map<String, PropertyTypeName> simpleProperties, Map<String, List<String>> genericTypesMap, Type type, String typeName) {
         this.factName = factName;
         this.fullPackage = fullPackage;
         this.simpleProperties = simpleProperties;
         this.genericTypesMap = genericTypesMap;
         this.type = type;
-        this.typeName = typeName;
     }
 
     public String getFactName() {
@@ -148,14 +137,6 @@ public class FactModelTree {
         return type;
     }
 
-    public String getTypeName() {
-        return typeName != null ? typeName : factName;
-    }
-
-    public String getFullTypeName() {
-        return getFullPackage() + "." + getTypeName();
-    }
-
     public FactModelTree cloneFactModelTree() {
         Map<String, PropertyTypeName> clonedSimpleProperties = new HashMap<>(simpleProperties);
         Map<String, List<String>> clonedGenericTypesMap =
@@ -170,7 +151,7 @@ public class FactModelTree {
                                 }
 
                         ));
-        FactModelTree toReturn = new FactModelTree(factName, fullPackage, clonedSimpleProperties, clonedGenericTypesMap, type, typeName);
+        FactModelTree toReturn = new FactModelTree(factName, fullPackage, clonedSimpleProperties, clonedGenericTypesMap, type);
         toReturn.expandableProperties = new HashMap<>(expandableProperties);
         toReturn.isSimple = isSimple;
         return toReturn;
@@ -180,7 +161,6 @@ public class FactModelTree {
     public String toString() {
         return "FactModelTree{" +
                 "factName='" + factName + '\'' +
-                "typeName='" + typeName + '\'' +
                 ", simpleProperties=" + simpleProperties +
                 ", expandableProperties=" + expandableProperties +
                 '}';

@@ -177,7 +177,7 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
                 }
             }
         }
-        return new FactModelTree(factClassName, factPackageName, simpleProperties, genericTypesMap, factClassName);
+        return new FactModelTree(factClassName, factPackageName, simpleProperties, genericTypesMap);
     }
 
     protected String defineClassNameField(String modelFieldClassName, Map<String, String> superTypesMap) {

@@ -247,8 +247,7 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioGrid
         context.getAbstractScesimGridModelByGridWidget(gridWidget).updateColumnProperty(columnIndex,
                                                                                         selectedColumn,
                                                                                         propertyNameElements,
-                                                                                        propertyClass,
-                                                                                        context.getStatus().isKeepData(),
+                                                                                        propertyClass, context.getStatus().isKeepData(),
                                                                                         factMappingValueType);
         if (ScenarioSimulationSharedUtils.isCollection(propertyClass) && factMappingValueType.equals(FactMappingValueType.NOT_EXPRESSION)) {
             manageCollectionProperty(context, selectedColumn, className, columnIndex, propertyNameElements);
