@@ -186,7 +186,7 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioGrid
      */
     protected void setPropertyHeader(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn, List<String> propertyNameElements, String propertyClass) {
         String instanceAliasName = propertyNameElements.get(0);
-        String canonicalClassName = getFullPackage(context) + instanceAliasName.replace(".", "$");
+        String canonicalClassName = getFullPackage(context) + instanceAliasName;
         final FactIdentifier factIdentifier = setEditableHeadersAndGetFactIdentifier(context, selectedColumn, instanceAliasName, canonicalClassName);
         String propertyTitle = getPropertyHeaderTitle(context, propertyNameElements, factIdentifier);
         this.setPropertyHeader(context, selectedColumn, factIdentifier, propertyNameElements, propertyClass, propertyTitle);
@@ -202,7 +202,7 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioGrid
      */
     protected void setPropertyHeader(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn, List<String> propertyNameElements, String propertyClass, String propertyTitle) {
         String instanceAliasName = propertyNameElements.get(0);
-        String canonicalClassName = getFullPackage(context) + instanceAliasName.replace(".", "$");
+        String canonicalClassName = getFullPackage(context) + instanceAliasName;
         final FactIdentifier factIdentifier = setEditableHeadersAndGetFactIdentifier(context, selectedColumn, instanceAliasName, canonicalClassName);
         this.setPropertyHeader(context, selectedColumn, factIdentifier, propertyNameElements, propertyClass, propertyTitle);
     }
@@ -221,7 +221,7 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioGrid
             throw new IllegalArgumentException("Property title can not be null");
         }
         int columnIndex = context.getAbstractScesimGridModelByGridWidget(gridWidget).getColumns().indexOf(selectedColumn);
-        String instanceAliasName = propertyNameElements.get(0);
+        String instanceAliasName = propertyNameElements.get(0).replace("$", ".");
         if (selectedColumn.isInstanceAssigned() && !instanceAliasName.equals(selectedColumn.getInformationHeaderMetaData().getTitle())) {
             throw new IllegalArgumentException("It's not possible to assign this property");
         }

@@ -127,10 +127,7 @@ public class ScenarioSimulationUtils {
      * @return
      */
     public static List<String> getPropertyNameElementsWithoutAlias(List<String> propertyNameElements, FactIdentifier factIdentifier) {
-        String actualClassName = factIdentifier.getClassName();
-        if (actualClassName.contains(".")) {
-            actualClassName = actualClassName.substring(actualClassName.lastIndexOf('.') + 1);
-        }
+        String actualClassName = factIdentifier.getClassNameWithoutPackage();
         List<String> toReturn = new ArrayList<>(); // We have to keep the original List unmodified
         toReturn.addAll(propertyNameElements);
         if (toReturn.size() > 1) {

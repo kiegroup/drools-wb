@@ -173,7 +173,6 @@ public abstract class AbstractScenarioGridCommand extends AbstractScenarioSimula
     }
 
     protected Optional<FactIdentifier> getFactIdentifierByColumnTitle(String columnTitle, ScenarioSimulationContext context) {
-
         return context.getAbstractScesimGridModelByGridWidget(gridWidget).getColumns().stream()
                 .filter(column -> columnTitle.equals(((ScenarioGridColumn) column).getInformationHeaderMetaData().getTitle()))
                 .findFirst()

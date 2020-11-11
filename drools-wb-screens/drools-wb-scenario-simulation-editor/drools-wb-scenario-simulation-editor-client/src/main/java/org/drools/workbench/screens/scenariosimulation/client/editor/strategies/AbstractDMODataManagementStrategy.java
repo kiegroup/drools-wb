@@ -71,7 +71,6 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
             // Retrieve the relevant facttypes
             List<String> factTypes = getFactTypes();
 
-
             // Split the DMO from the Simple Java types
             final Map<Boolean, List<String>> partitionedFactTypes = factTypes.stream()
                     .collect(Collectors.partitioningBy(factType -> SIMPLE_CLASSES_MAP.keySet().contains(factType)));
@@ -125,14 +124,14 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
      * @return
      */
     protected Callback<String> superTypeAggregatorCallBack(final List<String> dataObjectsTypes,
-                                                         final Map<String, String> superTypeMap,
-                                                         final TestToolsView.Presenter testToolsPresenter,
-                                                         final int expectedElements,
-                                                         final SortedMap<String, FactModelTree> dataObjectsFieldsMap,
-                                                         final ScenarioSimulationContext context,
-                                                         final List<String> simpleJavaTypes,
-                                                         final GridWidget gridWidget,
-                                                         final String factType) {
+                                                           final Map<String, String> superTypeMap,
+                                                           final TestToolsView.Presenter testToolsPresenter,
+                                                           final int expectedElements,
+                                                           final SortedMap<String, FactModelTree> dataObjectsFieldsMap,
+                                                           final ScenarioSimulationContext context,
+                                                           final List<String> simpleJavaTypes,
+                                                           final GridWidget gridWidget,
+                                                           final String factType) {
         return superType -> {
             superTypeMap.put(factType, superType);
             /* This is used to invoke this callback only once, when all the expected superclasses
@@ -166,7 +165,7 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
         }
         if (ScenarioSimulationSharedUtils.isEnumCanonicalName(superTypeMap.get(factName))) {
             simpleProperties.put(ConstantsHolder.VALUE, new FactModelTree.PropertyTypeName(fullFactClassName));
-            return getSimpleClassFactModelTree(factName, fullFactClassName);
+            return getSimpleClassFactModelTree(factClassName, fullFactClassName);
         }
 
         for (ModelField modelField : modelFields) {
@@ -178,7 +177,7 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
                 }
             }
         }
-        return new FactModelTree(factName, factPackageName, simpleProperties, genericTypesMap, factClassName);
+        return new FactModelTree(factClassName, factPackageName, simpleProperties, genericTypesMap, factClassName);
     }
 
     protected String defineClassNameField(String modelFieldClassName, Map<String, String> superTypesMap) {

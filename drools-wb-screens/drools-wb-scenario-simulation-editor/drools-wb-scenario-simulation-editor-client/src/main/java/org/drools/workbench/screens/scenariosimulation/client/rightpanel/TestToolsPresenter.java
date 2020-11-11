@@ -16,8 +16,8 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -292,6 +292,7 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
 
     @Override
     public void onEnableEditorTab(String filterTerm, List<String> propertyNameElements, boolean notEqualsSearch) {
+        filterTerm = filterTerm.replace(".", "$");
         onDisableEditorTab();
         onPerfectMatchSearchedEvent(filterTerm, notEqualsSearch);
         listGroupItemPresenter.enable(filterTerm);
@@ -362,37 +363,24 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
         if (editingColumnEnabled) {
             if (selectedListGroupItemView != null) {
                 String className = selectedListGroupItemView.getActualClassName();
-                getFactModelTreeFromMaps(className).ifPresent(factModelTree -> eventBus.fireEvent(
-                        new SetPropertyHeaderEvent(gridWidget,
-                                                   factModelTree.getFullPackage(),
-                                                   Arrays.asList(className),
-                                                   factModelTree.getFullTypeName(),
-                                                   FactMappingValueType.EXPRESSION)));
+                getFullPackage(className).ifPresent(fullPackage -> eventBus.fireEvent(
+                            new SetPropertyHeaderEvent(gridWidget,
+                                                       fullPackage,
+                                                       Arrays.asList(className),
+                                                       fullPackage + "." + className,
+                                                       FactMappingValueType.EXPRESSION)));
             } else if (selectedFieldItemView != null) {
-                String rootFactName = selectedFieldItemView.getRootFactName();
-                String pathToProperty = isSimple(rootFactName) ?
+                String baseClass = selectedFieldItemView.getFullPath().split("\\.")[0];
+                String value = isSimple(baseClass) ?
                         selectedFieldItemView.getFullPath() :
                         selectedFieldItemView.getFullPath() + "." + selectedFieldItemView.getFieldName();
-                List<String> pathToPropertyElements = createPathToPropertyList(rootFactName, pathToProperty);
-                getFullPackage(rootFactName).ifPresent(fullPackage -> eventBus.fireEvent(
-                        new SetPropertyHeaderEvent(gridWidget,
-                                                   fullPackage,
-                                                   pathToPropertyElements,
-                                                   selectedFieldItemView.getClassName(),
-                                                   FactMappingValueType.NOT_EXPRESSION)));
+                List<String> propertyNameElements = Collections.unmodifiableList(Arrays.asList(value.split("\\.")));
+                getFullPackage(baseClass).ifPresent(fullPackage -> eventBus.fireEvent(new SetPropertyHeaderEvent(gridWidget, fullPackage,
+                                                                                                                 propertyNameElements,
+                                                                                                                 selectedFieldItemView.getClassName(),
+                                                                                                                 FactMappingValueType.NOT_EXPRESSION)));
             }
         }
-    }
-
-    protected List<String> createPathToPropertyList(String rootFactName, String pathToProperty) {
-        int instanceElements = rootFactName.split("\\.").length;
-        List<String> fullPathToPropertyList = Arrays.asList(pathToProperty.split("\\."));
-        List<String> toReturn = new ArrayList<>();
-        toReturn.add(rootFactName);
-        if (fullPathToPropertyList.size() > instanceElements) {
-            toReturn.addAll(fullPathToPropertyList.subList(instanceElements, fullPathToPropertyList.size()));
-        }
-        return toReturn;
     }
 
     @Override
