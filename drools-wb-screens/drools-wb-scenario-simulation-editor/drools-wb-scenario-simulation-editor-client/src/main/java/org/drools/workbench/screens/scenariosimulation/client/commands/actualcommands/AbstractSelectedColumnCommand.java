@@ -162,7 +162,7 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioGrid
         final ScenarioSimulationModel.Type simulationModelType = context.getSettings().getType();
         selectedColumn.setEditableHeaders(!(simulationModelType.equals(ScenarioSimulationModel.Type.DMN) || GridWidget.BACKGROUND.equals(gridWidget)));
         String nameToUseForCreation = simulationModelType.equals(ScenarioSimulationModel.Type.DMN) ? aliasName : selectedColumn.getInformationHeaderMetaData().getColumnId();
-        return getFactIdentifierByColumnTitle(aliasName, context).orElseGet(() -> FactIdentifier.create(nameToUseForCreation, canonicalClassName));
+        return getFactIdentifierByColumnTitle(aliasName.replace("$", "."), context).orElseGet(() -> FactIdentifier.create(nameToUseForCreation, canonicalClassName));
     }
 
     /**

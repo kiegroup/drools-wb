@@ -155,7 +155,7 @@ public class ListGroupItemViewImpl implements ListGroupItemView {
         this.factName = factName;
         this.factType = factType;
         String innerHtml = new StringBuilder()
-                .append(factName)
+                .append(factName.replace("$", "."))
                 .append(" [")
                 .append(factType.replace("$", "."))
                 .append("]")
