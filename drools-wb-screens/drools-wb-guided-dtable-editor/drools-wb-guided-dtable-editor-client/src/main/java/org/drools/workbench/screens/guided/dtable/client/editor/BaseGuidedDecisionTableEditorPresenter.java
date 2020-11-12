@@ -584,8 +584,8 @@ public abstract class BaseGuidedDecisionTableEditorPresenter extends KieMultiple
 
         void setModellerView(final GuidedDecisionTableModellerView view);
 
-        void showConversionSuccess();
+        void showConversionSuccess(final Set<String> infoMessage);
 
-        void showConversionMessage(final String message);
+        void showConversionErrorMessage(final String errorMessage);
     }
 }
