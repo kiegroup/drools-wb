@@ -368,7 +368,7 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
                                                factModelTree.getFullPackage(),
                                                factModelTree.getTypeName(),
                                                Collections.unmodifiableList(Arrays.asList(className)),
-                                               factModelTree.getFullPackage()+ "." + factModelTree.getTypeName(),
+                                               factModelTree.getFullTypeName(),
                                                FactMappingValueType.EXPRESSION)));
             } else if (selectedFieldItemView != null) {
                 String baseClass = selectedFieldItemView.getFullPath().get(0);
