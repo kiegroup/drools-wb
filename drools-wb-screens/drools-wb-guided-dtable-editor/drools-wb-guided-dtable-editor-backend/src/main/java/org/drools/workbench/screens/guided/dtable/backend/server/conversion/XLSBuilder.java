@@ -40,6 +40,8 @@ public class XLSBuilder {
     private final PackageDataModelOracle dmo;
     private final ColumnContext columnContext = new ColumnContext();
 
+    private String notification = "";
+
     public XLSBuilder(final GuidedDecisionTable52 dtable,
                       final PackageDataModelOracle dmo) {
 
@@ -65,8 +67,10 @@ public class XLSBuilder {
             return new BuildResult(workbook,
                                    new XLSConversionResult(e.toString() + " : " + e.getMessage()));
         }
+        final XLSConversionResult conversionResult = new XLSConversionResult();
+        conversionResult.addInfoMessage(notification);
         return new BuildResult(workbook,
-                               new XLSConversionResult());
+                               conversionResult);
     }
 
     private void checkHitPolicy() {
@@ -121,15 +125,15 @@ public class XLSBuilder {
     }
 
     private void makeTableSubHeader() {
-        new SubHeaderBuilder(sheet, dtable, dmo, columnContext).build();
+        new SubHeaderBuilder(sheet, dtable, dmo, columnContext).build(report -> notification = report);
     }
 
     private void makePatternRow() {
-        new PatternRowBuilder(sheet, dtable, columnContext).build();
+        new PatternRowBuilder(sheet, dtable, columnContext).build(report -> notification = report);
     }
 
     private void makeDTableColumns() {
-        new DataBuilder(sheet, dtable, dmo, columnContext).build();
+        new DataBuilder(sheet, dtable, dmo, columnContext).build(report -> notification = report);
     }
 
     class BuildResult {
