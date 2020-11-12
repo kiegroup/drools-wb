@@ -144,7 +144,7 @@ public class BRLColumnSubHeaderBuilderDefault
         for (int i = 0; i < childColumns.size(); i++) {
             final BRLVariableColumn brlConditionVariableColumn = childColumns.get(i);
             columnContext.addBoundName(brlConditionVariableColumn.getVarName());
-            if (brlConditionVariableColumn.getVarName().isEmpty()) {
+            if (brlConditionVariableColumn.getVarName() == null || brlConditionVariableColumn.getVarName().isEmpty()) {
                 result.add(new DTCellValue52(true));
             } else {
                 String varName = brlConditionVariableColumn.getVarName();
