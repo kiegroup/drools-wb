@@ -165,7 +165,7 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
         }
         if (ScenarioSimulationSharedUtils.isEnumCanonicalName(superTypeMap.get(factName))) {
             simpleProperties.put(ConstantsHolder.VALUE, new FactModelTree.PropertyTypeName(fullFactClassName));
-            return getSimpleClassFactModelTree(factClassName, fullFactClassName);
+            return getSimpleClassFactModelTree(factName, fullFactClassName);
         }
 
         for (ModelField modelField : modelFields) {
@@ -177,7 +177,7 @@ public abstract class AbstractDMODataManagementStrategy extends AbstractDataMana
                 }
             }
         }
-        return new FactModelTree(factClassName, factPackageName, simpleProperties, genericTypesMap);
+        return new FactModelTree(factName, factPackageName, simpleProperties, genericTypesMap, factClassName);
     }
 
     protected String defineClassNameField(String modelFieldClassName, Map<String, String> superTypesMap) {

@@ -61,7 +61,8 @@ public abstract class AbstractDataManagementStrategy implements DataManagementSt
         Map<String, FactModelTree.PropertyTypeName> simpleProperties = new HashMap<>();
         simpleProperties.put(VALUE, new FactModelTree.PropertyTypeName(canonicalName));
         String packageName = canonicalName.substring(0, canonicalName.lastIndexOf('.'));
-        FactModelTree toReturn = new FactModelTree(simpleClass, packageName, simpleProperties, new HashMap<>());
+        String factClassName = canonicalName.substring(canonicalName.lastIndexOf('.') + 1);
+        FactModelTree toReturn = new FactModelTree(simpleClass, packageName, simpleProperties, new HashMap<>(), factClassName);
         toReturn.setSimple(true);
         return toReturn;
     }
@@ -180,12 +181,15 @@ public abstract class AbstractDataManagementStrategy implements DataManagementSt
         // map instance name to base class
         if (model != null) {
             final ScesimModelDescriptor simulationDescriptor = model.getSimulation().getScesimModelDescriptor();
+            final ScenarioSimulationModel.Type type = model.getSettings().getType();
             simulationDescriptor.getUnmodifiableFactMappings()
                     .stream()
                     .filter(factMapping -> !Objects.equals(FactMappingType.OTHER, factMapping.getExpressionIdentifier().getType()))
                     .forEach(factMapping -> {
-                        String dataObjectName = factMapping.getFactIdentifier().getClassNameWithoutPackage();
-                        final String instanceName = factMapping.getFactAlias().replace(".", "$");
+                        String dataObjectName = ScenarioSimulationModel.Type.DMN.equals(type) ?
+                                factMapping.getFactIdentifier().getClassName() :
+                                factMapping.getFactIdentifier().getClassNameWithoutPackage().replace("$", ".");
+                        final String instanceName = factMapping.getFactAlias();
                         if (!instanceName.equals(dataObjectName)) {
                             final FactModelTree factModelTree = sourceMap.get(dataObjectName);
                             if (factModelTree != null) {

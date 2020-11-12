@@ -293,7 +293,6 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
 
     @Override
     public void onEnableEditorTab(String filterTerm, List<String> propertyNameElements, boolean notEqualsSearch) {
-        filterTerm = filterTerm.replace(".", "$");
         onDisableEditorTab();
         onPerfectMatchSearchedEvent(filterTerm, notEqualsSearch);
         listGroupItemPresenter.enable(filterTerm);
@@ -364,24 +363,26 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
         if (editingColumnEnabled) {
             if (selectedListGroupItemView != null) {
                 String className = selectedListGroupItemView.getActualClassName();
-                getFullPackage(className).ifPresent(fullPackage -> eventBus.fireEvent(
-                            new SetPropertyHeaderEvent(gridWidget,
-                                                       fullPackage,
-                                                       Collections.unmodifiableList(Arrays.asList(className)),
-                                                       fullPackage + "." + className,
-                                                       FactMappingValueType.EXPRESSION)));
+                getFactModelTreeFromMaps(className).ifPresent(factModelTree -> eventBus.fireEvent(
+                    new SetPropertyHeaderEvent(gridWidget,
+                                               factModelTree.getFullPackage(),
+                                               factModelTree.getTypeName(),
+                                               Collections.unmodifiableList(Arrays.asList(className)),
+                                               factModelTree.getFullPackage()+ "." + factModelTree.getTypeName(),
+                                               FactMappingValueType.EXPRESSION)));
             } else if (selectedFieldItemView != null) {
                 String baseClass = selectedFieldItemView.getFullPath().get(0);
                 List<String> propertyNameElements = new ArrayList<>(selectedFieldItemView.getFullPath());
-                if (isSimple(baseClass)) {
+                if (!isSimple(baseClass)) {
                     propertyNameElements.add(selectedFieldItemView.getFieldName());
                 }
-                getFullPackage(baseClass).ifPresent(fullPackage -> eventBus.fireEvent(
-                        new SetPropertyHeaderEvent(gridWidget,
-                                                   fullPackage,
-                                                   Collections.unmodifiableList(propertyNameElements),
-                                                   selectedFieldItemView.getClassName(),
-                                                   FactMappingValueType.NOT_EXPRESSION)));
+                getFactModelTreeFromMaps(baseClass).ifPresent(factModelTree -> eventBus.fireEvent(
+                    new SetPropertyHeaderEvent(gridWidget,
+                                               factModelTree.getFullPackage(),
+                                               factModelTree.getTypeName(),
+                                               Collections.unmodifiableList(propertyNameElements),
+                                               selectedFieldItemView.getClassName(),
+                                               FactMappingValueType.NOT_EXPRESSION)));
             }
         }
     }

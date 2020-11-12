@@ -148,7 +148,7 @@ public class ListGroupItemViewImpl implements ListGroupItemView {
     public void setFactName(String factName) {
         this.factName = factName;
         this.factType = factName;
-        fullClassName.setInnerText(factName.replace("$", "."));
+        fullClassName.setInnerText(factName);
         listGroupItem.setAttribute("id", "listGroupItem-" + factName);
     }
 
@@ -157,9 +157,9 @@ public class ListGroupItemViewImpl implements ListGroupItemView {
         this.factName = factName;
         this.factType = factType;
         String innerHtml = new StringBuilder()
-                .append(factName.replace("$", "."))
+                .append(factName)
                 .append(" [")
-                .append(factType.replace("$", "."))
+                .append(factType)
                 .append("]")
                 .toString();
         fullClassName.setInnerHTML(innerHtml);
