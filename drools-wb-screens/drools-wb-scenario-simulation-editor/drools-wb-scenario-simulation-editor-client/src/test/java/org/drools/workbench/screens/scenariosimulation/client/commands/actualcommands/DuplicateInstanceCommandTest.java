@@ -36,7 +36,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
 
-import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.CLASS_NAME;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.COLUMN_NUMBER;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FACT_ALIAS;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FACT_ALIAS_1;
