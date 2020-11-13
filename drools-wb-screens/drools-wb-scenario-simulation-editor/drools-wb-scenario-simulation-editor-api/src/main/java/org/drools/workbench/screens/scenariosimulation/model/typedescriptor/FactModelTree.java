@@ -54,12 +54,28 @@ public class FactModelTree {
     private Map<String, String> expandableProperties = new HashMap<>();
     private Type type;
 
+    /**
+     * Static factory method to be used in DMO context. type is not managed. Managing factName and typeName.
+     * @param factName
+     * @param fullPackage
+     * @param simpleProperties
+     * @param genericTypesMap
+     * @param typeName
+     * @return
+     */
+    public static FactModelTree ofDMO(String factName, String fullPackage, Map<String, PropertyTypeName> simpleProperties, Map<String, List<String>> genericTypesMap, String typeName) {
+        if (typeName == null || factName.equals(typeName)) {
+            return new FactModelTree(factName, fullPackage, simpleProperties, genericTypesMap);
+        }
+        return new FactModelTree(factName, fullPackage, simpleProperties, genericTypesMap, typeName);
+    }
+
     public FactModelTree() {
         // CDI
     }
 
     /**
-     * Call this constructor to have a <code>FactModelTree</code> with <b>UNDEFINED</b> <code>Type</code>
+     * Call this constructor to have a <code>FactModelTree</code> with <b>UNDEFINED</b> <code>Type</code>. RULE Test Scenario specific.
      * @param factName
      * @param fullPackage
      * @param simpleProperties
@@ -69,12 +85,21 @@ public class FactModelTree {
         this(factName, fullPackage, simpleProperties, genericTypesMap, Type.UNDEFINED);
     }
 
+    /**
+     * Call this constructor to have a <code>FactModelTree</code> with <b>UNDEFINED</b> <code>Type</code> and the type (eg. ClassName)
+     * differs from the factName (A case is for nested classes eg Class.Nested as FactName and Class$Nested as className. RULE Test Scenario specific.
+     * @param factName
+     * @param fullPackage
+     * @param simpleProperties
+     * @param genericTypesMap the <b>generic type</b> info, in the format {collection_class_name}#{generic_type}: ex "java.util.List#com.Book"
+     * @param typeName The typeName of the fact (the className)
+     */
     public FactModelTree(String factName, String fullPackage, Map<String, PropertyTypeName> simpleProperties, Map<String, List<String>> genericTypesMap, String typeName) {
         this(factName, fullPackage, simpleProperties, genericTypesMap, Type.UNDEFINED, typeName);
     }
 
     /**
-     * Call this constructor to specify the <code>FactModelTree</code>' <code>Type</code>
+     * Call this constructor to specify the <code>FactModelTree</code>' <code>Type</code>. DMN Test Scenario specific.
      * @param factName
      * @param fullPackage
      * @param simpleProperties
