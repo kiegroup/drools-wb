@@ -16,7 +16,9 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.rightpanel;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
@@ -25,11 +27,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
-/*
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.CLASS_NAME;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FACT_NAME;
-import static org.mockito.Matchers.eq;*/
-
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -61,11 +61,11 @@ public class FieldItemPresenterTest extends AbstractTestToolsTest {
 
     @Test
     public void getLIElement() {
-        /*
-        fieldItemPresenter.getLIElement("", FACT_NAME, FACT_NAME, FACT_MODEL_TREE.getFactName(), CLASS_NAME);
+        List<String> parentPath = Collections.EMPTY_LIST;
+        fieldItemPresenter.getLIElement(parentPath, FACT_NAME, FACT_NAME, FACT_MODEL_TREE.getFactName(), CLASS_NAME);
         verify(viewsProviderMock, times(1)).getFieldItemView();
-        verify(mockFieldItemView, times(1)).setFieldData(eq(""), eq(FACT_NAME), eq(FACT_NAME), eq(FACT_MODEL_TREE.getFactName()), eq(CLASS_NAME));
-        verify(mockFieldItemView, times(1)).setPresenter(eq(fieldItemPresenter));*/
+        verify(mockFieldItemView, times(1)).setFieldData(eq(parentPath), eq(FACT_NAME), eq(FACT_NAME), eq(FACT_MODEL_TREE.getFactName()), eq(CLASS_NAME));
+        verify(mockFieldItemView, times(1)).setPresenter(eq(fieldItemPresenter));
     }
 
     @Test
