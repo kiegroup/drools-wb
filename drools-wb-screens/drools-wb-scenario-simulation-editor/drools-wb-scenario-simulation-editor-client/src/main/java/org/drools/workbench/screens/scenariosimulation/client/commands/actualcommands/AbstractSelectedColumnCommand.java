@@ -245,7 +245,7 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioGrid
                                                                                         propertyClass,
                                                                                         context.getStatus().isKeepData(),
                                                                                         factMappingValueType,
-                                                                                        context.getSettings().getType());
+                                                                                        context.getScenarioSimulationModel().getSettings().getType());
         if (ScenarioSimulationSharedUtils.isCollection(propertyClass) && factMappingValueType.equals(FactMappingValueType.NOT_EXPRESSION)) {
             manageCollectionProperty(context, selectedColumn, className, columnIndex, propertyNameElements);
         } else {
@@ -325,7 +325,9 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioGrid
             return FactMappingValueType.EXPRESSION.equals(factMappingValueType) ? ConstantHolder.EXPRESSION_INSTANCE_PLACEHOLDER : VALUE;
         }
         String propertyPathPart = String.join(".", propertyNameElements.subList(1, propertyNameElements.size()));
-        List<String> propertyNameElementsClone = getPropertyNameElementsWithoutAlias(propertyNameElements, factIdentifier, context.getSettings().getType());
+        List<String> propertyNameElementsClone = getPropertyNameElementsWithoutAlias(propertyNameElements,
+                                                                                     factIdentifier,
+                                                                                     context.getScenarioSimulationModel().getSettings().getType());
         // This is because the propertyName starts with the alias of the fact; i.e. it may be Book.name but also Bookkk.name,
         // while the first element of ExpressionElements is always the class name
         return getMatchingExpressionAlias(context, propertyNameElementsClone, factIdentifier).orElse(propertyPathPart);
