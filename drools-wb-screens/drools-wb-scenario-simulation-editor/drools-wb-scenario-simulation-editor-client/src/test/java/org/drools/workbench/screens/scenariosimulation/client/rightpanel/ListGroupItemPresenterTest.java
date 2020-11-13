@@ -33,7 +33,6 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FACT_NAME;
-import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FULL_PACKAGE;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FULL_PACKAGE_ELEMENTS;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.MULTIPART_VALUE;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.VALUE_CLASS_NAME;
