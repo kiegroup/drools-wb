@@ -38,7 +38,7 @@ public class FieldItemPresenter implements FieldItemView.Presenter {
 
     @Override
     public LIElement getLIElement(List<String> parentPath, String factName, String fieldName, String className, String classTypeName) {
-        String key = parentPath  + "." + fieldName;
+        String key = String.join(".", parentPath)  + "." + fieldName;
         if (!fieldItemMap.containsKey(key)) {
             FieldItemView fieldItemView = viewsProvider.getFieldItemView();
             fieldItemView.setFieldData(parentPath, factName, fieldName, className, classTypeName);
