@@ -49,7 +49,7 @@ public class ScenarioValidationService
         if (factMappings.stream().allMatch(AbstractScenarioValidation::isToSkip)) {
             return Collections.emptyList();
         }
-        KieContainer kieContainer = getKieContainer(path);
+        KieContainer kieContainer = getKieContainerClone(path);
         ScenarioSimulationModel.Type type = settings.getType();
         if (DMN.equals(type)) {
             return validateDMN(simulation, settings, kieContainer);
