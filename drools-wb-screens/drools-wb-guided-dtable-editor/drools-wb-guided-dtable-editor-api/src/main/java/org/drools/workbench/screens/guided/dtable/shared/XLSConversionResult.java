@@ -26,7 +26,7 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 public class XLSConversionResult {
 
     private String errorMessage;
-    private Set<String> infoMessages = new HashSet<>();
+    private Set<XLSConversionResultMessage> infoMessages = new HashSet<>();
 
     public XLSConversionResult() {
         this.errorMessage = "";
@@ -48,11 +48,11 @@ public class XLSConversionResult {
         this.errorMessage = errorMessage;
     }
 
-    public void addInfoMessage(final String infoMessage) {
+    public void addInfoMessage(final XLSConversionResultMessage infoMessage) {
         this.infoMessages.add(infoMessage);
     }
 
-    public Set<String> getInfoMessages() {
+    public Set<XLSConversionResultMessage> getInfoMessages() {
         return Collections.unmodifiableSet(infoMessages);
     }
 }

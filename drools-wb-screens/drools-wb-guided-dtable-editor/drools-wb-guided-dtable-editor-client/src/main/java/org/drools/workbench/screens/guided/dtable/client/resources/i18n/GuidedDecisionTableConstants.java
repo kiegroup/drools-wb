@@ -373,4 +373,8 @@ public interface GuidedDecisionTableConstants
     String RuleName();
 
     String ShowRuleNameColumnTooltip();
+
+    String DialectNotConverted();
+
+    String RanIntoIssueWhenConverting();
 }

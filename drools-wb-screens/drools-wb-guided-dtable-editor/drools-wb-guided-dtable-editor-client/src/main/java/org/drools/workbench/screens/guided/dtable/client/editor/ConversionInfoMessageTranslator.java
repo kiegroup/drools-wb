@@ -13,11 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drools.workbench.screens.guided.dtable.backend.server.conversion.util;
+package org.drools.workbench.screens.guided.dtable.client.editor;
 
+import org.drools.workbench.screens.guided.dtable.client.resources.i18n.GuidedDecisionTableConstants;
 import org.drools.workbench.screens.guided.dtable.shared.XLSConversionResultMessage;
 
-public interface NotificationReporter {
+public class ConversionInfoMessageTranslator {
 
-    void report(final XLSConversionResultMessage message);
+    private ConversionInfoMessageTranslator() {
+
+    }
+
+    public static String translate(final XLSConversionResultMessage infoMessage) {
+        switch (infoMessage.getType()) {
+            case DIALECT_NOT_CONVERTED:
+                return GuidedDecisionTableConstants.INSTANCE.DialectNotConverted();
+            default:
+                return GuidedDecisionTableConstants.INSTANCE.RanIntoIssueWhenConverting();
+        }
+    }
 }

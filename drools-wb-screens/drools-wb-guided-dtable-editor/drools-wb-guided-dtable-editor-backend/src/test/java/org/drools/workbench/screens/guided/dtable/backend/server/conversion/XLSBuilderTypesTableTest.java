@@ -20,6 +20,8 @@ import java.util.Set;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.drools.workbench.models.guided.dtable.backend.GuidedDTXMLPersistence;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
+import org.drools.workbench.screens.guided.dtable.shared.XLSConversionResultMessage;
+import org.drools.workbench.screens.guided.dtable.shared.XLSConversionResultMessageType;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -38,10 +40,11 @@ public class XLSBuilderTypesTableTest
         final XLSBuilder.BuildResult buildResult = new XLSBuilder(dtable, makeDMO()).build();
         final Workbook workbook = buildResult.getWorkbook();
 
-        final Set<String> infoMessages = buildResult.getConversionResult().getInfoMessages();
+        final Set<XLSConversionResultMessage> infoMessages = buildResult.getConversionResult().getInfoMessages();
 
         assertEquals(1, infoMessages.size());
-        assertEquals("Dialect is not a supported column type in XLS Decision tables. Conversion ignored this column.", infoMessages.iterator().next());
+        assertEquals(XLSConversionResultMessageType.DIALECT_NOT_CONVERTED, infoMessages.iterator().next().getType());
+        assertEquals("Dialect is not a supported column type in XLS Decision tables. Conversion ignored this column.", infoMessages.iterator().next().getMessage());
 
         assertEquals(1, workbook.getNumberOfSheets());
         sheet = workbook.iterator().next();
