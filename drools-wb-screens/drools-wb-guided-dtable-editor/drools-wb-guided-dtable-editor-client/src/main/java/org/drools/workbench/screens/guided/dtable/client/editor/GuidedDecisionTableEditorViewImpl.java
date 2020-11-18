@@ -23,13 +23,13 @@ import javax.inject.Inject;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.SimpleLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import org.drools.workbench.screens.guided.dtable.client.resources.i18n.GuidedDecisionTableConstants;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTableModellerView;
+import org.drools.workbench.screens.guided.dtable.shared.XLSConversionResultMessage;
 import org.kie.workbench.common.widgets.client.popups.list.MessageType;
 import org.kie.workbench.common.widgets.client.popups.list.PopupListWidget;
 import org.kie.workbench.common.widgets.metadata.client.KieEditorViewImpl;
@@ -57,13 +57,10 @@ public class GuidedDecisionTableEditorViewImpl
         container.getElement().setAttribute("data-uf-lock",
                                             "false");
 
-        addAttachHandler(new AttachEvent.Handler() {
-            @Override
-            public void onAttachOrDetach(final AttachEvent event) {
-                if (event.isAttached()) {
-                    getElement().getParentElement().getStyle().setHeight(100.0, Style.Unit.PCT);
-                    getElement().getParentElement().getStyle().setWidth(100.0, Style.Unit.PCT);
-                }
+        addAttachHandler(event -> {
+            if (event.isAttached()) {
+                getElement().getParentElement().getStyle().setHeight(100.0, Style.Unit.PCT);
+                getElement().getParentElement().getStyle().setWidth(100.0, Style.Unit.PCT);
             }
         });
     }
@@ -79,10 +76,11 @@ public class GuidedDecisionTableEditorViewImpl
     }
 
     @Override
-    public void showConversionSuccess(final Set<String> infoMessages) {
+    public void showConversionSuccess(final Set<XLSConversionResultMessage> infoMessages) {
         popupListWidget.setTitle(GuidedDecisionTableConstants.INSTANCE.TableConvertedSuccessfully());
-        for (String infoMessage : infoMessages) {
-            popupListWidget.addListMessage(MessageType.INFO, infoMessage);
+        popupListWidget.clear();
+        for (XLSConversionResultMessage infoMessage : infoMessages) {
+            popupListWidget.addListMessage(MessageType.INFO, ConversionInfoMessageTranslator.translate(infoMessage));
         }
         popupListWidget.show();
     }

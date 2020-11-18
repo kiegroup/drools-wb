@@ -40,6 +40,7 @@ import org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDeci
 import org.drools.workbench.screens.guided.dtable.client.widget.table.events.cdi.DecisionTableSelectedEvent;
 import org.drools.workbench.screens.guided.dtable.model.GuidedDecisionTableEditorContent;
 import org.drools.workbench.screens.guided.dtable.service.GuidedDecisionTableEditorService;
+import org.drools.workbench.screens.guided.dtable.shared.XLSConversionResultMessage;
 import org.guvnor.common.services.project.client.context.WorkspaceProjectContext;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
 import org.guvnor.common.services.shared.validation.model.ValidationMessage;
@@ -584,7 +585,7 @@ public abstract class BaseGuidedDecisionTableEditorPresenter extends KieMultiple
 
         void setModellerView(final GuidedDecisionTableModellerView view);
 
-        void showConversionSuccess(final Set<String> infoMessage);
+        void showConversionSuccess(final Set<XLSConversionResultMessage> infoMessage);
 
         void showConversionErrorMessage(final String errorMessage);
     }

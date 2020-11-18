@@ -122,7 +122,7 @@ public class BRLColumnDataBuilderDefault
         private boolean isMissingVariable(final BRLColumn brlColumn) {
             for (final Object childColumn : brlColumn.getChildColumns()) {
                 final String variableName = getVariableName(childColumn);
-                if (variableName != null && !variableName.isEmpty()) {
+                if (!StringUtils.isEmpty(variableName)) {
                     return false;
                 }
             }

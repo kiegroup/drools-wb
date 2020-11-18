@@ -19,6 +19,8 @@ import java.util.Objects;
 
 import org.drools.workbench.models.guided.dtable.shared.model.AttributeCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.BaseColumn;
+import org.drools.workbench.screens.guided.dtable.shared.XLSConversionResultMessage;
+import org.drools.workbench.screens.guided.dtable.shared.XLSConversionResultMessageType;
 
 public class Skipper {
 
@@ -28,7 +30,8 @@ public class Skipper {
     public static boolean shouldSkip(final NotificationReporter notificationReporter,
                                      final BaseColumn baseColumn) {
         if (baseColumn instanceof AttributeCol52) {
-            notificationReporter.report("Dialect is not a supported column type in XLS Decision tables. Conversion ignored this column.");
+            notificationReporter.report(new XLSConversionResultMessage(XLSConversionResultMessageType.DIALECT_NOT_CONVERTED,
+                                                                       "Dialect is not a supported column type in XLS Decision tables. Conversion ignored this column."));
             return Objects.equals(((AttributeCol52) baseColumn).getAttribute(), "dialect");
         } else {
             return false;
