@@ -26,6 +26,7 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -46,6 +47,7 @@ import org.kie.dmn.api.core.ast.InputDataNode;
 import org.kie.dmn.core.impl.BaseDMNTypeImpl;
 import org.kie.dmn.feel.lang.Type;
 import org.kie.dmn.feel.lang.types.BuiltInType;
+import org.kie.dmn.model.api.Import;
 import org.uberfire.backend.vfs.Path;
 
 import static org.drools.scenariosimulation.api.utils.ConstantsHolder.VALUE;
@@ -63,20 +65,23 @@ public class DMNTypeServiceImpl
         SortedMap<String, FactModelTree> visibleFacts = new TreeMap<>();
         SortedMap<String, FactModelTree> hiddenFacts = new TreeMap<>();
         ErrorHolder errorHolder = new ErrorHolder();
+        Map<String, String> importedModelsMap = dmnModel.getDefinitions().getImport().stream().collect(Collectors.toMap(Import::getNamespace, Import::getName));
         for (InputDataNode input : dmnModel.getInputs()) {
-            DMNType type = input.getType();
+            final DMNType type = input.getType();
+            final String name = importedModelsMap.containsKey(input.getModelNamespace()) ? importedModelsMap.get(input.getModelNamespace()) + "." + input.getName() : input.getName();
             checkTypeSupport(type, errorHolder, input.getName());
             try {
-                visibleFacts.put(input.getName(), createTopLevelFactModelTree(input.getName(), type, hiddenFacts, FactModelTree.Type.INPUT));
+                visibleFacts.put(name, createTopLevelFactModelTree(name, type, hiddenFacts, FactModelTree.Type.INPUT));
             } catch (WrongDMNTypeException e) {
                 throw ExceptionUtilities.handleException(e);
             }
         }
         for (DecisionNode decision : dmnModel.getDecisions()) {
             DMNType type = decision.getResultType();
+            final String name = importedModelsMap.containsKey(decision.getModelNamespace()) ? importedModelsMap.get(decision.getModelNamespace()) + "." + decision.getName() : decision.getName();
             checkTypeSupport(type, errorHolder, decision.getName());
             try {
-                visibleFacts.put(decision.getName(), createTopLevelFactModelTree(decision.getName(), type, hiddenFacts, FactModelTree.Type.DECISION));
+                visibleFacts.put(name, createTopLevelFactModelTree(name, type, hiddenFacts, FactModelTree.Type.DECISION));
             } catch (WrongDMNTypeException e) {
                 throw ExceptionUtilities.handleException(e);
             }
