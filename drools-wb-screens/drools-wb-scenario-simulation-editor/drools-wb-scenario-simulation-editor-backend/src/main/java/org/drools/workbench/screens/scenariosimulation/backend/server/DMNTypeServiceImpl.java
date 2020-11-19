@@ -66,6 +66,7 @@ public class DMNTypeServiceImpl
         SortedMap<String, FactModelTree> hiddenFacts = new TreeMap<>();
         ErrorHolder errorHolder = new ErrorHolder();
         Map<String, String> importedModelsMap = dmnModel.getDefinitions().getImport().stream().collect(Collectors.toMap(Import::getNamespace, Import::getName));
+
         for (InputDataNode input : dmnModel.getInputs()) {
             final DMNType type = input.getType();
             final String name = importedModelsMap.containsKey(input.getModelNamespace()) ? importedModelsMap.get(input.getModelNamespace()) + "." + input.getName() : input.getName();
@@ -76,6 +77,7 @@ public class DMNTypeServiceImpl
                 throw ExceptionUtilities.handleException(e);
             }
         }
+
         for (DecisionNode decision : dmnModel.getDecisions()) {
             DMNType type = decision.getResultType();
             final String name = importedModelsMap.containsKey(decision.getModelNamespace()) ? importedModelsMap.get(decision.getModelNamespace()) + "." + decision.getName() : decision.getName();
