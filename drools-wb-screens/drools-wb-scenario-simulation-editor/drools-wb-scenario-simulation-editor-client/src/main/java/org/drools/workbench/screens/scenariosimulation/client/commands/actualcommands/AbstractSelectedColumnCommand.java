@@ -141,7 +141,7 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioGrid
      */
     protected String getFullPackage(ScenarioSimulationContext context) {
         String fullPackage = context.getStatus().getFullPackage();
-        if (!fullPackage.endsWith(".")) {
+        if (!fullPackage.isEmpty() && !fullPackage.endsWith(".")) {
             fullPackage += ".";
         }
         return fullPackage;

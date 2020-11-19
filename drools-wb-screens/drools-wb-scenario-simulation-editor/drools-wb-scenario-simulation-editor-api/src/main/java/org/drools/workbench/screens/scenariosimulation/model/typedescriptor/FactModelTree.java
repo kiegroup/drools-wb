@@ -178,7 +178,7 @@ public class FactModelTree {
     }
 
     public String getFullTypeName() {
-        return getFullPackage() + "." + getTypeName();
+        return (fullPackage == null || fullPackage.isEmpty()) ? getTypeName() : fullPackage + "." + getTypeName();
     }
 
     public FactModelTree cloneFactModelTree() {
