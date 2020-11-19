@@ -88,4 +88,16 @@ public class FactModelTreeTest {
         assertEquals(FactModelTree.Type.UNDEFINED, factModelTree.getType());
     }
 
+    @Test
+    public void getFullTypeName() {
+        FactModelTree factModelTree = FactModelTree.ofDMO(FACT_NAME, PACKAGE, Collections.emptyMap(), Collections.emptyMap(), FACT_TYPE);
+        assertEquals(PACKAGE + "." + FACT_TYPE, factModelTree.getFullTypeName());
+        factModelTree = FactModelTree.ofDMO(FACT_NAME, "", Collections.emptyMap(), Collections.emptyMap(), FACT_TYPE);
+        assertEquals(FACT_TYPE, factModelTree.getFullTypeName());
+        factModelTree = FactModelTree.ofDMO(FACT_NAME, null, Collections.emptyMap(), Collections.emptyMap(), FACT_TYPE);
+        assertEquals(FACT_TYPE, factModelTree.getFullTypeName());
+        factModelTree = FactModelTree.ofDMO(FACT_NAME, "", Collections.emptyMap(), Collections.emptyMap(), FACT_NAME);
+        assertEquals(FACT_NAME, factModelTree.getFullTypeName());
+    }
+
 }

@@ -239,6 +239,19 @@ public abstract class AbstractSelectedColumnCommandTest extends AbstractScenario
         verify(informationHeaderMetaDataMock, times(1)).setTitle(eq(FACT_NAME));
     }
 
+    @Test
+    public void getFullPackage() {
+        scenarioSimulationContextLocal.getStatus().setFullPackage(FULL_PACKAGE);
+        String fullPackage = ((AbstractSelectedColumnCommand) commandSpy).getFullPackage(scenarioSimulationContextLocal);
+        assertEquals(fullPackage, FULL_PACKAGE + ".");
+        scenarioSimulationContextLocal.getStatus().setFullPackage("");
+        fullPackage = ((AbstractSelectedColumnCommand) commandSpy).getFullPackage(scenarioSimulationContextLocal);
+        assertEquals("", fullPackage);
+        scenarioSimulationContextLocal.getStatus().setFullPackage(null);
+        fullPackage = ((AbstractSelectedColumnCommand) commandSpy).getFullPackage(scenarioSimulationContextLocal);
+        assertEquals("", fullPackage);
+    }
+
     /* This test is usable ONLY by <code>SetPropertyCommandTest</code> subclass */
     public void manageCollectionProperty() {
         scenarioSimulationContextLocal.getStatus().setValueClassName(LIST_CLASS_NAME);
