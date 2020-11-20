@@ -37,7 +37,6 @@ import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSIT
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITDRGElement;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITDecision;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITDefinitions;
-import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITImport;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITInformationItem;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITInputData;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITItemDefinition;
@@ -55,16 +54,7 @@ public class ScenarioSimulationKogitoDMNDataManager {
         SortedMap<String, FactModelTree> hiddenFacts = new TreeMap<>();
         ErrorHolder errorHolder = new ErrorHolder();
         Map<String, ClientDMNType> dmnTypesMap = getDMNDataTypesMap(jsitDefinitions.getItemDefinition(), jsitDefinitions.getNamespace());
-        List<JSITImport> imports = jsitDefinitions.getImport();
-        Map<String, String> importedModelsMap = new HashMap<>();
-
-        for (int i = 0; i < imports.size(); i++) {
-            JSITImport importItem = Js.uncheckedCast(imports.get(i));
-            importedModelsMap.put(importItem.getNamespace(), importItem.getName());
-        }
-
         final List<JSITDRGElement> jsitdrgElements = jsitDefinitions.getDrgElement();
-
         for (int i = 0; i < jsitdrgElements.size(); i++) {
             final JSITDRGElement jsitdrgElement = Js.uncheckedCast(jsitdrgElements.get(i));
             if (isJSITInputData(jsitdrgElement)) {
@@ -72,14 +62,12 @@ public class ScenarioSimulationKogitoDMNDataManager {
                 final JSITInformationItem jsitInputDataVariable = jsitInputData.getVariable();
                 ClientDMNType type = getDMNTypeFromMaps(dmnTypesMap, getOtherAttributesMap(jsitInputDataVariable));
                 checkTypeSupport(type, errorHolder, jsitInputData.getName());
-                //final String name = importedModelsMap.containsKey(jsitInputData.getModelNamespace()) ? importedModelsMap.get(input.getModelNamespace()) + "." + input.getName() : input.getName();
                 visibleFacts.put(jsitInputData.getName(), createTopLevelFactModelTree(jsitInputData.getName(), type, hiddenFacts, FactModelTree.Type.INPUT));
             } else if (isJSITDecision(jsitdrgElement)) {
                 JSITDecision jsitDecision = Js.uncheckedCast(jsitdrgElement);
                 final JSITInformationItem jsitDecisionVariable = jsitDecision.getVariable();
                 ClientDMNType type = getDMNTypeFromMaps(dmnTypesMap, getOtherAttributesMap(jsitDecisionVariable));
                 checkTypeSupport(type, errorHolder, jsitdrgElement.getName());
-                //final String name = importedModelsMap.containsKey(jsitInputData.getModelNamespace()) ? importedModelsMap.get(input.getModelNamespace()) + "." + input.getName() : input.getName();
                 visibleFacts.put(jsitDecisionVariable.getName(), createTopLevelFactModelTree(jsitDecisionVariable.getName(), type, hiddenFacts, FactModelTree.Type.DECISION));
             }
         }
