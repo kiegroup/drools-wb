@@ -67,8 +67,8 @@ public class ScenarioSimulationKogitoDMNDataManager {
                 JSITDecision jsitDecision = Js.uncheckedCast(jsitdrgElement);
                 final JSITInformationItem jsitDecisionVariable = jsitDecision.getVariable();
                 ClientDMNType type = getDMNTypeFromMaps(dmnTypesMap, getOtherAttributesMap(jsitDecisionVariable));
-                checkTypeSupport(type, errorHolder, jsitdrgElement.getName());
-                visibleFacts.put(jsitDecisionVariable.getName(), createTopLevelFactModelTree(jsitDecisionVariable.getName(), type, hiddenFacts, FactModelTree.Type.DECISION));
+                checkTypeSupport(type, errorHolder, jsitDecision.getName());
+                visibleFacts.put(jsitDecision.getName(), createTopLevelFactModelTree(jsitDecision.getName(), type, hiddenFacts, FactModelTree.Type.DECISION));
             }
         }
         FactModelTuple toReturn = new FactModelTuple(visibleFacts, hiddenFacts);
