@@ -16,6 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.model.typedescriptor;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
+
+import static org.drools.scenariosimulation.api.utils.ConstantsHolder.VALUE;
 
 /**
  * Class used to recursively represent a given fact with its ModelFields eventually expanded
@@ -64,10 +67,41 @@ public class FactModelTree {
      * @return
      */
     public static FactModelTree ofDMO(String factName, String fullPackage, Map<String, PropertyTypeName> simpleProperties, Map<String, List<String>> genericTypesMap, String typeName) {
-        if (typeName == null || factName.equals(typeName)) {
-            return new FactModelTree(factName, fullPackage, simpleProperties, genericTypesMap);
-        }
-        return new FactModelTree(factName, fullPackage, simpleProperties, genericTypesMap, typeName);
+        return new FactModelTree(factName, fullPackage, simpleProperties, genericTypesMap, Type.UNDEFINED, typeName);
+    }
+
+    /**
+     * Static factory method to be used in DMO context. type is not managed. Managing factName and typeName.
+     * @param factName
+     * @param fullPackage
+     * @param simplePropertyFullClass
+     * @param typeName
+     * @return
+     */
+    public static FactModelTree ofSimpleDMO(String factName, String fullPackage, String simplePropertyFullClass, String typeName) {
+        Map<String, FactModelTree.PropertyTypeName> simpleProperties = new HashMap<>();
+        simpleProperties.put(VALUE, new FactModelTree.PropertyTypeName(simplePropertyFullClass));
+        FactModelTree toReturn = new FactModelTree(factName, fullPackage, simpleProperties, Collections.emptyMap(), Type.UNDEFINED, typeName);
+        toReturn.setSimple(true);
+        return toReturn;
+    }
+
+    public static FactModelTree ofDMN(String factName, Map<String, PropertyTypeName> simpleProperties, Map<String, List<String>> genericTypesMap, String typeName, Type type) {
+        return new FactModelTree(factName, "", simpleProperties, genericTypesMap, type, typeName);
+    }
+
+    /**
+     * Static factory method to be used in DMO context. type is not managed. Managing factName and typeName.
+     * @param factName
+     * @param typeName
+     * @return
+     */
+    public static FactModelTree ofSimpleDMN(String factName, String simplePropertyType, Map<String, List<String>> genericTypeInfoMap, String typeName, Type type) {
+        Map<String, FactModelTree.PropertyTypeName> simpleProperties = new HashMap<>();
+        simpleProperties.put(VALUE, new FactModelTree.PropertyTypeName(simplePropertyType));
+        FactModelTree toReturn = new FactModelTree(factName, "", simpleProperties, genericTypeInfoMap, type, typeName);
+        toReturn.setSimple(true);
+        return toReturn;
     }
 
     public FactModelTree() {
@@ -108,7 +142,6 @@ public class FactModelTree {
      */
     public FactModelTree(String factName, String fullPackage, Map<String, PropertyTypeName> simpleProperties, Map<String, List<String>> genericTypesMap, Type type) {
         this(factName, fullPackage, simpleProperties, genericTypesMap, type, null);
-
     }
 
     public FactModelTree(String factName, String fullPackage, Map<String, PropertyTypeName> simpleProperties, Map<String, List<String>> genericTypesMap, Type type, String typeName) {

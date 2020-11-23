@@ -138,7 +138,7 @@ public class DMNTypeServiceImpl
         }
         String typeName = type.getName();
         populateGeneric(genericTypeInfoMap, VALUE, typeName);
-        FactModelTree toReturn = createFactModelTreeForSimple(genericTypeInfoMap, factName, List.class.getCanonicalName(), fmType);
+        FactModelTree toReturn = createFactModelTreeForSimple(factName, typeName, List.class.getCanonicalName(), genericTypeInfoMap, fmType);
         if (!hiddenFacts.containsKey(typeName) && !alreadyVisited.contains(typeName)) {
             alreadyVisited.add(typeName);
             FactModelTree genericFactModelTree = createFactModelTreeForGenericType(new HashMap<>(), typeName, typeName, typeName, type, hiddenFacts, fmType, alreadyVisited);
@@ -161,7 +161,7 @@ public class DMNTypeServiceImpl
         if (type.isCollection() && isToBeManagedAsCollection(type)) {
             throw new WrongDMNTypeException();
         }
-        return isToBeManagedAsComposite(type) ? createFactModelTreeForComposite(genericTypeInfoMap, propertyName, fullPropertyPath, type, hiddenFacts, fmType, alreadyVisited) : createFactModelTreeForSimple(genericTypeInfoMap, factName, type.getName(), fmType);
+        return isToBeManagedAsComposite(type) ? createFactModelTreeForComposite(genericTypeInfoMap, propertyName, fullPropertyPath, type, hiddenFacts, fmType, alreadyVisited) : createFactModelTreeForSimple(factName, type.getName(), type.getName(), genericTypeInfoMap, fmType);
     }
 
     /**
@@ -174,7 +174,7 @@ public class DMNTypeServiceImpl
      * @return
      */
     protected FactModelTree createFactModelTreeForGenericType(Map<String, List<String>> genericTypeInfoMap, String factName, String propertyName, String fullPropertyPath, DMNType type, SortedMap<String, FactModelTree> hiddenFacts, FactModelTree.Type fmType, List<String> alreadyVisited) throws WrongDMNTypeException {
-        return type.isComposite() ? createFactModelTreeForComposite(genericTypeInfoMap, propertyName, fullPropertyPath, type, hiddenFacts, fmType, alreadyVisited) : createFactModelTreeForSimple(genericTypeInfoMap, factName, type.getName(), fmType);
+        return type.isComposite() ? createFactModelTreeForComposite(genericTypeInfoMap, propertyName, fullPropertyPath, type, hiddenFacts, fmType, alreadyVisited) : createFactModelTreeForSimple(factName, type.getName(), type.getName(), genericTypeInfoMap, fmType);
     }
 
     /**
@@ -186,12 +186,12 @@ public class DMNTypeServiceImpl
      * @param fmType
      * @return
      */
-    protected FactModelTree createFactModelTreeForSimple(Map<String, List<String>> genericTypeInfoMap, String factName, String propertyClass, FactModelTree.Type fmType) {
-        Map<String, FactModelTree.PropertyTypeName> simpleProperties = new HashMap<>();
-        FactModelTree simpleFactModelTree = new FactModelTree(factName, "", simpleProperties, genericTypeInfoMap, fmType);
-        simpleFactModelTree.addSimpleProperty(VALUE, new FactModelTree.PropertyTypeName(propertyClass));
-        simpleFactModelTree.setSimple(true);
-        return simpleFactModelTree;
+    protected FactModelTree createFactModelTreeForSimple(String factName,
+                                                         String typeName,
+                                                         String propertyClass,
+                                                         Map<String, List<String>> genericTypeInfoMap,
+                                                         FactModelTree.Type fmType) {
+        return FactModelTree.ofSimpleDMN(factName, propertyClass, genericTypeInfoMap, typeName, fmType);
     }
 
     /**
@@ -208,7 +208,7 @@ public class DMNTypeServiceImpl
             throw new WrongDMNTypeException();
         }
         Map<String, FactModelTree.PropertyTypeName> simpleFields = new HashMap<>();
-        FactModelTree toReturn = new FactModelTree(name, "", simpleFields, genericTypeInfoMap, fmType);
+        FactModelTree toReturn = FactModelTree.ofDMN(name, simpleFields, genericTypeInfoMap, type.getName(), fmType);
         for (Map.Entry<String, DMNType> entry : type.getFields().entrySet()) {
             String expandablePropertyName = fullPropertyPath + "." + entry.getKey();
             if (isToBeManagedAsCollection(entry.getValue())) {  // if it is a collection, generate the generic and add as hidden fact a simple or composite fact model tree
