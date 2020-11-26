@@ -18,17 +18,29 @@ package org.drools.workbench.screens.guided.dtable.shared;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 public class XLSConversionResultMessageTest {
 
     @Test
-    public void name() {
+    public void testEqualsAndHashCode() {
         final XLSConversionResultMessage a = new XLSConversionResultMessage(XLSConversionResultMessageType.DIALECT_NOT_CONVERTED, "test");
         final XLSConversionResultMessage b = new XLSConversionResultMessage(XLSConversionResultMessageType.DIALECT_NOT_CONVERTED, "test");
         assertEquals(a, b);
         assertEquals(a.hashCode(), b.hashCode());
         assertTrue(a.equals(b));
         assertTrue(b.equals(a));
+    }
+
+    @Test
+    public void testEqualsAndHashCodeNotEqual() {
+        final XLSConversionResultMessage a = new XLSConversionResultMessage(XLSConversionResultMessageType.DIALECT_NOT_CONVERTED, "test");
+        final XLSConversionResultMessage b = new XLSConversionResultMessage(XLSConversionResultMessageType.DIALECT_NOT_CONVERTED, "another");
+        assertNotEquals(a, b);
+        assertNotEquals(a.hashCode(), b.hashCode());
+        assertFalse(a.equals(b));
+        assertFalse(b.equals(a));
     }
 }

@@ -19,5 +19,11 @@ import org.drools.workbench.screens.guided.dtable.shared.XLSConversionResultMess
 
 public interface NotificationReporter {
 
+    /**
+     * During the conversion there can come issues that do not fail the conversion,
+     * but the user should be informed.
+     *
+     * @param message Message object that can be used with i18n.
+     */
     void report(final XLSConversionResultMessage message);
 }

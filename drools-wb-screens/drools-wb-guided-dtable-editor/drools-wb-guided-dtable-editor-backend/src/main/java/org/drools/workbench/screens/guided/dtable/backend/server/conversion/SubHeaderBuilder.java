@@ -40,8 +40,6 @@ import org.drools.workbench.models.guided.dtable.shared.model.ConditionCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.DescriptionCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
 import org.drools.workbench.models.guided.dtable.shared.model.MetadataCol52;
-import org.drools.workbench.models.guided.dtable.shared.model.RowNumberCol52;
-import org.drools.workbench.models.guided.dtable.shared.model.RuleNameColumn;
 import org.drools.workbench.screens.guided.dtable.backend.server.conversion.util.ColumnContext;
 import org.drools.workbench.screens.guided.dtable.backend.server.conversion.util.NotificationReporter;
 import org.drools.workbench.screens.guided.dtable.backend.server.conversion.util.Skipper;
@@ -112,9 +110,7 @@ public class SubHeaderBuilder {
 
             final BaseColumn baseColumn = expandedColumns.get(sourceColumnIndex);
 
-            if (Skipper.shouldSkip(notificationReporter, baseColumn)
-                    || baseColumn instanceof RowNumberCol52
-                    || baseColumn instanceof RuleNameColumn) {
+            if (Skipper.shouldSkip(notificationReporter, baseColumn)) {
                 // Ignore and do not add to count
                 continue;
             } else if (baseColumn instanceof AttributeCol52) {
@@ -238,7 +234,7 @@ public class SubHeaderBuilder {
                              final String boundName,
                              final String factType,
                              final String factField,
-                             final String type) {
+                             final String valueType) {
         boolean madeInsert = false;
 
         if (columnContext.isBoundNameFree(boundName)) {
@@ -261,13 +257,13 @@ public class SubHeaderBuilder {
 
         fieldRow.createCell(targetColumnIndex).setCellValue(addSetMethod(boundName,
                                                                          factField,
-                                                                         getRHSParamWithWrapper(type)));
+                                                                         getRHSParamWithWrapper(valueType)));
         return madeInsert;
     }
 
-    private String getRHSParamWithWrapper(final String type) {
+    private String getRHSParamWithWrapper(final String valueType) {
 
-        switch (type) {
+        switch (valueType) {
 
             case DataType.TYPE_NUMERIC_BIGDECIMAL:
                 return "new java.math.BigDecimal(\"$param\")";

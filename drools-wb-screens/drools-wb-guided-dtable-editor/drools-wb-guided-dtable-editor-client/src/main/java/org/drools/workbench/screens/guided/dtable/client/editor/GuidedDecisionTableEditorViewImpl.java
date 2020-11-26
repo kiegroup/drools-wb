@@ -77,8 +77,9 @@ public class GuidedDecisionTableEditorViewImpl
 
     @Override
     public void showConversionSuccess(final Set<XLSConversionResultMessage> infoMessages) {
-        popupListWidget.setTitle(GuidedDecisionTableConstants.INSTANCE.TableConvertedSuccessfully());
         popupListWidget.clear();
+        popupListWidget.setTitle(GuidedDecisionTableConstants.INSTANCE.TableConvertedSuccessfully());
+        popupListWidget.addListMessage(MessageType.INFO, GuidedDecisionTableConstants.INSTANCE.TableConvertedSuccessfully());
         for (XLSConversionResultMessage infoMessage : infoMessages) {
             popupListWidget.addListMessage(MessageType.INFO, ConversionInfoMessageTranslator.translate(infoMessage));
         }

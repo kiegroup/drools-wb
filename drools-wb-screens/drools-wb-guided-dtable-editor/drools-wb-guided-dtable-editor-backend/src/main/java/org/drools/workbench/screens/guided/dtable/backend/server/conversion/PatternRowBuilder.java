@@ -31,8 +31,6 @@ import org.drools.workbench.models.guided.dtable.shared.model.BaseColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.ConditionCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
 import org.drools.workbench.models.guided.dtable.shared.model.Pattern52;
-import org.drools.workbench.models.guided.dtable.shared.model.RowNumberCol52;
-import org.drools.workbench.models.guided.dtable.shared.model.RuleNameColumn;
 import org.drools.workbench.screens.guided.dtable.backend.server.conversion.util.ColumnContext;
 import org.drools.workbench.screens.guided.dtable.backend.server.conversion.util.NotificationReporter;
 import org.drools.workbench.screens.guided.dtable.backend.server.conversion.util.Skipper;
@@ -70,9 +68,7 @@ public class PatternRowBuilder {
 
             final BaseColumn baseColumn = expandedColumns.get(sourceIndex);
 
-            if (Skipper.shouldSkip(notificationReporter, baseColumn)
-                    || baseColumn instanceof RowNumberCol52
-                    || baseColumn instanceof RuleNameColumn) {
+            if (Skipper.shouldSkip(notificationReporter, baseColumn)) {
                 // Ignore row column and do not up the columnIndex
                 continue;
             } else if (baseColumn instanceof BRLActionVariableColumn) {
