@@ -44,7 +44,7 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandler extends AbstractSce
         implements ScenarioSimulationGridPanelMouseMoveHandler {
 
     /* This parameter must be synchronized with POPOVER_WIDTH static variable in ErrorReportPopoverView.less */
-    private static final int POPOVER_WIDTH = 200;
+    private static final int POPOVER_WIDTH = 220;
     private static final String NULL = "null";
 
     protected ErrorReportPopoverPresenter errorReportPopupPresenter;
@@ -152,17 +152,12 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandler extends AbstractSce
                                             yPosition,
                                             position);
         } else {
-            if (toManage.getDetailsMessage() != null) {
-                errorReportPopupPresenter.setup(ScenarioSimulationEditorConstants.INSTANCE.errorReason(),
-                                                ScenarioSimulationEditorConstants.INSTANCE.errorPopoverMessageFailedWithException(
-                                                        toManage.getExceptionMessage()),
-                                                ScenarioSimulationEditorConstants.INSTANCE.close(),
-                                                "See Details",
-                                                toManage.getDetailsMessage(),
-                                                xPosition,
-                                                yPosition,
-                                                position);
-            }
+            errorReportPopupPresenter.setup(ScenarioSimulationEditorConstants.INSTANCE.errorReason(),
+                                            toManage.getExceptionMessage(),
+                                            ScenarioSimulationEditorConstants.INSTANCE.close(),
+                                            xPosition,
+                                            yPosition,
+                                            position);
         }
     }
 

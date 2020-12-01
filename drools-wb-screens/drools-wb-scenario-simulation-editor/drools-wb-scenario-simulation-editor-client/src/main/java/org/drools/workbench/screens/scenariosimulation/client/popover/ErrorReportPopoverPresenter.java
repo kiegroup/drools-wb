@@ -19,7 +19,6 @@ package org.drools.workbench.screens.scenariosimulation.client.popover;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-import org.drools.workbench.screens.scenariosimulation.client.popup.ConfirmPopupPresenter;
 import org.uberfire.mvp.Command;
 
 @ApplicationScoped
@@ -27,8 +26,6 @@ public class ErrorReportPopoverPresenter implements ErrorReportPopover.Presenter
 
     @Inject
     protected ErrorReportPopoverView errorReportPopupView;
-    @Inject
-    protected ConfirmPopupPresenter confirmPopupPresenter;
 
     @Override
     public void setup(final String errorTitleText,
@@ -50,18 +47,6 @@ public class ErrorReportPopoverPresenter implements ErrorReportPopover.Presenter
                       final int my,
                       final PopoverView.Position position) {
         errorReportPopupView.setup(errorTitleText, errorContentText, keepText, mx, my, position);
-    }
-
-    @Override
-    public void setup(final String errorTitleText,
-                      final String errorContentText,
-                      final String keepText,
-                      final String detailsButtonText,
-                      final String detailsContent,
-                      final int mx,
-                      final int my,
-                      final PopoverView.Position position) {
-        errorReportPopupView.setup(errorTitleText, errorContentText, keepText, detailsButtonText, () -> confirmPopupPresenter.show("Details", detailsContent), mx, my, position);
     }
 
     @Override
