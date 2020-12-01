@@ -23,6 +23,7 @@ import java.util.Optional;
 import java.util.SortedMap;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import org.drools.scenariosimulation.api.model.AbstractScesimModel;
 import org.drools.scenariosimulation.api.model.ExpressionElement;
@@ -52,14 +53,11 @@ import static org.drools.workbench.screens.scenariosimulation.client.utils.Scena
  */
 public abstract class AbstractSelectedColumnCommand extends AbstractScenarioGridCommand {
 
-    protected FactMappingValueType factMappingValueType = FactMappingValueType.NOT_EXPRESSION;
+    protected FactMappingValueType factMappingValueType;
 
     protected AbstractSelectedColumnCommand(GridWidget gridWidget, FactMappingValueType factMappingValueType) {
         super(gridWidget);
         this.factMappingValueType = factMappingValueType;
-    }
-
-    protected AbstractSelectedColumnCommand() {
     }
 
     protected abstract void executeIfSelectedColumn(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn);
@@ -158,7 +156,7 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioGrid
      * @return
      */
     protected FactIdentifier setEditableHeadersAndGetFactIdentifier(ScenarioSimulationContext context, ScenarioGridColumn selectedColumn, String aliasName, String canonicalClassName) {
-        final ScenarioSimulationModel.Type simulationModelType = context.getSettings().getType();
+        final ScenarioSimulationModel.Type simulationModelType = context.getScenarioSimulationModel().getSettings().getType();
         selectedColumn.setEditableHeaders(!(simulationModelType.equals(ScenarioSimulationModel.Type.DMN) || GridWidget.BACKGROUND.equals(gridWidget)));
         String nameToUseForCreation = simulationModelType.equals(ScenarioSimulationModel.Type.DMN) ? aliasName : selectedColumn.getInformationHeaderMetaData().getColumnId();
         return getFactIdentifierByColumnTitle(aliasName, context).orElseGet(() -> FactIdentifier.create(nameToUseForCreation, canonicalClassName));
@@ -252,7 +250,7 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioGrid
             manageCollectionProperty(context, selectedColumn, className, columnIndex, propertyNameElements);
         } else {
             selectedColumn.setFactory(context.getAbstractScesimGridModelByGridWidget(gridWidget).getDOMElementFactory(propertyClass,
-                                                                                                                      context.getSettings().getType(),
+                                                                                                                      context.getScenarioSimulationModel().getSettings().getType(),
                                                                                                                       factMappingValueType));
         }
         if (context.getScenarioSimulationEditorPresenter() != null) {
@@ -314,7 +312,7 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioGrid
         if (pathElements.size() > 2) {
             for (String step : pathElements.subList(1, pathElements.size() - 1)) {
                 if (nestedFactModelTree.getExpandableProperties().containsKey(step)) {
-                    nestedFactModelTree = dataObjectFieldsMap.get(factModelTree.getExpandableProperties().get(step));
+                    nestedFactModelTree = dataObjectFieldsMap.get(nestedFactModelTree.getExpandableProperties().get(step));
                 }
             }
         }
@@ -334,8 +332,8 @@ public abstract class AbstractSelectedColumnCommand extends AbstractScenarioGrid
     }
 
     protected Optional<String> getMatchingExpressionAlias(ScenarioSimulationContext context, List<String> propertyNameElements, FactIdentifier factIdentifier) {
-        final List<FactMapping> factMappingsByFactName = context.getAbstractScesimModelByGridWidget(gridWidget).getScesimModelDescriptor().getFactMappingsByFactName(factIdentifier.getName());
-        return factMappingsByFactName.stream()
+        final Stream<FactMapping> factMappingsByFactName = context.getAbstractScesimModelByGridWidget(gridWidget).getScesimModelDescriptor().getFactMappingsByFactName(factIdentifier.getName());
+        return factMappingsByFactName
                 .filter(factMapping -> {
                     List<String> expressionElements = factMapping.getExpressionElements().stream().map(ExpressionElement::getStep).collect(Collectors.toList());
                     return Objects.equals(expressionElements, propertyNameElements);

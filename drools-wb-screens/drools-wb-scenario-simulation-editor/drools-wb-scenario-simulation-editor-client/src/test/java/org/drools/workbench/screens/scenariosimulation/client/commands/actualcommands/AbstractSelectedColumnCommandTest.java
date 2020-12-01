@@ -85,7 +85,6 @@ public abstract class AbstractSelectedColumnCommandTest extends AbstractScenario
         super.setup();
 
         when(gridColumnsMock.indexOf(gridColumnMock)).thenReturn(COLUMN_INDEX);
-        settingsLocal.setType(ScenarioSimulationModel.Type.RULE);
         when(factModelTreeMock.getExpandableProperties()).thenReturn(mock(SortedMap.class));
         when(dataObjectFieldsMapMock.get(anyString())).thenReturn(factModelTreeMock);
 
@@ -159,7 +158,6 @@ public abstract class AbstractSelectedColumnCommandTest extends AbstractScenario
     @Test
     public void executeKeepDataFalseRule() {
         scenarioSimulationContextLocal.getStatus().setKeepData(false);
-        settingsLocal.setType(ScenarioSimulationModel.Type.RULE);
         commonSetPropertyHeader(ScenarioSimulationModel.Type.RULE, false, MULTIPART_VALUE_ELEMENTS, VALUE_CLASS_NAME);
     }
 
@@ -287,6 +285,20 @@ public abstract class AbstractSelectedColumnCommandTest extends AbstractScenario
         verify(sortedMap, times(1)).get("Author");
     }
 
+    protected void navigateComplexObject3Levels() {
+        FactModelTree book = new FactModelTree("Book", "com.Book", new HashMap<>(), new HashMap<>());
+        book.addExpandableProperty("author", "Author");
+        FactModelTree author = new FactModelTree("Author", "com.Author", new HashMap<>(), new HashMap<>());
+        author.addExpandableProperty("firstBook", "Book");
+        SortedMap<String, FactModelTree> sortedMap = spy(new TreeMap<>());
+        sortedMap.put("Book", book);
+        sortedMap.put("Author", author);
+        List<String> elements = Arrays.asList("Book", "author", "firstBook", "topics");
+        FactModelTree target = ((AbstractSelectedColumnCommand) commandSpy).navigateComplexObject(book, elements, sortedMap);
+        assertEquals(target, book);
+        verify(sortedMap, times(1)).get("Author");
+    }
+
     /* This test is usable ONLY by <code>SetPropertyCommandTest</code> subclass */
     protected void getPropertyHeaderTitle() {
         Optional<String> emptyMatching = Optional.empty();
@@ -331,14 +343,15 @@ public abstract class AbstractSelectedColumnCommandTest extends AbstractScenario
         verify(simulationDescriptorMock, times(1)).getFactMappingsByFactName(eq(factIdentifierMock.getName()));
         assertEquals(Optional.empty(), retrieved);
         List<FactMapping> factMappingList = new ArrayList<>();
-        when(simulationDescriptorMock.getFactMappingsByFactName(FACT_IDENTIFIER_NAME)).thenReturn(factMappingList);
         factMappingList.add(factMappingMock);
+        when(simulationDescriptorMock.getFactMappingsByFactName(FACT_IDENTIFIER_NAME)).thenReturn(factMappingList.stream());
         String EXPRESSION_ALIAS = "EXPRESSION_ALIAS";
         when(factMappingMock.getExpressionAlias()).thenReturn(EXPRESSION_ALIAS);
         retrieved = ((AbstractSelectedColumnCommand) commandSpy).getMatchingExpressionAlias(scenarioSimulationContextLocal, FULL_PROPERTY_NAME_ELEMENTS, factIdentifierMock);
         assertEquals(Optional.empty(), retrieved);
         List<ExpressionElement> expressionElements = FULL_PROPERTY_NAME_ELEMENTS.stream().map(ExpressionElement::new).collect(Collectors.toList());
         when(factMappingMock.getExpressionElements()).thenReturn(expressionElements);
+        when(simulationDescriptorMock.getFactMappingsByFactName(FACT_IDENTIFIER_NAME)).thenReturn(factMappingList.stream());
         retrieved = ((AbstractSelectedColumnCommand) commandSpy).getMatchingExpressionAlias(scenarioSimulationContextLocal, FULL_PROPERTY_NAME_ELEMENTS, factIdentifierMock);
         assertEquals(Optional.of(EXPRESSION_ALIAS), retrieved);
     }

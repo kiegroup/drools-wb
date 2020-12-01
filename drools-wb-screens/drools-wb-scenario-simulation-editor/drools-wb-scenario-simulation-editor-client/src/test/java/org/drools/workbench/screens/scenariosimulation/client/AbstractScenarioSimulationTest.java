@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import javax.enterprise.event.Event;
 
@@ -331,12 +332,12 @@ public abstract class AbstractScenarioSimulationTest {
             }
 
             @Override
-            public void validateInstanceHeaderUpdate(String instanceHeaderCellValue, int columnIndex, boolean isADataType) throws Exception {
+            public void validateInstanceHeaderUpdate(String instanceHeaderCellValue, int columnIndex, boolean isADataType)  {
                 //
             }
 
             @Override
-            public void validatePropertyHeaderUpdate(String propertyHeaderCellValue, int columnIndex, boolean isPropertyType) throws Exception {
+            public void validatePropertyHeaderUpdate(String propertyHeaderCellValue, int columnIndex, boolean isPropertyType) {
                 //
             }
         });
@@ -372,7 +373,6 @@ public abstract class AbstractScenarioSimulationTest {
         scenarioSimulationContextLocal.getStatus().setFullPackage(FULL_PACKAGE);
         scenarioSimulationContextLocal.setScenarioSimulationEditorPresenter(scenarioSimulationEditorPresenterMock);
         scenarioSimulationContextLocal.setDataObjectFieldsMap(dataObjectFieldsMapMock);
-        scenarioSimulationContextLocal.setSettings(settingsLocal);
         when(backgroundGridWidgetSpy.getScenarioSimulationContext()).thenReturn(scenarioSimulationContextLocal);
         when(scenarioGridWidgetSpy.getScenarioSimulationContext()).thenReturn(scenarioSimulationContextLocal);
 
@@ -388,6 +388,7 @@ public abstract class AbstractScenarioSimulationTest {
 
         when(scenarioSimulationModelMock.getSimulation()).thenReturn(simulationMock);
         when(scenarioSimulationModelMock.getBackground()).thenReturn(backgroundMock);
+        when(scenarioSimulationModelMock.getSettings()).thenReturn(settingsLocal);
 
         when(scenarioCommandRegistryManagerMock.undo(scenarioSimulationContextLocal)).thenReturn(CommandResultBuilder.SUCCESS);
         when(scenarioCommandRegistryManagerMock.redo(scenarioSimulationContextLocal)).thenReturn(CommandResultBuilder.SUCCESS);
@@ -433,6 +434,7 @@ public abstract class AbstractScenarioSimulationTest {
         when(factIdentifierMock.getName()).thenReturn(FACT_IDENTIFIER_NAME);
         when(simulationDescriptorMock.getFactIdentifiers()).thenReturn(factIdentifierSet);
         when(simulationDescriptorMock.getUnmodifiableFactMappings()).thenReturn(factMappingLocal);
+        when(simulationDescriptorMock.getFactMappingsByFactName(anyString())).thenReturn(Stream.empty());
         when(scenarioGridModelMock.nextColumnCount()).thenReturn(factMappingValuesLocal.size());
         when(factMappingMock.getFactIdentifier()).thenReturn(factIdentifierMock);
         when(factMappingMock.getFactAlias()).thenReturn(FACT_ALIAS);

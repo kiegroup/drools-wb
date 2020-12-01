@@ -43,18 +43,12 @@ import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSIT
 
 import static org.drools.scenariosimulation.api.utils.ConstantsHolder.VALUE;
 
-/**
- * Abstract class to provide methods shared by <b>runtime</b> and <b>testing</b> environments.
- * <p>
- * Most of this code is cloned/adapted from ScenarioSimulation backend and dmn core
- */
-public abstract class AbstractKogitoDMNService implements KogitoDMNService {
+public class ScenarioSimulationKogitoDMNDataManager {
 
-    public static final String URI_FEEL = "http://www.omg.org/spec/DMN/20180521/FEEL/";
-    public static final String WRONG_DMN_MESSAGE = "Wrong DMN Type";
+    protected static final String URI_FEEL = "http://www.omg.org/spec/DMN/20180521/FEEL/";
+    protected static final String WRONG_DMN_MESSAGE = "Wrong DMN Type";
     protected static final QName TYPEREF_QNAME = new QName("", "typeRef", "");
 
-    @Override
     public FactModelTuple getFactModelTuple(final JSITDefinitions jsitDefinitions) {
         SortedMap<String, FactModelTree> visibleFacts = new TreeMap<>();
         SortedMap<String, FactModelTree> hiddenFacts = new TreeMap<>();
@@ -92,7 +86,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
      */
     protected ClientDMNType getDMNTypeFromMaps(final Map<String, ClientDMNType> dmnTypesMap,
                                                final Map<QName, String> source) {
-        String typeRef = source.get(TYPEREF_QNAME);
+        String typeRef = getFilteredTypeRef(source.get(TYPEREF_QNAME));
         if (typeRef == null) {
             typeRef = BuiltInType.ANY.getName();
         }
@@ -205,7 +199,7 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
 
         /* Inheriting fields defined from item's typeRef, which represent its "super item" */
         /* This is required to define DMNType fields and isCollection / isComposite fields */
-        String typeRef = itemDefinition.getTypeRef();
+        String typeRef = getFilteredTypeRef(itemDefinition.getTypeRef());
         if (typeRef != null) {
             final ClientDMNType superDmnType = getOrCreateDMNType(allDefinitions,
                                                                   typeRef,
@@ -216,7 +210,8 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
                 itemDefinitionDMNType.addFields(superDmnType.getFields());
                 itemDefinitionDMNType.setCollection(superDmnType.isCollection() || itemDefinitionDMNType.isCollection());
                 itemDefinitionDMNType.setIsComposite(superDmnType.isComposite() || itemDefinitionDMNType.isComposite());
-                itemDefinitionDMNType.setFeelType(superDmnType.getFeelType() != null ? superDmnType.getFeelType() : null);
+                itemDefinitionDMNType.setFeelType(superDmnType.getFeelType());
+                itemDefinitionDMNType.setBaseType(getBaseTypeForItemDefinition(itemDefinition, superDmnType));
             } else {
                 throw new IllegalStateException(
                         "Item: " + itemDefinition.getName() + " refers to typeRef: " + itemDefinition.getTypeRef()
@@ -231,6 +226,12 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
 
         return itemDefinitionDMNType;
    }
+
+    protected ClientDMNType getBaseTypeForItemDefinition(JSITItemDefinition itemDefinition, ClientDMNType superDmnType) {
+        final boolean hasAllowedValues = itemDefinition.getAllowedValues() != null
+                && !itemDefinition.getAllowedValues().getText().isEmpty();
+        return hasAllowedValues ? superDmnType : superDmnType.getBaseType();
+    }
 
     /**
      * This method aim is to populate all fields and subfields present in a given <code>JSITItemDefinitionItem</code>
@@ -253,20 +254,26 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
 
             for (int i = 0; i < jsitItemDefinitionFields.size(); i++) {
                 final JSITItemDefinition jsitItemDefinitionField = Js.uncheckedCast(jsitItemDefinitionFields.get(i));
-                final String typeRef = jsitItemDefinitionField.getTypeRef();
+                final String typeRef = getFilteredTypeRef(jsitItemDefinitionField.getTypeRef());
                 final List<JSITItemDefinition> subfields = jsitItemDefinitionField.getItemComponent();
                 final boolean hasSubFields = subfields != null && !subfields.isEmpty();
+                final boolean hasAllowedValues = jsitItemDefinitionField.getAllowedValues() != null
+                        && !jsitItemDefinitionField.getAllowedValues().getText().isEmpty();
+
                 ClientDMNType fieldDMNType;
                 /* Retrieving field ClientDMNType */
-                if (typeRef != null && !hasSubFields) {
-                    /* The field refers to a DMType which must be present in dmnTypesMap */
+                if (typeRef != null && !hasSubFields && !hasAllowedValues) {
+                    /* The field refers to a DMType which is present in dmnTypesMap or needs to be created */
                     fieldDMNType = getOrCreateDMNType(allItemDefinitions, typeRef, namespace, dmnTypesMap);
+                } else if (typeRef != null && !hasSubFields && hasAllowedValues) {
+                    /* This case requires to create a new "Anonymous" DMNType to handle the allowed values */
+                    fieldDMNType = createDMNType(allItemDefinitions, jsitItemDefinitionField, namespace, dmnTypesMap);
                 } else if (typeRef == null && hasSubFields) {
-                    /* In this case we are handling an "in place" Structure type not defined in allItemDefinition list.
+                    /* In this case we are handling an "Anonymous" type not defined in allItemDefinition list.
                      * Therefore, a new DMNType must be created and then it manages its defined subfields in recursive way */
                     fieldDMNType = createDMNType(allItemDefinitions, jsitItemDefinitionField, namespace, dmnTypesMap);
                 } else {
-                    /* The following case are not managed, because invalid typeRef empty and no subfields OR typeRef
+                    /* Remaining cases are not managed, because invalid. Eg typeRef empty and no subfields OR typeRef
                      * empty and at least one subfield */
                     continue;
                 }
@@ -551,12 +558,30 @@ public abstract class AbstractKogitoDMNService implements KogitoDMNService {
                         hiddenFacts.put(typeName, fact);
                     }
                     toReturn.addExpandableProperty(entry.getKey(), typeName);
-                } else {  // a simple type is just name -> type
-                    simpleFields.put(entry.getKey(), new FactModelTree.PropertyTypeName(typeName));
+                } else {
+                    FactModelTree.PropertyTypeName propertyTypeName = entry.getValue().getBaseType() != null ?
+                            new FactModelTree.PropertyTypeName(typeName, entry.getValue().getBaseType().getName()) :
+                            new FactModelTree.PropertyTypeName(typeName);
+                    simpleFields.put(entry.getKey(), propertyTypeName);
                 }
             }
         }
         return toReturn;
+    }
+
+    /**
+     * In case of typeRef which points to an imported DMN model, eg. external.tType, the type is normalized
+     * to remove the prefix, in order to handle a DMNType without a prefix in Test Scenario Editor.
+     * This should be used everywhere a typeRef is retrieved
+     * @param typeRef
+     * @return
+     */
+    private String getFilteredTypeRef(String typeRef) {
+        if (typeRef != null && typeRef.contains(".")) {
+            return typeRef.substring(typeRef.lastIndexOf('.') + 1);
+        } else {
+            return typeRef;
+        }
     }
 
     // Indirection required for tests
