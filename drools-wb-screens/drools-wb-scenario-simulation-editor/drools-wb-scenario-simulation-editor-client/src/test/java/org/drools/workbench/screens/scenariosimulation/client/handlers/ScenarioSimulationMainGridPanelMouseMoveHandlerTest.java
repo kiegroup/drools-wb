@@ -335,7 +335,7 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandlerTest extends Abstrac
         mouseMoveHandler.setupPopupPresenter(factMappingValueMock, ROW_INDEX, COLUMN_INDEX, DX, DY, PopoverView.Position.RIGHT);
         verify(errorReportPopupPresenterMock, times(1)).setup(
                 eq(ScenarioSimulationEditorConstants.INSTANCE.errorReason()),
-                eq(ScenarioSimulationEditorConstants.INSTANCE.errorPopoverMessageFailedWithException(EXCEPTION)),
+                eq(EXCEPTION),
                 eq(ScenarioSimulationEditorConstants.INSTANCE.close()),
                 eq(DX),
                 eq(DY),
