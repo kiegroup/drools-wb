@@ -200,6 +200,10 @@ public interface ScenarioSimulationEditorConstants
 
     String dateFormatPlaceholder();
 
+    String dateTimeFormatPlaceholder();
+
+    String timeFormatPlaceholder();
+
     String dmnDateFormatPlaceholder();
 
     String deleteScenarioMainTitle();
@@ -276,7 +280,7 @@ public interface ScenarioSimulationEditorConstants
 
     String dmnPathErrorLabel(String dmnPath);
 
-    String dmnPathErrorDetailedLabel(String dmnPath);
+    String dmnPathErrorDetailedLabel(String dmnPath, String message);
 
     String missingSelectedType();
 

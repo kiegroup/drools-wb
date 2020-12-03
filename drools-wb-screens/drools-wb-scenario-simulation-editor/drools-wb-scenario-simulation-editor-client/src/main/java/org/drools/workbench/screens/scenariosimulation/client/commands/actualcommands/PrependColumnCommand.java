@@ -15,8 +15,6 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.commands.actualcommands;
 
-import javax.enterprise.context.Dependent;
-
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
 import org.drools.workbench.screens.scenariosimulation.client.models.AbstractScesimGridModel;
@@ -24,15 +22,10 @@ import org.drools.workbench.screens.scenariosimulation.client.models.AbstractSce
 /**
  * <code>Command</code> to <b>prepend</b> (i.e. put in the first position) a column to a given <i>group</i>
  */
-@Dependent
 public class PrependColumnCommand extends AbstractInsertColumnCommand {
 
     public PrependColumnCommand(GridWidget gridWidget) {
         super(gridWidget);
-    }
-
-    private PrependColumnCommand() {
-        // CDI
     }
 
     @Override
