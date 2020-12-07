@@ -18,6 +18,7 @@ package org.drools.workbench.screens.guided.dtable.backend.server.conversion;
 import java.util.Set;
 
 import org.apache.poi.ss.usermodel.Workbook;
+import org.assertj.core.api.Assertions;
 import org.drools.workbench.models.guided.dtable.backend.GuidedDTXMLPersistence;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
 import org.drools.workbench.screens.guided.dtable.shared.XLSConversionResultMessage;
@@ -42,9 +43,13 @@ public class XLSBuilderTypesTableTest
 
         final Set<XLSConversionResultMessage> infoMessages = buildResult.getConversionResult().getInfoMessages();
 
-        assertEquals(1, infoMessages.size());
-        assertEquals(XLSConversionResultMessageType.DIALECT_NOT_CONVERTED, infoMessages.iterator().next().getType());
-        assertEquals("Dialect is not a supported column type in XLS Decision tables. Conversion ignored this column.", infoMessages.iterator().next().getMessage());
+        assertEquals(2, infoMessages.size());
+        Assertions.assertThat(infoMessages)
+                .hasSize(2)
+                .containsOnlyOnce(new XLSConversionResultMessage(XLSConversionResultMessageType.DIALECT_NOT_CONVERTED,
+                                                                 "Dialect is not a supported column type in XLS Decision tables. Conversion ignored this column."))
+                .containsOnlyOnce(new XLSConversionResultMessage(XLSConversionResultMessageType.RULE_NAME_NOT_CONVERTED,
+                                                                 "Rule Name column conversion is not supported yet. Conversion ignored this column."));
 
         assertEquals(1, workbook.getNumberOfSheets());
         sheet = workbook.iterator().next();

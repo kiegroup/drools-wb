@@ -32,7 +32,6 @@ public class Skipper {
     }
 
     /**
-     *
      * @param notificationReporter Logs the reasons for skipping when the user needs to know about it.
      * @param baseColumn Column that is investigated. If skipped this is not added to the XLS
      * @return If the baseColumn should be left out of XLS or not.
@@ -44,6 +43,9 @@ public class Skipper {
             // No use for this in XLS
             return true;
         } else if (baseColumn instanceof RuleNameColumn) {
+            notificationReporter.report(new XLSConversionResultMessage(XLSConversionResultMessageType.RULE_NAME_NOT_CONVERTED,
+                                                                       "Rule Name column conversion is not " +
+                                                                               "supported yet. Conversion ignored this column."));
             return true;
         } else if (isDialect(baseColumn)) {
             notificationReporter.report(new XLSConversionResultMessage(XLSConversionResultMessageType.DIALECT_NOT_CONVERTED,

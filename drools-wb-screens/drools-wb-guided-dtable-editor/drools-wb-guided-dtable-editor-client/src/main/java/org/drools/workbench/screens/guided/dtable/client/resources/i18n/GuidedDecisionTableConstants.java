@@ -376,5 +376,7 @@ public interface GuidedDecisionTableConstants
 
     String DialectNotConverted();
 
+    String RuleNameNotConverted();
+
     String RanIntoIssueWhenConverting();
 }

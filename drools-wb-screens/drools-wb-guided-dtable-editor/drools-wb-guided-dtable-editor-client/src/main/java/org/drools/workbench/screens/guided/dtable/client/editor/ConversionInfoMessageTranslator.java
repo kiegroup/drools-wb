@@ -28,6 +28,8 @@ public class ConversionInfoMessageTranslator {
         switch (infoMessage.getType()) {
             case DIALECT_NOT_CONVERTED:
                 return GuidedDecisionTableConstants.INSTANCE.DialectNotConverted();
+            case RULE_NAME_NOT_CONVERTED:
+                return GuidedDecisionTableConstants.INSTANCE.RuleNameNotConverted();
             default:
                 return GuidedDecisionTableConstants.INSTANCE.RanIntoIssueWhenConverting();
         }

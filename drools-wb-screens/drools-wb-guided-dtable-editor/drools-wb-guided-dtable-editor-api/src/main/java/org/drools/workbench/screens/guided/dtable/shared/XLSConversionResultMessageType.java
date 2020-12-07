@@ -16,5 +16,6 @@
 package org.drools.workbench.screens.guided.dtable.shared;
 
 public enum XLSConversionResultMessageType {
-    DIALECT_NOT_CONVERTED
+    DIALECT_NOT_CONVERTED,
+    RULE_NAME_NOT_CONVERTED
 }
