@@ -36,7 +36,7 @@ public class ScenarioSimulationKogitoRuntimeCreationAssetsDropdownProviderImpl i
 
     protected static final String DMN_FILE_SEARCH_PATTERN = "**/*.dmn";
     protected static final String TARGET_FOLDER = "target/";
-    protected static final String TARGET_FOLDER_NOT_ROOT = "/target/";
+    protected static final String TARGET_FOLDER_NOT_ROOT = "/" + TARGET_FOLDER;
 
 
     @Inject
