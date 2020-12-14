@@ -522,14 +522,14 @@ public class ScenarioGridTest {
         selectedHeaderCells.add(new GridData.SelectedCell(0, 1));
         selectedHeaderCells.add(new GridData.SelectedCell(0, 2));
         when(scenarioGridModelMock.getSelectedHeaderCells()).thenReturn(selectedHeaderCells);
-        scenarioGridSpy.reselectCurrentHeaderCell();
+        scenarioGridSpy.selectCurrentHeaderCellGroup();
         verify(scenarioGridSpy, times(1)).setSelectedColumnAndHeader(eq(0), eq(0));
     }
 
     public void reselectCurrentHeaderCell_NoHeaderCellsSelected() {
         List<GridData.SelectedCell> selectedHeaderCells = new ArrayList<>();
         when(scenarioGridModelMock.getSelectedHeaderCells()).thenReturn(selectedHeaderCells);
-        scenarioGridSpy.reselectCurrentHeaderCell();
+        scenarioGridSpy.selectCurrentHeaderCellGroup();
         verify(scenarioGridSpy, never()).setSelectedColumnAndHeader(anyInt(), anyInt());
     }
 }

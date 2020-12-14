@@ -153,13 +153,13 @@ public class ScenarioGrid extends BaseGridWidget {
     }
 
     /**
-     * It selects the current selected header cells group
+     * It focus the current selected header cells group
      */
-    public void reselectCurrentHeaderCell() {
+    public void selectCurrentHeaderCellGroup() {
         if (!model.getSelectedHeaderCells().isEmpty()) {
             int rowIndex = model.getSelectedHeaderCells().get(0).getRowIndex();
             int columnIndex = ColumnIndexUtilities.findUiColumnIndex(model.getColumns(),
-                    model.getSelectedHeaderCells().get(0).getColumnIndex());
+                                                                     model.getSelectedHeaderCells().get(0).getColumnIndex());
             setSelectedColumnAndHeader(rowIndex, columnIndex);
         }
     }

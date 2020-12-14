@@ -17,7 +17,6 @@ package org.drools.workbench.screens.scenariosimulation.client.commands.actualco
 
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationContext;
 import org.drools.workbench.screens.scenariosimulation.client.enums.GridWidget;
-import org.drools.workbench.screens.scenariosimulation.client.models.AbstractScesimGridModel;
 
 /**
  * <code>Command</code> to <b>append</b> (i.e. put in the last position) a column to a given <i>group</i>
@@ -31,9 +30,7 @@ public class AppendColumnCommand extends AbstractInsertColumnCommand {
     @Override
     protected void internalExecute(ScenarioSimulationContext context) {
         final ScenarioSimulationContext.Status status = context.getStatus();
-        final AbstractScesimGridModel gridModel = context.getAbstractScesimGridModelByGridWidget(gridWidget);
-        final int index = gridModel.getFirstIndexRightOfGroup(status.getColumnGroup());
+        final int index = context.getAbstractScesimGridModelByGridWidget(gridWidget).getFirstIndexRightOfGroup(status.getColumnGroup());
         commonInsertColumnCommand(context, status, index);
-        context.getSelectedScenarioGridPanel().ifPresent(panel -> panel.getScenarioGrid().reselectCurrentHeaderCell());
     }
 }
