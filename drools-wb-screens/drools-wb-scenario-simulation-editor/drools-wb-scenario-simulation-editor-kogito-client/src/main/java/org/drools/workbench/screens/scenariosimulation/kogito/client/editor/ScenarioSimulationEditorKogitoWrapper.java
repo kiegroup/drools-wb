@@ -291,7 +291,7 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     }
 
     @Override
-    public void unPublishTestResultsAlerts() {
+    public void unpublishTestResultsAlerts() {
         // Not used in Kogito
     }
 

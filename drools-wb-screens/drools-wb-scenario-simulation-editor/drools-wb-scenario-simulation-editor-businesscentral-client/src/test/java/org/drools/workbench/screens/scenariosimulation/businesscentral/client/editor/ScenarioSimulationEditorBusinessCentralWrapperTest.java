@@ -117,6 +117,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
 
     private static final int BACKGROUND_TAB_INDEX = 1;
     private static final int SIMULATION_TAB_INDEX = 0;
+    private static final String SESSION_ID = "session-id-123";
 
     @Mock
     private PathPlaceRequest placeRequestMock;
@@ -184,6 +185,8 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     private SessionInfo sessionInfoMock;
     @Captor
     private ArgumentCaptor<Command> commandArgumentCaptor;
+    @Captor
+    private ArgumentCaptor<UnpublishMessagesEvent> unpublishMessagesEventArgumentCaptor;
 
     private CallerMock<ScenarioSimulationService> scenarioSimulationCaller;
     private CallerMock<ImportExportService> importExportCaller;
@@ -254,6 +257,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         when(scenarioSimulationBusinessCentralDocksHandlerMock.getTestRunnerReportingPanelWidget()).thenReturn(testRunnerReportingPanelWidgetMock);
         when(simulationRunResultMock.getTestResultMessage()).thenReturn(testResultMessageMock);
         when(simulationRunResultMock.getSimulationRunMetadata()).thenReturn(simulationRunMetadataMock);
+        when(sessionInfoMock.getId()).thenReturn(SESSION_ID);
     }
 
     @Test
@@ -268,6 +272,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         scenarioSimulationEditorBusinessClientWrapper.onClose();
         verify(versionRecordManagerMock, times(1)).clear();
         verify(scenarioSimulationEditorPresenterMock, times(1)).onClose();
+        verify(scenarioSimulationEditorBusinessClientWrapper, times(1)).unpublishTestResultsAlerts();
     }
 
     @Test
@@ -342,6 +347,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         RemoteCallback<SimulationRunResult> remoteCallback = mock(RemoteCallback.class);
         ScenarioSimulationHasBusyIndicatorDefaultErrorCallback errorCallback = mock(ScenarioSimulationHasBusyIndicatorDefaultErrorCallback.class);
         scenarioSimulationEditorBusinessClientWrapper.onRunScenario(remoteCallback, errorCallback, simulationDescriptorMock, settingsLocal, scenarioWithIndexLocal, backgroundLocal);
+        verify(scenarioSimulationEditorBusinessClientWrapper, times(1)).unpublishTestResultsAlerts();
         verify(scenarioSimulationCaller, times(1)).call(eq(remoteCallback), eq(errorCallback));
         verify(scenarioSimulationServiceMock, times(1)).runScenario(eq(observablePathMock), eq(simulationDescriptorMock), eq(scenarioWithIndexLocal), eq(settingsLocal), eq(backgroundLocal));
     }
@@ -664,5 +670,14 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
                                                                                               isA(ScenarioSimulationHasBusyIndicatorDefaultErrorCallback.class),
                                                                                               eq(simulationRunMetadataMock),
                                                                                               eq(RULE));
+    }
+
+    @Test
+    public void unpublishTestResultsAlerts() {
+        scenarioSimulationEditorBusinessClientWrapper.unpublishTestResultsAlerts();
+        verify(unpublishMessagesEventMock, times(1)).fire(unpublishMessagesEventArgumentCaptor.capture());
+        assertFalse(unpublishMessagesEventArgumentCaptor.getValue().isShowSystemConsole());
+        assertEquals("TestResults", unpublishMessagesEventArgumentCaptor.getValue().getMessageType());
+        assertEquals(SESSION_ID, unpublishMessagesEventArgumentCaptor.getValue().getSessionId());
     }
 }

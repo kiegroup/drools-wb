@@ -163,7 +163,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     public void onClose() {
         this.versionRecordManager.clear();
         scenarioSimulationEditorPresenter.onClose();
-        unPublishTestResultsAlerts();
+        unpublishTestResultsAlerts();
         super.onClose();
     }
 
@@ -247,7 +247,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
 
     @Override
     public void onRunScenario(RemoteCallback<SimulationRunResult> refreshModelCallback, ScenarioSimulationHasBusyIndicatorDefaultErrorCallback scenarioSimulationHasBusyIndicatorDefaultErrorCallback, ScesimModelDescriptor simulationDescriptor, Settings settings, List<ScenarioWithIndex> toRun, Background background) {
-        unPublishTestResultsAlerts();
+        unpublishTestResultsAlerts();
         service.call(refreshModelCallback, scenarioSimulationHasBusyIndicatorDefaultErrorCallback)
                 .runScenario(versionRecordManager.getCurrentPath(),
                              simulationDescriptor,
@@ -257,12 +257,12 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     }
 
     @Override
-    public void unPublishTestResultsAlerts() {
-        final UnpublishMessagesEvent unpublishMessagesEvent = new UnpublishMessagesEvent();
-        unpublishMessagesEvent.setShowSystemConsole(false);
-        unpublishMessagesEvent.setMessageType("TestResults");
-        unpublishMessagesEvent.setSessionId(sessionInfo.getId());
-        this.unpublishMessagesEvent.fire(unpublishMessagesEvent);
+    public void unpublishTestResultsAlerts() {
+        final UnpublishMessagesEvent event = new UnpublishMessagesEvent();
+        event.setShowSystemConsole(false);
+        event.setMessageType("TestResults");
+        event.setSessionId(sessionInfo.getId());
+        this.unpublishMessagesEvent.fire(event);
     }
 
     @Override

@@ -62,7 +62,7 @@ public interface ScenarioSimulationEditorWrapper {
 
     void selectBackgroundTab();
 
-    void unPublishTestResultsAlerts();
+    void unpublishTestResultsAlerts();
 
     AbstractScenarioSimulationDocksHandler getScenarioSimulationDocksHandler();
 

@@ -651,7 +651,7 @@ public class ScenarioSimulationEditorPresenter {
         return () -> populateRightDocks(TestToolsPresenter.IDENTIFIER);
     }
 
-    public void unPublishTestResultsAlerts() {
-        scenarioSimulationEditorWrapper.unPublishTestResultsAlerts();
+    public void unpublishTestResultsAlerts() {
+        scenarioSimulationEditorWrapper.unpublishTestResultsAlerts();
     }
 }
