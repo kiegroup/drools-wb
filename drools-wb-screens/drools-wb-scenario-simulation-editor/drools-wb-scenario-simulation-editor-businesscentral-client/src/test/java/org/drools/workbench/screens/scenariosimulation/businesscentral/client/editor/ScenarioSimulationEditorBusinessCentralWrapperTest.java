@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import javax.enterprise.event.Event;
+
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.scenariosimulation.api.model.AbstractScesimModel;
@@ -52,6 +54,7 @@ import org.guvnor.common.services.project.model.WorkspaceProject;
 import org.guvnor.common.services.shared.metadata.model.Metadata;
 import org.guvnor.common.services.shared.test.TestResultMessage;
 import org.guvnor.messageconsole.client.console.widget.button.AlertsButtonMenuItemBuilder;
+import org.guvnor.messageconsole.events.UnpublishMessagesEvent;
 import org.gwtbootstrap3.client.ui.NavTabs;
 import org.gwtbootstrap3.client.ui.TabListItem;
 import org.jboss.errai.common.client.api.ErrorCallback;
@@ -85,6 +88,7 @@ import org.uberfire.mvp.Command;
 import org.uberfire.mvp.impl.DefaultPlaceRequest;
 import org.uberfire.mvp.impl.PathPlaceRequest;
 import org.uberfire.promise.SyncPromises;
+import org.uberfire.rpc.SessionInfo;
 import org.uberfire.workbench.events.NotificationEvent;
 import org.uberfire.workbench.model.menu.MenuItem;
 
@@ -174,6 +178,10 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
     private CoverageReportPresenter coverageReportPresenterMock;
     @Mock
     private ObservablePath pathMock;
+    @Mock
+    private Event<UnpublishMessagesEvent> unpublishMessagesEventMock;
+    @Mock
+    private SessionInfo sessionInfoMock;
     @Captor
     private ArgumentCaptor<Command> commandArgumentCaptor;
 
@@ -200,6 +208,8 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
                                                                                                                new CallerMock<>(dmnTypeServiceMock),
                                                                                                                importExportCaller,
                                                                                                                runnerReportServiceCaller,
+                                                                                                               sessionInfoMock,
+                                                                                                               unpublishMessagesEventMock,
                                                                                                                scenarioSimulationBusinessCentralDocksHandlerMock) {
             {
                 this.kieView = kieViewMock;

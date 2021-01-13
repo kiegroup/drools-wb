@@ -650,4 +650,8 @@ public class ScenarioSimulationEditorPresenter {
     private Command createPopulateTestToolsCommand() {
         return () -> populateRightDocks(TestToolsPresenter.IDENTIFIER);
     }
+
+    public void unPublishTestResultsAlerts() {
+        scenarioSimulationEditorWrapper.unPublishTestResultsAlerts();
+    }
 }
