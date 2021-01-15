@@ -94,6 +94,7 @@ import org.kie.workbench.common.command.client.CommandResultBuilder;
 import org.kie.workbench.common.command.client.impl.CommandResultImpl;
 import org.mockito.Mock;
 
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.CLASS_NAME;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.COLUMN_GROUP;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.COLUMN_INDEX;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FULL_CLASS_NAME;
@@ -427,7 +428,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
 
     @Test
     public void onSetPropertyHeaderEvent() {
-        SetPropertyHeaderEvent event = new SetPropertyHeaderEvent(GridWidget.SIMULATION, FULL_PACKAGE, MULTIPART_VALUE_ELEMENTS, VALUE_CLASS_NAME, FactMappingValueType.NOT_EXPRESSION);
+        SetPropertyHeaderEvent event = new SetPropertyHeaderEvent(GridWidget.SIMULATION, FULL_PACKAGE, CLASS_NAME, MULTIPART_VALUE_ELEMENTS, VALUE_CLASS_NAME, FactMappingValueType.NOT_EXPRESSION);
         when(scenarioGridModelMock.getSelectedColumn()).thenReturn(null);
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler, never()).commonExecution(isA(SetPropertyHeaderCommand.class), anyBoolean());
@@ -496,6 +497,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         scenarioSimulationEventHandler.onEvent(event);
         verify(predicateMock, times(1)).test(eq(settingsLocal));
         verify(scenarioSimulationEventHandler, times(1)).commonExecution(isA(UpdateSettingsDataCommand.class), eq(false));
+        verify(scenarioSimulationEditorPresenterMock, times(1)).unpublishTestResultsAlerts();
     }
 
     @Test
@@ -507,6 +509,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         scenarioSimulationEventHandler.onEvent(event);
         verify(predicateMock, times(1)).test(eq(settingsLocal));
         verify(scenarioSimulationEventHandler, never()).commonExecution(isA(UpdateSettingsDataCommand.class), eq(false));
+        verify(scenarioSimulationEditorPresenterMock, never()).unpublishTestResultsAlerts();
     }
 
     @Test
@@ -515,6 +518,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         UpdateSettingsDataEvent event = new UpdateSettingsDataEvent(consumerMock);
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler, times(1)).commonExecution(isA(UpdateSettingsDataCommand.class), eq(false));
+        verify(scenarioSimulationEditorPresenterMock, times(1)).unpublishTestResultsAlerts();
     }
 
     @Test

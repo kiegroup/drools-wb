@@ -402,6 +402,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
             return;
         }
         context.getStatus().setFullPackage(event.getFullPackage());
+        context.getStatus().setClassName(event.getFactType());
         context.getStatus().setPropertyNameElements(event.getPropertyNameElements());
         context.getStatus().setValueClassName(event.getValueClassName());
         if (context.getAbstractScesimGridModelByGridWidget(event.getGridWidget()).isSelectedColumnEmpty()) {
@@ -459,6 +460,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
     public void onEvent(UpdateSettingsDataEvent updateSettingsDataEvent) {
         if (updateSettingsDataEvent.getSettingsValueChanged().test(context.getScenarioSimulationModel().getSettings())) {
             commonExecution(new UpdateSettingsDataCommand(updateSettingsDataEvent.getSettingsChangeToApply()), false);
+            scenarioSimulationEditorPresenter.unpublishTestResultsAlerts();
         }
     }
 
