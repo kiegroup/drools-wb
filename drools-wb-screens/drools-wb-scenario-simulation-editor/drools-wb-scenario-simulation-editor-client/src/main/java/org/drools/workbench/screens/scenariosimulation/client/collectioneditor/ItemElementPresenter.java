@@ -54,7 +54,9 @@ public class ItemElementPresenter extends ElementPresenter<ItemElementView> impl
     public void onToggleRowExpansion(ItemElementView itemElementView, boolean isShown) {
         CollectionEditorUtils.toggleRowExpansion(itemElementView.getFaAngleRight(), !isShown);
         propertyPresenter.onToggleRowExpansion(itemElementView.getItemId(), isShown);
-        itemIdExpandablePropertiesMap.get(itemElementView.getItemId()).forEach(expandablePropertyName -> propertyPresenter.onToggleRowExpansion(itemElementView.getItemId() + "." + expandablePropertyName, isShown));
+        itemIdExpandablePropertiesMap.get(itemElementView.getItemId()).forEach(expandablePropertyName -> propertyPresenter.onToggleRowExpansion(generateExpandableItemElementID(itemElementView,
+                                                                                                                                                                                expandablePropertyName),
+                                                                                                                                                isShown));
         updateCommonToggleStatus(isShown);
     }
 
@@ -64,7 +66,8 @@ public class ItemElementPresenter extends ElementPresenter<ItemElementView> impl
             onToggleRowExpansion(itemElementView, false);
         }
         propertyPresenter.editProperties(itemElementView.getItemId());
-        itemIdExpandablePropertiesMap.get(itemElementView.getItemId()).forEach(expandablePropertyName -> propertyPresenter.editProperties(itemElementView.getItemId() + "." + expandablePropertyName));
+        itemIdExpandablePropertiesMap.get(itemElementView.getItemId()).forEach(expandablePropertyName -> propertyPresenter.editProperties(generateExpandableItemElementID(itemElementView,
+                                                                                                                                                                          expandablePropertyName)));
         itemElementView.getSaveChange().getStyle().setDisplay(Style.Display.INLINE);
         collectionEditorPresenter.toggleEditingStatus(true);
     }
@@ -72,7 +75,8 @@ public class ItemElementPresenter extends ElementPresenter<ItemElementView> impl
     @Override
     public void onStopEditingItem(ItemElementView itemElementView) {
         propertyPresenter.stopEditProperties(itemElementView.getItemId());
-        itemIdExpandablePropertiesMap.get(itemElementView.getItemId()).forEach(expandablePropertyName -> propertyPresenter.stopEditProperties(itemElementView.getItemId() + "." + expandablePropertyName));
+        itemIdExpandablePropertiesMap.get(itemElementView.getItemId()).forEach(expandablePropertyName -> propertyPresenter.stopEditProperties(generateExpandableItemElementID(itemElementView,
+                                                                                                                                                                              expandablePropertyName)));
         itemElementView.getSaveChange().getStyle().setDisplay(Style.Display.NONE);
         collectionEditorPresenter.toggleEditingStatus(false);
     }
@@ -80,7 +84,8 @@ public class ItemElementPresenter extends ElementPresenter<ItemElementView> impl
     @Override
     public void updateItem(ItemElementView itemElementView) {
         propertyPresenter.updateProperties(itemElementView.getItemId());
-        itemIdExpandablePropertiesMap.get(itemElementView.getItemId()).forEach(expandablePropertyName -> propertyPresenter.updateProperties(itemElementView.getItemId() + "." + expandablePropertyName));
+        itemIdExpandablePropertiesMap.get(itemElementView.getItemId()).forEach(expandablePropertyName -> propertyPresenter.updateProperties(generateExpandableItemElementID(itemElementView,
+                                                                                                                                                                            expandablePropertyName)));
         itemElementView.getSaveChange().getStyle().setDisplay(Style.Display.NONE);
         collectionEditorPresenter.toggleEditingStatus(false);
     }
@@ -88,7 +93,8 @@ public class ItemElementPresenter extends ElementPresenter<ItemElementView> impl
     @Override
     public void onDeleteItem(ItemElementView itemElementView) {
         propertyPresenter.deleteProperties(itemElementView.getItemId());
-        itemIdExpandablePropertiesMap.get(itemElementView.getItemId()).forEach(expandablePropertyName -> propertyPresenter.deleteProperties(itemElementView.getItemId() + "." + expandablePropertyName));
+        itemIdExpandablePropertiesMap.get(itemElementView.getItemId()).forEach(expandablePropertyName -> propertyPresenter.deleteProperties(generateExpandableItemElementID(itemElementView,
+                                                                                                                                                                            expandablePropertyName)));
         itemElementView.getItemContainer().removeFromParent();
         elementViewList.remove(itemElementView);
         collectionEditorPresenter.toggleEditingStatus(false);
@@ -108,7 +114,8 @@ public class ItemElementPresenter extends ElementPresenter<ItemElementView> impl
             final List<String> expandablePropertiesNames = itemIdExpandablePropertiesMap.get(itemElementView.getItemId());
             Map<String, Map<String, String>> expandableProperties = new HashMap<>();
             expandablePropertiesNames.forEach(expandablePropertyName -> {
-                final Map<String, String> simpleProperties = propertyPresenter.getSimpleProperties(itemElementView.getItemId() + "." + expandablePropertyName);
+                final Map<String, String> simpleProperties = propertyPresenter.getSimpleProperties(generateExpandableItemElementID(itemElementView,
+                                                                                                                                   expandablePropertyName));
                 expandableProperties.put(expandablePropertyName, simpleProperties);
             });
             toReturn.put(itemElementView.getItemId(), expandableProperties);
@@ -120,13 +127,20 @@ public class ItemElementPresenter extends ElementPresenter<ItemElementView> impl
         final ItemElementView itemElementView = viewsProvider.getListEditorElementView();
         itemElementView.init(this);
         final UListElement innerItemContainer = itemElementView.getInnerItemContainer();
+        final String expandableItemID = generateExpandableItemElementID(containerItemElementView, expandablePropertyName);
         itemElementView.setItemSeparatorText(expandablePropertyName);
         itemElementView.getEditItemButton().removeFromParent();
         itemElementView.getDeleteItemButton().removeFromParent();
         itemElementView.getSaveChange().removeFromParent();
-        itemElementView.setItemId(containerItemElementView.getItemId() + "." + expandablePropertyName);
+        itemElementView.setItemId(expandableItemID);
         propertiesMap.forEach((propertyName, propertyValue) ->
-                              innerItemContainer.appendChild(propertyPresenter.getPropertyFields(containerItemElementView.getItemId() + "." + expandablePropertyName, propertyName, propertyValue)));
+                              innerItemContainer.appendChild(propertyPresenter.getPropertyFields(expandableItemID,
+                                                                                                 propertyName,
+                                                                                                 propertyValue)));
         containerItemElementView.getInnerItemContainer().insertBefore(itemElementView.getItemContainer(), containerItemElementView.getSaveChange());
+    }
+
+    protected String generateExpandableItemElementID(final ItemElementView itemElementView, final String expandablePropertyName) {
+        return itemElementView.getItemId() + "." + expandablePropertyName;
     }
 }
