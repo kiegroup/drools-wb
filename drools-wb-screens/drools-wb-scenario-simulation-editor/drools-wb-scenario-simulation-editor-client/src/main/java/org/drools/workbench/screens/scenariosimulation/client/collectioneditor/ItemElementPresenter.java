@@ -54,9 +54,12 @@ public class ItemElementPresenter extends ElementPresenter<ItemElementView> impl
     public void onToggleRowExpansion(ItemElementView itemElementView, boolean isShown) {
         CollectionEditorUtils.toggleRowExpansion(itemElementView.getFaAngleRight(), !isShown);
         propertyPresenter.onToggleRowExpansion(itemElementView.getItemId(), isShown);
-        itemIdExpandablePropertiesMap.get(itemElementView.getItemId()).forEach(expandablePropertyName -> propertyPresenter.onToggleRowExpansion(generateExpandableItemElementID(itemElementView,
-                                                                                                                                                                                expandablePropertyName),
-                                                                                                                                                isShown));
+        if (itemIdExpandablePropertiesMap.containsKey(itemElementView.getItemId())) {
+            itemIdExpandablePropertiesMap.get(itemElementView.getItemId())
+                    .forEach(expandablePropertyName -> propertyPresenter.onToggleRowExpansion(generateExpandableItemElementID(itemElementView,
+                                                                                                                              expandablePropertyName),
+                                                                                              isShown));
+        }
         updateCommonToggleStatus(isShown);
     }
 
