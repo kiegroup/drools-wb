@@ -30,7 +30,6 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -49,7 +48,6 @@ import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOr
 import org.kie.workbench.common.widgets.client.widget.TextBoxFactory;
 import org.uberfire.client.callbacks.Callback;
 import org.uberfire.ext.widgets.common.client.common.DropDownValueChanged;
-import org.uberfire.ext.widgets.common.client.common.InfoPopup;
 import org.uberfire.ext.widgets.common.client.common.SmallLabel;
 import org.uberfire.ext.widgets.common.client.common.popups.FormStylePopup;
 
@@ -218,10 +216,10 @@ public class MethodParameterValueEditor
             }
         });
 
-        form.addAttribute(GuidedRuleEditorResources.CONSTANTS.LiteralValue() + ":",
-                          widgets(lit,
-                                  new InfoPopup(GuidedRuleEditorResources.CONSTANTS.Literal(),
-                                                GuidedRuleEditorResources.CONSTANTS.LiteralValTip())));
+        form.addAttributeWithHelp(GuidedRuleEditorResources.CONSTANTS.LiteralValue(),
+                                  GuidedRuleEditorResources.CONSTANTS.LiteralValue(),
+                                  GuidedRuleEditorResources.CONSTANTS.LiteralValTip(),
+                                  lit);
 
         if (modeller.isTemplate()) {
             Button templateButton = new Button(GuidedRuleEditorResources.CONSTANTS.TemplateKey());
@@ -261,10 +259,10 @@ public class MethodParameterValueEditor
                     }
                 });
 
-                form.addAttribute(GuidedRuleEditorResources.CONSTANTS.AFormula() + ":",
-                                  widgets(formula,
-                                          new InfoPopup(GuidedRuleEditorResources.CONSTANTS.AFormula(),
-                                                        GuidedRuleEditorResources.CONSTANTS.FormulaExpressionTip())));
+                form.addAttributeWithHelp(GuidedRuleEditorResources.CONSTANTS.AFormula(),
+                                          GuidedRuleEditorResources.CONSTANTS.AFormula(),
+                                          GuidedRuleEditorResources.CONSTANTS.FormulaExpressionTip(),
+                                          formula);
 
                 form.show();
             }
@@ -311,13 +309,5 @@ public class MethodParameterValueEditor
         } else {
             return modeller.getModel().getRHSBoundFact(variable).getFactType();
         }
-    }
-
-    private Widget widgets(Button lit,
-                           InfoPopup popup) {
-        HorizontalPanel h = new HorizontalPanel();
-        h.add(lit);
-        h.add(popup);
-        return h;
     }
 }
