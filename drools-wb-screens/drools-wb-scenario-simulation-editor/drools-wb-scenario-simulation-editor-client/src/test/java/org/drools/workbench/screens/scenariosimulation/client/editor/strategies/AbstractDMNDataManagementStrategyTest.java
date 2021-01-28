@@ -73,7 +73,7 @@ public class AbstractDMNDataManagementStrategyTest extends AbstractScenarioSimul
         modelLocal.getSettings().setDmnFilePath(DMN_FILE_PATH);
         abstractDMNDataManagementStrategySpy = spy(new AbstractDMNDataManagementStrategy(mock(EventBus.class)) {
             @Override
-            protected void retrieveFactModelTuple(TestToolsView.Presenter testToolsPresenter, ScenarioSimulationContext context, GridWidget gridWidget, String dmnFilePath) {
+            protected void retrieveFactModelTuple(TestToolsView.Presenter testToolsPresenter, ScenarioSimulationContext context, GridWidget gridWidget) {
 
             }
 

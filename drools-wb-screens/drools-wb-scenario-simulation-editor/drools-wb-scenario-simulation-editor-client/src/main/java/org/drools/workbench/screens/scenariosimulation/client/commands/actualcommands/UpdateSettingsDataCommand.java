@@ -56,7 +56,10 @@ public class UpdateSettingsDataCommand extends AbstractScenarioSimulationUndoabl
             final Settings originalSettings = context.getScenarioSimulationModel().getSettings().cloneSettings();
             context.getScenarioSimulationEditorPresenter().getModel().setSettings(restorableStatus);
             restorableStatus = originalSettings;
-            context.getScenarioSimulationEditorPresenter().reloadSettingsDock();
+            // TODO Following should be lanched only if DMN path changes. Introduce a boolean witch defines this.
+            context.getScenarioSimulationEditorPresenter().getPopulateTestToolsCommand().execute();
+            context.getScenarioSimulationEditorPresenter().reloadSettingsDock();  // TODO change this to update Setting from b-e
+            context.getScenarioSimulationEditorPresenter().validateSimulation();
             return commonExecution(context);
         } catch (Exception e) {
             return new CommandResultImpl<>(CommandResult.Type.ERROR, Collections.singleton(new ScenarioSimulationViolation(e.getMessage())));
@@ -66,7 +69,8 @@ public class UpdateSettingsDataCommand extends AbstractScenarioSimulationUndoabl
     @Override
     protected void internalExecute(ScenarioSimulationContext context)  {
         settingsConsumer.accept(context.getScenarioSimulationModel().getSettings());
-        context.getScenarioSimulationEditorPresenter().reloadSettingsDock();
+        context.getScenarioSimulationEditorPresenter().getPopulateTestToolsCommand().execute();
+        context.getScenarioSimulationEditorPresenter().reloadSettingsDock();  // TODO change this to update Setting from b-e
     }
 
 }

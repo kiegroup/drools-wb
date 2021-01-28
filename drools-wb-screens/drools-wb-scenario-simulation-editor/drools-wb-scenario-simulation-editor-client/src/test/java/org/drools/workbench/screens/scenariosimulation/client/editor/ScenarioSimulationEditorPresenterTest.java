@@ -165,8 +165,8 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         when(testToolsActivityMock.getWidget()).thenReturn(testToolsViewMock);
         when(placeRequestMock.getPath()).thenReturn(pathMock);
         when(simulationMock.getUnmodifiableData()).thenReturn(Arrays.asList(new Scenario()));
-        when(abstractScenarioSimulationDocksHandlerMock.getTestToolsPresenter()).thenReturn(Optional.ofNullable(testToolsPresenterMock));
-        when(abstractScenarioSimulationDocksHandlerMock.getSettingsPresenter()).thenReturn(Optional.ofNullable(settingsPresenterMock));
+        when(abstractScenarioSimulationDocksHandlerMock.getTestToolsPresenter()).thenReturn(testToolsPresenterMock);
+        when(abstractScenarioSimulationDocksHandlerMock.getSettingsPresenter()).thenReturn(settingsPresenterMock);
 
         this.presenterSpy = spy(new ScenarioSimulationEditorPresenter(abstractScenarioSimulationProducerMock,
                                                                       mock(ScenarioSimulationResourceType.class),

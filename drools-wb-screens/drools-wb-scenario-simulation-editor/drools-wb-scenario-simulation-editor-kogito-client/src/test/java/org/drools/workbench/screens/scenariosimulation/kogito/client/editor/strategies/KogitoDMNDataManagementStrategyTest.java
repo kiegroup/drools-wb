@@ -86,7 +86,8 @@ public class KogitoDMNDataManagementStrategyTest {
 
     @Test
     public void retrieveFactModelTuple() {
-        kogitoDMNDataManagementStrategySpy.retrieveFactModelTuple(testToolsPresenterMock, scenarioSimulationContextMock, gridWidgetMock, "path/dmnFile.dmn");
+        //"path/dmnFile.dmn";
+        kogitoDMNDataManagementStrategySpy.retrieveFactModelTuple(testToolsPresenterMock, scenarioSimulationContextMock, gridWidgetMock);
         Path expectedPath = new PathFactory.PathImpl("dmnFile.dmn", "path/dmnFile.dmn");
         verify(dmnMarshallerServiceMock, times(1)).getDMNContent(eq(expectedPath), callbackArgumentCaptor.capture(), errorCallbackArgumentCaptor.capture());
 

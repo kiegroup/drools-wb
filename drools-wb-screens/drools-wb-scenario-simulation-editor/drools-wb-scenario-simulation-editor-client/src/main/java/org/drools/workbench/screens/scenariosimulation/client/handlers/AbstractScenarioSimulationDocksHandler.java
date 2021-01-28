@@ -27,7 +27,6 @@ import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSh
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SettingsView;
-import org.drools.workbench.screens.scenariosimulation.client.rightpanel.SubDockView;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.kie.workbench.common.widgets.client.docks.AbstractWorkbenchDocksHandler;
@@ -53,6 +52,13 @@ public abstract class AbstractScenarioSimulationDocksHandler extends AbstractWor
     protected AuthoringEditorDock authoringWorkbenchDocks;
     @Inject
     protected PlaceManager placeManager;
+    @Inject
+    private TestToolsPresenter testToolsPresenter;
+    @Inject
+    private SettingsPresenter settingsPresenter;
+    @Inject
+    private CheatSheetPresenter cheatSheetPresenter;
+
 
     private UberfireDock settingsDock;
     private UberfireDock toolsDock;
@@ -109,9 +115,9 @@ public abstract class AbstractScenarioSimulationDocksHandler extends AbstractWor
     public abstract void expandTestResultsDock();
 
     public void resetDocks() {
-        getSettingsPresenter().ifPresent(SubDockView.Presenter::reset);
-        getCheatSheetPresenter().ifPresent(SubDockView.Presenter::reset);
-        getTestToolsPresenter().ifPresent(SubDockView.Presenter::reset);
+        settingsPresenter.reset();
+        cheatSheetPresenter.reset();
+        testToolsPresenter.reset();
     }
 
     public void setScesimEditorId(String scesimEditorId) {
@@ -121,19 +127,16 @@ public abstract class AbstractScenarioSimulationDocksHandler extends AbstractWor
         cheatSheetDock.getPlaceRequest().addParameter(SCESIMEDITOR_ID, scesimEditorId);
     }
 
-    public Optional<CheatSheetView.Presenter> getCheatSheetPresenter() {
-        final Optional<CheatSheetView> cheatSheetView = getCheatSheetView(getCurrentRightDockPlaceRequest(CheatSheetPresenter.IDENTIFIER));
-        return cheatSheetView.map(CheatSheetView::getPresenter);
+    public CheatSheetView.Presenter getCheatSheetPresenter() {
+        return cheatSheetPresenter;
     }
 
-    public Optional<TestToolsView.Presenter> getTestToolsPresenter() {
-        final Optional<TestToolsView> testToolsView = getTestToolsView(getTestToolsPlaceManager());
-        return testToolsView.map(TestToolsView::getPresenter);
+    public TestToolsView.Presenter getTestToolsPresenter() {
+        return testToolsPresenter;
     }
 
-    public Optional<SettingsView.Presenter> getSettingsPresenter() {
-        final Optional<SettingsView> settingsView = getSettingsView(getSettingsPlaceManager());
-        return settingsView.map(SettingsView::getPresenter);
+    public SettingsView.Presenter getSettingsPresenter() {
+        return settingsPresenter;
     }
 
     protected PlaceRequest getSettingsPlaceManager() {
