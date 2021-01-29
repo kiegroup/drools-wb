@@ -324,8 +324,7 @@ public class DataBuilder {
                  */
                 if (Objects.equals(DataType.DataTypes.STRING, cell.getDataType())) {
 
-                    xlsRow.createCell(targetColumnIndex)
-                            .setCellValue(cell.getStringValue());
+                    return cell.getStringValue();
                 } else {
 
                     return getValue(cell,

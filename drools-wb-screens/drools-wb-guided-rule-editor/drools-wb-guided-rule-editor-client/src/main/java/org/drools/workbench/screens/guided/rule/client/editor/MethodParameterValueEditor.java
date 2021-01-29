@@ -25,8 +25,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
@@ -82,7 +80,7 @@ public class MethodParameterValueEditor
     }
 
     private void setEnums(DropDownData enums) {
-        if (methodParameter.getType().equals(DataType.TYPE_BOOLEAN)) {
+        if ( methodParameter.getType().equals(DataType.TYPE_BOOLEAN) && !modeller.isTemplate()) {
             this.enums = DropDownData.create(new String[]{"true", "false"});
         } else {
             this.enums = enums;
@@ -136,21 +134,11 @@ public class MethodParameterValueEditor
     }
 
     private TextBox boundLiteralTextBox() {
-        final TextBox box = TextBoxFactory.getTextBox(methodParameter.getType());
+        final TextBox box = TextBoxFactory.getTextBox(getType());
 
         // We need both handlers, since The textbox TextBoxFactory can return a box that changes the value in itself
-        box.addValueChangeHandler(new ValueChangeHandler<String>() {
-            @Override
-            public void onValueChange(ValueChangeEvent<String> event) {
-                setMethodParameterValue(box.getValue());
-            }
-        });
-        box.addKeyUpHandler(new KeyUpHandler() {
-            @Override
-            public void onKeyUp(KeyUpEvent event) {
-                setMethodParameterValue(box.getValue());
-            }
-        });
+        box.addValueChangeHandler(event -> setMethodParameterValue(box.getValue()));
+        box.addKeyUpHandler(event -> setMethodParameterValue(box.getValue()));
 
         box.setStyleName("constraint-value-Editor");
         if (this.methodParameter.getValue() != null || this.methodParameter.getValue().isEmpty()) {
@@ -161,6 +149,14 @@ public class MethodParameterValueEditor
         setMethodParameterValue(box.getValue());
 
         return box;
+    }
+
+    private String getType() {
+        if(modeller.isTemplate()){
+            return DataType.TYPE_STRING;
+        }else {
+            return methodParameter.getType();
+        }
     }
 
     private TextBox boundFormulaTextBox() {
