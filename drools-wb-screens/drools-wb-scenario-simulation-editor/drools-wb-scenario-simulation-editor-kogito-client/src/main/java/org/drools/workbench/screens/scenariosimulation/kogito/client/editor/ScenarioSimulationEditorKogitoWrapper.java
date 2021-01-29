@@ -296,6 +296,11 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     }
 
     @Override
+    public void updateDMNMetadata() {
+        // to be implemented
+    }
+
+    @Override
     public AbstractScenarioSimulationDocksHandler getScenarioSimulationDocksHandler() {
         return scenarioSimulationKogitoDocksHandler;
     }

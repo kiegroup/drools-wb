@@ -52,6 +52,7 @@ import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.Sce
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsPresenter;
 import org.drools.workbench.screens.scenariosimulation.client.type.ScenarioSimulationResourceType;
 import org.drools.workbench.screens.scenariosimulation.client.widgets.ScenarioGridWidget;
+import org.drools.workbench.screens.scenariosimulation.model.DMNMetadata;
 import org.drools.workbench.screens.scenariosimulation.model.ScenarioSimulationModelContent;
 import org.drools.workbench.screens.scenariosimulation.model.SimulationRunResult;
 import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
@@ -263,6 +264,21 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
         event.setMessageType("TestResults");
         event.setSessionId(sessionInfo.getId());
         this.unpublishMessagesEvent.fire(event);
+    }
+
+    @Override
+    public void updateDMNMetadata() {
+        dmnTypeService.call(createUpdateMetadataCallback())
+                .getDMNMetadata(getScenarioSimulationEditorPresenter().getPath(),
+                                getScenarioSimulationEditorPresenter().getModel().getSettings().getDmnFilePath());
+    }
+
+    private RemoteCallback<DMNMetadata> createUpdateMetadataCallback() {
+        return response -> {
+            getScenarioSimulationEditorPresenter().getModel().getSettings().setDmnName(response.getDmnName());
+            getScenarioSimulationEditorPresenter().getModel().getSettings().setDmnNamespace(response.getDmnNamespace());
+            getScenarioSimulationEditorPresenter().reloadSettingsDock();
+        };
     }
 
     @Override

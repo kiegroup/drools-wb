@@ -654,4 +654,6 @@ public class ScenarioSimulationEditorPresenter {
     public void unpublishTestResultsAlerts() {
         scenarioSimulationEditorWrapper.unpublishTestResultsAlerts();
     }
+
+    public Command getUpdateDMNMetadataCommand() { return () -> scenarioSimulationEditorWrapper.updateDMNMetadata();}
 }

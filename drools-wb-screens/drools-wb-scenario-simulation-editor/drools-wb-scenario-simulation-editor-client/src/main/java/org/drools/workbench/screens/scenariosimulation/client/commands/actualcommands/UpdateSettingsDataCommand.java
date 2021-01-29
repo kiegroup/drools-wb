@@ -32,9 +32,12 @@ import org.kie.workbench.common.command.client.impl.CommandResultImpl;
 public class UpdateSettingsDataCommand extends AbstractScenarioSimulationUndoableCommand<Settings> {
 
     private final Consumer<Settings> settingsConsumer;
+    private final boolean dmnPathchanged;
 
-    public UpdateSettingsDataCommand(Consumer<Settings> settingsConsumer) {
+    public UpdateSettingsDataCommand(final Consumer<Settings> settingsConsumer, 
+                                     final boolean dmnPathChanged) {
         this.settingsConsumer = settingsConsumer;
+        this.dmnPathchanged = dmnPathChanged;
     }
 
     @Override
@@ -56,10 +59,11 @@ public class UpdateSettingsDataCommand extends AbstractScenarioSimulationUndoabl
             final Settings originalSettings = context.getScenarioSimulationModel().getSettings().cloneSettings();
             context.getScenarioSimulationEditorPresenter().getModel().setSettings(restorableStatus);
             restorableStatus = originalSettings;
-            // TODO Following should be lanched only if DMN path changes. Introduce a boolean witch defines this.
-            context.getScenarioSimulationEditorPresenter().getPopulateTestToolsCommand().execute();
-            context.getScenarioSimulationEditorPresenter().reloadSettingsDock();  // TODO change this to update Setting from b-e
-            context.getScenarioSimulationEditorPresenter().validateSimulation();
+            if (dmnPathchanged) {
+                context.getScenarioSimulationEditorPresenter().getPopulateTestToolsCommand().execute();
+                context.getScenarioSimulationEditorPresenter().validateSimulation();
+            }
+            context.getScenarioSimulationEditorPresenter().reloadSettingsDock();
             return commonExecution(context);
         } catch (Exception e) {
             return new CommandResultImpl<>(CommandResult.Type.ERROR, Collections.singleton(new ScenarioSimulationViolation(e.getMessage())));
@@ -69,8 +73,12 @@ public class UpdateSettingsDataCommand extends AbstractScenarioSimulationUndoabl
     @Override
     protected void internalExecute(ScenarioSimulationContext context)  {
         settingsConsumer.accept(context.getScenarioSimulationModel().getSettings());
-        context.getScenarioSimulationEditorPresenter().getPopulateTestToolsCommand().execute();
-        context.getScenarioSimulationEditorPresenter().reloadSettingsDock();  // TODO change this to update Setting from b-e
+        if (dmnPathchanged) {
+            context.getScenarioSimulationEditorPresenter().getPopulateTestToolsCommand().execute();
+            context.getScenarioSimulationEditorPresenter().getUpdateDMNMetadataCommand().execute();
+        } else {
+            context.getScenarioSimulationEditorPresenter().reloadSettingsDock();
+        }
     }
 
 }

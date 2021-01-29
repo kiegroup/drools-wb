@@ -47,7 +47,7 @@ public class UpdateSettingsDataCommandTest extends AbstractScenarioSimulationTes
 
     @Before
     public void setup() {
-        commandSpy = spy(new UpdateSettingsDataCommand(consumerMock));
+        commandSpy = spy(new UpdateSettingsDataCommand(consumerMock, false));
         super.setup();
     }
 
