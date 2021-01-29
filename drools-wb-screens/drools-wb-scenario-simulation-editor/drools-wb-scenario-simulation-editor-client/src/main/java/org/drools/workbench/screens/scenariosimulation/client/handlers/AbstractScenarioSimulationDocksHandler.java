@@ -18,7 +18,6 @@ package org.drools.workbench.screens.scenariosimulation.client.handlers;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 import javax.inject.Inject;
 
@@ -31,8 +30,6 @@ import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToo
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.TestToolsView;
 import org.kie.workbench.common.widgets.client.docks.AbstractWorkbenchDocksHandler;
 import org.kie.workbench.common.widgets.client.docks.AuthoringEditorDock;
-import org.uberfire.client.mvp.AbstractWorkbenchActivity;
-import org.uberfire.client.mvp.Activity;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.mvp.PlaceStatus;
 import org.uberfire.client.workbench.docks.UberfireDock;
@@ -156,35 +153,5 @@ public abstract class AbstractScenarioSimulationDocksHandler extends AbstractWor
         PlaceRequest toReturn = new DefaultPlaceRequest(identifier);
         toReturn.addParameter(SCESIMEDITOR_ID, String.valueOf(currentScesimEditorId));
         return toReturn;
-    }
-
-    protected Optional<TestToolsView> getTestToolsView(PlaceRequest placeRequest) {
-        final Activity activity = placeManager.getActivity(placeRequest);
-        if (activity == null) {
-            return Optional.empty();
-        } else {
-            final AbstractWorkbenchActivity testToolsActivity = (AbstractWorkbenchActivity) activity;
-            return Optional.of((TestToolsView) testToolsActivity.getWidget());
-        }
-    }
-
-    protected Optional<CheatSheetView> getCheatSheetView(PlaceRequest placeRequest) {
-        final Activity activity = placeManager.getActivity(placeRequest);
-        if (activity == null) {
-            return Optional.empty();
-        } else {
-            final AbstractWorkbenchActivity cheatSheetActivity = (AbstractWorkbenchActivity) activity;
-            return Optional.of((CheatSheetView) cheatSheetActivity.getWidget());
-        }
-    }
-
-    protected Optional<SettingsView> getSettingsView(PlaceRequest placeRequest) {
-        final Activity activity = placeManager.getActivity(placeRequest);
-        if (activity == null) {
-            return Optional.empty();
-        } else {
-            final AbstractWorkbenchActivity settingsActivity = (AbstractWorkbenchActivity) activity;
-            return Optional.of((SettingsView) settingsActivity.getWidget());
-        }
     }
 }

@@ -22,7 +22,6 @@ import java.util.Optional;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.businesscentral.client.rightpanel.coverage.CoverageReportPresenter;
-import org.drools.workbench.screens.scenariosimulation.businesscentral.client.rightpanel.coverage.CoverageReportView;
 import org.drools.workbench.screens.scenariosimulation.businesscentral.client.rightpanel.testrunner.TestRunnerReportingPanelWrapper;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.client.rightpanel.CheatSheetPresenter;
@@ -34,16 +33,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.workbench.common.widgets.client.docks.AuthoringEditorDock;
 import org.mockito.Mock;
-import org.uberfire.client.mvp.AbstractWorkbenchActivity;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.workbench.docks.UberfireDock;
 import org.uberfire.client.workbench.docks.UberfireDockPosition;
-import org.uberfire.mvp.PlaceRequest;
 
 import static org.drools.workbench.screens.scenariosimulation.businesscentral.client.handlers.ScenarioSimulationBusinessCentralDocksHandler.TEST_RUNNER_REPORTING_PANEL;
 import static org.drools.workbench.screens.scenariosimulation.client.handlers.AbstractScenarioSimulationDocksHandler.SCESIMEDITOR_ID;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -188,24 +184,5 @@ public class ScenarioSimulationBusinessCentralDocksHandlerTest {
         TestResultMessage testResultMessageMock = mock(TestResultMessage.class);
         scenarioSimulationBusinessCentralDocksHandlerSpy.updateTestRunnerReportingPanelResult(testResultMessageMock);
         verify(testRunnerReportingPanelWrapperMock, times(1)).onTestRun(eq(testResultMessageMock));
-    }
-
-    @Test
-    public void getCoverageView() {
-        CoverageReportView coverageReportView = mock(CoverageReportView.class);
-        AbstractWorkbenchActivity activityMock = mock(AbstractWorkbenchActivity.class);
-        when(activityMock.getWidget()).thenReturn(coverageReportView);
-        PlaceRequest placeRequest = scenarioSimulationBusinessCentralDocksHandlerSpy.getCurrentRightDockPlaceRequest(CoverageReportPresenter.IDENTIFIER);
-        when(placeManagerMock.getActivity(eq(placeRequest))).thenReturn(activityMock);
-        Optional<CoverageReportView> optional = scenarioSimulationBusinessCentralDocksHandlerSpy.getCoverageReportView(placeRequest);
-        assertSame(coverageReportView, optional.get());
-    }
-
-    @Test
-    public void getCoverageView_NullActivity() {
-        PlaceRequest placeRequest = scenarioSimulationBusinessCentralDocksHandlerSpy.getCurrentRightDockPlaceRequest(CoverageReportPresenter.IDENTIFIER);
-        when(placeManagerMock.getActivity(eq(placeRequest))).thenReturn(null);
-        Optional<CoverageReportView> optional = scenarioSimulationBusinessCentralDocksHandlerSpy.getCoverageReportView(placeRequest);
-        assertFalse(optional.isPresent());
     }
 }

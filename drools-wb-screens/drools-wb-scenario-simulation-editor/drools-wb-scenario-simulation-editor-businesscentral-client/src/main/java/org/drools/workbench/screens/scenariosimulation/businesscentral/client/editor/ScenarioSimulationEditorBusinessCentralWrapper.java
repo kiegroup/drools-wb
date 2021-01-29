@@ -268,7 +268,8 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
 
     @Override
     public void updateDMNMetadata() {
-        dmnTypeService.call(createUpdateMetadataCallback())
+        dmnTypeService.call(createUpdateMetadataCallback(),
+                            createUpdateMetadataErrorCallback())
                 .getDMNMetadata(getScenarioSimulationEditorPresenter().getPath(),
                                 getScenarioSimulationEditorPresenter().getModel().getSettings().getDmnFilePath());
     }
@@ -278,6 +279,14 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
             getScenarioSimulationEditorPresenter().getModel().getSettings().setDmnName(response.getDmnName());
             getScenarioSimulationEditorPresenter().getModel().getSettings().setDmnNamespace(response.getDmnNamespace());
             getScenarioSimulationEditorPresenter().reloadSettingsDock();
+        };
+    }
+
+    private ErrorCallback<Object> createUpdateMetadataErrorCallback() {
+        return (message, throwable) -> {
+            scenarioSimulationEditorPresenter.sendNotification(message.toString(),
+                                                               NotificationEvent.NotificationType.ERROR);
+            return false;
         };
     }
 
@@ -385,10 +394,9 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     @Override
     public void populateDocks(String identifier) {
         if (CoverageReportPresenter.IDENTIFIER.equals(identifier)) {
-            scenarioSimulationBusinessCentralDocksHandler.getCoverageReportPresenter().ifPresent(presenter -> {
-                setCoverageReport(presenter);
-                presenter.setCurrentPath(scenarioSimulationEditorPresenter.getPath());
-            });
+            CoverageReportView.Presenter coverageReportPresenter = scenarioSimulationBusinessCentralDocksHandler.getCoverageReportPresenter();
+            setCoverageReport(coverageReportPresenter);
+            coverageReportPresenter.setCurrentPath(scenarioSimulationEditorPresenter.getPath());
         } else {
             ScenarioSimulationEditorWrapper.super.populateDocks(identifier);
         }

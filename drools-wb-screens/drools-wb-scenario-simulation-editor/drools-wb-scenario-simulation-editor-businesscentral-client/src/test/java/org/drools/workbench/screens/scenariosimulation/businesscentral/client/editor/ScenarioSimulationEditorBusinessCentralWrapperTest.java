@@ -256,7 +256,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapperTest extends Abstract
         when(multiPageEditorViewMock.getPageIndex(ScenarioSimulationEditorConstants.INSTANCE.backgroundTabTitle())).thenReturn(BACKGROUND_TAB_INDEX);
         when(navTabsMock.getWidget(SIMULATION_TAB_INDEX)).thenReturn(simulationTabListItemMock);
         when(navTabsMock.getWidget(BACKGROUND_TAB_INDEX)).thenReturn(backgroundTabListItemMock);
-        when(scenarioSimulationBusinessCentralDocksHandlerMock.getCoverageReportPresenter()).thenReturn(Optional.ofNullable(coverageReportPresenterMock));
+        when(scenarioSimulationBusinessCentralDocksHandlerMock.getCoverageReportPresenter()).thenReturn(coverageReportPresenterMock);
         when(scenarioSimulationBusinessCentralDocksHandlerMock.getTestRunnerReportingPanelWidget()).thenReturn(testRunnerReportingPanelWidgetMock);
         when(simulationRunResultMock.getTestResultMessage()).thenReturn(testResultMessageMock);
         when(simulationRunResultMock.getSimulationRunMetadata()).thenReturn(simulationRunMetadataMock);
