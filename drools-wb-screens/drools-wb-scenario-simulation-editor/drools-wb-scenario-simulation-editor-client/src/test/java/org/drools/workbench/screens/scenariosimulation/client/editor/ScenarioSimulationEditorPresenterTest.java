@@ -190,11 +190,6 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
             }
 
             @Override
-            protected void clearTestToolsStatus() {
-
-            }
-
-            @Override
             protected void open(String downloadURL) {
 
             }
@@ -268,6 +263,7 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         presenterSpy.reloadTestTools(false);
         verify(presenterSpy, times(1)).populateRightDocks(eq(TestToolsPresenter.IDENTIFIER));
         verify(abstractScenarioSimulationDocksHandlerMock, never()).getTestToolsPresenter();
+        verify(testToolsPresenterMock, never()).onDisableEditorTab();
     }
 
     @Test
@@ -275,6 +271,14 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
         presenterSpy.reloadTestTools(true);
         verify(presenterSpy, times(1)).populateRightDocks(eq(TestToolsPresenter.IDENTIFIER));
         verify(abstractScenarioSimulationDocksHandlerMock, times(1)).getTestToolsPresenter();
+        verify(testToolsPresenterMock, times(1)).onDisableEditorTab();
+    }
+
+    @Test
+    public void clearTestTools() {
+        presenterSpy.clearTestToolsStatus();
+        verify(abstractScenarioSimulationDocksHandlerMock, times(1)).getTestToolsPresenter();
+        verify(testToolsPresenterMock, times(1)).onClearStatus();
     }
 
     @Test
@@ -752,5 +756,11 @@ public class ScenarioSimulationEditorPresenterTest extends AbstractScenarioSimul
     public void unpublishTestResultsAlerts(){
         presenterSpy.unpublishTestResultsAlerts();
         verify(scenarioSimulationEditorWrapperMock, times(1)).unpublishTestResultsAlerts();
+    }
+
+    @Test
+    public void getUpdateDMNMetadataCommand() {
+        presenterSpy.getUpdateDMNMetadataCommand().execute();
+        verify(scenarioSimulationEditorWrapperMock, times(1)).getDMNMetadata();
     }
 }

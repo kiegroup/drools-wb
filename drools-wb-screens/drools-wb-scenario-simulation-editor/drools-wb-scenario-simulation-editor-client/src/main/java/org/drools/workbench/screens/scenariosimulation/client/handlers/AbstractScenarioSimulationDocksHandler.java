@@ -56,7 +56,6 @@ public abstract class AbstractScenarioSimulationDocksHandler extends AbstractWor
     @Inject
     protected CheatSheetPresenter cheatSheetPresenter;
 
-
     private UberfireDock settingsDock;
     private UberfireDock toolsDock;
     private UberfireDock cheatSheetDock;

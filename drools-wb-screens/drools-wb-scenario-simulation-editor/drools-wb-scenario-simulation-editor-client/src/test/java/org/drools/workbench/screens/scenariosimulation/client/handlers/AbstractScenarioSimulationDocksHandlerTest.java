@@ -16,7 +16,6 @@
 package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
 import java.util.Collection;
-import java.util.Optional;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
@@ -39,7 +38,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -75,6 +73,9 @@ public class AbstractScenarioSimulationDocksHandlerTest {
             {
                 this.authoringWorkbenchDocks = authoringWorkbenchDocksMock;
                 this.placeManager = placeManagerMock;
+                this.cheatSheetPresenter = cheatSheetPresenterMock;
+                this.settingsPresenter = settingsPresenterMock;
+                this.testToolsPresenter = testToolsPresenterMock;
             }
 
             @Override
@@ -82,10 +83,6 @@ public class AbstractScenarioSimulationDocksHandlerTest {
                 //Do nothing
             }
         });
-
-        doReturn(Optional.of(cheatSheetPresenterMock)).when(abstractScenarioSimulationDocksHandlerSpy).getCheatSheetPresenter();
-        doReturn(Optional.of(testToolsPresenterMock)).when(abstractScenarioSimulationDocksHandlerSpy).getTestToolsPresenter();
-        doReturn(Optional.of(settingsPresenterMock)).when(abstractScenarioSimulationDocksHandlerSpy).getSettingsPresenter();
     }
 
     @Test
