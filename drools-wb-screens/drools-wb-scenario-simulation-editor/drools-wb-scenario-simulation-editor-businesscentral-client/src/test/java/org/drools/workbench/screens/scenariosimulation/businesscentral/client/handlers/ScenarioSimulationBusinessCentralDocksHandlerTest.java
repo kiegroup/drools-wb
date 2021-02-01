@@ -44,7 +44,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -89,14 +88,14 @@ public class ScenarioSimulationBusinessCentralDocksHandlerTest {
                 this.authoringWorkbenchDocks = authoringWorkbenchDocksMock;
                 this.testRunnerReportingPanelWrapper = testRunnerReportingPanelWrapperMock;
                 this.placeManager = placeManagerMock;
+                this.coverageReportPresenter = coverageReportPresenterMock;
+                this.settingsPresenter = settingsPresenterMock;
+                this.cheatSheetPresenter = cheatSheetPresenterMock;
+                this.testToolsPresenter = testToolsPresenterMock;
             }
 
         });
         when(testRunnerReportingPanelWrapperMock.asWidget()).thenReturn(testRunnerReportingPanelWidgetMock);
-        doReturn(Optional.of(cheatSheetPresenterMock)).when(scenarioSimulationBusinessCentralDocksHandlerSpy).getCheatSheetPresenter();
-        doReturn(Optional.of(testToolsPresenterMock)).when(scenarioSimulationBusinessCentralDocksHandlerSpy).getTestToolsPresenter();
-        doReturn(Optional.of(settingsPresenterMock)).when(scenarioSimulationBusinessCentralDocksHandlerSpy).getSettingsPresenter();
-        doReturn(Optional.of(coverageReportPresenterMock)).when(scenarioSimulationBusinessCentralDocksHandlerSpy).getCoverageReportPresenter();
     }
 
     @Test

@@ -43,17 +43,17 @@ public class ScenarioSimulationBusinessCentralDocksHandler extends AbstractScena
     @Inject
     protected CoverageReportPresenter coverageReportPresenter;
 
-    private UberfireDock testRunnedDock;
+    private UberfireDock testRunnerDock;
     private UberfireDock coverageDock;
 
     @Override
     public Collection<UberfireDock> provideDocks(String perspectiveIdentifier) {
         Collection<UberfireDock> result = super.provideDocks(perspectiveIdentifier);
-        testRunnedDock = new UberfireDock(UberfireDockPosition.EAST,
+        testRunnerDock = new UberfireDock(UberfireDockPosition.EAST,
                                           "PLAY_CIRCLE",
                                           new DockPlaceHolderPlace(TEST_RUNNER_REPORTING_PANEL),
                                           perspectiveIdentifier);
-        result.add(testRunnedDock.withSize(450).withLabel(ScenarioSimulationEditorConstants.INSTANCE.testReport()));
+        result.add(testRunnerDock.withSize(450).withLabel(ScenarioSimulationEditorConstants.INSTANCE.testReport()));
         coverageDock = new UberfireDock(UberfireDockPosition.EAST,
                                         "BAR_CHART",
                                         new DefaultPlaceRequest(CoverageReportPresenter.IDENTIFIER),
@@ -64,7 +64,7 @@ public class ScenarioSimulationBusinessCentralDocksHandler extends AbstractScena
 
     @Override
     public void expandTestResultsDock() {
-        authoringWorkbenchDocks.expandAuthoringDock(testRunnedDock);
+        authoringWorkbenchDocks.expandAuthoringDock(testRunnerDock);
     }
 
     @Override

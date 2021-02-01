@@ -50,11 +50,11 @@ public abstract class AbstractScenarioSimulationDocksHandler extends AbstractWor
     @Inject
     protected PlaceManager placeManager;
     @Inject
-    private TestToolsPresenter testToolsPresenter;
+    protected TestToolsPresenter testToolsPresenter;
     @Inject
-    private SettingsPresenter settingsPresenter;
+    protected SettingsPresenter settingsPresenter;
     @Inject
-    private CheatSheetPresenter cheatSheetPresenter;
+    protected CheatSheetPresenter cheatSheetPresenter;
 
 
     private UberfireDock settingsDock;
