@@ -17,7 +17,6 @@
 package org.drools.workbench.screens.scenariosimulation.businesscentral.client.handlers;
 
 import java.util.Collection;
-import java.util.Optional;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwtmockito.GwtMockitoTestRunner;
