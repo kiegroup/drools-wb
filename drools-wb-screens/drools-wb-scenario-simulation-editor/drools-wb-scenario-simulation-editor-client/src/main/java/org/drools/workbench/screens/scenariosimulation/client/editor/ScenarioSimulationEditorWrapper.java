@@ -66,7 +66,7 @@ public interface ScenarioSimulationEditorWrapper {
 
     void unpublishTestResultsAlerts();
 
-    void updateDMNMetadata();
+    void getDMNMetadata();
 
     AbstractScenarioSimulationDocksHandler getScenarioSimulationDocksHandler();
 

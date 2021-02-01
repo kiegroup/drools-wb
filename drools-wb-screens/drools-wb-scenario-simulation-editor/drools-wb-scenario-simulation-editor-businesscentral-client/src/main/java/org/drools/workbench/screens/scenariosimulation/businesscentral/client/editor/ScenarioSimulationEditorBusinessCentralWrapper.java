@@ -267,14 +267,14 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
     }
 
     @Override
-    public void updateDMNMetadata() {
-        dmnTypeService.call(createUpdateMetadataCallback(),
-                            createUpdateMetadataErrorCallback())
+    public void getDMNMetadata() {
+        dmnTypeService.call(getUpdateMetadataCallback(),
+                            getUpdateMetadataErrorCallback())
                 .getDMNMetadata(getScenarioSimulationEditorPresenter().getPath(),
                                 getScenarioSimulationEditorPresenter().getModel().getSettings().getDmnFilePath());
     }
 
-    private RemoteCallback<DMNMetadata> createUpdateMetadataCallback() {
+    private RemoteCallback<DMNMetadata> getUpdateMetadataCallback() {
         return response -> {
             getScenarioSimulationEditorPresenter().getModel().getSettings().setDmnName(response.getDmnName());
             getScenarioSimulationEditorPresenter().getModel().getSettings().setDmnNamespace(response.getDmnNamespace());
@@ -282,7 +282,7 @@ public class ScenarioSimulationEditorBusinessCentralWrapper extends KieEditor<Sc
         };
     }
 
-    private ErrorCallback<Object> createUpdateMetadataErrorCallback() {
+    private ErrorCallback<Object> getUpdateMetadataErrorCallback() {
         return (message, throwable) -> {
             scenarioSimulationEditorPresenter.sendNotification(message.toString(),
                                                                NotificationEvent.NotificationType.ERROR);

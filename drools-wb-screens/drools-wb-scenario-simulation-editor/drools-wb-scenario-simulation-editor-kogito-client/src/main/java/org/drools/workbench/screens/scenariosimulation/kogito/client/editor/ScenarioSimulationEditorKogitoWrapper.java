@@ -298,7 +298,7 @@ public class ScenarioSimulationEditorKogitoWrapper extends MultiPageEditorContai
     }
 
     @Override
-    public void updateDMNMetadata() {
+    public void getDMNMetadata() {
         final String dmnFilePath = getScenarioSimulationEditorPresenter().getModel().getSettings().getDmnFilePath();
         final String dmnFileName = dmnFilePath.substring(dmnFilePath.lastIndexOf('/') + 1);
         final Path dmnPath = PathFactory.newPath(dmnFileName, dmnFilePath);
