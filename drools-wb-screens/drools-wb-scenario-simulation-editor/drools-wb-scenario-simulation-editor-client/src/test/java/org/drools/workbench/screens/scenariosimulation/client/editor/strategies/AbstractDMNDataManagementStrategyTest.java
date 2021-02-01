@@ -96,6 +96,16 @@ public class AbstractDMNDataManagementStrategyTest extends AbstractScenarioSimul
     }
 
     @Test
+    public void populateTestToolsWithoutFactModelTupleAndDifferentDMNPath() {
+        factModelTreeHolderlocal.setFactModelTuple(null);
+        modelLocal.getSettings().setDmnName("/src/test.dmn");
+        abstractDMNDataManagementStrategySpy.populateTestTools(testToolsPresenterMock, scenarioSimulationContextLocal, GridWidget.SIMULATION);
+        verify(abstractDMNDataManagementStrategySpy, times(1)).retrieveFactModelTuple(eq(testToolsPresenterMock), eq(scenarioSimulationContextLocal), eq(GridWidget.SIMULATION));
+        verify(abstractDMNDataManagementStrategySpy, never()).getSuccessCallback(testToolsPresenterMock, scenarioSimulationContextLocal, GridWidget.SIMULATION);
+        verify(abstractDMNDataManagementStrategySpy, never()).getSuccessCallbackMethod(eq(factModelTupleLocal), eq(testToolsPresenterMock), eq(scenarioSimulationContextLocal), eq(GridWidget.SIMULATION));
+    }
+
+    @Test
     public void populateTestToolsWithFactDifferentDMNPath() {
         modelLocal.getSettings().setDmnName("/src/test.dmn");
         abstractDMNDataManagementStrategySpy.populateTestTools(testToolsPresenterMock, scenarioSimulationContextLocal, GridWidget.SIMULATION);
