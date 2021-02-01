@@ -32,12 +32,12 @@ import org.kie.workbench.common.command.client.impl.CommandResultImpl;
 public class UpdateSettingsDataCommand extends AbstractScenarioSimulationUndoableCommand<Settings> {
 
     private final Consumer<Settings> settingsConsumer;
-    private final boolean dmnPathchanged;
+    private final boolean dmnPathChanged;
 
     public UpdateSettingsDataCommand(final Consumer<Settings> settingsConsumer, 
                                      final boolean dmnPathChanged) {
         this.settingsConsumer = settingsConsumer;
-        this.dmnPathchanged = dmnPathChanged;
+        this.dmnPathChanged = dmnPathChanged;
     }
 
     @Override
@@ -59,7 +59,7 @@ public class UpdateSettingsDataCommand extends AbstractScenarioSimulationUndoabl
             final Settings originalSettings = context.getScenarioSimulationModel().getSettings().cloneSettings();
             context.getScenarioSimulationEditorPresenter().getModel().setSettings(restorableStatus);
             restorableStatus = originalSettings;
-            if (dmnPathchanged) {
+            if (dmnPathChanged) {
                 context.getScenarioSimulationEditorPresenter().getPopulateTestToolsCommand().execute();
                 context.getScenarioSimulationEditorPresenter().validateSimulation();
             }
@@ -73,7 +73,7 @@ public class UpdateSettingsDataCommand extends AbstractScenarioSimulationUndoabl
     @Override
     protected void internalExecute(ScenarioSimulationContext context)  {
         settingsConsumer.accept(context.getScenarioSimulationModel().getSettings());
-        if (dmnPathchanged) {
+        if (dmnPathChanged) {
             context.getScenarioSimulationEditorPresenter().getPopulateTestToolsCommand().execute();
             context.getScenarioSimulationEditorPresenter().getUpdateDMNMetadataCommand().execute();
         } else {
