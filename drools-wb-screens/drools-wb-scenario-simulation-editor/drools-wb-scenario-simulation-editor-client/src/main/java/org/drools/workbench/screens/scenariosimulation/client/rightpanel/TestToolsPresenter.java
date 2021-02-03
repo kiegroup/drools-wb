@@ -396,7 +396,6 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
     /**
      * Method to hide all the <b>instance-related</b> html
      */
-    @Override
     public void hideInstances() {
         clearInstanceList();
         clearSimpleJavaInstanceFieldList();
@@ -436,7 +435,8 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
                                                    .orElse(null))).isPresent();
     }
 
-    protected void clearLists() {
+    @Override
+    public void clearLists() {
         clearDataObjectList();
         clearSimpleJavaTypeList();
         clearInstanceList();
