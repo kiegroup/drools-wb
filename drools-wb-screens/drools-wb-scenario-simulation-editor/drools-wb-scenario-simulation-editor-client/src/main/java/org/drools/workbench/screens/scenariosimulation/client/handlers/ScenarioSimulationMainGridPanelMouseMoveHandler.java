@@ -139,8 +139,8 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandler extends AbstractSce
         if (FactMappingValueStatus.FAILED_WITH_ERROR == toManage.getStatus()) {
             errorReportPopupPresenter.setup(ScenarioSimulationEditorConstants.INSTANCE.errorReason(),
                                             ScenarioSimulationEditorConstants.INSTANCE.errorPopoverMessageFailedWithError(
-                                                    expectedValue != null ? expectedValue.toString() : NULL,
-                                                    errorValue != null ? errorValue.toString() : NULL),
+                                                    decorateWithStrongHTMLTag(expectedValue != null ? expectedValue.toString() : NULL),
+                                                    decorateWithStrongHTMLTag(errorValue != null ? errorValue.toString() : NULL)),
                                             ScenarioSimulationEditorConstants.INSTANCE.keep(),
                                             ScenarioSimulationEditorConstants.INSTANCE.apply(),
                                             () -> scenarioGrid.getEventBus().fireEvent(
@@ -159,6 +159,10 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandler extends AbstractSce
                                             yPosition,
                                             position);
         }
+    }
+
+    private String decorateWithStrongHTMLTag(String value) {
+        return "<strong>\"" + value + "\"</strong>";
     }
 
     //Indirection for test
