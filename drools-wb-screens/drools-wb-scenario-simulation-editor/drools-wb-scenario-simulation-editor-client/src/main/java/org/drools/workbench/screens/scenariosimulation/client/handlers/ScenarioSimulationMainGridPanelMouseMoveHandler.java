@@ -161,7 +161,7 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandler extends AbstractSce
         }
     }
 
-    private String decorateWithStrongHTMLTag(String value) {
+    protected String decorateWithStrongHTMLTag(String value) {
         return "<strong>\"" + value + "\"</strong>";
     }
 

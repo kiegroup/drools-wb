@@ -43,6 +43,7 @@ import static org.drools.workbench.screens.scenariosimulation.client.TestPropert
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.DY;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.ERROR_VALUE;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.EXCEPTION;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.EXPRESSION_VALUE;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.LARGE_LAYER;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.MX;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.MY;
@@ -298,9 +299,11 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandlerTest extends Abstrac
         when(factMappingValueMock.getRawValue()).thenReturn(null);
         when(factMappingValueMock.getErrorValue()).thenReturn(null);
         mouseMoveHandler.setupPopupPresenter(factMappingValueMock, ROW_INDEX, COLUMN_INDEX, DX, DY, PopoverView.Position.RIGHT);
+        String expectedValue = mouseMoveHandler.decorateWithStrongHTMLTag(NULL);
+        String wrongValue = mouseMoveHandler.decorateWithStrongHTMLTag(NULL);
         verify(errorReportPopupPresenterMock, times(1)).setup(
                 eq(ScenarioSimulationEditorConstants.INSTANCE.errorReason()),
-                eq(ScenarioSimulationEditorConstants.INSTANCE.errorPopoverMessageFailedWithError(NULL, NULL)),
+                eq(ScenarioSimulationEditorConstants.INSTANCE.errorPopoverMessageFailedWithError(expectedValue, wrongValue)),
                 eq(ScenarioSimulationEditorConstants.INSTANCE.keep()),
                 eq(ScenarioSimulationEditorConstants.INSTANCE.apply()),
                 isA(Command.class),
@@ -315,9 +318,11 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandlerTest extends Abstrac
         when(elementMock.getScrollLeft()).thenReturn(SCROLL_LEFT);
         when(factMappingValueMock.getStatus()).thenReturn(FactMappingValueStatus.FAILED_WITH_ERROR);
         mouseMoveHandler.setupPopupPresenter(factMappingValueMock, ROW_INDEX, COLUMN_INDEX, DX, DY, PopoverView.Position.RIGHT);
+        String expectedValue = mouseMoveHandler.decorateWithStrongHTMLTag(RAW_VALUE);
+        String wrongValue = mouseMoveHandler.decorateWithStrongHTMLTag(ERROR_VALUE);
         verify(errorReportPopupPresenterMock, times(1)).setup(
                 eq(ScenarioSimulationEditorConstants.INSTANCE.errorReason()),
-                eq(ScenarioSimulationEditorConstants.INSTANCE.errorPopoverMessageFailedWithError(RAW_VALUE, ERROR_VALUE)),
+                eq(ScenarioSimulationEditorConstants.INSTANCE.errorPopoverMessageFailedWithError(expectedValue, wrongValue)),
                 eq(ScenarioSimulationEditorConstants.INSTANCE.keep()),
                 eq(ScenarioSimulationEditorConstants.INSTANCE.apply()),
                 isA(Command.class),
