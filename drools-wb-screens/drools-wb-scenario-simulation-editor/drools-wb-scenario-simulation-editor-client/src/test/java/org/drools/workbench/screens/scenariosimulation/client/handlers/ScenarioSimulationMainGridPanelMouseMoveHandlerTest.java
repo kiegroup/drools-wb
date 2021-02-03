@@ -43,7 +43,6 @@ import static org.drools.workbench.screens.scenariosimulation.client.TestPropert
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.DY;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.ERROR_VALUE;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.EXCEPTION;
-import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.EXPRESSION_VALUE;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.LARGE_LAYER;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.MX;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.MY;
