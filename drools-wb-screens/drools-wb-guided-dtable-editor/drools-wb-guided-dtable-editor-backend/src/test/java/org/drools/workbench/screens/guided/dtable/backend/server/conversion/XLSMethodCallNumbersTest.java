@@ -24,17 +24,12 @@ import org.junit.Test;
 import static org.drools.workbench.screens.guided.dtable.backend.server.util.TestUtil.loadResource;
 import static org.junit.Assert.assertEquals;
 
-/**
- * Tests two things.
- * 1. BRL field constraints under && composite constraint
- * 2. In some cases the BRL columns do not have an operator. Like in the BRLWithAnd.gdst and the operator needs to be resolved from the BRL Pattern.
- */
-public class BRLWithAndTest
+public class XLSMethodCallNumbersTest
         extends TestBase {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        final String xml = loadResource(XLSBuilderAttributesNegateTest.class.getResourceAsStream("BRLWithAnd.gdst"));
+        final String xml = loadResource(XLSBuilderAttributesNegateTest.class.getResourceAsStream("NumbersInMethods.gdst"));
 
         final GuidedDecisionTable52 dtable = GuidedDTXMLPersistence.getInstance().unmarshal(xml);
 
@@ -54,52 +49,50 @@ public class BRLWithAndTest
         assertEquals("Import", cell(2, 1).getStringCellValue());
         assertEquals("", sheet.getRow(2).getCell(2).getStringCellValue());
 
-        assertEquals("RuleTable BRlWithAnd", cell(4, 1).getStringCellValue());
+        assertEquals("RuleTable NumbersInMethods", cell(4, 1).getStringCellValue());
     }
 
     @Test
     public void columnTypes() {
 
-        assertEquals("CONDITION", cell(5, 1).getStringCellValue());
-        assertEquals("CONDITION", cell(5, 2).getStringCellValue());
-        assertEquals("CONDITION", cell(5, 3).getStringCellValue());
+        assertEquals("ACTION", cell(5, 1).getStringCellValue());
+        assertEquals("ACTION", cell(5, 2).getStringCellValue());
+        assertEquals("ACTION", cell(5, 3).getStringCellValue());
         assertNullCell(5, 4);
     }
 
     @Test
     public void patterns() {
 
-        assertEquals("Applicant", cell(6, 1).getStringCellValue().trim());
-        assertEquals("Applicant", cell(6, 2).getStringCellValue().trim());
-        assertEquals("Applicant", cell(6, 3).getStringCellValue().trim());
-        assertNullCell(6, 4);
+        assertNullCell(6, 1);
+        assertNullCell(6, 2);
+        assertNullCell(6, 3);
     }
 
     @Test
     public void constraints() {
 
-        assertEquals("age > $param", cell(7, 1).getStringCellValue().trim());
-        assertEquals("approved == $param", cell(7, 2).getStringCellValue().trim());
-        assertEquals("creditRating == $param", cell(7, 3).getStringCellValue().trim());
+        assertEquals("NumberWrapper a = new NumberWrapper(); insert( a );", cell(7, 1).getStringCellValue().trim());
+        assertEquals("a.assignTestId( new java.math.BigDecimal(\"$param\") );", cell(7, 2).getStringCellValue().trim());
+        assertEquals("a.assignBigInteger( new java.math.BigInteger(\"$param\") );", cell(7, 3).getStringCellValue().trim());
         assertNullCell(7, 4);
     }
 
     @Test
     public void columnTitles() {
 
-        assertEquals("And BRL Column", cell(8, 1).getStringCellValue());
-        assertEquals("And BRL Column", cell(8, 2).getStringCellValue());
-        assertEquals("And BRL Column", cell(8, 3).getStringCellValue());
+        assertEquals("", cell(8, 1).getStringCellValue());
+        assertEquals("Big Decimal", cell(8, 2).getStringCellValue());
+        assertEquals("Big Decimal", cell(8, 3).getStringCellValue());
         assertNullCell(8, 4);
     }
 
     @Test
     public void content() {
 
-        assertEquals("20", cell(9, 1).getStringCellValue());
-        assertEquals("true", cell(9, 2).getStringCellValue());
-        assertEquals("OK", cell(9, 3).getStringCellValue());
+        assertEquals("X", cell(9, 1).getStringCellValue());
+        assertEquals("11", cell(9, 2).getStringCellValue());
+        assertEquals("22", cell(9, 3).getStringCellValue());
         assertNullCell(9, 4);
-
     }
 }
