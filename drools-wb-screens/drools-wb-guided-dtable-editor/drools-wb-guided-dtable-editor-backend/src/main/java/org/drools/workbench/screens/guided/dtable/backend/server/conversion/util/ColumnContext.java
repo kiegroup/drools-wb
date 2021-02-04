@@ -28,7 +28,6 @@ import org.drools.workbench.models.datamodel.rule.FactPattern;
 import org.drools.workbench.models.datamodel.rule.FieldNatureType;
 import org.drools.workbench.models.datamodel.rule.IAction;
 import org.drools.workbench.models.datamodel.rule.IPattern;
-import org.drools.workbench.models.guided.dtable.shared.model.BRLActionColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.BRLColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.BRLConditionColumn;
 
@@ -47,31 +46,27 @@ public class ColumnContext {
         if (!map.containsKey(brlColumn)) {
             map.put(brlColumn, new ArrayList<>());
         }
-        map.get(brlColumn).add(childColumn);
+        if (!map.get(brlColumn).contains(childColumn)) {
+            map.get(brlColumn).add(childColumn);
+        }
     }
 
     public List<FromTo> getCols(final BRLColumn baseColumn) {
         return map.get(baseColumn);
     }
 
-    public List<String> getVariablesInOrderOfUse(final BRLActionColumn brlColumn) {
-
-        final List<String> result = new ArrayList<>();
-        for (final IAction iAction : brlColumn.getDefinition()) {
-            result.addAll(getVariablesInOrderOfUse(iAction));
-        }
-        return result;
-    }
-
-    public List<String> getVariablesInOrderOfUse(final IAction iAction) {
-        final List<String> result = new ArrayList<>();
+    public List<ValuePlaceHolder> getVariablesInOrderOfUse(final IAction iAction) {
+        final List<ValuePlaceHolder> result = new ArrayList<>();
 
         if (iAction instanceof ActionFieldList) {
 
             for (final ActionFieldValue fieldValue : ((ActionFieldList) iAction).getFieldValues()) {
-                if (fieldValue.getNature() == FieldNatureType.TYPE_TEMPLATE) {
-                    final String variable = fieldValue.getValue();
-                    result.add(variable);
+                if (fieldValue.getNature() == FieldNatureType.TYPE_LITERAL) {
+                    result.add(new ValuePlaceHolder(ValuePlaceHolder.Type.VALUE,
+                                                    fieldValue.getValue()));
+                } else if (fieldValue.getNature() == FieldNatureType.TYPE_TEMPLATE) {
+                    result.add(new ValuePlaceHolder(ValuePlaceHolder.Type.VARIABLE,
+                                                    fieldValue.getValue()));
                 }
             }
         }

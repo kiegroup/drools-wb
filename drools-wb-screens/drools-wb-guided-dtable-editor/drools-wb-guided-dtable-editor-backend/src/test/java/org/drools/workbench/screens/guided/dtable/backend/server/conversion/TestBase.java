@@ -23,7 +23,11 @@ import java.util.List;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.kie.soup.project.datamodel.oracle.*;
+import org.kie.soup.project.datamodel.oracle.DataType;
+import org.kie.soup.project.datamodel.oracle.FieldAccessorsAndMutators;
+import org.kie.soup.project.datamodel.oracle.MethodInfo;
+import org.kie.soup.project.datamodel.oracle.ModelField;
+import org.kie.soup.project.datamodel.oracle.PackageDataModelOracle;
 
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.doReturn;
@@ -51,7 +55,7 @@ public abstract class TestBase {
 
         doReturn(fieldMap).when(dmo).getModuleModelFields();
 
-        final HashMap<String, MethodInfo[]> methodMap = new HashMap<>();
+        final HashMap<String, List<MethodInfo>> methodMap = new HashMap<>();
         methodMap.put("com.myspace.covid19.Covid19Test", makeMethodInfoCovid19TestSourceCovid19TestSource());
         doReturn(methodMap).when(dmo).getModuleMethodInformation();
 
@@ -162,15 +166,25 @@ public abstract class TestBase {
         return modelFields.toArray(new ModelField[modelFields.size()]);
     }
 
-    private static MethodInfo[] makeMethodInfoCovid19TestSourceCovid19TestSource() {
+    private static List<MethodInfo> makeMethodInfoCovid19TestSourceCovid19TestSource() {
         final List<MethodInfo> methodInfos = Arrays.asList(
+                new MethodInfo("noParams",
+                               Collections.emptyList(),
+                               Void.class.getClass(),
+                               null,
+                               DataType.TYPE_VOID),
+                new MethodInfo("alarm",
+                               Collections.singletonList("alarmText"),
+                               Void.class.getClass(),
+                               null,
+                               DataType.TYPE_VOID),
                 new MethodInfo("sendNotification",
-                        Collections.singletonList("notificationText"),
-                        Void.class.getClass(),
-                        null,
-                        DataType.TYPE_VOID));
+                               Collections.singletonList("notificationText"),
+                               Void.class.getClass(),
+                               null,
+                               DataType.TYPE_VOID));
 
-        return methodInfos.toArray(new MethodInfo[methodInfos.size()]);
+        return methodInfos;
     }
 
     private static ModelField[] makeModelFieldsPoliceTransportSource() {

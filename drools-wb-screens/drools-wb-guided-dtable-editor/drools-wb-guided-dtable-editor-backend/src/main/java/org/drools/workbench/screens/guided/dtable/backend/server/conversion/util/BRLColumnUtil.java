@@ -15,6 +15,7 @@
  */
 package org.drools.workbench.screens.guided.dtable.backend.server.conversion.util;
 
+import org.drools.workbench.models.datamodel.rule.ActionCallMethod;
 import org.drools.workbench.models.datamodel.rule.ActionFieldList;
 import org.drools.workbench.models.datamodel.rule.ActionFieldValue;
 import org.drools.workbench.models.datamodel.rule.BaseSingleFieldConstraint;
@@ -56,7 +57,7 @@ public class BRLColumnUtil {
 
     private static boolean validateActionFieldValues(final ActionFieldList iAction) {
         for (ActionFieldValue fieldValue : iAction.getFieldValues()) {
-            if (onlyAllowedActionFieldValueTypeIsTemplateType(fieldValue)) {
+            if (!(iAction instanceof ActionCallMethod) && onlyAllowedActionFieldValueTypeIsTemplateType(fieldValue)) {
                 return true;
             }
         }

@@ -15,19 +15,28 @@
  */
 package org.drools.workbench.screens.guided.dtable.backend.server.conversion.util;
 
-import java.util.HashMap;
-import java.util.Map;
+public class ValuePlaceHolder {
 
-public class VariableOperators {
+    private final Type type;
+    private final String value;
 
-    private final Map<String, String> multiList = new HashMap<>();
-
-    public void append(final String variable,
-                       final String operator) {
-        multiList.put(variable, operator);
+    public enum Type {
+        VARIABLE,
+        VALUE
     }
 
-    public String getOperator(final String variable) {
-        return multiList.get(variable);
+    public ValuePlaceHolder(final Type type,
+                            final String value) {
+
+        this.type = type;
+        this.value = value;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public String getValue() {
+        return value;
     }
 }
