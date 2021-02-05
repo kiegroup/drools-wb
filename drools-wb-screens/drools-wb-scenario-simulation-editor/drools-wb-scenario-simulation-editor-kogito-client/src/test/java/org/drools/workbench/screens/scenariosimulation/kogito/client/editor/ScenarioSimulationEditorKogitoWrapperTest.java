@@ -15,6 +15,7 @@
  */
 package org.drools.workbench.screens.scenariosimulation.kogito.client.editor;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
@@ -35,6 +36,7 @@ import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.stra
 import org.drools.workbench.screens.scenariosimulation.kogito.client.editor.strategies.KogitoDMODataManagementStrategy;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.handlers.ScenarioSimulationKogitoDocksHandler;
 import org.drools.workbench.screens.scenariosimulation.kogito.client.popup.ScenarioSimulationKogitoCreationPopupPresenter;
+import org.drools.workbench.screens.scenariosimulation.kogito.client.services.ScenarioSimulationKogitoDMNMarshallerService;
 import org.gwtbootstrap3.client.ui.NavTabs;
 import org.gwtbootstrap3.client.ui.TabListItem;
 import org.jboss.errai.common.client.api.ErrorCallback;
@@ -42,7 +44,9 @@ import org.jboss.errai.ui.client.local.spi.TranslationService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITDefinitions;
 import org.kie.workbench.common.kogito.client.editor.BaseKogitoEditor;
+import org.kie.workbench.common.kogito.client.editor.MultiPageEditorContainerPresenter;
 import org.kie.workbench.common.kogito.client.editor.MultiPageEditorContainerView;
 import org.kie.workbench.common.kogito.client.resources.i18n.KogitoClientConstants;
 import org.kie.workbench.common.widgets.client.docks.AuthoringEditorDock;
@@ -51,7 +55,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.internal.util.reflection.Whitebox;
 import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.backend.vfs.PathFactory;
@@ -72,7 +75,6 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
@@ -141,6 +143,8 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
     private ScenarioSimulationKogitoDocksHandler scenarioSimulationKogitoDocksHandlerMock;
     @Mock
     private AuthoringEditorDock authoringEditorDockMock;
+    @Mock
+    private ScenarioSimulationKogitoDMNMarshallerService scenarioSimulationKogitoDMNMarshallerServiceMock;
     @Captor
     private ArgumentCaptor<DataManagementStrategy> dataManagementStrategyCaptor;
     @Captor
@@ -186,6 +190,7 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
                 this.scenarioSimulationBuilder = kogitoScenarioSimulationBuilderMock;
                 this.authoringWorkbenchDocks = authoringEditorDockMock;
                 this.scenarioSimulationKogitoDocksHandler = scenarioSimulationKogitoDocksHandlerMock;
+                this.scenarioSimulationKogitoDMNMarshallerService = scenarioSimulationKogitoDMNMarshallerServiceMock;
             }
 
             @Override
@@ -241,11 +246,11 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
 
     @Test
     public void prepareContent_Exception() {
-        willThrow(Exception.class).given(scenarioSimulationEditorKogitoWrapperSpy).marshallContent(any(), any());
+        willThrow(RuntimeException.class).given(scenarioSimulationEditorKogitoWrapperSpy).marshallContent(any(), any());
         scenarioSimulationEditorKogitoWrapperSpy.prepareContent(resolveCallBackMock, rejectCallbackFnMock);
         verify(scenarioSimulationEditorKogitoWrapperSpy, times(1)).synchronizeColumnsDimension(eq(simulationGridPanelMock), eq(backgroundGridPanelMock));
         verify(scenarioSimulationEditorKogitoWrapperSpy, times(1)).marshallContent(eq(scenarioSimulationModelMock), eq(resolveCallBackMock));
-        verify(scenarioSimulationEditorPresenterMock, times(1)).sendNotification(anyString(), eq(NotificationEvent.NotificationType.ERROR));
+        verify(scenarioSimulationEditorPresenterMock, times(1)).sendNotification(any(), eq(NotificationEvent.NotificationType.ERROR));
     }
 
     @Test
@@ -323,8 +328,11 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
     }
 
     @Test
-    public void onStartup() {
-        Whitebox.setInternalState(scenarioSimulationEditorKogitoWrapperSpy, "multiPageEditorContainerView", multiPageEditorContainerViewMock);
+    public void onStartup() throws IllegalAccessException, NoSuchFieldException {
+        final Field field = MultiPageEditorContainerPresenter.class.getDeclaredField("multiPageEditorContainerView");
+        field.setAccessible(true);
+        field.set(scenarioSimulationEditorKogitoWrapperSpy, multiPageEditorContainerViewMock);
+
         scenarioSimulationEditorKogitoWrapperSpy.onStartup(placeRequestMock);
         verify(authoringEditorDockMock, times(1)).setup(eq("AuthoringPerspective"), eq(placeRequestMock));
         verify(scenarioSimulationEditorPresenterMock, times(1)).setWrapper(eq(scenarioSimulationEditorKogitoWrapperSpy));
@@ -478,5 +486,25 @@ public class ScenarioSimulationEditorKogitoWrapperTest {
     public void getScenarioSimulationEditorPresenter() {
         assertEquals(scenarioSimulationEditorPresenterMock,
                      scenarioSimulationEditorKogitoWrapperSpy.getScenarioSimulationEditorPresenter());
+    }
+
+    @Test
+    public void getDMNMetadata() {
+        when(settingsMock.getDmnFilePath()).thenReturn("src/test.dmn");
+        ArgumentCaptor<Path> pathArgumentCaptor = ArgumentCaptor.forClass(Path.class);
+        ArgumentCaptor<Callback> callbackArgumentCaptor = ArgumentCaptor.forClass(Callback.class);
+        scenarioSimulationEditorKogitoWrapperSpy.getDMNMetadata();
+        verify(scenarioSimulationKogitoDMNMarshallerServiceMock, times(1)).getDMNContent(pathArgumentCaptor.capture(),
+                                                                                                               callbackArgumentCaptor.capture(),
+                                                                                                               isA(ErrorCallback.class));
+        assertEquals("src/test.dmn", pathArgumentCaptor.getValue().toURI());
+        assertEquals("test.dmn", pathArgumentCaptor.getValue().getFileName());
+        JSITDefinitions returnCallback = mock(JSITDefinitions.class);
+        when(returnCallback.getNamespace()).thenReturn("DMN-NAMESPACE");
+        when(returnCallback.getName()).thenReturn("DMN-Name");
+        callbackArgumentCaptor.getValue().callback(returnCallback);
+        verify(settingsMock, times(1)).setDmnNamespace(eq("DMN-NAMESPACE"));
+        verify(settingsMock, times(1)).setDmnName("DMN-Name");
+        verify(scenarioSimulationEditorPresenterMock, times(1)).reloadSettingsDock();
     }
 }
