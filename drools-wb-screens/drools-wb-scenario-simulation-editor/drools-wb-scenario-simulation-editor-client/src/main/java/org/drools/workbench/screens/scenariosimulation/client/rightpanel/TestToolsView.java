@@ -126,7 +126,10 @@ public interface TestToolsView extends SubDockView<TestToolsView.Presenter> {
 
         void addSimpleJavaInstanceListGroupItemView(String factName, FactModelTree factModelTree);
 
-        void clearLists();
+        /**
+         * Method to hide all the <b>instance-related</b> html
+         */
+        void hideInstances();
 
         void setEventBus(EventBus eventBus);
 
