@@ -16,6 +16,8 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 
 import com.ait.lienzo.client.core.event.NodeMouseMoveEvent;
@@ -55,10 +57,10 @@ import static org.drools.workbench.screens.scenariosimulation.client.TestPropert
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.TINY_LAYER;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.never;
@@ -72,6 +74,8 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandlerTest extends Abstrac
 
     private final int ABSOLUTE_LEFT = 0;
     private final int CELL_HEIGHT = 30;
+    private static final String BR = "<br>";
+
     private ScenarioSimulationMainGridPanelMouseMoveHandler mouseMoveHandler;
     @Mock
     private ErrorReportPopoverPresenter errorReportPopupPresenterMock;
@@ -150,7 +154,7 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandlerTest extends Abstrac
         verify(simulationDescriptorMock, never()).getFactMappingByIndex(isA(Integer.class));
         verify(scenarioMock, never()).getFactMappingValue(any());
         verify(mouseMoveHandler, never()).retrieveCellMiddleXYPosition(any(), isA(Integer.class));
-        verify(errorReportPopupPresenterMock, never()).setup(any(), any(), any(), any(), any(), isA(Integer.class), isA(Integer.class), any());
+        verify(errorReportPopupPresenterMock, never()).setup(any(), any(), any(), any(), any(), anyInt(), anyInt(), any());
         assertFalse(inGrid);
     }
 
@@ -348,6 +352,53 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandlerTest extends Abstrac
     }
 
     @Test
+    public void getCollectionHTMLErrorMessage_EmptyPath() {
+        assertEquals(ScenarioSimulationEditorConstants.INSTANCE.errorPopoverGenericCollectionErrorMessage(),
+                     mouseMoveHandler.getCollectionHTMLErrorMessage("wrongValue", Collections.emptyList()));
+    }
+
+    @Test
+    public void getCollectionHTMLErrorMessage_OnePathItemWithWrongValue() {
+        String field1 = "Field1";
+        String wrongValue = "wrongValue";
+        assertEquals(ScenarioSimulationEditorConstants.INSTANCE.errorPopoverCollectionHTMLFailureMessage(mouseMoveHandler.decorateWithEMHTMLTag(field1))
+                             + BR
+                             + ScenarioSimulationEditorConstants.INSTANCE.errorPopoverCollectionHTMLValue(mouseMoveHandler.decorateWithStrongHTMLTag(wrongValue)),
+                     mouseMoveHandler.getCollectionHTMLErrorMessage(wrongValue, Arrays.asList(field1)));
+    }
+
+    @Test
+    public void getCollectionHTMLErrorMessage_OnePathItemWithoutWrongValue() {
+        String field1 = "Field1";
+        assertEquals(ScenarioSimulationEditorConstants.INSTANCE.errorPopoverCollectionHTMLFailureMessage(mouseMoveHandler.decorateWithEMHTMLTag(field1)),
+                     mouseMoveHandler.getCollectionHTMLErrorMessage(null, Arrays.asList(field1)));
+    }
+
+    @Test
+    public void getCollectionHTMLErrorMessage_PathItemsWithWrongValue() {
+        String field1 = "Field1";
+        String field2 = "Field2";
+        String wrongValue = "wrongValue";
+        assertEquals(ScenarioSimulationEditorConstants.INSTANCE.errorPopoverCollectionHTMLFailureMessage(mouseMoveHandler.decorateWithEMHTMLTag(field1))
+                             + BR
+                             + ScenarioSimulationEditorConstants.INSTANCE.errorPopoverCollectionHTMLField(mouseMoveHandler.decorateWithEMHTMLTag(mouseMoveHandler.generateFieldsHierarchy(Arrays.asList(field2))))
+                             + BR
+                             + ScenarioSimulationEditorConstants.INSTANCE.errorPopoverCollectionHTMLValue(mouseMoveHandler.decorateWithStrongHTMLTag(wrongValue)),
+                     mouseMoveHandler.getCollectionHTMLErrorMessage(wrongValue, Arrays.asList(field1, field2)));
+    }
+
+    @Test
+    public void getCollectionHTMLErrorMessage_PathItemsWithoutWrongValue() {
+        String field1 = "Field1";
+        String field2 = "Field2";
+        assertEquals(ScenarioSimulationEditorConstants.INSTANCE.errorPopoverCollectionHTMLFailureMessage(mouseMoveHandler.decorateWithEMHTMLTag(field1))
+                             + BR
+                             + ScenarioSimulationEditorConstants.INSTANCE.errorPopoverCollectionHTMLField(mouseMoveHandler.decorateWithEMHTMLTag(mouseMoveHandler.generateFieldsHierarchy(Arrays.asList(field2)))),
+                     mouseMoveHandler.getCollectionHTMLErrorMessage(null, Arrays.asList(field1, field2))
+        );
+    }
+
+    @Test
     public void decorateWithStrongHTMLTag() {
         assertEquals("<strong>\"test\"</strong>", mouseMoveHandler.decorateWithStrongHTMLTag("test"));
     }
@@ -355,6 +406,13 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandlerTest extends Abstrac
     @Test
     public void decorateWithEMHTMLTag() {
         assertEquals("<em>\"test\"</em>", mouseMoveHandler.decorateWithEMHTMLTag("test"));
+    }
+
+    @Test
+    public void generateFieldsHierarchy() {
+        assertEquals("Field1<br>", mouseMoveHandler.generateFieldsHierarchy(Arrays.asList("Field1")));
+        assertEquals("<ul><li>Field1<ul><li>Field2<ul><li>Field3</li></ul></li></ul></li></ul>",
+                     mouseMoveHandler.generateFieldsHierarchy(Arrays.asList("Field1", "Field2", "Field3")));
     }
 
 }
