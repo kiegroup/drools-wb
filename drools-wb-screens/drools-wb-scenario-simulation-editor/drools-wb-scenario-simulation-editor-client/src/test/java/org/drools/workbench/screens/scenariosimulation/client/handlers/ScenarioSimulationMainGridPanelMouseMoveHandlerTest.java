@@ -308,7 +308,7 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandlerTest extends Abstrac
         verify(mouseMoveHandler, times(1)).showErrorPopoverWithSuggestion(eq(RAW_VALUE), eq(ERROR_VALUE), eq(ROW_INDEX), eq(COLUMN_INDEX), eq(DX), eq(DY), eq(PopoverView.Position.RIGHT));
     }
 
-    /*@Test
+    @Test
     public void setupPopupPresenterWithScrollFailedWithError_WithPath() {
         when(elementMock.getScrollTop()).thenReturn(SCROLL_TOP);
         when(elementMock.getScrollLeft()).thenReturn(SCROLL_LEFT);
@@ -317,7 +317,7 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandlerTest extends Abstrac
         mouseMoveHandler.setupPopupPresenter(factMappingValueMock, ROW_INDEX, COLUMN_INDEX, DX, DY, PopoverView.Position.RIGHT);
         String errorMessage = mouseMoveHandler.getCollectionHTMLErrorMessage(ERROR_VALUE, Arrays.asList("field1"));
         verify(mouseMoveHandler, times(1)).showErrorPopoverWithoutSuggestion(eq(errorMessage), eq(DX), eq(DY), eq(PopoverView.Position.RIGHT));
-    } */
+    }
 
     @Test
     public void setupPopupPresenterWithScrollFailedWithException() {
