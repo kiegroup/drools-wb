@@ -145,8 +145,8 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandler extends AbstractSce
         final Object expectedValue = factMappingValue.getRawValue();
         final Object errorValue = factMappingValue.getErrorValue();
         if (FactMappingValueStatus.FAILED_WITH_ERROR == factMappingValue.getStatus()) {
-            if (factMappingValue.getPathToValue().isPresent()) {
-                showErrorPopoverWithoutSuggestion(getCollectionHTMLErrorMessage(errorValue.toString(), factMappingValue.getPathToValue().get()),
+            if (factMappingValue.getPathToValue() != null) {
+                showErrorPopoverWithoutSuggestion(getCollectionHTMLErrorMessage(errorValue.toString(), factMappingValue.getPathToValue()),
                                                   xPosition,
                                                   yPosition,
                                                   position);
