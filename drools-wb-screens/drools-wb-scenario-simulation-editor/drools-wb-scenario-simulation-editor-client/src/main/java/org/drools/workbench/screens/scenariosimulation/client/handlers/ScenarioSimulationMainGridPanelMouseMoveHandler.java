@@ -145,14 +145,14 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandler extends AbstractSce
         final Object expectedValue = factMappingValue.getRawValue();
         final Object errorValue = factMappingValue.getErrorValue();
         if (FactMappingValueStatus.FAILED_WITH_ERROR == factMappingValue.getStatus()) {
-            if (factMappingValue.getPathToValue() != null) {
-                showErrorPopoverWithoutSuggestion(getCollectionHTMLErrorMessage(errorValue.toString(), factMappingValue.getPathToValue()),
-                                                  xPosition,
-                                                  yPosition,
-                                                  position);
-            } else {
-                showErrorPopoverWithSuggestion(expectedValue, errorValue, uiRowIndex, uiColumnIndex, xPosition, yPosition, position);
-            }
+            showErrorPopoverWithSuggestion(expectedValue, errorValue, uiRowIndex, uiColumnIndex, xPosition, yPosition, position);
+        }
+        else if(FactMappingValueStatus.FAILED_WITH_ERROR_COLLECTION == factMappingValue.getStatus()) {
+            showErrorPopoverWithoutSuggestion(getCollectionHTMLErrorMessage(errorValue,
+                                                                            factMappingValue.getCollectionPathToValue()),
+                                              xPosition,
+                                              yPosition,
+                                              position);
         } else if (FactMappingValueStatus.FAILED_WITH_EXCEPTION == factMappingValue.getStatus()) {
             showErrorPopoverWithoutSuggestion(factMappingValue.getExceptionMessage(), xPosition, yPosition, position);
         }
@@ -193,8 +193,8 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandler extends AbstractSce
                                         position);
     }
 
-    protected String getCollectionHTMLErrorMessage(String wrongValue, List<String> pathToWrongValue) {
-        if (pathToWrongValue.isEmpty()) {
+    protected String getCollectionHTMLErrorMessage(Object wrongValue, List<String> pathToWrongValue) {
+        if (pathToWrongValue == null || pathToWrongValue.isEmpty()) {
             return ScenarioSimulationEditorConstants.INSTANCE.errorPopoverGenericCollectionErrorMessage();
         }
         if (pathToWrongValue.size() == 1) {
@@ -202,7 +202,7 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandler extends AbstractSce
             builder.append(ScenarioSimulationEditorConstants.INSTANCE.errorPopoverCollectionHTMLFailureMessage(decorateWithEMHTMLTag(pathToWrongValue.get(0))));
             if (wrongValue != null) {
                 builder.append(BR);
-                builder.append(ScenarioSimulationEditorConstants.INSTANCE.errorPopoverCollectionHTMLValue(decorateWithStrongHTMLTag(wrongValue)));
+                builder.append(ScenarioSimulationEditorConstants.INSTANCE.errorPopoverCollectionHTMLValue(decorateWithStrongHTMLTag(wrongValue.toString())));
             }
             return builder.toString();
         }
@@ -212,8 +212,7 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandler extends AbstractSce
         builder.append(BR);
         builder.append(ScenarioSimulationEditorConstants.INSTANCE.errorPopoverCollectionHTMLField(decorateWithEMHTMLTag(generateFieldsHierarchy(pathToWrongValue.subList(1, pathToWrongValue.size())))));
         if (wrongValue != null) {
-            builder.append(BR);
-            builder.append(ScenarioSimulationEditorConstants.INSTANCE.errorPopoverCollectionHTMLValue(decorateWithStrongHTMLTag(wrongValue)));
+            builder.append(ScenarioSimulationEditorConstants.INSTANCE.errorPopoverCollectionHTMLValue(decorateWithStrongHTMLTag(wrongValue.toString())));
         }
         return builder.toString();
     }
@@ -223,7 +222,7 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandler extends AbstractSce
     }
 
     protected String decorateWithEMHTMLTag(String value) {
-        return "<em>\"" + value + "\"</em>";
+        return "<em>" + value + "</em>";
     }
 
     protected String generateFieldsHierarchy(List<String> hierarchy) {
