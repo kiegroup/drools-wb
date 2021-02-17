@@ -313,7 +313,7 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandlerTest extends Abstrac
         when(elementMock.getScrollTop()).thenReturn(SCROLL_TOP);
         when(elementMock.getScrollLeft()).thenReturn(SCROLL_LEFT);
         when(factMappingValueMock.getStatus()).thenReturn(FactMappingValueStatus.FAILED_WITH_ERROR);
-        when(factMappingValueMock.getPathToValue()).thenReturn(null);
+        when(factMappingValueMock.getPathToValue()).thenReturn(Arrays.asList("field1"));
         mouseMoveHandler.setupPopupPresenter(factMappingValueMock, ROW_INDEX, COLUMN_INDEX, DX, DY, PopoverView.Position.RIGHT);
         String errorMessage = mouseMoveHandler.getCollectionHTMLErrorMessage(ERROR_VALUE, Arrays.asList("field1"));
         verify(mouseMoveHandler, times(1)).showErrorPopoverWithoutSuggestion(eq(errorMessage), eq(DX), eq(DY), eq(PopoverView.Position.RIGHT));
