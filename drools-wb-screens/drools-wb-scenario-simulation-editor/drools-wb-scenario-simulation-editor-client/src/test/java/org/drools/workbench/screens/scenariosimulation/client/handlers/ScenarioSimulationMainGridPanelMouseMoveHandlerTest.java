@@ -37,7 +37,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.uberfire.ext.wires.core.grids.client.model.GridColumn;
-//import org.uberfire.mvp.Command;
+import org.uberfire.mvp.Command;
 
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.CELL_WIDTH;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.COLUMN_INDEX;
@@ -48,7 +48,7 @@ import static org.drools.workbench.screens.scenariosimulation.client.TestPropert
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.LARGE_LAYER;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.MX;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.MY;
-//import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.NULL;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.NULL;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.RAW_VALUE;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.ROW_INDEX;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.SCROLL_LEFT;
@@ -334,6 +334,57 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandlerTest extends Abstrac
                 eq(DY),
                 eq(PopoverView.Position.RIGHT));
     }*/
+
+    @Test
+    public void setupPopupPresenterWithScrollFailedWithError() {
+        String errorValue = "ErrorMessage";
+        mouseMoveHandler.showErrorPopoverWithoutSuggestion(errorValue, DX, DY, PopoverView.Position.RIGHT);
+        verify(errorReportPopupPresenterMock, times(1)).setup(
+                eq(ScenarioSimulationEditorConstants.INSTANCE.errorReason()),
+                eq(errorValue),
+                eq(ScenarioSimulationEditorConstants.INSTANCE.close()),
+                eq(DX),
+                eq(DY),
+                eq(PopoverView.Position.RIGHT));
+    }
+
+    @Test
+    public void showErrorPopoverWithSuggestion() {
+        when(elementMock.getScrollTop()).thenReturn(SCROLL_TOP);
+        when(elementMock.getScrollLeft()).thenReturn(SCROLL_LEFT);
+        when(factMappingValueMock.getStatus()).thenReturn(FactMappingValueStatus.FAILED_WITH_ERROR);
+        mouseMoveHandler.showErrorPopoverWithSuggestion(RAW_VALUE, ERROR_VALUE, ROW_INDEX, COLUMN_INDEX, DX, DY, PopoverView.Position.RIGHT);
+        String expectedValue = mouseMoveHandler.decorateWithStrongHTMLTag(RAW_VALUE);
+        String wrongValue = mouseMoveHandler.decorateWithStrongHTMLTag(ERROR_VALUE);
+        verify(errorReportPopupPresenterMock, times(1)).setup(
+                eq(ScenarioSimulationEditorConstants.INSTANCE.errorReason()),
+                eq(ScenarioSimulationEditorConstants.INSTANCE.errorPopoverMessageFailedWithError(expectedValue, wrongValue)),
+                eq(ScenarioSimulationEditorConstants.INSTANCE.keep()),
+                eq(ScenarioSimulationEditorConstants.INSTANCE.apply()),
+                isA(Command.class),
+                eq(DX),
+                eq(DY),
+                eq(PopoverView.Position.RIGHT));
+    }
+
+    @Test
+    public void showErrorPopoverWithSuggestion_NULLValues() {
+        when(elementMock.getScrollTop()).thenReturn(SCROLL_TOP);
+        when(elementMock.getScrollLeft()).thenReturn(SCROLL_LEFT);
+        when(factMappingValueMock.getStatus()).thenReturn(FactMappingValueStatus.FAILED_WITH_ERROR);
+        mouseMoveHandler.showErrorPopoverWithSuggestion(null, null, ROW_INDEX, COLUMN_INDEX, DX, DY, PopoverView.Position.RIGHT);
+        String expectedValue = mouseMoveHandler.decorateWithStrongHTMLTag(NULL);
+        String wrongValue = mouseMoveHandler.decorateWithStrongHTMLTag(NULL);
+        verify(errorReportPopupPresenterMock, times(1)).setup(
+                eq(ScenarioSimulationEditorConstants.INSTANCE.errorReason()),
+                eq(ScenarioSimulationEditorConstants.INSTANCE.errorPopoverMessageFailedWithError(expectedValue, wrongValue)),
+                eq(ScenarioSimulationEditorConstants.INSTANCE.keep()),
+                eq(ScenarioSimulationEditorConstants.INSTANCE.apply()),
+                isA(Command.class),
+                eq(DX),
+                eq(DY),
+                eq(PopoverView.Position.RIGHT));
+    }
 
     @Test
     public void setupPopupPresenterWithScrollFailedWithException() {
