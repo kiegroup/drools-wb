@@ -63,6 +63,7 @@ public interface ScenarioSimulationEditorWrapper {
     void selectSimulationTab();
 
     void selectBackgroundTab();
+
     void getDMNMetadata();
 
     AbstractScenarioSimulationDocksHandler getScenarioSimulationDocksHandler();
