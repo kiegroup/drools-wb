@@ -16,6 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
@@ -145,14 +146,15 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandler extends AbstractSce
         final Object expectedValue = factMappingValue.getRawValue();
         final Object errorValue = factMappingValue.getErrorValue();
         if (FactMappingValueStatus.FAILED_WITH_ERROR == factMappingValue.getStatus()) {
-            showErrorPopoverWithSuggestion(expectedValue, errorValue, uiRowIndex, uiColumnIndex, xPosition, yPosition, position);
-        }
-        else if (FactMappingValueStatus.FAILED_WITH_ERROR_COLLECTION == factMappingValue.getStatus()) {
-            showErrorPopoverWithoutSuggestion(getCollectionHTMLErrorMessage(errorValue,
-                                                                            factMappingValue.getCollectionPathToValue()),
-                                              xPosition,
-                                              yPosition,
-                                              position);
+            if (Objects.isNull(factMappingValue.getCollectionPathToValue())) {
+                showErrorPopoverWithSuggestion(expectedValue, errorValue, uiRowIndex, uiColumnIndex, xPosition, yPosition, position);
+            } else {
+                showErrorPopoverWithoutSuggestion(getCollectionHTMLErrorMessage(errorValue,
+                                                                                factMappingValue.getCollectionPathToValue()),
+                                                  xPosition,
+                                                  yPosition,
+                                                  position);
+            }
         } else if (FactMappingValueStatus.FAILED_WITH_EXCEPTION == factMappingValue.getStatus()) {
             showErrorPopoverWithoutSuggestion(factMappingValue.getExceptionMessage(), xPosition, yPosition, position);
         }
@@ -194,7 +196,7 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandler extends AbstractSce
     }
 
     protected String getCollectionHTMLErrorMessage(Object wrongValue, List<String> pathToWrongValue) {
-        if (pathToWrongValue == null || pathToWrongValue.isEmpty()) {
+        if (pathToWrongValue.isEmpty()) {
             return ScenarioSimulationEditorConstants.INSTANCE.errorPopoverGenericCollectionErrorMessage();
         }
         if (pathToWrongValue.size() == 1) {

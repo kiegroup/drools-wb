@@ -312,7 +312,7 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandlerTest extends Abstrac
     public void setupPopupPresenterWithScrollFailedWithError_WithPath() {
         when(elementMock.getScrollTop()).thenReturn(SCROLL_TOP);
         when(elementMock.getScrollLeft()).thenReturn(SCROLL_LEFT);
-        when(factMappingValueMock.getStatus()).thenReturn(FactMappingValueStatus.FAILED_WITH_ERROR_COLLECTION);
+        when(factMappingValueMock.getStatus()).thenReturn(FactMappingValueStatus.FAILED_WITH_ERROR);
         when(factMappingValueMock.getCollectionPathToValue()).thenReturn(Arrays.asList("field1"));
         mouseMoveHandler.setupPopupPresenter(factMappingValueMock, ROW_INDEX, COLUMN_INDEX, DX, DY, PopoverView.Position.RIGHT);
         String errorMessage = mouseMoveHandler.getCollectionHTMLErrorMessage(ERROR_VALUE, Arrays.asList("field1"));
