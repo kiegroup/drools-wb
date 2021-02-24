@@ -147,7 +147,7 @@ public class ScenarioSimulationMainGridPanelMouseMoveHandler extends AbstractSce
         if (FactMappingValueStatus.FAILED_WITH_ERROR == factMappingValue.getStatus()) {
             showErrorPopoverWithSuggestion(expectedValue, errorValue, uiRowIndex, uiColumnIndex, xPosition, yPosition, position);
         }
-        else if(FactMappingValueStatus.FAILED_WITH_ERROR_COLLECTION == factMappingValue.getStatus()) {
+        else if (FactMappingValueStatus.FAILED_WITH_ERROR_COLLECTION == factMappingValue.getStatus()) {
             showErrorPopoverWithoutSuggestion(getCollectionHTMLErrorMessage(errorValue,
                                                                             factMappingValue.getCollectionPathToValue()),
                                               xPosition,
