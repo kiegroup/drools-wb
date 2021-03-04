@@ -27,7 +27,7 @@ import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTabl
 import org.drools.workbench.services.verifier.plugin.client.AnalyzerUpdateTestBase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.drools.workbench.services.verifier.plugin.client.testutil.TestUtil.assertContains;
 import static org.drools.workbench.services.verifier.plugin.client.testutil.TestUtil.assertDoesNotContain;
