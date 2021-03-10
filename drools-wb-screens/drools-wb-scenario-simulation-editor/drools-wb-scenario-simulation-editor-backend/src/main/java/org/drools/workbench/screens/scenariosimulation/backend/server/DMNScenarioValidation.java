@@ -96,10 +96,10 @@ public class DMNScenarioValidation extends AbstractScenarioValidation {
     private FactMappingValidationError defineFieldChangedError(FactMapping factMapping, DMNType factType, DMNType fieldType) {
         String typeName = factMapping.getClassName();
         if (isConstraintAdded(typeName, fieldType)) {
-            return FactMappingValidationError.createAddedConstraintError(factMapping);
+            return FactMappingValidationError.createFieldAddedConstraintError(factMapping);
         }
         if (isConstraintRemoved(typeName, factType, fieldType)) {
-            return FactMappingValidationError.createRemovedConstraintError(factMapping);
+            return FactMappingValidationError.createFieldRemovedConstraintError(factMapping);
         }
         return createFieldChangedError(factMapping, fieldType.getName());
     }

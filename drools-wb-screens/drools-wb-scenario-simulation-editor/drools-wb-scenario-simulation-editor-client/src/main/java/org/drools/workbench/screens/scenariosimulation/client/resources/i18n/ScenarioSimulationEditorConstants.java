@@ -435,4 +435,12 @@ public interface ScenarioSimulationEditorConstants
     String createLabelMapDescription();
 
     String defineLabelMapDescription();
+
+    String dmnScenarioValidationNodeChangedError(String oldType, String newType);
+
+    String dmnScenarioValidationFieldChangedError(String oldType, String newType);
+
+    String dmnScenarioValidationFieldAddedConstraintError();
+
+    String dmnScenarioValidationFieldRemoveConstraintError();
 }
