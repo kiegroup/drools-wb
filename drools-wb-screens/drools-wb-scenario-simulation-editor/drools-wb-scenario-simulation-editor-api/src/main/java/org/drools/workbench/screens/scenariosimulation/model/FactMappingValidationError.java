@@ -38,6 +38,16 @@ public class FactMappingValidationError {
                                               "Node type has changed: old '" + factMapping.getFactIdentifier().getClassName() + "', current '" + newType + "'");
     }
 
+    public static FactMappingValidationError createAddedConstraintError(FactMapping factMapping) {
+        return new FactMappingValidationError(extractFactMappingId(factMapping),
+                                              "A constraint has been added for this type. This requires to redefine (remove and add) its related column");
+    }
+
+    public static FactMappingValidationError createRemovedConstraintError(FactMapping factMapping) {
+        return new FactMappingValidationError(extractFactMappingId(factMapping),
+                                              "A constraint has been removed for this type. This requires to redefine (remove and add) its related column");
+    }
+
     public static FactMappingValidationError createGenericError(FactMapping factMapping, String genericError) {
         return new FactMappingValidationError(extractFactMappingId(factMapping), genericError);
     }

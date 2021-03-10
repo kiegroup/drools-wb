@@ -69,9 +69,9 @@ public class DMNScenarioValidation extends AbstractScenarioValidation {
 
             String nodeName = factMapping.getFactIdentifier().getName();
 
-            DMNType rootDMNType;
+            DMNType factDMNType;
             try {
-                rootDMNType = dmnModel.getDecisionByName(nodeName) != null ?
+                factDMNType = dmnModel.getDecisionByName(nodeName) != null ?
                         dmnModel.getDecisionByName(nodeName).getResultType() :
                         dmnModel.getInputByName(nodeName).getType();
             } catch (NullPointerException e) {
@@ -82,10 +82,9 @@ public class DMNScenarioValidation extends AbstractScenarioValidation {
             List<String> steps = expressionElementToString(factMapping);
 
             try {
-                DMNType fieldType = navigateDMNType(rootDMNType, steps);
-
-                if (!isDMNFactMappingValid(factMapping.getClassName(), factMapping, fieldType)) {
-                    errors.add(createFieldChangedError(factMapping, fieldType.getName()));
+                DMNType fieldType = navigateDMNType(factDMNType, steps);
+                if (!isDMNFactMappingValid(factMapping, fieldType)) {
+                    errors.add(defineFieldChangedError(factMapping, factDMNType, fieldType));
                 }
             } catch (IllegalStateException e) {
                 errors.add(createGenericError(factMapping, e.getMessage()));
@@ -94,9 +93,21 @@ public class DMNScenarioValidation extends AbstractScenarioValidation {
         return errors;
     }
 
-    private boolean isDMNFactMappingValid(String typeName, FactMapping factMapping, DMNType dmnType) {
+    private FactMappingValidationError defineFieldChangedError(FactMapping factMapping, DMNType factType, DMNType fieldType) {
+        String typeName = factMapping.getClassName();
+        if (isConstraintAdded(typeName, fieldType)) {
+            return FactMappingValidationError.createAddedConstraintError(factMapping);
+        }
+        if (isConstraintRemoved(typeName, factType, fieldType)) {
+            return FactMappingValidationError.createRemovedConstraintError(factMapping);
+        }
+        return createFieldChangedError(factMapping, fieldType.getName());
+    }
+
+    private boolean isDMNFactMappingValid(FactMapping factMapping, DMNType dmnType) {
         // NOTE: Any/Undefined is a special case where collection is true
         Type rootType = getRootType((BaseDMNTypeImpl) dmnType);
+        String typeName = factMapping.getClassName();
         boolean isCoherent = UNKNOWN.equals(rootType) || ScenarioSimulationSharedUtils.isList(typeName) ==
                 dmnType.isCollection();
         if (!isCoherent) {
@@ -107,6 +118,22 @@ public class DMNScenarioValidation extends AbstractScenarioValidation {
                 typeName;
 
         return Objects.equals(factMappingType, dmnType.getName());
+    }
+
+    private boolean isConstraintAdded(String typeName, DMNType dmnType) {
+        if (Objects.isNull(dmnType.getBaseType())) {
+            return false;
+        }
+        Type baseType = getRootType((BaseDMNTypeImpl) dmnType.getBaseType());
+        return Objects.equals(typeName, baseType.getName());
+    }
+
+    private boolean isConstraintRemoved(String typeName, DMNType factType, DMNType fieldType) {
+        if (Objects.isNull(fieldType.getBaseType()) && factType.getFields().containsKey(typeName)) {
+            DMNType typeNameDMNType = factType.getFields().get(typeName);
+            return Objects.equals(fieldType.getNamespace(), typeNameDMNType.getNamespace());
+        }
+        return false;
     }
 
     protected DMNModel getDMNModel(KieContainer kieContainer, String dmnPath) {
