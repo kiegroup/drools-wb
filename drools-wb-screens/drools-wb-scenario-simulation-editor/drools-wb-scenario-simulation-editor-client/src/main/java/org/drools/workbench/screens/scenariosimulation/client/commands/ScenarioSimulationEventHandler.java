@@ -409,7 +409,7 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
             commonExecution(new SetPropertyHeaderCommand(event.getGridWidget(), event.getFactMappingValueType()), true);
         } else if (context.getAbstractScesimGridModelByGridWidget(event.getGridWidget()).isSameSelectedColumnProperty(event.getPropertyNameElements())) {
             return;
-        } else if (context.getAbstractScesimGridModelByGridWidget(event.getGridWidget()).isSameSelectedColumnType(event.getValueClassName())) {
+        } else {
             org.uberfire.mvp.Command okDeleteCommand = () -> {
                 context.getStatus().setKeepData(false);
                 commonExecution(new SetPropertyHeaderCommand(event.getGridWidget(), event.getFactMappingValueType()), true);
@@ -428,18 +428,6 @@ public class ScenarioSimulationEventHandler implements AppendColumnEventHandler,
                                               ScenarioSimulationEditorConstants.INSTANCE.deleteValues(),
                                               okPreserveCommand,
                                               okDeleteCommand);
-        } else if (!context.getAbstractScesimGridModelByGridWidget(event.getGridWidget()).isSameSelectedColumnType(event.getValueClassName())) {
-            org.uberfire.mvp.Command okPreserveCommand = () -> {
-                context.getStatus().setKeepData(false);
-                commonExecution(new SetPropertyHeaderCommand(event.getGridWidget(), event.getFactMappingValueType()), true);
-            };
-            deletePopupPresenter.show(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioMainTitle(),
-                                      ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioMainQuestion(),
-                                      ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioText1(),
-                                      ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioTextQuestion(),
-                                      ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioTextDanger(),
-                                      ScenarioSimulationEditorConstants.INSTANCE.deleteValues(),
-                                      okPreserveCommand);
         }
     }
 
