@@ -104,12 +104,12 @@ import static org.drools.workbench.screens.scenariosimulation.client.TestPropert
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.ROW_INDEX;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.VALUE_CLASS_NAME;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyListOf;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -239,7 +239,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
     @Test
     public void unregisterHandlers() {
         scenarioSimulationEventHandler.unregisterHandlers();
-        verify(handlerRegistrationListMock, times(1)).forEach(anyObject());
+        verify(handlerRegistrationListMock, times(1)).forEach(any());
     }
 
     @Test
@@ -304,7 +304,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         ImportEvent event = new ImportEvent(GridWidget.SIMULATION);
         scenarioSimulationEventHandler.onEvent(event);
         verify(fileUploadPopupPresenterMock, times(1))
-                .show(anyListOf(String.class),
+                .show(anyList(),
                       eq(ScenarioSimulationEditorConstants.INSTANCE.selectImportFile()),
                       eq(ScenarioSimulationEditorConstants.INSTANCE.uploadWarning()),
                       eq(ScenarioSimulationEditorConstants.INSTANCE.importLabel()),
@@ -448,11 +448,12 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         //
         reset(scenarioSimulationEventHandler);
         when(scenarioGridModelMock.isSelectedColumnEmpty()).thenReturn(false);
-        when(scenarioGridModelMock.isSameSelectedColumnProperty(anyListOf(String.class))).thenReturn(true);
+        when(scenarioGridModelMock.isSameSelectedColumnProperty(anyList())).thenReturn(true);
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler, never()).commonExecution(isA(SetPropertyHeaderCommand.class), anyBoolean());
         //
-        when(scenarioGridModelMock.isSameSelectedColumnProperty(anyListOf(String.class))).thenReturn(false);
+        reset(scenarioSimulationEventHandler);
+        when(scenarioGridModelMock.isSameSelectedColumnProperty(anyList())).thenReturn(false);
         when(scenarioGridModelMock.isSameSelectedColumnType(anyString())).thenReturn(true);
         scenarioSimulationEventHandler.onEvent(event);
         verify(preserveDeletePopupPresenterMock, times(1))
@@ -468,15 +469,19 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
                       isA(org.uberfire.mvp.Command.class));
         verify(scenarioSimulationEventHandler, never()).commonExecution(isA(SetPropertyHeaderCommand.class), anyBoolean());
         //
+        reset(scenarioSimulationEventHandler, preserveDeletePopupPresenterMock);
         when(scenarioGridModelMock.isSameSelectedColumnType(anyString())).thenReturn(false);
         scenarioSimulationEventHandler.onEvent(event);
-        verify(deletePopupPresenterMock, times(1))
-                .show(eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioMainTitle()),
-                      eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioMainQuestion()),
-                      eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioText1()),
-                      eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioTextQuestion()),
-                      eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioTextDanger()),
+        verify(preserveDeletePopupPresenterMock, times(1))
+                .show(eq(ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioMainTitle()),
+                      eq(ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioMainQuestion()),
+                      eq(ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioText1()),
+                      eq(ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioTextQuestion()),
+                      eq(ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioTextOption1()),
+                      eq(ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioTextOption2()),
+                      eq(ScenarioSimulationEditorConstants.INSTANCE.preserveValues()),
                       eq(ScenarioSimulationEditorConstants.INSTANCE.deleteValues()),
+                      isA(org.uberfire.mvp.Command.class),
                       isA(org.uberfire.mvp.Command.class));
         verify(scenarioSimulationEventHandler, never()).commonExecution(isA(SetPropertyHeaderCommand.class), anyBoolean());
     }
