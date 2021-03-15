@@ -32,26 +32,26 @@ public class FactMappingValidationError {
 
     public static FactMappingValidationError createFieldChangedError(FactMapping factMapping, String newType) {
         return new FactMappingValidationError(extractFactMappingId(factMapping),
-                                              ScenarioSimulationI18nServerMessage.DMN_SCENARIO_VALIDATION_FIELD_CHANGED_ERROR,
+                                              ScenarioSimulationI18nServerMessage.SCENARIO_VALIDATION_FIELD_CHANGED_ERROR,
                                               factMapping.getClassName(),
                                               newType);
     }
 
     public static FactMappingValidationError createNodeChangedError(FactMapping factMapping, String newType) {
         return new FactMappingValidationError(extractFactMappingId(factMapping),
-                                              ScenarioSimulationI18nServerMessage.DMN_SCENARIO_VALIDATION_NODE_CHANGED_ERROR,
+                                              ScenarioSimulationI18nServerMessage.SCENARIO_VALIDATION_NODE_CHANGED_ERROR,
                                               factMapping.getFactIdentifier().getClassName(),
                                               newType);
     }
 
     public static FactMappingValidationError createFieldAddedConstraintError(FactMapping factMapping) {
         return new FactMappingValidationError(extractFactMappingId(factMapping),
-                                              ScenarioSimulationI18nServerMessage.DMN_SCENARIO_VALIDATION_FIELD_ADDED_CONSTRAINT_ERROR);
+                                              ScenarioSimulationI18nServerMessage.SCENARIO_VALIDATION_FIELD_ADDED_CONSTRAINT_ERROR);
     }
 
     public static FactMappingValidationError createFieldRemovedConstraintError(FactMapping factMapping) {
         return new FactMappingValidationError(extractFactMappingId(factMapping),
-                                              ScenarioSimulationI18nServerMessage.DMN_SCENARIO_VALIDATION_FIELD_REMOVED_CONSTRAINT_ERROR);
+                                              ScenarioSimulationI18nServerMessage.SCENARIO_VALIDATION_FIELD_REMOVED_CONSTRAINT_ERROR);
     }
 
     public static FactMappingValidationError createGenericError(FactMapping factMapping, String genericError) {

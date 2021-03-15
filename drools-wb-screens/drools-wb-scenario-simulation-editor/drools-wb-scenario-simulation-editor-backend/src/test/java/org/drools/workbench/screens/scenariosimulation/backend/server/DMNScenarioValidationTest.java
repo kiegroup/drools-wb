@@ -44,15 +44,13 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.drools.scenariosimulation.api.utils.ConstantsHolder.VALUE;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class DMNScenarioValidationTest {
+public class DMNScenarioValidationTest extends AbstractScenarioValidationTest {
 
     @Mock
     private DMNModel dmnModelMock;
@@ -144,7 +142,7 @@ public class DMNScenarioValidationTest {
         errorsTest2 = validationSpy.validate(test2, settingsLocal, null);
         checkResult(errorsTest2,
                     new ExpectedError("Impossible to find field 'notExisting' in type 'tPARENT'"),
-                    new ExpectedError(ScenarioSimulationI18nServerMessage.DMN_SCENARIO_VALIDATION_FIELD_CHANGED_ERROR, Arrays.asList("java.lang.Integer", "tNAME")));
+                    new ExpectedError(ScenarioSimulationI18nServerMessage.SCENARIO_VALIDATION_FIELD_CHANGED_ERROR, Arrays.asList("java.lang.Integer", "tNAME")));
 
         // Test 3 - list
         Simulation test3 = new Simulation();
@@ -181,21 +179,7 @@ public class DMNScenarioValidationTest {
 
         when(dmnModelMock.getDecisionByName(anyString())).thenReturn(null);
         List<FactMappingValidationError> errorsTest4 = validationSpy.validate(test4, settingsLocal, null);
-        checkResult(errorsTest4, new ExpectedError(ScenarioSimulationI18nServerMessage.DMN_SCENARIO_VALIDATION_NODE_CHANGED_ERROR, Arrays.asList("tMYSIMPLETYPE", "node not found")));
-    }
-
-    private void checkResult(List<FactMappingValidationError> validationErrors, ExpectedError... expectedErrors) {
-        if (expectedErrors.length == 0) {
-            assertEquals(0, validationErrors.size());
-        }
-
-        for (ExpectedError expectedError : expectedErrors) {
-            if (expectedError.getErrorMessage() != null) {
-                assertTrue(validationErrors.stream().anyMatch(validationError -> Objects.equals(expectedError.getErrorMessage(), validationError.getErrorMessage())));
-            } else {
-                assertTrue(validationErrors.stream().anyMatch(validationError -> checkValidationErrorWithExpected(validationError, expectedError)));
-            }
-        }
+        checkResult(errorsTest4, new ExpectedError(ScenarioSimulationI18nServerMessage.SCENARIO_VALIDATION_NODE_CHANGED_ERROR, Arrays.asList("tMYSIMPLETYPE", "node not found")));
     }
 
     private void createDMNType(String decisionName, String rootType, String... steps) {
@@ -243,58 +227,6 @@ public class DMNScenarioValidationTest {
 
     private String createDMNTypeName(String name) {
         return "t" + name.toUpperCase();
-    }
-
-    private boolean checkValidationErrorWithExpected(FactMappingValidationError validationError, ExpectedError expectedError) {
-        if (validationError.getErrorMessage() != null) {
-            return false;
-        }
-
-        boolean isSameServerMessage = validationError.getServerMessage().equals(expectedError.getServerMessage());
-        boolean parametersSameLength = validationError.getParameters().length == expectedError.getParameters().size();
-
-        if (isSameServerMessage && parametersSameLength) {
-            if (expectedError.getParameters().isEmpty()) {
-                return true;
-            }
-
-            for (int i = 0; i < validationError.getParameters().length; i++) {
-                if (!Objects.equals(validationError.getParameters()[i], expectedError.getParameters().get(i))) {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        return false;
-    }
-
-    private static class ExpectedError {
-        private String errorMessage;
-        private ScenarioSimulationI18nServerMessage serverMessage;
-        private List<String> parameters;
-
-        public ExpectedError(String errorMessage) {
-            this.errorMessage = errorMessage;
-        }
-
-        public ExpectedError(ScenarioSimulationI18nServerMessage serverMessage, List<String> parameters) {
-            this.serverMessage = serverMessage;
-            this.parameters = parameters;
-        }
-
-        public String getErrorMessage() {
-            return errorMessage;
-        }
-
-        public ScenarioSimulationI18nServerMessage getServerMessage() {
-            return serverMessage;
-        }
-
-        public List<String> getParameters() {
-            return parameters;
-        }
     }
 
 }

@@ -22,16 +22,16 @@ public class ScenarioSimulationEditorI18nServerManager {
 
     public static String retrieveMessage(FactMappingValidationError error) {
         switch (error.getServerMessage()) {
-            case DMN_SCENARIO_VALIDATION_NODE_CHANGED_ERROR:
-                return ScenarioSimulationEditorConstants.INSTANCE.dmnScenarioValidationNodeChangedError(error.getParameters()[0],
-                                                                                                        error.getParameters()[1]);
-            case DMN_SCENARIO_VALIDATION_FIELD_CHANGED_ERROR:
-                return ScenarioSimulationEditorConstants.INSTANCE.dmnScenarioValidationFieldChangedError(error.getParameters()[0],
-                                                                                                         error.getParameters()[1]);
-            case DMN_SCENARIO_VALIDATION_FIELD_ADDED_CONSTRAINT_ERROR:
-                return ScenarioSimulationEditorConstants.INSTANCE.dmnScenarioValidationFieldAddedConstraintError();
-            case DMN_SCENARIO_VALIDATION_FIELD_REMOVED_CONSTRAINT_ERROR:
-                return ScenarioSimulationEditorConstants.INSTANCE.dmnScenarioValidationFieldRemoveConstraintError();
+            case SCENARIO_VALIDATION_NODE_CHANGED_ERROR:
+                return ScenarioSimulationEditorConstants.INSTANCE.scenarioValidationNodeChangedError(error.getParameters()[0],
+                                                                                                     error.getParameters()[1]);
+            case SCENARIO_VALIDATION_FIELD_CHANGED_ERROR:
+                return ScenarioSimulationEditorConstants.INSTANCE.scenarioValidationFieldChangedError(error.getParameters()[0],
+                                                                                                      error.getParameters()[1]);
+            case SCENARIO_VALIDATION_FIELD_ADDED_CONSTRAINT_ERROR:
+                return ScenarioSimulationEditorConstants.INSTANCE.scenarioValidationFieldAddedConstraintError();
+            case SCENARIO_VALIDATION_FIELD_REMOVED_CONSTRAINT_ERROR:
+                return ScenarioSimulationEditorConstants.INSTANCE.scenarioValidationFieldRemoveConstraintError();
             default:
                 throw new IllegalStateException();
         }
