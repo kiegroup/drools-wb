@@ -40,6 +40,8 @@ import org.kie.dmn.api.core.DMNModel;
 import org.kie.dmn.api.core.DMNType;
 import org.kie.dmn.api.core.ast.DecisionNode;
 import org.kie.dmn.core.impl.BaseDMNTypeImpl;
+import org.kie.dmn.feel.lang.types.BuiltInType;
+import org.kie.dmn.feel.runtime.UnaryTestImpl;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
@@ -144,6 +146,24 @@ public class DMNScenarioValidationTest extends AbstractScenarioValidationTest {
                     new ExpectedError("Impossible to find field 'notExisting' in type 'tPARENT'"),
                     new ExpectedError(ScenarioSimulationI18nServerMessage.SCENARIO_VALIDATION_FIELD_CHANGED_ERROR, Arrays.asList("java.lang.Integer", "tNAME")));
 
+        // color parameter - Constraint added for its type (string to tColor with allowed values)
+        FactMapping colorsAddedConstraintFM = test2.getScesimModelDescriptor().addFactMapping(
+                myComplexFactIdentifier,
+                ExpressionIdentifier.create("parent3", FactMappingType.GIVEN));
+        colorsAddedConstraintFM.addExpressionElement("tMYCOMPLEXTYPE", "tMYCOMPLEXTYPE");
+        colorsAddedConstraintFM.addExpressionElement("color", BuiltInType.STRING.getName());
+
+        createDMNType("myComplexType", "myComplexType", "color");
+        DMNType baseDMNType = initDMNType(BuiltInType.STRING);
+        when(mapOfMockDecisions.get("myComplexType").getResultType().getFields().get("color").getAllowedValues()).thenReturn(Arrays.asList(new UnaryTestImpl(null, "Value")));
+        when(mapOfMockDecisions.get("myComplexType").getResultType().getFields().get("color").getBaseType()).thenReturn(baseDMNType);
+
+        errorsTest2 = validationSpy.validate(test2, settingsLocal, null);
+        checkResult(errorsTest2,
+                    new ExpectedError("Impossible to find field 'notExisting' in type 'tPARENT'"),
+                    new ExpectedError(ScenarioSimulationI18nServerMessage.SCENARIO_VALIDATION_FIELD_CHANGED_ERROR, Arrays.asList("java.lang.Integer", "tNAME")),
+                    new ExpectedError(ScenarioSimulationI18nServerMessage.SCENARIO_VALIDATION_FIELD_ADDED_CONSTRAINT_ERROR, Collections.emptyList()));
+
         // Test 3 - list
         Simulation test3 = new Simulation();
         // topLevelListFM is valid
@@ -180,18 +200,6 @@ public class DMNScenarioValidationTest extends AbstractScenarioValidationTest {
         when(dmnModelMock.getDecisionByName(anyString())).thenReturn(null);
         List<FactMappingValidationError> errorsTest4 = validationSpy.validate(test4, settingsLocal, null);
         checkResult(errorsTest4, new ExpectedError(ScenarioSimulationI18nServerMessage.SCENARIO_VALIDATION_NODE_CHANGED_ERROR, Arrays.asList("tMYSIMPLETYPE", "node not found")));
-
-        // Test 5 - not existing node
-        Simulation test5 = new Simulation();
-        FactMapping factMappingNodeDMNConstraintAdded = test5.getScesimModelDescriptor().addFactMapping(
-                FactIdentifier.create("mySimpleTypeCA", "tMYSIMPLETYPECA"),
-                ExpressionIdentifier.create(VALUE, FactMappingType.GIVEN));
-        factMappingNodeDMNConstraintAdded.addExpressionElement("tMYSIMPLETYPECA", "tMYSIMPLETYPECA");
-        createDMNType("mySimpleTypeCA", "mySimpleTypeCA");
-
-        //when(dmnModelMock.getDecisionByName("mySimpleTypeCA").getResultType().getBaseType()).thenReturn(null);
-        List<FactMappingValidationError> errorsTest5 = validationSpy.validate(test5, settingsLocal, null);
-        checkResult(errorsTest5, new ExpectedError(ScenarioSimulationI18nServerMessage.SCENARIO_VALIDATION_FIELD_ADDED_CONSTRAINT_ERROR, Arrays.asList("tMYSIMPLETYPECA")));
     }
 
     private void createDMNType(String decisionName, String rootType, String... steps) {
@@ -234,6 +242,14 @@ public class DMNScenarioValidationTest extends AbstractScenarioValidationTest {
         when(dmnTypeMock.getFields()).thenReturn(new HashMap<>());
         String type = createDMNTypeName(name);
         when(dmnTypeMock.getName()).thenReturn(type);
+        return dmnTypeMock;
+    }
+
+    private DMNType initDMNType(BuiltInType type) {
+        BaseDMNTypeImpl dmnTypeMock = mock(BaseDMNTypeImpl.class);
+        when(dmnTypeMock.getFields()).thenReturn(new HashMap<>());
+        when(dmnTypeMock.getName()).thenReturn(type.getName());
+        when(dmnTypeMock.getFeelType()).thenReturn(type);
         return dmnTypeMock;
     }
 
