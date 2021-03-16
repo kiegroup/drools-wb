@@ -442,5 +442,5 @@ public interface ScenarioSimulationEditorConstants
 
     String scenarioValidationFieldAddedConstraintError();
 
-    String scenarioValidationFieldRemoveConstraintError();
+    String scenarioValidationFieldRemovedConstraintError();
 }

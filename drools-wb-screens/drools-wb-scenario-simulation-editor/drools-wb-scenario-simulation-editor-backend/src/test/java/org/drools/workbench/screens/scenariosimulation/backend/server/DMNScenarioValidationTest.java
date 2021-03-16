@@ -180,6 +180,18 @@ public class DMNScenarioValidationTest extends AbstractScenarioValidationTest {
         when(dmnModelMock.getDecisionByName(anyString())).thenReturn(null);
         List<FactMappingValidationError> errorsTest4 = validationSpy.validate(test4, settingsLocal, null);
         checkResult(errorsTest4, new ExpectedError(ScenarioSimulationI18nServerMessage.SCENARIO_VALIDATION_NODE_CHANGED_ERROR, Arrays.asList("tMYSIMPLETYPE", "node not found")));
+
+        // Test 5 - not existing node
+        Simulation test5 = new Simulation();
+        FactMapping factMappingNodeDMNConstraintAdded = test5.getScesimModelDescriptor().addFactMapping(
+                FactIdentifier.create("mySimpleTypeCA", "tMYSIMPLETYPECA"),
+                ExpressionIdentifier.create(VALUE, FactMappingType.GIVEN));
+        factMappingNodeDMNConstraintAdded.addExpressionElement("tMYSIMPLETYPECA", "tMYSIMPLETYPECA");
+        createDMNType("mySimpleTypeCA", "mySimpleTypeCA");
+
+        //when(dmnModelMock.getDecisionByName("mySimpleTypeCA").getResultType().getBaseType()).thenReturn(null);
+        List<FactMappingValidationError> errorsTest5 = validationSpy.validate(test5, settingsLocal, null);
+        checkResult(errorsTest5, new ExpectedError(ScenarioSimulationI18nServerMessage.SCENARIO_VALIDATION_FIELD_ADDED_CONSTRAINT_ERROR, Arrays.asList("tMYSIMPLETYPECA")));
     }
 
     private void createDMNType(String decisionName, String rootType, String... steps) {
@@ -228,5 +240,4 @@ public class DMNScenarioValidationTest extends AbstractScenarioValidationTest {
     private String createDMNTypeName(String name) {
         return "t" + name.toUpperCase();
     }
-
 }

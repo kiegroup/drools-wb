@@ -91,5 +91,4 @@ public abstract class AbstractScenarioValidationTest {
             return parameters;
         }
     }
-    
 }

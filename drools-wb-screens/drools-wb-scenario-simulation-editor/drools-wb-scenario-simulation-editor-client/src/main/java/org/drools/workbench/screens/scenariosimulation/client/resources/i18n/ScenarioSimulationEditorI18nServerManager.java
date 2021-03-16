@@ -20,6 +20,10 @@ import org.drools.workbench.screens.scenariosimulation.model.FactMappingValidati
 
 public class ScenarioSimulationEditorI18nServerManager {
 
+    private ScenarioSimulationEditorI18nServerManager() {
+        // Util Class
+    }
+
     public static String retrieveMessage(FactMappingValidationError error) {
         switch (error.getServerMessage()) {
             case SCENARIO_VALIDATION_NODE_CHANGED_ERROR:
@@ -31,9 +35,9 @@ public class ScenarioSimulationEditorI18nServerManager {
             case SCENARIO_VALIDATION_FIELD_ADDED_CONSTRAINT_ERROR:
                 return ScenarioSimulationEditorConstants.INSTANCE.scenarioValidationFieldAddedConstraintError();
             case SCENARIO_VALIDATION_FIELD_REMOVED_CONSTRAINT_ERROR:
-                return ScenarioSimulationEditorConstants.INSTANCE.scenarioValidationFieldRemoveConstraintError();
+                return ScenarioSimulationEditorConstants.INSTANCE.scenarioValidationFieldRemovedConstraintError();
             default:
-                throw new IllegalStateException();
+                throw new IllegalArgumentException();
         }
     }
 }
