@@ -71,11 +71,9 @@ public class ScenarioSimulationEditorI18nServerManagerTest {
     @Test
     public void retrieveMessageFieldChangedError() {
         String newType = "newType";
-        String type = "type";
-        factMapping.addExpressionElement("step", type);
         FactMappingValidationError error = FactMappingValidationError.createFieldChangedError(factMapping, newType);
         String message = ScenarioSimulationEditorI18nServerManager.retrieveMessage(error);
-        String expected = ScenarioSimulationEditorConstants.INSTANCE.scenarioValidationFieldChangedError(type, newType);
+        String expected = ScenarioSimulationEditorConstants.INSTANCE.scenarioValidationFieldChangedError("tMYTYPE", newType);
         assertEquals(expected, message);
     }
 
