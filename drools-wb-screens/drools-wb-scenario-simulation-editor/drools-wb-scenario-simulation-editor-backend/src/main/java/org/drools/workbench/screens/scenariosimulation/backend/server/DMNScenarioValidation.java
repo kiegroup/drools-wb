@@ -29,6 +29,7 @@ import org.kie.dmn.api.core.DMNModel;
 import org.kie.dmn.api.core.DMNType;
 import org.kie.dmn.core.impl.BaseDMNTypeImpl;
 import org.kie.dmn.feel.lang.Type;
+import org.kie.dmn.feel.lang.types.BuiltInType;
 
 import static org.drools.scenariosimulation.backend.util.DMNSimulationUtils.extractDMNModel;
 import static org.drools.scenariosimulation.backend.util.DMNSimulationUtils.extractDMNRuntime;
@@ -120,16 +121,43 @@ public class DMNScenarioValidation extends AbstractScenarioValidation {
         return Objects.equals(factMappingType, dmnType.getName());
     }
 
-    private boolean isConstraintAdded(String typeName, DMNType dmnType) {
-        if (Objects.isNull(dmnType.getBaseType())) {
-            return false;
+    /**
+     * To define if a constraint (allowed values) were added in a DMNType fieldType given a typeName, the following conditions
+     * are requires:
+     * - typeName MUST BE a BuiltInType (eg. STRING, NUMERIC ..)
+     * - DMNType fieldType MUST have at least one defined Allowed Values
+     * - DMNType fieldType MUST have a Base Type. It's name MUST be equals to given typeName.
+     * @param typeName TypeName present in the scesim file
+     * @param fieldType DMNType of field under analysis
+     * @return
+     */
+    private boolean isConstraintAdded(String typeName, DMNType fieldType) {
+        boolean isTypeNameBuiltInType = !Objects.equals(UNKNOWN, BuiltInType.determineTypeFromName(typeName));
+        boolean hasFieldTypeAllowedValues = fieldType.getAllowedValues() != null && !fieldType.getAllowedValues().isEmpty();
+        boolean hasFieldTypeBaseType = Objects.nonNull(fieldType.getBaseType());
+        if (isTypeNameBuiltInType && hasFieldTypeBaseType && hasFieldTypeAllowedValues) {
+            Type baseType = getRootType((BaseDMNTypeImpl) fieldType.getBaseType());
+            return Objects.equals(typeName, baseType.getName());
         }
-        Type baseType = getRootType((BaseDMNTypeImpl) dmnType.getBaseType());
-        return Objects.equals(typeName, baseType.getName());
+        return false;
     }
 
+    /**
+     * To define if a constraint (allowed values) were removed in a DMNType fieldType given a typeName, the following conditions
+     * are requires:
+     * - DMNType fieldType MUST DON'T have Allowed Values defined
+     * - DMNType fieldType MUST DON'T have a Base Type.
+     * - typeName MUST BE a DMNType factType's field. The field's DMNType MUST BE the same of given fieldType DMNType
+     * @param typeName
+     * @param factType Fact DMNType
+     * @param fieldType Field DMNType
+     * @return
+     */
     private boolean isConstraintRemoved(String typeName, DMNType factType, DMNType fieldType) {
-        if (Objects.isNull(fieldType.getBaseType()) && factType.getFields().containsKey(typeName)) {
+        boolean hasFieldTypeAllowedValues = fieldType.getAllowedValues() != null && !fieldType.getAllowedValues().isEmpty();
+        boolean hasFieldTypeBaseType = Objects.nonNull(fieldType.getBaseType());
+        boolean isTypeNameFactTypeField = factType.getFields().containsKey(typeName);
+        if (!hasFieldTypeBaseType && !hasFieldTypeAllowedValues && isTypeNameFactTypeField) {
             DMNType typeNameDMNType = factType.getFields().get(typeName);
             return Objects.equals(fieldType.getNamespace(), typeNameDMNType.getNamespace());
         }

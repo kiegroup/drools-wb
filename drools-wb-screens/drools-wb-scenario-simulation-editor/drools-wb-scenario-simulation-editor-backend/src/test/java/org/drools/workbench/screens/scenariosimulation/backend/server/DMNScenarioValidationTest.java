@@ -164,6 +164,22 @@ public class DMNScenarioValidationTest extends AbstractScenarioValidationTest {
                     new ExpectedError(ScenarioSimulationI18nServerMessage.SCENARIO_VALIDATION_FIELD_CHANGED_ERROR, Arrays.asList("java.lang.Integer", "tNAME")),
                     new ExpectedError(ScenarioSimulationI18nServerMessage.SCENARIO_VALIDATION_FIELD_ADDED_CONSTRAINT_ERROR, Collections.emptyList()));
 
+        // age parameter - Constraint removed for its type (tAge to numeric without allowed values)
+        FactMapping ageConstraintFM = test2.getScesimModelDescriptor().addFactMapping(
+                myComplexFactIdentifier,
+                ExpressionIdentifier.create("parent4", FactMappingType.GIVEN));
+        ageConstraintFM.addExpressionElement("tMYCOMPLEXTYPE", "tMYCOMPLEXTYPE");
+        ageConstraintFM.addExpressionElement("age", "age");
+
+        createDMNType("myComplexType", "myComplexType", "age");
+
+        errorsTest2 = validationSpy.validate(test2, settingsLocal, null);
+        checkResult(errorsTest2,
+                    new ExpectedError("Impossible to find field 'notExisting' in type 'tPARENT'"),
+                    new ExpectedError(ScenarioSimulationI18nServerMessage.SCENARIO_VALIDATION_FIELD_CHANGED_ERROR, Arrays.asList("java.lang.Integer", "tNAME")),
+                    new ExpectedError(ScenarioSimulationI18nServerMessage.SCENARIO_VALIDATION_FIELD_ADDED_CONSTRAINT_ERROR, Collections.emptyList()),
+                    new ExpectedError(ScenarioSimulationI18nServerMessage.SCENARIO_VALIDATION_FIELD_REMOVED_CONSTRAINT_ERROR, Collections.emptyList()));
+
         // Test 3 - list
         Simulation test3 = new Simulation();
         // topLevelListFM is valid
@@ -247,8 +263,6 @@ public class DMNScenarioValidationTest extends AbstractScenarioValidationTest {
 
     private DMNType initDMNType(BuiltInType type) {
         BaseDMNTypeImpl dmnTypeMock = mock(BaseDMNTypeImpl.class);
-        when(dmnTypeMock.getFields()).thenReturn(new HashMap<>());
-        when(dmnTypeMock.getName()).thenReturn(type.getName());
         when(dmnTypeMock.getFeelType()).thenReturn(type);
         return dmnTypeMock;
     }
