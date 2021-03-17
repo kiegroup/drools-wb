@@ -469,19 +469,15 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
                       isA(org.uberfire.mvp.Command.class));
         verify(scenarioSimulationEventHandler, never()).commonExecution(isA(SetPropertyHeaderCommand.class), anyBoolean());
         //
-        reset(scenarioSimulationEventHandler, preserveDeletePopupPresenterMock);
         when(scenarioGridModelMock.isSameSelectedColumnType(anyString())).thenReturn(false);
         scenarioSimulationEventHandler.onEvent(event);
-        verify(preserveDeletePopupPresenterMock, times(1))
-                .show(eq(ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioMainTitle()),
-                      eq(ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioMainQuestion()),
-                      eq(ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioText1()),
-                      eq(ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioTextQuestion()),
-                      eq(ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioTextOption1()),
-                      eq(ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioTextOption2()),
-                      eq(ScenarioSimulationEditorConstants.INSTANCE.preserveValues()),
+        verify(deletePopupPresenterMock, times(1))
+                .show(eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioMainTitle()),
+                      eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioMainQuestion()),
+                      eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioText1()),
+                      eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioTextQuestion()),
+                      eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioTextDanger()),
                       eq(ScenarioSimulationEditorConstants.INSTANCE.deleteValues()),
-                      isA(org.uberfire.mvp.Command.class),
                       isA(org.uberfire.mvp.Command.class));
         verify(scenarioSimulationEventHandler, never()).commonExecution(isA(SetPropertyHeaderCommand.class), anyBoolean());
     }
