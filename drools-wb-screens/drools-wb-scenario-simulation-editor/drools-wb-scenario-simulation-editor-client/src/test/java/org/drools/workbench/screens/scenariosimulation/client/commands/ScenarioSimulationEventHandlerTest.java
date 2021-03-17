@@ -110,6 +110,7 @@ import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -444,7 +445,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         when(scenarioGridModelMock.isSelectedColumnEmpty()).thenReturn(true);
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler, never()).onEvent(isA(ScenarioNotificationEvent.class));
-        verify(scenarioSimulationEventHandler).commonExecution(isA(SetPropertyHeaderCommand.class), eq(true));
+        verify(scenarioSimulationEventHandler, never()).commonExecution(isA(SetPropertyHeaderCommand.class), anyBoolean());
         //
         reset(scenarioSimulationEventHandler);
         when(scenarioGridModelMock.isSelectedColumnEmpty()).thenReturn(false);
@@ -476,7 +477,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
                       eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioMainQuestion()),
                       eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioText1()),
                       eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioTextQuestion()),
-                      eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioTextDanger()),
+                      isNull(),
                       eq(ScenarioSimulationEditorConstants.INSTANCE.deleteValues()),
                       isA(org.uberfire.mvp.Command.class));
         verify(scenarioSimulationEventHandler, never()).commonExecution(isA(SetPropertyHeaderCommand.class), anyBoolean());
