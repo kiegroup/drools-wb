@@ -58,7 +58,7 @@ public class FactModelTree {
     private Type type;
 
     /**
-     * Static factory method to be used in DMO context. type is not managed. Managing factName and typeName.
+     * Static factory method to be used in DMO (Rule) context.
      * @param factName
      * @param fullPackage
      * @param simpleProperties
@@ -67,11 +67,14 @@ public class FactModelTree {
      * @return
      */
     public static FactModelTree ofDMO(String factName, String fullPackage, Map<String, PropertyTypeName> simpleProperties, Map<String, List<String>> genericTypesMap, String typeName) {
-        return new FactModelTree(factName, fullPackage, simpleProperties, genericTypesMap, Type.UNDEFINED, typeName);
+        if (typeName == null || factName.equals(typeName)) {
+            return new FactModelTree(factName, fullPackage, simpleProperties, genericTypesMap);
+        }
+        return new FactModelTree(factName, fullPackage, simpleProperties, genericTypesMap, typeName);
     }
 
     /**
-     * Static factory method to be used in DMO context. type is not managed. Managing factName and typeName.
+     * Static factory method to be used in DMO (Rule) context, to create a Simple Type FactModelTree.
      * @param factName
      * @param fullPackage
      * @param simplePropertyFullClass
@@ -86,14 +89,26 @@ public class FactModelTree {
         return toReturn;
     }
 
+    /**
+     * Static factory method to be used in DMN context.
+     * @param factName
+     * @param simpleProperties
+     * @param genericTypesMap
+     * @param typeName
+     * @param type
+     * @return
+     */
     public static FactModelTree ofDMN(String factName, Map<String, PropertyTypeName> simpleProperties, Map<String, List<String>> genericTypesMap, String typeName, Type type) {
         return new FactModelTree(factName, "", simpleProperties, genericTypesMap, type, typeName);
     }
 
     /**
-     * Static factory method to be used in DMO context. type is not managed. Managing factName and typeName.
+     * Static factory method to be used in DMN context, to create a Simple Type FactModelTree.
      * @param factName
+     * @param simplePropertyType
+     * @param genericTypeInfoMap
      * @param typeName
+     * @param type
      * @return
      */
     public static FactModelTree ofSimpleDMN(String factName, String simplePropertyType, Map<String, List<String>> genericTypeInfoMap, String typeName, Type type) {
