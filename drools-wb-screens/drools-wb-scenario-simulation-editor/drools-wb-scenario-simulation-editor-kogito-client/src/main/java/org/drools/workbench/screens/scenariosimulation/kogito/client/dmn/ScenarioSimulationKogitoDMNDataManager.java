@@ -67,8 +67,8 @@ public class ScenarioSimulationKogitoDMNDataManager {
                 JSITDecision jsitDecision = Js.uncheckedCast(jsitdrgElement);
                 final JSITInformationItem jsitDecisionVariable = jsitDecision.getVariable();
                 ClientDMNType type = getDMNTypeFromMaps(dmnTypesMap, getOtherAttributesMap(jsitDecisionVariable));
-                checkTypeSupport(type, errorHolder, jsitDecision.getName());
-                visibleFacts.put(jsitDecision.getName(), createTopLevelFactModelTree(jsitDecision.getName(), type, hiddenFacts, FactModelTree.Type.DECISION));
+                checkTypeSupport(type, errorHolder, jsitdrgElement.getName());
+                visibleFacts.put(jsitDecisionVariable.getName(), createTopLevelFactModelTree(jsitDecisionVariable.getName(), type, hiddenFacts, FactModelTree.Type.DECISION));
             }
         }
         FactModelTuple toReturn = new FactModelTuple(visibleFacts, hiddenFacts);
@@ -416,7 +416,7 @@ public class ScenarioSimulationKogitoDMNDataManager {
         }
         String typeName = type.getName();
         populateGeneric(genericTypeInfoMap, VALUE, typeName);
-        FactModelTree toReturn = createFactModelTreeForSimple(factName, typeName, List.class.getCanonicalName(), genericTypeInfoMap, fmType);
+        FactModelTree toReturn = createFactModelTreeForSimple(genericTypeInfoMap, factName, List.class.getCanonicalName(), fmType);
         if (!hiddenFacts.containsKey(typeName) && !alreadyVisited.contains(typeName)) {
             alreadyVisited.add(typeName);
             FactModelTree genericFactModelTree = createFactModelTreeForGenericType(new HashMap<>(), typeName, typeName, typeName, type, hiddenFacts, fmType, alreadyVisited);
@@ -469,7 +469,7 @@ public class ScenarioSimulationKogitoDMNDataManager {
         }
         return isToBeManagedAsComposite(type) ?
                 createFactModelTreeForComposite(genericTypeInfoMap, propertyName, fullPropertyPath, type, hiddenFacts, fmType, alreadyVisited) :
-                createFactModelTreeForSimple(factName, type.getName(), type.getName(), genericTypeInfoMap, fmType);
+                createFactModelTreeForSimple(genericTypeInfoMap, factName, type.getName(), fmType);
     }
 
     /**
@@ -494,7 +494,7 @@ public class ScenarioSimulationKogitoDMNDataManager {
                                                               final SortedMap<String, FactModelTree> hiddenFacts,
                                                               final FactModelTree.Type fmType,
                                                               final List<String> alreadyVisited) {
-        return type.isComposite() ? createFactModelTreeForComposite(genericTypeInfoMap, propertyName, fullPropertyPath, type, hiddenFacts, fmType, alreadyVisited) : createFactModelTreeForSimple(factName, type.getName(), type.getName(), genericTypeInfoMap, fmType);
+        return type.isComposite() ? createFactModelTreeForComposite(genericTypeInfoMap, propertyName, fullPropertyPath, type, hiddenFacts, fmType, alreadyVisited) : createFactModelTreeForSimple(genericTypeInfoMap, factName, type.getName(), fmType);
     }
 
     /**
@@ -507,12 +507,15 @@ public class ScenarioSimulationKogitoDMNDataManager {
      * @param fmType
      * @return
      */
-    protected FactModelTree createFactModelTreeForSimple(final String factName,
-                                                         final String typeName,
+    protected FactModelTree createFactModelTreeForSimple(final Map<String, List<String>> genericTypeInfoMap,
+                                                         final String factName,
                                                          final String propertyClass,
-                                                         final Map<String, List<String>> genericTypeInfoMap,
                                                          final FactModelTree.Type fmType) {
-        return FactModelTree.ofSimpleDMN(factName, propertyClass, genericTypeInfoMap, typeName, fmType);
+        Map<String, FactModelTree.PropertyTypeName> simpleProperties = new HashMap<>();
+        FactModelTree simpleFactModelTree = new FactModelTree(factName, "", simpleProperties, genericTypeInfoMap, fmType);
+        simpleFactModelTree.addSimpleProperty(VALUE, new FactModelTree.PropertyTypeName(propertyClass));
+        simpleFactModelTree.setSimple(true);
+        return simpleFactModelTree;
     }
 
     /**
@@ -539,7 +542,7 @@ public class ScenarioSimulationKogitoDMNDataManager {
             throw new IllegalStateException(WRONG_DMN_MESSAGE);
         }
         Map<String, FactModelTree.PropertyTypeName> simpleFields = new HashMap<>();
-        FactModelTree toReturn = FactModelTree.ofDMN(name, simpleFields, genericTypeInfoMap, type.getName(), fmType);
+        FactModelTree toReturn = new FactModelTree(name, "", simpleFields, genericTypeInfoMap, fmType);
         for (Map.Entry<String, ClientDMNType> entry : type.getFields().entrySet()) {
             String expandablePropertyName = fullPropertyPath + "." + entry.getKey();
             if (isToBeManagedAsCollection(entry.getValue())) {  // if it is a collection, generate the generic and add as hidden fact a simple or composite fact model tree
