@@ -16,8 +16,10 @@
 
 package org.drools.workbench.screens.scenariosimulation.backend.server;
 
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.workbench.screens.scenariosimulation.backend.server.exceptions.WrongDMNTypeException;
@@ -33,6 +35,7 @@ import org.kie.dmn.api.core.ast.DecisionNode;
 import org.kie.dmn.api.core.ast.InputDataNode;
 import org.kie.dmn.core.impl.CompositeTypeImpl;
 import org.kie.dmn.core.impl.SimpleTypeImpl;
+import org.kie.dmn.model.api.Import;
 import org.uberfire.backend.vfs.Path;
 
 import static org.drools.scenariosimulation.api.utils.ConstantsHolder.VALUE;
@@ -81,10 +84,12 @@ public class DMNTypeServiceImplTest extends AbstractDMNTest {
         // VisibleFacts should match inputs and decisions on given model
         int expectedVisibleFacts = dmnModelLocal.getInputs().size() + dmnModelLocal.getDecisions().size();
         assertEquals(expectedVisibleFacts, factModelTuple.getVisibleFacts().size());
+        Map<String, String> importedModelsMap = dmnModelLocal.getDefinitions().getImport().stream()
+                .collect(Collectors.toMap(Import::getNamespace, Import::getName));
         // Verify each inputDataNode has been correctly mapped
-        dmnModelLocal.getInputs().forEach(inputDataNode -> verifyFactModelTree(factModelTuple, inputDataNode, factModelTuple.getHiddenFacts()));
+        dmnModelLocal.getInputs().forEach(inputDataNode -> verifyFactModelTree(factModelTuple, inputDataNode, factModelTuple.getHiddenFacts(), importedModelsMap));
         // Verify each decisionNode has been correctly mapped
-        dmnModelLocal.getDecisions().forEach(decisionNode -> verifyFactModelTree(factModelTuple, decisionNode, factModelTuple.getHiddenFacts()));
+        dmnModelLocal.getDecisions().forEach(decisionNode -> verifyFactModelTree(factModelTuple, decisionNode, factModelTuple.getHiddenFacts(), importedModelsMap));
     }
 
     @Test
@@ -94,10 +99,27 @@ public class DMNTypeServiceImplTest extends AbstractDMNTest {
         // VisibleFacts should match inputs and decisions on given model
         int expectedVisibleFacts = dmnModelLocal.getInputs().size() + dmnModelLocal.getDecisions().size();
         assertEquals(expectedVisibleFacts, factModelTuple.getVisibleFacts().size());
+        Map<String, String> importedModelsMap = dmnModelLocal.getDefinitions().getImport().stream()
+                .collect(Collectors.toMap(Import::getNamespace, Import::getName));
         // Verify each inputDataNode has been correctly mapped
-        dmnModelLocal.getInputs().forEach(inputDataNode -> verifyFactModelTree(factModelTuple, inputDataNode, factModelTuple.getHiddenFacts()));
+        dmnModelLocal.getInputs().forEach(inputDataNode -> verifyFactModelTree(factModelTuple, inputDataNode, factModelTuple.getHiddenFacts(), importedModelsMap));
         // Verify each decisionNode has been correctly mapped
-        dmnModelLocal.getDecisions().forEach(decisionNode -> verifyFactModelTree(factModelTuple, decisionNode, factModelTuple.getHiddenFacts()));
+        dmnModelLocal.getDecisions().forEach(decisionNode -> verifyFactModelTree(factModelTuple, decisionNode, factModelTuple.getHiddenFacts(), importedModelsMap));
+    }
+
+    @Test
+    public void retrieveFactModelTupleUsingImportedTrafficViolation() {
+        setDmnModelLocal("Using Imported.dmn", "https://kiegroup.org/dmn/_7120AA2F-BEB6-4CB1-BCC7-427A17AEF71D", "Using Imported", "Traffic Violation.dmn");
+        FactModelTuple factModelTuple = dmnTypeServiceImpl.retrieveFactModelTuple(mock(Path.class), null);
+        // VisibleFacts should match inputs and decisions on given model
+        int expectedVisibleFacts = dmnModelLocal.getInputs().size() + dmnModelLocal.getDecisions().size();
+        assertEquals(expectedVisibleFacts, factModelTuple.getVisibleFacts().size());
+        Map<String, String> importedModelsMap = dmnModelLocal.getDefinitions().getImport().stream()
+                .collect(Collectors.toMap(Import::getNamespace, Import::getName));
+        // Verify each inputDataNode has been correctly mapped
+        dmnModelLocal.getInputs().forEach(inputDataNode -> verifyFactModelTree(factModelTuple, inputDataNode, factModelTuple.getHiddenFacts(), importedModelsMap));
+        // Verify each decisionNode has been correctly mapped
+        dmnModelLocal.getDecisions().forEach(decisionNode -> verifyFactModelTree(factModelTuple, decisionNode, factModelTuple.getHiddenFacts(), importedModelsMap));
     }
 
     @Test
@@ -281,10 +303,13 @@ public class DMNTypeServiceImplTest extends AbstractDMNTest {
      * @param dmnNode
      * @param hiddenFacts
      */
-    private void verifyFactModelTree(FactModelTuple factModelTuple, DMNNode dmnNode, SortedMap<String, FactModelTree> hiddenFacts) {
+    private void verifyFactModelTree(FactModelTuple factModelTuple, DMNNode dmnNode, SortedMap<String, FactModelTree> hiddenFacts, Map<String, String> importedModelsMap) {
+        final String name = importedModelsMap.containsKey(dmnNode.getModelNamespace()) ?
+                importedModelsMap.get(dmnNode.getModelNamespace()) + "." + dmnNode.getName() :
+                dmnNode.getName();
         // Check the FactModelTree has been mapped between visible facts
-        assertTrue(factModelTuple.getVisibleFacts().containsKey(dmnNode.getName()));
-        final FactModelTree mappedFactModelTree = factModelTuple.getVisibleFacts().get(dmnNode.getName());
+        assertTrue(factModelTuple.getVisibleFacts().containsKey(name));
+        final FactModelTree mappedFactModelTree = factModelTuple.getVisibleFacts().get(name);
         // Check the FactModelTree is not null
         assertNotNull(mappedFactModelTree);
         DMNType originalType;
@@ -294,7 +319,7 @@ public class DMNTypeServiceImplTest extends AbstractDMNTest {
         } else if (dmnNode instanceof DecisionNode) {
             originalType = ((DecisionNode) dmnNode).getResultType();
         } else {
-            fail("Unrecognized node type " + dmnNode.getName() + " -> " + dmnNode.getClass().getCanonicalName());
+            fail("Unrecognized node type " + name + " -> " + dmnNode.getClass().getCanonicalName());
             return;
         }
         if (originalType.isCollection()) { // if original type is a collection
