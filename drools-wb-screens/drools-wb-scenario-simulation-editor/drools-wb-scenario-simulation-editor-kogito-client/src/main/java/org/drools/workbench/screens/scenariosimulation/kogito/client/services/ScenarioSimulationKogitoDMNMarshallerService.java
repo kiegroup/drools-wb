@@ -30,7 +30,9 @@ import org.jboss.errai.common.client.api.RemoteCallback;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.MainJs;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.callbacks.DMN12UnmarshallCallback;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.DMN12;
+import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITDRGElement;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITDefinitions;
+import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITImport;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITItemDefinition;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.backend.vfs.PathFactory;
@@ -107,15 +109,31 @@ public class ScenarioSimulationKogitoDMNMarshallerService {
 
             if (importsNumber == importedDefinitions.size()) {
 
+                List<JSITImport> imports = definitions.getImport();
+                Map<String, String> importedModelsMap = new HashMap<>();
+
+                for (int i = 0; i < imports.size(); i++) {
+                    JSITImport importItem = Js.uncheckedCast(imports.get(i));
+                    importedModelsMap.put(importItem.getNamespace(), importItem.getName());
+                }
+
                 for (int i = 0; i < importedDefinitions.size(); i++) {
 
-                    final JSITDefinitions jsitDefinitions1 = Js.uncheckedCast(importedDefinitions.get(i));
-                    List<JSITItemDefinition> itemDefinitionsRaw = jsitDefinitions1.getItemDefinition();
+                    final JSITDefinitions importedDefinition = Js.uncheckedCast(importedDefinitions.get(i));
 
-                    for (int j = 0; j< itemDefinitionsRaw.size(); j++) {
+                    final List<JSITItemDefinition> itemDefinitionsRaw = importedDefinition.getItemDefinition();
+                    for (int j = 0; j < itemDefinitionsRaw.size(); j++) {
                         JSITItemDefinition value = Js.uncheckedCast(itemDefinitionsRaw.get(j));
                         definitions.addItemDefinition(value);
                     }
+
+                    final List<JSITDRGElement> jsitdrgElements = importedDefinition.getDrgElement();
+                    for (int k = 0; k < jsitdrgElements.size(); k++) {
+                        JSITDRGElement value = Js.uncheckedCast(jsitdrgElements.get(k));
+                        value.setName(importedModelsMap.get(importedDefinition.getNamespace()) + "." + value.getName());
+                        definitions.addDrgElement(value);
+                    }
+
                 }
 
                 callback.callback(definitions);
