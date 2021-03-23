@@ -75,7 +75,7 @@ public class DMNTypeServiceImplTest extends AbstractDMNTest {
     }
 
     @Test
-    public void retrieveFactModelTupleDmnList() throws WrongDMNTypeException {
+    public void retrieveFactModelTupleDmnList() {
         setDmnModelLocal("dmn-list.dmn", "https://github.com/kiegroup/drools/kie-dmn/_CC8924B0-D729-4D70-9588-039B5824FFE9", "dmn-list");
         FactModelTuple factModelTuple = dmnTypeServiceImpl.retrieveFactModelTuple(mock(Path.class), null);
         // VisibleFacts should match inputs and decisions on given model
@@ -88,7 +88,7 @@ public class DMNTypeServiceImplTest extends AbstractDMNTest {
     }
 
     @Test
-    public void retrieveFactModelTupleDmnListComposite() throws WrongDMNTypeException {
+    public void retrieveFactModelTupleDmnListComposite() {
         setDmnModelLocal("dmn-list-composite.dmn", "https://github.com/kiegroup/drools/kie-dmn/_25BF2679-3109-488F-9AD1-DDBCCEBBE5F1", "dmn-list-composite");
         FactModelTuple factModelTuple = dmnTypeServiceImpl.retrieveFactModelTuple(mock(Path.class), null);
         // VisibleFacts should match inputs and decisions on given model

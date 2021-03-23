@@ -66,7 +66,8 @@ public class DMNTypeServiceImpl
         SortedMap<String, FactModelTree> visibleFacts = new TreeMap<>();
         SortedMap<String, FactModelTree> hiddenFacts = new TreeMap<>();
         ErrorHolder errorHolder = new ErrorHolder();
-        Map<String, String> importedModelsMap = dmnModel.getDefinitions().getImport().stream().collect(Collectors.toMap(Import::getNamespace, Import::getName));
+        Map<String, String> importedModelsMap = dmnModel.getDefinitions().getImport().stream()
+                .collect(Collectors.toMap(Import::getNamespace, Import::getName));
 
         for (InputDataNode input : dmnModel.getInputs()) {
             final DMNType type = input.getType();
