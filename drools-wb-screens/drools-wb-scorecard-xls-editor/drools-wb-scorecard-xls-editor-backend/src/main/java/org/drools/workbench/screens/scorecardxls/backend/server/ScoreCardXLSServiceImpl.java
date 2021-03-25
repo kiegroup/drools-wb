@@ -16,7 +16,6 @@
 
 package org.drools.workbench.screens.scorecardxls.backend.server;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
@@ -62,7 +61,6 @@ public class ScoreCardXLSServiceImpl
 
     private static final Logger log = LoggerFactory.getLogger( ScoreCardXLSServiceImpl.class );
 
-    private IOService ioService;
     private CopyService copyService;
     private DeleteService deleteService;
     private RenameService renameService;
@@ -94,11 +92,6 @@ public class ScoreCardXLSServiceImpl
     }
 
     @Override
-    public ScoreCardXLSContent loadContent( final Path path ) {
-        return super.loadContent( path );
-    }
-
-    @Override
     protected ScoreCardXLSContent constructContent( Path path,
                                                     Overview overview ) {
         final ScoreCardXLSContent content = new ScoreCardXLSContent();
@@ -109,10 +102,8 @@ public class ScoreCardXLSServiceImpl
     @Override
     public InputStream load( final Path path,
                              final String sessionId ) {
-        try {
-            final InputStream inputStream = ioService.newInputStream( Paths.convert( path ),
-                                                                      StandardOpenOption.READ );
-
+        try (final InputStream inputStream = ioService.newInputStream( Paths.convert( path ),
+                                                                       StandardOpenOption.READ )) {
             //Signal opening to interested parties
             resourceOpenedEvent.fire( new ResourceOpenedEvent( path,
                                                                getSessionInfo( sessionId ) ) );
@@ -146,22 +137,17 @@ public class ScoreCardXLSServiceImpl
                               final String comment,
                               boolean create ) {
         final SessionInfo sessionInfo = getSessionInfo( sessionId );
-        String userAction = "UPDATING";
-        if ( create ) {
-            userAction = "CREATING";
-        }
-        log.info( "USER:" + sessionInfo.getIdentity().getIdentifier() + " " + userAction + " asset [" + resource.getFileName() + "]" );
 
-        OutputStream outputStream = null;
-        try {
-            final org.uberfire.java.nio.file.Path nioPath = Paths.convert( resource );
-            if ( create ) {
-                ioService.createFile( nioPath );
-            }
-            outputStream = ioService.newOutputStream( nioPath,
-                                                      commentedOptionFactory.makeCommentedOption( comment,
-                                                                                                  sessionInfo.getIdentity(),
-                                                                                                  sessionInfo ) );
+        log.info("USER: {} {} asset [{}]", sessionInfo.getIdentity().getIdentifier(), create ? "CREATING" : "UPDATING", resource.getFileName());
+
+        final org.uberfire.java.nio.file.Path nioPath = Paths.convert( resource );
+        if ( create ) {
+            ioService.createFile( nioPath );
+        }
+        try ( OutputStream outputStream = ioService.newOutputStream( nioPath,
+                                                                     commentedOptionFactory.makeCommentedOption( comment,
+                                                                                                                 sessionInfo.getIdentity(),
+                                                                                                                 sessionInfo ) ) ) {
             IOUtils.copy( content,
                           outputStream );
             outputStream.flush();
@@ -170,19 +156,6 @@ public class ScoreCardXLSServiceImpl
 
         } catch ( Exception e ) {
             throw ExceptionUtilities.handleException( e );
-        } finally {
-            try {
-                content.close();
-            } catch ( IOException e ) {
-                throw ExceptionUtilities.handleException( e );
-            }
-            if ( outputStream != null ) {
-                try {
-                    outputStream.close();
-                } catch ( IOException e ) {
-                    throw ExceptionUtilities.handleException( e );
-                }
-            }
         }
     }
 
