@@ -33,7 +33,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.ext.editor.commons.service.CopyService;
 import org.uberfire.ext.editor.commons.service.DeleteService;
@@ -45,7 +45,6 @@ import org.uberfire.workbench.events.ResourceOpenedEvent;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyObject;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -109,7 +108,7 @@ public class ScoreCardXLSServiceImplTest {
         when( user.getIdentifier() ).thenReturn( "user" );
 
         when( path.toURI() ).thenReturn( "default://p0/src/main/resources/dtable.xls" );
-        when( inputstream.read( anyObject() ) ).thenReturn( -1 );
+        when( inputstream.read( any() ) ).thenReturn( -1 );
         when( ioService.newOutputStream( any( org.uberfire.java.nio.file.Path.class ),
                                          commentedOptionArgumentCaptor.capture() ) ).thenReturn( outputStream );
     }
