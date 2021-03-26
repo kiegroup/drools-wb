@@ -291,9 +291,12 @@ public class DecisionTableXLSServiceImplTest {
     public void load() {
         this.service = getServiceWithValidationOverride(null);
 
+        mockStatic(Paths.class);
+        when(Paths.convert(any(Path.class))).thenReturn(nioPath);
+
         service.load(path, sessionId);
-        verify(ioService, times(1)).newInputStream(isA(org.uberfire.java.nio.file.Path.class),
-                                                                         eq(StandardOpenOption.READ));
+        verify(ioService, times(1)).newInputStream(nioPath,
+                                                   StandardOpenOption.READ);
         verify(resourceOpenedEvent, times(1)).fire(isA(ResourceOpenedEvent.class));
     }
 
