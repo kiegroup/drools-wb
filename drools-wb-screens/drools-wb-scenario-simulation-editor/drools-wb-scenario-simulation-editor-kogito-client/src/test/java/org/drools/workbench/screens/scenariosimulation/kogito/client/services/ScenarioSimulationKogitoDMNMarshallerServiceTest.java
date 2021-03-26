@@ -28,6 +28,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.callbacks.DMN12UnmarshallCallback;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.DMN12;
+import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITDRGElement;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITDefinitions;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITImport;
 import org.kie.workbench.common.dmn.webapp.kogito.marshaller.js.model.dmn12.JSITItemDefinition;
@@ -78,6 +79,8 @@ public class ScenarioSimulationKogitoDMNMarshallerServiceTest {
     @Mock
     private JSITItemDefinition importedItemDefinitionMock2;
     @Mock
+    private JSITDRGElement importedDRGElementMock;
+    @Mock
     private ScenarioSimulationKogitoResourceContentService resourceContentServiceMock;
     @Captor
     private ArgumentCaptor<DMN12UnmarshallCallback> dmn12UnmarshallCallbackArgumentCaptor;
@@ -100,6 +103,7 @@ public class ScenarioSimulationKogitoDMNMarshallerServiceTest {
         doReturn(jsitImportedDefinitionsMock).when(dmnMarshallerServiceSpy).uncheckedCast(importedDmn12Mock);
         doReturn(jsitImportedDefinitionsMock2).when(dmnMarshallerServiceSpy).uncheckedCast(importedDmn12Mock2);
         doReturn(Arrays.asList(importedItemDefinitionMock)).when(jsitImportedDefinitionsMock).getItemDefinition();
+        doReturn(Arrays.asList(importedDRGElementMock)).when(jsitImportedDefinitionsMock).getDrgElement();
         doReturn(Arrays.asList(importedItemDefinitionMock2)).when(jsitImportedDefinitionsMock2).getItemDefinition();
     }
 
@@ -147,6 +151,7 @@ public class ScenarioSimulationKogitoDMNMarshallerServiceTest {
         assertEquals(jsitImportedDefinitionsMock, listArgumentCaptor.getValue().get(0));
         verify(dmnMarshallerServiceSpy, times(1)).uncheckedCast(eq(importedDmn12Mock));
         verify(jsitDefinitionsMock, times(1)).addItemDefinition(eq(importedItemDefinitionMock));
+        verify(jsitDefinitionsMock, times(1)).addDrgElement(eq(importedDRGElementMock));
         verify(jsitDefinitionsCallbackMock, times(1)).callback(jsitDefinitionsMock);
     }
 
@@ -177,6 +182,7 @@ public class ScenarioSimulationKogitoDMNMarshallerServiceTest {
         verify(jsitDefinitionsCallbackMock, times(0)).callback(jsitDefinitionsMock);
         verify(jsitDefinitionsMock, times(0)).addItemDefinition(eq(importedItemDefinitionMock));
         verify(jsitDefinitionsMock, times(0)).addItemDefinition(eq(importedItemDefinitionMock2));
+        verify(jsitDefinitionsMock, times(0)).addDrgElement(eq(importedDRGElementMock));
 
         verify(resourceContentServiceMock, times(1)).getFileContent(eq(PathFactory.newPath("import2.dmn", "src/import2.dmn")), remoteCallbackImportedArgumentCaptor2.capture(), eq(errorCallbackMock));
         remoteCallbackImportedArgumentCaptor2.getValue().callback("<xml>imported content 2</xml>");
@@ -190,6 +196,7 @@ public class ScenarioSimulationKogitoDMNMarshallerServiceTest {
         verify(dmnMarshallerServiceSpy, times(1)).uncheckedCast(eq(importedDmn12Mock2));
         verify(jsitDefinitionsMock, times(1)).addItemDefinition(eq(importedItemDefinitionMock));
         verify(jsitDefinitionsMock, times(1)).addItemDefinition(eq(importedItemDefinitionMock2));
+        verify(jsitDefinitionsMock, times(1)).addDrgElement(eq(importedDRGElementMock));
         verify(jsitDefinitionsCallbackMock, times(1)).callback(jsitDefinitionsMock);
     }
 

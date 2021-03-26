@@ -994,7 +994,7 @@ public class ScenarioSimulationKogitoDMNDataManagerTest {
 
     @Test
     public void getFactModelTupleSimpleDecisionData() {
-        when(jsiITInformationItemDecisionMock.getName()).thenReturn("inputDecisionName");
+        when(jsiITDecisionMock.getName()).thenReturn("inputDecisionName");
         drgElements.add(jsiITDecisionMock);
         when(jsiITDefinitionsMock.getDrgElement()).thenReturn(drgElements);
         attributesMapDecision.put(TYPEREF_QNAME, "string");
@@ -1011,7 +1011,7 @@ public class ScenarioSimulationKogitoDMNDataManagerTest {
     @Test
     public void getFactModelTupleSimpleInputAndDecisionData() {
         when(jsiITInputDataMock.getName()).thenReturn("inputDataName");
-        when(jsiITInformationItemDecisionMock.getName()).thenReturn("inputDecisionName");
+        when(jsiITDecisionMock.getName()).thenReturn("inputDecisionName");
         drgElements.add(jsiITDecisionMock);
         drgElements.add(jsiITInputDataMock);
         when(jsiITDefinitionsMock.getDrgElement()).thenReturn(drgElements);
