@@ -52,12 +52,14 @@ import org.uberfire.ext.editor.commons.service.DeleteService;
 import org.uberfire.ext.editor.commons.service.RenameService;
 import org.uberfire.io.IOService;
 import org.uberfire.java.nio.base.options.CommentedOption;
+import org.uberfire.java.nio.file.StandardOpenOption;
 import org.uberfire.workbench.events.ResourceOpenedEvent;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -286,7 +288,17 @@ public class DecisionTableXLSServiceImplTest {
     }
 
     @Test
-    public void testValidateFileWithValidContent() throws IOException, URISyntaxException {
+    public void load() {
+        this.service = getServiceWithValidationOverride(null);
+
+        service.load(path, sessionId);
+        verify(ioService, times(1)).newInputStream(isA(org.uberfire.java.nio.file.Path.class),
+                                                                         eq(StandardOpenOption.READ));
+        verify(resourceOpenedEvent, times(1)).fire(isA(ResourceOpenedEvent.class));
+    }
+
+    @Test
+    public void testValidateFileWithValidContent() throws URISyntaxException {
         this.service = getServiceWithValidationOverride(null);
 
         File tempFile = new File(this.getClass().getResource("dummy.xls").toURI());

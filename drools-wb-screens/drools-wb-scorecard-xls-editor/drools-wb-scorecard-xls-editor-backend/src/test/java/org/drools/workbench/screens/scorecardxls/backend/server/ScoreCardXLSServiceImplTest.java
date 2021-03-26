@@ -40,11 +40,16 @@ import org.uberfire.ext.editor.commons.service.DeleteService;
 import org.uberfire.ext.editor.commons.service.RenameService;
 import org.uberfire.io.IOService;
 import org.uberfire.java.nio.base.options.CommentedOption;
+import org.uberfire.java.nio.file.StandardOpenOption;
 import org.uberfire.workbench.events.ResourceOpenedEvent;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -141,6 +146,15 @@ public class ScoreCardXLSServiceImplTest {
                       commentedOption.getName() );
         assertEquals( "123",
                       commentedOption.getSessionId() );
+    }
+
+
+    @Test
+    public void load() {
+        service.load(path, sessionId);
+        verify(ioService, times(1)).newInputStream(isA(org.uberfire.java.nio.file.Path.class),
+                                                   eq(StandardOpenOption.READ));
+        verify(resourceOpenedEvent, times(1)).fire(isA(ResourceOpenedEvent.class));
     }
 
 }
