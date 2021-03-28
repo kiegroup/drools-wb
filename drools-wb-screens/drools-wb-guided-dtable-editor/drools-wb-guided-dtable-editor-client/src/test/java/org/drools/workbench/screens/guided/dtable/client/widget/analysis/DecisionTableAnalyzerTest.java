@@ -198,4 +198,11 @@ public class DecisionTableAnalyzerTest {
 
         decisionTableAnalyzer.insertColumn(b);
     }
+
+    @Test
+    public void testSort() {
+        final List<Integer> rowOrder = Collections.emptyList();
+        decisionTableAnalyzer.sort(rowOrder);
+        verify(updateManager).sort(rowOrder);
+    }
 }

@@ -15,6 +15,7 @@
  */
 package org.drools.workbench.screens.guided.dtable.client.widget.table;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.enterprise.event.Event;
@@ -39,9 +40,12 @@ import org.drools.workbench.screens.guided.dtable.client.widget.table.themes.Gui
 import org.uberfire.ext.widgets.common.client.common.BusyPopup;
 import org.uberfire.ext.wires.core.grids.client.model.GridData;
 import org.uberfire.ext.wires.core.grids.client.util.CoordinateUtilities;
+import org.uberfire.ext.wires.core.grids.client.widget.grid.NodeMouseEventHandler;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.impl.BaseGridWidget;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.GridRenderer;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.renderers.grids.impl.BaseGridRendererHelper;
+import org.uberfire.ext.wires.core.grids.client.widget.layer.GridSelectionManager;
+import org.uberfire.ext.wires.core.grids.client.widget.layer.pinning.GridPinnedModeManager;
 import org.uberfire.workbench.events.NotificationEvent;
 
 public class GuidedDecisionTableViewImpl extends BaseGridWidget implements GuidedDecisionTableView {
@@ -82,6 +86,14 @@ public class GuidedDecisionTableViewImpl extends BaseGridWidget implements Guide
     @Override
     public void registerNodeMouseDoubleClickHandler(final NodeMouseDoubleClickHandler handler) {
         addNodeMouseDoubleClickHandler(handler);
+    }
+
+    @Override
+    protected List<NodeMouseEventHandler> getNodeMouseDoubleClickEventHandlers(final GridSelectionManager selectionManager,
+                                                                               final GridPinnedModeManager pinnedModeManager) {
+        final List<NodeMouseEventHandler> handlers = new ArrayList<>();
+        handlers.add(new GuidedDecisionTableSortGridWidgetMouseEventHandler(column -> presenter.onSort(column)));
+        return handlers;
     }
 
     private Group makeHeaderCaption() {
