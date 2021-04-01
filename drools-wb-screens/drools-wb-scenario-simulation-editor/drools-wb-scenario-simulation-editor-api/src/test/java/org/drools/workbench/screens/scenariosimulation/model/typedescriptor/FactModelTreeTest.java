@@ -22,6 +22,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class FactModelTreeTest {
@@ -30,6 +31,7 @@ public class FactModelTreeTest {
     private final static String PACKAGE = "com";
     private final static String FACT_TYPE = "FactType";
     private final static String SIMPLE_PROPERTY_TYPE = "numeric";
+    private final static String IMPORT_PREFIX = "imp";
 
     @Test
     public void ofDMOConstructorNoTypeName() {
@@ -43,6 +45,7 @@ public class FactModelTreeTest {
         assertEquals(0, factModelTree.getGenericTypesMap().size());
         assertEquals(FactModelTree.Type.UNDEFINED, factModelTree.getType());
         assertFalse(factModelTree.isSimple());
+        assertNull(factModelTree.getImportPrefix());
     }
 
     @Test
@@ -57,6 +60,7 @@ public class FactModelTreeTest {
         assertEquals(0, factModelTree.getGenericTypesMap().size());
         assertEquals(FactModelTree.Type.UNDEFINED, factModelTree.getType());
         assertFalse(factModelTree.isSimple());
+        assertNull(factModelTree.getImportPrefix());
     }
 
     @Test
@@ -71,6 +75,7 @@ public class FactModelTreeTest {
         assertEquals(0, factModelTree.getGenericTypesMap().size());
         assertEquals(FactModelTree.Type.UNDEFINED, factModelTree.getType());
         assertFalse(factModelTree.isSimple());
+        assertNull(factModelTree.getImportPrefix());
     }
 
     @Test
@@ -86,11 +91,12 @@ public class FactModelTreeTest {
         assertEquals(0, factModelTree.getGenericTypesMap().size());
         assertEquals(FactModelTree.Type.UNDEFINED, factModelTree.getType());
         assertTrue(factModelTree.isSimple());
+        assertNull(factModelTree.getImportPrefix());
     }
 
     @Test
     public void ofDMN() {
-        FactModelTree factModelTree = FactModelTree.ofDMN(FACT_NAME, Collections.emptyMap(), Collections.emptyMap(), FACT_TYPE, FactModelTree.Type.INPUT);
+        FactModelTree factModelTree = FactModelTree.ofDMN(FACT_NAME, IMPORT_PREFIX, Collections.emptyMap(), Collections.emptyMap(), FACT_TYPE, FactModelTree.Type.INPUT);
         assertEquals(FACT_NAME, factModelTree.getFactName());
         assertEquals(FACT_TYPE, factModelTree.getTypeName());
         assertEquals("", factModelTree.getFullPackage());
@@ -100,11 +106,12 @@ public class FactModelTreeTest {
         assertEquals(0, factModelTree.getGenericTypesMap().size());
         assertEquals(FactModelTree.Type.INPUT, factModelTree.getType());
         assertFalse(factModelTree.isSimple());
+        assertEquals(IMPORT_PREFIX, factModelTree.getImportPrefix());
     }
 
     @Test
     public void ofSimpleDMN() {
-        FactModelTree factModelTree = FactModelTree.ofSimpleDMN(FACT_NAME, SIMPLE_PROPERTY_TYPE, Collections.emptyMap(), FACT_TYPE, FactModelTree.Type.INPUT);
+        FactModelTree factModelTree = FactModelTree.ofSimpleDMN(FACT_NAME, IMPORT_PREFIX, SIMPLE_PROPERTY_TYPE, Collections.emptyMap(), FACT_TYPE, FactModelTree.Type.INPUT);
         assertEquals(FACT_NAME, factModelTree.getFactName());
         assertEquals(FACT_TYPE, factModelTree.getTypeName());
         assertEquals("", factModelTree.getFullPackage());
@@ -115,6 +122,7 @@ public class FactModelTreeTest {
         assertEquals(0, factModelTree.getGenericTypesMap().size());
         assertEquals(FactModelTree.Type.INPUT, factModelTree.getType());
         assertTrue(factModelTree.isSimple());
+        assertEquals(IMPORT_PREFIX, factModelTree.getImportPrefix());
     }
 
     @Test

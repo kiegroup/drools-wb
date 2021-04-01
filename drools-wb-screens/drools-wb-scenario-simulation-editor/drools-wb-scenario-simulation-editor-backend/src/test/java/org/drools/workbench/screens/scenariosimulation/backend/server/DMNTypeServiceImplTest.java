@@ -38,6 +38,7 @@ import org.kie.dmn.core.impl.SimpleTypeImpl;
 import org.kie.dmn.model.api.Import;
 import org.uberfire.backend.vfs.Path;
 
+import static org.drools.scenariosimulation.api.utils.ConstantsHolder.IMPORTED_PREFIX;
 import static org.drools.scenariosimulation.api.utils.ConstantsHolder.VALUE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -126,7 +127,7 @@ public class DMNTypeServiceImplTest extends AbstractDMNTest {
     public void createTopLevelFactModelTreeSimpleNoCollection() throws WrongDMNTypeException {
         // Single property retrieve
         DMNType simpleString = getSimpleNoCollection();
-        FactModelTree retrieved = dmnTypeServiceImpl.createTopLevelFactModelTree("testPath", simpleString, new TreeMap<>(), FactModelTree.Type.INPUT);
+        FactModelTree retrieved = dmnTypeServiceImpl.createTopLevelFactModelTree("testPath", IMPORTED_PREFIX, simpleString, new TreeMap<>(), FactModelTree.Type.INPUT);
         assertNotNull(retrieved);
         assertEquals("testPath", retrieved.getFactName());
         assertEquals(1, retrieved.getSimpleProperties().size());
@@ -136,6 +137,7 @@ public class DMNTypeServiceImplTest extends AbstractDMNTest {
         assertEquals(simpleString.getName(), retrieved.getSimpleProperties().get(VALUE).getPropertyTypeNameToVisualize());
         assertTrue(retrieved.getExpandableProperties().isEmpty());
         assertTrue(retrieved.getGenericTypesMap().isEmpty());
+        assertEquals(IMPORTED_PREFIX, retrieved.getImportPrefix());
     }
 
     @Test
@@ -143,7 +145,7 @@ public class DMNTypeServiceImplTest extends AbstractDMNTest {
         // Single property collection retrieve
         DMNType simpleCollectionString = getSimpleCollection();
         TreeMap<String, FactModelTree> hiddenFactSimpleCollection = new TreeMap<>();
-        FactModelTree retrieved = dmnTypeServiceImpl.createTopLevelFactModelTree("testPath", simpleCollectionString, hiddenFactSimpleCollection, FactModelTree.Type.INPUT);
+        FactModelTree retrieved = dmnTypeServiceImpl.createTopLevelFactModelTree("testPath", IMPORTED_PREFIX, simpleCollectionString, hiddenFactSimpleCollection, FactModelTree.Type.INPUT);
         assertNotNull(retrieved);
         assertEquals("testPath", retrieved.getFactName());
         assertEquals(1, retrieved.getSimpleProperties().size());
@@ -157,13 +159,14 @@ public class DMNTypeServiceImplTest extends AbstractDMNTest {
         assertNotNull(retrieved.getGenericTypesMap().get(VALUE));
         assertEquals(1, retrieved.getGenericTypesMap().get(VALUE).size());
         assertEquals(simpleCollectionString.getName(), retrieved.getGenericTypesMap().get(VALUE).get(0));
+        assertEquals(IMPORTED_PREFIX, retrieved.getImportPrefix());
     }
 
     @Test
     public void createTopLevelFactModelTreeCompositeNoCollectionBaseType() throws WrongDMNTypeException {
         // Single property retrieve
         DMNType composite = getSingleCompositeWithBaseTypeField();
-        FactModelTree retrieved = dmnTypeServiceImpl.createTopLevelFactModelTree("testPath", composite, new TreeMap<>(), FactModelTree.Type.INPUT);
+        FactModelTree retrieved = dmnTypeServiceImpl.createTopLevelFactModelTree("testPath", IMPORTED_PREFIX, composite, new TreeMap<>(), FactModelTree.Type.INPUT);
         assertNotNull(retrieved);
         assertEquals("testPath", retrieved.getFactName());
         assertEquals(2, retrieved.getSimpleProperties().size());
@@ -178,13 +181,14 @@ public class DMNTypeServiceImplTest extends AbstractDMNTest {
         assertEquals(SIMPLE_TYPE_NAME, retrieved.getSimpleProperties().get("gender").getPropertyTypeNameToVisualize());
         assertTrue(retrieved.getExpandableProperties().isEmpty());
         assertTrue(retrieved.getGenericTypesMap().isEmpty());
+        assertEquals(IMPORTED_PREFIX, retrieved.getImportPrefix());
     }
 
     @Test
     public void createTopLevelFactModelTreeCompositeNoCollection() throws WrongDMNTypeException {
         // Single property retrieve
         DMNType compositePerson = getSingleCompositeWithSimpleCollection();
-        FactModelTree retrieved = dmnTypeServiceImpl.createTopLevelFactModelTree("testPath", compositePerson, new TreeMap<>(), FactModelTree.Type.INPUT);
+        FactModelTree retrieved = dmnTypeServiceImpl.createTopLevelFactModelTree("testPath", IMPORTED_PREFIX, compositePerson, new TreeMap<>(), FactModelTree.Type.INPUT);
         assertNotNull(retrieved);
         assertEquals("testPath", retrieved.getFactName());
         assertEquals(2, retrieved.getSimpleProperties().size());
@@ -206,6 +210,7 @@ public class DMNTypeServiceImplTest extends AbstractDMNTest {
         assertEquals("tPhoneNumber", retrieved.getExpandableProperties().get(EXPANDABLE_PROPERTY_PHONENUMBERS));
         assertTrue(retrieved.getExpandableProperties().containsKey(EXPANDABLE_PROPERTY_DETAILS));
         assertEquals("tDetails", retrieved.getExpandableProperties().get(EXPANDABLE_PROPERTY_DETAILS));
+        assertEquals(IMPORTED_PREFIX, retrieved.getImportPrefix());
     }
 
     @Test
@@ -213,7 +218,7 @@ public class DMNTypeServiceImplTest extends AbstractDMNTest {
         // Single property collection retrieve
         DMNType compositePerson = getCompositeCollection();
         TreeMap<String, FactModelTree> hiddenFactSimpleCollection = new TreeMap<>();
-        FactModelTree retrieved = dmnTypeServiceImpl.createTopLevelFactModelTree("testPath", compositePerson, hiddenFactSimpleCollection, FactModelTree.Type.INPUT);
+        FactModelTree retrieved = dmnTypeServiceImpl.createTopLevelFactModelTree("testPath", IMPORTED_PREFIX, compositePerson, hiddenFactSimpleCollection, FactModelTree.Type.INPUT);
         assertNotNull(retrieved);
         assertEquals("testPath", retrieved.getFactName());
         assertEquals(1, retrieved.getSimpleProperties().size());
@@ -227,25 +232,28 @@ public class DMNTypeServiceImplTest extends AbstractDMNTest {
         assertNotNull(retrieved.getGenericTypesMap().get(VALUE));
         assertEquals(1, retrieved.getGenericTypesMap().get(VALUE).size());
         assertEquals(compositePerson.getName(), retrieved.getGenericTypesMap().get(VALUE).get(0));
+        assertEquals(IMPORTED_PREFIX, retrieved.getImportPrefix());
     }
 
     @Test
     public void createTopLevelFactModelTreeRecursiveTypes() throws WrongDMNTypeException {
         SortedMap<String, FactModelTree> hiddenFacts = new TreeMap<>();
-        FactModelTree person = dmnTypeServiceImpl.createTopLevelFactModelTree("person", getRecursivePersonComposite(false), hiddenFacts, FactModelTree.Type.DECISION);
+        FactModelTree person = dmnTypeServiceImpl.createTopLevelFactModelTree("person", IMPORTED_PREFIX, getRecursivePersonComposite(false), hiddenFacts, FactModelTree.Type.DECISION);
         assertNotNull(person);
         assertTrue(person.getExpandableProperties().containsKey("parent"));
         assertEquals("tPerson", person.getExpandableProperties().get("parent"));
         assertTrue(hiddenFacts.containsKey("tPerson"));
+        assertEquals(IMPORTED_PREFIX, person.getImportPrefix());
 
         hiddenFacts = new TreeMap<>();
-        FactModelTree personCollection = dmnTypeServiceImpl.createTopLevelFactModelTree("person", getRecursivePersonComposite(true), hiddenFacts, FactModelTree.Type.DECISION);
+        FactModelTree personCollection = dmnTypeServiceImpl.createTopLevelFactModelTree("person", IMPORTED_PREFIX, getRecursivePersonComposite(true), hiddenFacts, FactModelTree.Type.DECISION);
 
         assertNotNull(personCollection);
         assertTrue(personCollection.getGenericTypesMap().containsKey(VALUE));
         assertEquals("tPerson", personCollection.getGenericTypeInfo(VALUE).get(0));
         assertTrue(hiddenFacts.containsKey("tPerson"));
         assertTrue(hiddenFacts.containsKey("tPersonList"));
+        assertEquals(IMPORTED_PREFIX, personCollection.getImportPrefix());
     }
 
     @Test
