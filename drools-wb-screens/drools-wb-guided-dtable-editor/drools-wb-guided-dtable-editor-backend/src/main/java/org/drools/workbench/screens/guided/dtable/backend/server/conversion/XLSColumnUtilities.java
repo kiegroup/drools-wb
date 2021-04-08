@@ -34,8 +34,9 @@ public class XLSColumnUtilities
         this.dmo = PortablePreconditions.checkNotNull("dmo", dmo);
     }
 
-    protected String getTypeFromDataOracle(final String factType,
-                                           final String fieldName) {
+    @Override
+    public String getTypeFromDataOracle(final String factType,
+                                        final String fieldName) {
 
         final String fqcn = getFQCN(factType);
 
