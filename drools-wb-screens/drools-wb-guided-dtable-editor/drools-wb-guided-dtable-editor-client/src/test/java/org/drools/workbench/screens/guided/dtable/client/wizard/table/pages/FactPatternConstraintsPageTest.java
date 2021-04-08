@@ -211,7 +211,7 @@ public class FactPatternConstraintsPageTest {
 
         verify(callback).callback(new String[]{"==", "!=", "<", ">", "<=", ">=",
                 "contains", "not contains", "matches", "not matches", "soundslike", "not soundslike",
-                "== null", "!= null", "in", "not in"});
+                "memberOf", "not memberOf","== null", "!= null", "in", "not in"});
     }
 
     @Test
@@ -225,7 +225,7 @@ public class FactPatternConstraintsPageTest {
 
         verify(callback).callback(new String[]{"==", "!=", "<", ">", "<=", ">=",
                 "contains", "not contains", "matches", "not matches", "soundslike", "not soundslike",
-                "== null", "!= null"});
+                "memberOf", "not memberOf", "== null", "!= null"});
     }
 
     @Test
