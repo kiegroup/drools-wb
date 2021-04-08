@@ -21,6 +21,7 @@ import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 import org.drools.workbench.models.datamodel.rule.ActionCallMethod;
+import org.drools.workbench.models.datamodel.rule.ActionFieldList;
 import org.drools.workbench.models.datamodel.rule.ActionFieldValue;
 import org.drools.workbench.models.datamodel.rule.ActionInsertFact;
 import org.drools.workbench.models.datamodel.rule.ActionSetField;
@@ -74,7 +75,7 @@ public class BRLColumnSubHeaderBuilderByPatterns
                                                                                subHeaderBuilder.getTargetColumnIndex()));
                 final boolean madeInsert = subHeaderBuilder.makeInsert(boundName,
                                                                        actionInsertFact.getFactType());
-                if (madeInsert && ((ActionInsertFact) iAction).getFieldValues().length != 0) {
+                if (madeInsert && fieldValuesLength((ActionInsertFact) iAction) != 0) {
                     subHeaderBuilder.incrementTargetIndex();
                 }
             } else if (iAction instanceof ActionCallMethod && hasNoVariables(valuesIterator)) {
@@ -93,7 +94,7 @@ public class BRLColumnSubHeaderBuilderByPatterns
 
                 if (iAction instanceof ActionCallMethod) {
                     final StringBuilder params = new StringBuilder();
-                    final int methodParameterCount = ((ActionCallMethod) iAction).getFieldValues().length;
+                    final int methodParameterCount = fieldValuesLength((ActionCallMethod) iAction);
                     if (methodParameterCount == 1) {
                         params.append(wrapParameter(childColumn,
                                                     "$param"));
@@ -150,6 +151,16 @@ public class BRLColumnSubHeaderBuilderByPatterns
             }
         }
     }
+    /**
+     * Accessor of array length to prevent NPE
+     */
+    private int fieldValuesLength(final ActionFieldList action) {
+        if( action.getFieldValues() != null) {
+            return action.getFieldValues().length;
+        } else {
+            return 0;
+        }
+    }
 
     private String wrapParameter(final ActionCol52 childColumn,
                                  final String var) {
@@ -162,6 +173,10 @@ public class BRLColumnSubHeaderBuilderByPatterns
     }
 
     private boolean isThereJustOneVariableInParameters(final ActionFieldValue[] actionFieldValues) {
+        if (actionFieldValues == null) {
+            return false;
+        }
+
         boolean result = false;
         for (final ActionFieldValue actionFieldValue : actionFieldValues) {
             if (actionFieldValue.getNature() == FieldNatureType.TYPE_TEMPLATE) {

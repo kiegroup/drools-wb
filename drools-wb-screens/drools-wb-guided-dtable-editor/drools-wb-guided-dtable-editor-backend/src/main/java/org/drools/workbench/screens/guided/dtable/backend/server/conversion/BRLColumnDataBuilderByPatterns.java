@@ -116,9 +116,7 @@ public class BRLColumnDataBuilderByPatterns
     private Map<Integer, List<FromTo>> groupByTarget(final List<FromTo> columns) {
         final TreeMap<Integer, List<FromTo>> result = new TreeMap<>();
         for (final FromTo fromTo : columns) {
-            if (!result.containsKey(fromTo.getToColumnIndex())) {
-                result.put(fromTo.getToColumnIndex(), new ArrayList<>());
-            }
+            result.putIfAbsent(fromTo.getToColumnIndex(), new ArrayList<>());
             result.get(fromTo.getToColumnIndex()).add(fromTo);
         }
 

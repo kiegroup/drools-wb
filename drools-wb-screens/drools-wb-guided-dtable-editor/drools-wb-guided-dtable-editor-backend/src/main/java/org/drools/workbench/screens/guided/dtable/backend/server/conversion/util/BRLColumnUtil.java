@@ -103,9 +103,11 @@ public class BRLColumnUtil {
 
     private static boolean acceptOnlySingleFieldConstraints(final FieldConstraint constraint) {
         if (constraint instanceof CompositeFieldConstraint) {
-            for (final FieldConstraint fieldConstraint : ((CompositeFieldConstraint) constraint).getConstraints()) {
-                if (!acceptOnlySingleFieldConstraints(fieldConstraint)) {
-                    return false;
+            if (constraint != null && ((CompositeFieldConstraint) constraint).getConstraints() != null) {
+                for (final FieldConstraint fieldConstraint : ((CompositeFieldConstraint) constraint).getConstraints()) {
+                    if (!acceptOnlySingleFieldConstraints(fieldConstraint)) {
+                        return false;
+                    }
                 }
             }
         } else if ((constraint instanceof SingleFieldConstraint)) {
