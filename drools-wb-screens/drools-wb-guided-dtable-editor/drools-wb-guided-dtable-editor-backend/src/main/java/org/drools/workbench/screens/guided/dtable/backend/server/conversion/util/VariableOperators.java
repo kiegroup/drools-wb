@@ -20,14 +20,14 @@ import java.util.Map;
 
 public class VariableOperators {
 
-    private final Map<String, String> multiList = new HashMap<>();
+    private final Map<String, String> variableOperatorPairs = new HashMap<>();
 
     public void append(final String variable,
                        final String operator) {
-        multiList.put(variable, operator);
+        variableOperatorPairs.put(variable, operator);
     }
 
     public String getOperator(final String variable) {
-        return multiList.get(variable);
+        return variableOperatorPairs.get(variable);
     }
 }

@@ -100,7 +100,7 @@ public class XLSMethodCallAlertTest
     public void content() {
 
         assertEquals("true", cell(9, 1).getStringCellValue());
-        assertEquals("\"alrm alarm!\"", cell(9, 2).getStringCellValue());
+        assertEquals("\"alarm alarm!\"", cell(9, 2).getStringCellValue());
         assertEquals("\"positive result\"", cell(9, 3).getStringCellValue());
         assertEquals("1,2", cell(9, 4).getStringCellValue());
         assertEquals("3", cell(9, 5).getStringCellValue());
