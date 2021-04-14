@@ -1118,6 +1118,11 @@
     <!-- DMN Editor - Client side FEEL -->
     <dependency>
       <groupId>org.kie</groupId>
+      <artifactId>kie-dmn-feel-gwt-functions</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.kie</groupId>
       <artifactId>kie-dmn-feel-gwt</artifactId>
       <scope>provided</scope>
     </dependency>
