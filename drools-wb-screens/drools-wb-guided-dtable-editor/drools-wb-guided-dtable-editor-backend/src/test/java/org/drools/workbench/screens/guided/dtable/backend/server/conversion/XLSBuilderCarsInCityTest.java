@@ -22,8 +22,7 @@ import java.util.List;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.drools.workbench.models.guided.dtable.backend.GuidedDTXMLPersistence;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.kie.soup.project.datamodel.oracle.FieldAccessorsAndMutators;
@@ -38,11 +37,20 @@ import static org.mockito.Mockito.mock;
 public class XLSBuilderCarsInCityTest
         extends TestBase {
 
-    private String oldDateFormatValue;
-    private String oldLanguageValue;
+    private static String oldDateFormatValue;
+    private static String oldLanguageValue;
 
     @BeforeClass
     public static void setUpBefore() throws Exception {
+
+        oldDateFormatValue = System.getProperty("drools.dateformat");
+        oldLanguageValue = System.getProperty("drools.defaultlanguage");
+
+        System.setProperty("drools.dateformat",
+                           "dd-MMM-yyyy");
+        System.setProperty("drools.defaultlanguage",
+                           "fr_FR");
+
         final String xml = loadResource(XLSBuilderCarsInCityTest.class.getResourceAsStream("cars in city.gdst"));
 
         final GuidedDecisionTable52 dtable = GuidedDTXMLPersistence.getInstance().unmarshal(xml);
@@ -95,20 +103,8 @@ public class XLSBuilderCarsInCityTest
         return modelFields.toArray(new ModelField[modelFields.size()]);
     }
 
-    @Before
-    public void setUp() throws Exception {
-
-        oldDateFormatValue = System.getProperty("drools.dateformat");
-        oldLanguageValue = System.getProperty("drools.defaultlanguage");
-
-        System.setProperty("drools.dateformat",
-                           "dd-MMM-yyyy");
-        System.setProperty("drools.defaultlanguage",
-                           "fr_FR");
-    }
-
-    @After
-    public void tearDown() throws Exception {
+    @AfterClass
+    public static void tearDown() throws Exception {
 
         if (oldDateFormatValue == null) {
             System.clearProperty("drools.dateformat");
