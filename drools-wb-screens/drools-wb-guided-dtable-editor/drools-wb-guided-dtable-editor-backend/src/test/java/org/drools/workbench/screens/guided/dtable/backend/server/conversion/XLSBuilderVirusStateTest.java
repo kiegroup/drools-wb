@@ -18,6 +18,7 @@ package org.drools.workbench.screens.guided.dtable.backend.server.conversion;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.drools.workbench.models.guided.dtable.backend.GuidedDTXMLPersistence;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -28,8 +29,15 @@ import static org.junit.Assert.assertEquals;
 public class XLSBuilderVirusStateTest
         extends TestBase {
 
+    private static String oldValue;
+
     @BeforeClass
     public static void setUp() throws Exception {
+
+        oldValue = System.getProperty("drools.dateformat");
+
+        System.setProperty("drools.dateformat",
+                           "dd-MMM-yyyy");
         final String xml = loadResource(XLSBuilderAttributesNegateTest.class.getResourceAsStream("VirusState.gdst"));
 
         final GuidedDecisionTable52 dtable = GuidedDTXMLPersistence.getInstance().unmarshal(xml);
@@ -39,6 +47,17 @@ public class XLSBuilderVirusStateTest
 
         assertEquals(1, workbook.getNumberOfSheets());
         sheet = workbook.iterator().next();
+    }
+
+    @AfterClass
+    public static void tearDown() throws Exception {
+
+        if (oldValue == null) {
+            System.clearProperty("drools.dateformat");
+        } else {
+            System.setProperty("drools.dateformat",
+                               oldValue);
+        }
     }
 
     @Test
