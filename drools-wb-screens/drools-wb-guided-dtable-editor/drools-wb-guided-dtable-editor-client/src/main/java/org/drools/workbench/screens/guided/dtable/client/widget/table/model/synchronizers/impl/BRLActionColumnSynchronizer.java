@@ -81,10 +81,11 @@ public class BRLActionColumnSynchronizer extends BaseColumnSynchronizer<BaseColu
         final List<BaseColumnFieldDiff> diffs = originalColumn.diff(editedColumn);
 
         //Copy existing data for re-use if applicable
-        final Map<String, List<DTCellValue52>> originalColumnsData = new HashMap<String, List<DTCellValue52>>();
+        final Map<String, List<DTCellValue52>> originalColumnsData = new HashMap<>();
+
         for (BRLActionVariableColumn variable : originalColumn.getChildColumns()) {
             int iColumnIndex = model.getExpandedColumns().indexOf(variable);
-            final List<DTCellValue52> originalColumnData = new ArrayList<DTCellValue52>();
+            final List<DTCellValue52> originalColumnData = new ArrayList<>();
             final String key = makeUpdateBRLActionColumnKey(variable);
             for (List<DTCellValue52> row : model.getData()) {
                 originalColumnData.add(row.get(iColumnIndex));
@@ -130,9 +131,10 @@ public class BRLActionColumnSynchronizer extends BaseColumnSynchronizer<BaseColu
 
         final BRLActionColumn column = (BRLActionColumn) metaData.getColumn();
         if (column.getChildColumns().size() > 0) {
-            final int iFirstColumnIndex = model.getExpandedColumns().indexOf(column.getChildColumns().get(0));
-            for (int iColumnIndex = 0; iColumnIndex < column.getChildColumns().size(); iColumnIndex++) {
-                synchroniseDeleteColumn(iFirstColumnIndex);
+
+            // Need to reverse the iteration and remove from the last to first or the indexes are wrong.
+            for (int iColumnIndex = column.getChildColumns().size() - 1; iColumnIndex >= 0; iColumnIndex--) {
+                synchroniseDeleteColumn(model.getExpandedColumns().indexOf(column.getChildColumns().get(iColumnIndex)));
             }
         }
         model.getActionCols().remove(column);

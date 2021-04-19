@@ -62,7 +62,7 @@ public class XLSBuilderCovidBRLTest
         assertEquals("CONDITION", cell(5, 3).getStringCellValue());
         assertEquals("ACTION", cell(5, 4).getStringCellValue());
         assertEquals("ACTION", cell(5, 5).getStringCellValue());
-        assertNullCell(5, 6);
+        assertEquals("ACTION", cell(5, 6).getStringCellValue());
     }
 
     @Test
@@ -81,16 +81,16 @@ public class XLSBuilderCovidBRLTest
 
         assertEquals("age > $param", cell(7, 1).getStringCellValue().trim());
         assertEquals("fromCountry == $param", cell(7, 2).getStringCellValue().trim());
-        assertEquals("Covid19Test( personId == $r.personalId , positiveResult == $1 )", cell(7, 3).getStringCellValue().trim());
+        assertEquals("$test : Covid19Test( personId == $r.personalId , positiveResult == $1 )", cell(7, 3).getStringCellValue().trim());
         assertEquals("$r.setCanCrossBorders( $param );", cell(7, 4).getStringCellValue().trim());
         assertEquals("PoliceTransport brlColumnFact0 = new PoliceTransport();\n" +
-                             "\t\tbrlColumnFact0.setPersonalId( $r.personalId );\n" +
-                             "\t\tbrlColumnFact0.setWhere( \"$1\" );\n" +
-                             "\t\tinsert( brlColumnFact0 );\n" +
-                             "\t\tStateCaranteneBuilding brlColumnFact1 = new StateCaranteneBuilding();\n" +
-                             "\t\tbrlColumnFact1.setRoomPricePerNight( $2 );\n" +
-                             "\t\tinsert( brlColumnFact1 );", cell(7, 5).getStringCellValue().trim());
-         assertNullCell(7, 6);
+                "\t\tbrlColumnFact0.setPersonalId( $r.personalId );\n" +
+                "\t\tbrlColumnFact0.setWhere( \"$1\" );\n" +
+                "\t\tinsert( brlColumnFact0 );\n" +
+                "\t\tStateCaranteneBuilding brlColumnFact1 = new StateCaranteneBuilding();\n" +
+                "\t\tbrlColumnFact1.setRoomPricePerNight( $2 );\n" +
+                "\t\tinsert( brlColumnFact1 );", cell(7, 5).getStringCellValue().trim());
+        assertEquals("$test.sendNotification( $param );", cell(7, 6).getStringCellValue().trim());
     }
 
     @Test
@@ -101,7 +101,7 @@ public class XLSBuilderCovidBRLTest
         assertEquals("has test", cell(8, 3).getStringCellValue());
         assertEquals("can cross borders", cell(8, 4).getStringCellValue());
         assertEquals("transport it", cell(8, 5).getStringCellValue());
-        assertNullCell(8, 6);
+        assertEquals("notify person", cell(8, 6).getStringCellValue());
     }
 
     @Test
@@ -119,6 +119,6 @@ public class XLSBuilderCovidBRLTest
         assertEquals("true", cell(10, 3).getStringCellValue());
         assertEquals("false", cell(10, 4).getStringCellValue());
         assertEquals("BA, 10", cell(10, 5).getStringCellValue());
-        assertNullCell(10, 6);
+        assertEquals("\"your test was positive\"", cell(10, 6).getStringCellValue());
     }
 }

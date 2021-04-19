@@ -68,9 +68,9 @@ public class XLSBuilderQuarantineBuildingsTest
         assertEquals("$westBuilding : StateCaranteneBuilding( district == \"west\" , isFull == $1 )\n" +
                              "\t\t$eastBuilding : StateCaranteneBuilding( district == \"east\" , isFull == $2 )",
                      cell(7, 1).getStringCellValue().trim());
-        assertEquals("PoliceTransport brlColumnFact0 = new PoliceTransport(); insert( brlColumnFact0 );",
+        assertEquals("PoliceTransport $pt = new PoliceTransport(); insert( $pt );",
                      cell(7, 2).getStringCellValue().trim());
-        assertEquals("brlColumnFact0.setWhere( $param );",
+        assertEquals("$pt.setWhere( $param );",
                      cell(7, 3).getStringCellValue().trim());
         assertEquals("modify( $westBuilding ) {\n" +
                              "\t\t\t\tsetRoomPricePerNight( $westBuilding.roomPricePerNight / 2 )\n" +
