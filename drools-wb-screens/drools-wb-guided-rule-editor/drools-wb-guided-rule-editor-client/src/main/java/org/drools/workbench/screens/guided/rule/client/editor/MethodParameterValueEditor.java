@@ -25,12 +25,9 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -49,7 +46,6 @@ import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOr
 import org.kie.workbench.common.widgets.client.widget.TextBoxFactory;
 import org.uberfire.client.callbacks.Callback;
 import org.uberfire.ext.widgets.common.client.common.DropDownValueChanged;
-import org.uberfire.ext.widgets.common.client.common.InfoPopup;
 import org.uberfire.ext.widgets.common.client.common.SmallLabel;
 import org.uberfire.ext.widgets.common.client.common.popups.FormStylePopup;
 
@@ -84,7 +80,7 @@ public class MethodParameterValueEditor
     }
 
     private void setEnums(DropDownData enums) {
-        if (methodParameter.getType().equals(DataType.TYPE_BOOLEAN)) {
+        if ( methodParameter.getType().equals(DataType.TYPE_BOOLEAN) && !modeller.isTemplate()) {
             this.enums = DropDownData.create(new String[]{"true", "false"});
         } else {
             this.enums = enums;
@@ -138,21 +134,11 @@ public class MethodParameterValueEditor
     }
 
     private TextBox boundLiteralTextBox() {
-        final TextBox box = TextBoxFactory.getTextBox(methodParameter.getType());
+        final TextBox box = TextBoxFactory.getTextBox(getType());
 
         // We need both handlers, since The textbox TextBoxFactory can return a box that changes the value in itself
-        box.addValueChangeHandler(new ValueChangeHandler<String>() {
-            @Override
-            public void onValueChange(ValueChangeEvent<String> event) {
-                setMethodParameterValue(box.getValue());
-            }
-        });
-        box.addKeyUpHandler(new KeyUpHandler() {
-            @Override
-            public void onKeyUp(KeyUpEvent event) {
-                setMethodParameterValue(box.getValue());
-            }
-        });
+        box.addValueChangeHandler(event -> setMethodParameterValue(box.getValue()));
+        box.addKeyUpHandler(event -> setMethodParameterValue(box.getValue()));
 
         box.setStyleName("constraint-value-Editor");
         if (this.methodParameter.getValue() != null || this.methodParameter.getValue().isEmpty()) {
@@ -163,6 +149,14 @@ public class MethodParameterValueEditor
         setMethodParameterValue(box.getValue());
 
         return box;
+    }
+
+    private String getType() {
+        if(modeller.isTemplate()){
+            return DataType.TYPE_STRING;
+        }else {
+            return methodParameter.getType();
+        }
     }
 
     private TextBox boundFormulaTextBox() {
@@ -218,10 +212,26 @@ public class MethodParameterValueEditor
             }
         });
 
-        form.addAttribute(GuidedRuleEditorResources.CONSTANTS.LiteralValue() + ":",
-                          widgets(lit,
-                                  new InfoPopup(GuidedRuleEditorResources.CONSTANTS.Literal(),
-                                                GuidedRuleEditorResources.CONSTANTS.LiteralValTip())));
+        form.addAttributeWithHelp(GuidedRuleEditorResources.CONSTANTS.LiteralValue(),
+                                  GuidedRuleEditorResources.CONSTANTS.LiteralValue(),
+                                  GuidedRuleEditorResources.CONSTANTS.LiteralValTip(),
+                                  lit);
+
+        if (modeller.isTemplate()) {
+            Button templateButton = new Button(GuidedRuleEditorResources.CONSTANTS.TemplateKey());
+            templateButton.addClickHandler(new ClickHandler() {
+                public void onClick(ClickEvent event) {
+                    methodParameter.setNature(FieldNatureType.TYPE_TEMPLATE);
+                    methodParameter.setValue("");
+                    refresh();
+                    form.hide();
+                }
+            });
+            form.addAttributeWithHelp(GuidedRuleEditorResources.CONSTANTS.TemplateKey(),
+                                      GuidedRuleEditorResources.CONSTANTS.TemplateKey(),
+                                      GuidedRuleEditorResources.CONSTANTS.TemplateKeyTip(),
+                                      templateButton);
+        }
 
         canTheVariableButtonBeShown(new Callback<Boolean>() {
             @Override
@@ -245,10 +255,10 @@ public class MethodParameterValueEditor
                     }
                 });
 
-                form.addAttribute(GuidedRuleEditorResources.CONSTANTS.AFormula() + ":",
-                                  widgets(formula,
-                                          new InfoPopup(GuidedRuleEditorResources.CONSTANTS.AFormula(),
-                                                        GuidedRuleEditorResources.CONSTANTS.FormulaExpressionTip())));
+                form.addAttributeWithHelp(GuidedRuleEditorResources.CONSTANTS.AFormula(),
+                                          GuidedRuleEditorResources.CONSTANTS.AFormula(),
+                                          GuidedRuleEditorResources.CONSTANTS.FormulaExpressionTip(),
+                                          formula);
 
                 form.show();
             }
@@ -295,13 +305,5 @@ public class MethodParameterValueEditor
         } else {
             return modeller.getModel().getRHSBoundFact(variable).getFactType();
         }
-    }
-
-    private Widget widgets(Button lit,
-                           InfoPopup popup) {
-        HorizontalPanel h = new HorizontalPanel();
-        h.add(lit);
-        h.add(popup);
-        return h;
     }
 }

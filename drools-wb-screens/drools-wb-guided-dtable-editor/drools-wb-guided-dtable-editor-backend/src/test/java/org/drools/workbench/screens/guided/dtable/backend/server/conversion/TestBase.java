@@ -16,13 +16,16 @@
 package org.drools.workbench.screens.guided.dtable.backend.server.conversion;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.kie.soup.project.datamodel.oracle.DataType;
 import org.kie.soup.project.datamodel.oracle.FieldAccessorsAndMutators;
+import org.kie.soup.project.datamodel.oracle.MethodInfo;
 import org.kie.soup.project.datamodel.oracle.ModelField;
 import org.kie.soup.project.datamodel.oracle.PackageDataModelOracle;
 
@@ -37,20 +40,24 @@ public abstract class TestBase {
     public static PackageDataModelOracle makeDMO() {
         final PackageDataModelOracle dmo = mock(PackageDataModelOracle.class);
 
-        final HashMap<String, ModelField[]> map = new HashMap<>();
+        final HashMap<String, ModelField[]> fieldMap = new HashMap<>();
 
-        map.put("mortgages.mortgages.LoanApplication", makeModelFieldsLoanApplication());
-        map.put("mortgages.mortgages.IncomeSource", makeModelFieldsIncomeSource());
-        map.put("mortgages.mortgages.Applicant", makeModelFieldsApplicantSource());
+        fieldMap.put("mortgages.mortgages.LoanApplication", makeModelFieldsLoanApplication());
+        fieldMap.put("mortgages.mortgages.IncomeSource", makeModelFieldsIncomeSource());
+        fieldMap.put("mortgages.mortgages.Applicant", makeModelFieldsApplicantSource());
 
-        map.put("com.myspace.covid19.Covid19Test", makeModelFieldsCovid19TestSource());
-        map.put("com.myspace.covid19.PoliceTransport", makeModelFieldsPoliceTransportSource());
-        map.put("com.myspace.covid19.Repatriant", makeModelFieldsRepatriantSource());
-        map.put("com.myspace.covid19.StateCaranteneBuilding", makeModelFieldsStateCaranteneBuildingSource());
-        map.put("com.myspace.covid19.Virus", makeModelFieldsVirusSource());
-        map.put("com.myspace.covid19.Message", makeModelFieldsMessageSource());
+        fieldMap.put("com.myspace.covid19.Covid19Test", makeModelFieldsCovid19TestSource());
+        fieldMap.put("com.myspace.covid19.PoliceTransport", makeModelFieldsPoliceTransportSource());
+        fieldMap.put("com.myspace.covid19.Repatriant", makeModelFieldsRepatriantSource());
+        fieldMap.put("com.myspace.covid19.StateCaranteneBuilding", makeModelFieldsStateCaranteneBuildingSource());
+        fieldMap.put("com.myspace.covid19.Virus", makeModelFieldsVirusSource());
+        fieldMap.put("com.myspace.covid19.Message", makeModelFieldsMessageSource());
 
-        doReturn(map).when(dmo).getModuleModelFields();
+        doReturn(fieldMap).when(dmo).getModuleModelFields();
+
+        final HashMap<String, List<MethodInfo>> methodMap = new HashMap<>();
+        methodMap.put("com.myspace.covid19.Covid19Test", makeMethodInfoCovid19TestSourceCovid19TestSource());
+        doReturn(methodMap).when(dmo).getModuleMethodInformation();
 
         return dmo;
     }
@@ -157,6 +164,27 @@ public abstract class TestBase {
                                                                           "Date"));
 
         return modelFields.toArray(new ModelField[modelFields.size()]);
+    }
+
+    private static List<MethodInfo> makeMethodInfoCovid19TestSourceCovid19TestSource() {
+        final List<MethodInfo> methodInfos = Arrays.asList(
+                new MethodInfo("noParams",
+                               Collections.emptyList(),
+                               Void.class.getClass(),
+                               null,
+                               DataType.TYPE_VOID),
+                new MethodInfo("alarm",
+                               Collections.singletonList("alarmText"),
+                               Void.class.getClass(),
+                               null,
+                               DataType.TYPE_VOID),
+                new MethodInfo("sendNotification",
+                               Collections.singletonList("notificationText"),
+                               Void.class.getClass(),
+                               null,
+                               DataType.TYPE_VOID));
+
+        return methodInfos;
     }
 
     private static ModelField[] makeModelFieldsPoliceTransportSource() {

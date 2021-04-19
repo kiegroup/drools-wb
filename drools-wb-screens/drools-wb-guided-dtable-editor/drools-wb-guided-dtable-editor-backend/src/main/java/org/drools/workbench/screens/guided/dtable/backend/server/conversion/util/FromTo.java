@@ -15,6 +15,8 @@
  */
 package org.drools.workbench.screens.guided.dtable.backend.server.conversion.util;
 
+import java.util.Objects;
+
 /**
  * From origin column index to target column index.
  * If the column for example does not have values or is limited we only use a tick mark in the cell.
@@ -57,5 +59,22 @@ public class FromTo {
 
     public boolean shouldUseATickAsValue() {
         return useATickAsAValue;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final FromTo fromTo = (FromTo) o;
+        return fromColumnIndex == fromTo.fromColumnIndex && toColumnIndex == fromTo.toColumnIndex && useATickAsAValue == fromTo.useATickAsAValue;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fromColumnIndex, toColumnIndex, useATickAsAValue);
     }
 }
