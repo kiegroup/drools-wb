@@ -30,6 +30,8 @@ import org.dashbuilder.displayer.client.DisplayerLocator;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.jboss.errai.common.client.dom.elemental2.Elemental2DomUtil;
 
+import static org.drools.workbench.screens.scenariosimulation.client.utils.ConstantHolder.STYLE;
+
 @Dependent
 public class CoverageReportDonutPresenter {
 
@@ -78,6 +80,11 @@ public class CoverageReportDonutPresenter {
                                                 displayer.asWidget());
     }
 
+    public void initializeCSS() {
+        manageChartLabels();
+        manageChartTooltip();
+    }
+
     /**
      * Scope of this method is to manage the labels inside the Donut chart. The requirements is to:
      * - Remove all labels inside any arc of the chart. This is required because the chart current dimension is very
@@ -85,14 +92,31 @@ public class CoverageReportDonutPresenter {
      * To achieve these requirements without a native support of the component, it navigates the <code>container</code>
      * DOM to retrieve manually the text tags elements which handle the labels.
      */
-    public void manageChartLabels() {
+    private void manageChartLabels() {
         NodeList<Element> listE = container.getElementsByTagName("text");
         for (int i = 0; i < listE.getLength(); i++) {
             Element element = listE.getAt(i);
             String className = element.getAttribute("class");
              if (element.innerHTML != null && element.innerHTML.endsWith("%") && className.isEmpty()) {
-                String style = element.getAttribute("style");
-                element.setAttribute("style", style.concat("display:none;"));
+                String style = element.getAttribute(STYLE);
+                element.setAttribute(STYLE, style.concat("display:none;"));
+            }
+        }
+    }
+
+    /**
+     * Scope of this method is to change C3 native component position to "sticky"
+     */
+    private void manageChartTooltip() {
+        NodeList<Element> divs = container.getElementsByTagName("div");
+        for (int i = 0; i < divs.getLength(); i++) {
+            Element element = divs.getAt(i);
+            String className = element.getAttribute("class");
+            if ("c3-tooltip-container".equals(className)) {
+                String style = element.getAttribute(STYLE);
+                String replaceStyle = style.replace("absolute", "sticky").concat("position: -webkit-sticky;");
+                element.setAttribute(STYLE, replaceStyle);
+                break;
             }
         }
     }
