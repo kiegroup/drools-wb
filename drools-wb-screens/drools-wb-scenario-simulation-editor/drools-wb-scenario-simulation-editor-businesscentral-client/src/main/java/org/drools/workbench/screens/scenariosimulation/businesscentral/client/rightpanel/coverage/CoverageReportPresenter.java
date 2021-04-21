@@ -154,7 +154,7 @@ public class CoverageReportPresenter extends AbstractSubDockPresenter<CoverageRe
         coverageReportDonutPresenter.showCoverageReport(executed,
                                                         available - executed,
                                                         numberFormatNoDecimal.format(coveragePercentage) + "%");
-        coverageReportDonutPresenter.manageChartLabels();
+        coverageReportDonutPresenter.initializeCSS();
     }
 
     protected void populateList(Map<String, Integer> outputCounter) {
