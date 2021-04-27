@@ -203,5 +203,6 @@ public class ListGroupItemPresenterTest extends AbstractTestToolsTest {
         listGroupItemPresenter.selectProperty(instance, Collections.singletonList(property));
 
         verify(listGroupItemViewMock).showCheck(true);
+        verify(listGroupItemPresenter).onSelectedElement(listGroupItemViewMock);
     }
 }
