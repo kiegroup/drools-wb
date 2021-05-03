@@ -210,7 +210,7 @@ public class CoverageReportPresenterTest {
         verify(coverageReportDonutPresenterMock, times(1)).showCoverageReport(eq(executedLocal),
                                                                               eq(delta),
                                                                               endsWith("%"));
-        verify(coverageReportDonutPresenterMock, times(1)).initializeCSS();
+        verify(coverageReportDonutPresenterMock, times(1)).manageChartLabels();
     }
 
     @Test
