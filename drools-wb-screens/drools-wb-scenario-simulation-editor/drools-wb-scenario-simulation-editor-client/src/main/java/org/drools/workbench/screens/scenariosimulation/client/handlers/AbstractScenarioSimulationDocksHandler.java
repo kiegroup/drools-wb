@@ -38,8 +38,7 @@ import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.mvp.impl.DefaultPlaceRequest;
 
 /**
- * Abstract Handler used to register docks in ScenarioSimulation. Subclasses have to be defined in
- * Business Cental and Kogito Contest
+ * Abstract Handler used to register docks in ScenarioSimulation.
  */
 public abstract class AbstractScenarioSimulationDocksHandler extends AbstractWorkbenchDocksHandler {
 
