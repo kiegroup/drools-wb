@@ -90,6 +90,7 @@ public class ScenarioSimulationServiceImpl
     private static final String JUNIT_ACTIVATOR_PACKAGE_NAME = "testscenario";
     private static final String ORG_DROOLS = "org.drools";
     private static final String ORG_KIE = "org.kie";
+    private static final String ORG_JBPM = "org.jbpm";
 
     @Inject
     protected ScenarioSimulationBuilder scenarioSimulationBuilder;
@@ -458,6 +459,9 @@ public class ScenarioSimulationServiceImpl
                              new GAV(ORG_DROOLS, "drools-compiler", kieVersion),
                              // needed to compile guided decision table
                              new GAV(ORG_DROOLS, "drools-workbench-models-guided-dtable", kieVersion),
+                             // needed in case of BPMN file in the project, but not used directly by scesim
+                             new GAV(ORG_JBPM, "jbpm-bpmn2", kieVersion),
+                             // DMN dependencies
                              new GAV(ORG_KIE, "kie-dmn-feel", kieVersion),
                              new GAV(ORG_KIE, "kie-dmn-api", kieVersion),
                              new GAV(ORG_KIE, "kie-dmn-core", kieVersion));
