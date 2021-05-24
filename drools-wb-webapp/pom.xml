@@ -1118,11 +1118,16 @@
       <groupId>org.kie</groupId>
       <artifactId>kie-dmn-feel-gwt</artifactId>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.kie</groupId>
-      <artifactId>kie-dmn-feel-gwt</artifactId>
-      <classifier>sources</classifier>
+      <exclusions>
+        <exclusion>
+          <groupId>org.dominokit</groupId>
+          <artifactId>domino-slf4j-logger</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-api</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.kie</groupId>
