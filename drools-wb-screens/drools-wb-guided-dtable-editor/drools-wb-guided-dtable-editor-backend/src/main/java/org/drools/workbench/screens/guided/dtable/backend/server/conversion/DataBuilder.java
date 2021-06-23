@@ -307,7 +307,7 @@ public class DataBuilder {
 
         private String getStringValue(final DTCellValue52 cell,
                                       final boolean addQuotes) {
-            if (isTheRealCellValueString(sourceColumnIndex) && cell.getStringValue() != null) {
+            if (isTheRealCellValueString(cell) && cell.getStringValue() != null) {
 
                 if (cell.getStringValue() != null && !cell.getStringValue().isEmpty()) {
                     if (isOperator("in") || isOperator("not in")) {
@@ -382,11 +382,22 @@ public class DataBuilder {
             }
         }
 
-        private boolean isTheRealCellValueString(final int sourceColumnIndex) {
-            return !(dtable.getExpandedColumns().get(sourceColumnIndex) instanceof AttributeCol52)
-                    && !(dtable.getExpandedColumns().get(sourceColumnIndex) instanceof MetadataCol52)
-                    && !isFormula(sourceColumnIndex)
-                    && Objects.equals(DataType.DataTypes.STRING, utilsWithNoRespectForLists.getTypeSafeType(dtable.getExpandedColumns().get(sourceColumnIndex)));
+        private boolean isTheRealCellValueString(final DTCellValue52 cell) {
+
+            final BaseColumn baseColumn = dtable.getExpandedColumns().get(sourceColumnIndex);
+
+            if (baseColumn instanceof AttributeCol52
+                    || baseColumn instanceof MetadataCol52) {
+                return false;
+            }
+            if (isFormula(sourceColumnIndex)) {
+                return false;
+            }
+            if (baseColumn instanceof BRLActionVariableColumn) {
+                return Objects.equals(DataType.DataTypes.STRING, cell.getDataType());
+            } else {
+                return Objects.equals(DataType.DataTypes.STRING, utilsWithNoRespectForLists.getTypeSafeType(baseColumn));
+            }
         }
 
         private boolean isFormula(final int sourceColumnIndex) {
