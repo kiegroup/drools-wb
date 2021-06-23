@@ -18,7 +18,6 @@ package org.drools.workbench.screens.guided.dtable.backend.server.conversion;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.drools.workbench.models.guided.dtable.backend.GuidedDTXMLPersistence;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -28,15 +27,9 @@ import static org.junit.Assert.assertEquals;
 public class XLSBuilderAttributesTest
         extends TestBase {
 
-    private static String oldValue;
-
     @BeforeClass
     public static void setBeforeClass() throws Exception {
 
-        oldValue = System.getProperty("drools.dateformat");
-
-        System.setProperty("drools.dateformat",
-                           "dd-MMM-yyyy");
         final String xml = loadResource(XLSBuilderAttributesTest.class.getResourceAsStream("Attributes.gdst"));
 
         final GuidedDecisionTable52 dtable = GuidedDTXMLPersistence.getInstance().unmarshal(xml);
@@ -46,17 +39,6 @@ public class XLSBuilderAttributesTest
 
         assertEquals(1, workbook.getNumberOfSheets());
         sheet = workbook.iterator().next();
-    }
-
-    @AfterClass
-    public static void tearDown() throws Exception {
-
-        if (oldValue == null) {
-            System.clearProperty("drools.dateformat");
-        } else {
-            System.setProperty("drools.dateformat",
-                               oldValue);
-        }
     }
 
     @Test
@@ -131,10 +113,10 @@ public class XLSBuilderAttributesTest
     public void content() {
 
         assertEquals("0", cell(9, 1).getStringCellValue());
-        assertEquals("\"09-Aug-2019\"", cell(9, 2).getStringCellValue());
+        assertEquals("\"9-Aug-2019\"", cell(9, 2).getStringCellValue());
         assertEquals("true", cell(9, 3).getStringCellValue());
         assertEquals("true", cell(9, 4).getStringCellValue());
-        assertEquals("\"09-Aug-2019\"", cell(9, 5).getStringCellValue());
+        assertEquals("\"9-Aug-2019\"", cell(9, 5).getStringCellValue());
         assertEquals("agenda group cell", cell(9, 6).getStringCellValue());
         assertEquals("activation group cell", cell(9, 7).getStringCellValue());
         assertEquals("", cell(9, 8).getStringCellValue());
