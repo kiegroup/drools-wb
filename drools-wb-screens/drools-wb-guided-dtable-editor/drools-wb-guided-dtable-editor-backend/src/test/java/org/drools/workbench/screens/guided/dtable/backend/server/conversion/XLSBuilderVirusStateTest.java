@@ -28,8 +28,10 @@ import static org.junit.Assert.assertEquals;
 public class XLSBuilderVirusStateTest
         extends TestBase {
 
+
     @BeforeClass
     public static void setUp() throws Exception {
+
         final String xml = loadResource(XLSBuilderAttributesNegateTest.class.getResourceAsStream("VirusState.gdst"));
 
         final GuidedDecisionTable52 dtable = GuidedDTXMLPersistence.getInstance().unmarshal(xml);
@@ -79,13 +81,13 @@ public class XLSBuilderVirusStateTest
     public void content() {
 
         assertThat(cell(9, 1).getStringCellValue())
-                .startsWith("European, 10000.0, 0")
+                .startsWith("European, 10000.0, ")
                 .endsWith("-Jun-2020");
         assertThat(cell(10, 1).getStringCellValue())
-                .startsWith("Asian, 100000.0, 0")
+                .startsWith("Asian, 100000.0, ")
                 .endsWith("-Jun-2020");
         assertThat(cell(11, 1).getStringCellValue())
-                .startsWith("Asian, 10000.0, 0")
+                .startsWith("Asian, 10000.0, ")
                 .endsWith("-Jun-2020");
 
         assertEquals("low", cell(9, 2).getStringCellValue());
