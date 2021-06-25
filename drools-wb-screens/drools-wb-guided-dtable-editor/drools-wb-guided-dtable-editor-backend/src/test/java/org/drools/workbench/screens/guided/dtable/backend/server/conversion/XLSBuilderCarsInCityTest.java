@@ -106,7 +106,6 @@ public class XLSBuilderCarsInCityTest
 
     @Test
     public void content() {
-
         assertEquals("4", cell(9, 1).getStringCellValue());
         assertEquals("X", cell(9, 2).getStringCellValue());
         assertEquals("\"it is fine\"", cell(9, 3).getStringCellValue());
