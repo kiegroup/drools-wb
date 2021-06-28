@@ -23,6 +23,7 @@ import java.util.Optional;
 
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.drools.core.util.DateUtils;
 import org.drools.workbench.models.datamodel.rule.ActionCallMethod;
 import org.drools.workbench.models.datamodel.rule.Attribute;
 import org.drools.workbench.models.datamodel.workitems.PortableParameterDefinition;
@@ -328,10 +329,12 @@ public class SubHeaderBuilder {
 
         switch (valueType) {
 
+            case DataType.TYPE_DATE:
+                return String.format("new java.text.SimpleDateFormat( \"%s\").parse(%s)", DateUtils.getDateFormatMask(), var);
             case DataType.TYPE_NUMERIC_BIGDECIMAL:
-                return "new java.math.BigDecimal(\"" + var + "\")";
+                return String.format("new java.math.BigDecimal(\"%s\")", var);
             case DataType.TYPE_NUMERIC_BIGINTEGER:
-                return "new java.math.BigInteger(\"" + var + "\")";
+                return String.format("new java.math.BigInteger(\"%s\")", var);
             case DataType.TYPE_NUMERIC_DOUBLE:
                 return var + "d";
             case DataType.TYPE_NUMERIC_FLOAT:

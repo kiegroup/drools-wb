@@ -22,8 +22,6 @@ import java.util.List;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.drools.workbench.models.guided.dtable.backend.GuidedDTXMLPersistence;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.kie.soup.project.datamodel.oracle.FieldAccessorsAndMutators;
@@ -38,11 +36,15 @@ import static org.mockito.Mockito.mock;
 public class XLSBuilderCarsInCityTest
         extends TestBase {
 
-    private String oldDateFormatValue;
-    private String oldLanguageValue;
+    private static String oldLanguageValue;
 
     @BeforeClass
     public static void setUpBefore() throws Exception {
+        oldLanguageValue = System.getProperty("drools.defaultlanguage");
+
+        System.setProperty("drools.defaultlanguage",
+                           "fr_FR");
+
         final String xml = loadResource(XLSBuilderCarsInCityTest.class.getResourceAsStream("cars in city.gdst"));
 
         final GuidedDecisionTable52 dtable = GuidedDTXMLPersistence.getInstance().unmarshal(xml);
@@ -52,6 +54,13 @@ public class XLSBuilderCarsInCityTest
 
         assertEquals(1, workbook.getNumberOfSheets());
         sheet = workbook.iterator().next();
+
+        if (oldLanguageValue == null) {
+            System.clearProperty("drools.defaultlanguage");
+        } else {
+            System.setProperty("drools.defaultlanguage",
+                               oldLanguageValue);
+        }
     }
 
     public static PackageDataModelOracle makeDMO() {
@@ -95,42 +104,11 @@ public class XLSBuilderCarsInCityTest
         return modelFields.toArray(new ModelField[modelFields.size()]);
     }
 
-    @Before
-    public void setUp() throws Exception {
-
-        oldDateFormatValue = System.getProperty("drools.dateformat");
-        oldLanguageValue = System.getProperty("drools.defaultlanguage");
-
-        System.setProperty("drools.dateformat",
-                           "dd-MMM-yyyy");
-        System.setProperty("drools.defaultlanguage",
-                           "fr_FR");
-    }
-
-    @After
-    public void tearDown() throws Exception {
-
-        if (oldDateFormatValue == null) {
-            System.clearProperty("drools.dateformat");
-        } else {
-            System.setProperty("drools.dateformat",
-                               oldDateFormatValue);
-        }
-
-        if (oldLanguageValue == null) {
-            System.clearProperty("drools.defaultlanguage");
-        } else {
-            System.setProperty("drools.defaultlanguage",
-                               oldLanguageValue);
-        }
-    }
-
     @Test
     public void content() {
-
         assertEquals("4", cell(9, 1).getStringCellValue());
         assertEquals("X", cell(9, 2).getStringCellValue());
         assertEquals("\"it is fine\"", cell(9, 3).getStringCellValue());
-        assertEquals("\"09-Aug-2019\"", cell(9, 4).getStringCellValue());
+        assertEquals("\"9-Aug-2019\"", cell(9, 4).getStringCellValue());
     }
 }
