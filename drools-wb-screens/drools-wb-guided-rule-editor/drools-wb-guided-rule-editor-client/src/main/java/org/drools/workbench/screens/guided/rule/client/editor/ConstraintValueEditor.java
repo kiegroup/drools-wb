@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import com.google.gwt.dom.client.InputElement;
@@ -398,6 +399,7 @@ public class ConstraintValueEditor extends Composite {
         box.addItem(GuidedRuleEditorResources.CONSTANTS.Choose());
 
         List<String> bindingsInScope = this.model.getBoundVariablesInScope(this.constraint);
+        final boolean showMemberOfOption = showMemberOf(constraint);
 
         for (String var : bindingsInScope) {
             final String binding = var;
@@ -406,10 +408,19 @@ public class ConstraintValueEditor extends Composite {
                                                    @Override
                                                    public void callback(final Boolean result) {
                                                        if (Boolean.TRUE.equals(result)) {
-                                                           box.addItem(binding);
-                                                           if (ConstraintValueEditor.this.constraint.getValue() != null && ConstraintValueEditor.this.constraint.getValue().equals(binding)) {
-                                                               box.setSelectedIndex(box.getItemCount() - 1);
-                                                           }
+                                                           addItem(box,
+                                                                   binding);
+                                                       } else if (showMemberOfOption && Objects.equals("Collection", model.getLHSBindingType(var))) {
+                                                           addItem(box,
+                                                                   binding);
+                                                       }
+                                                   }
+
+                                                   private void addItem(final ListBox box,
+                                                                        final String binding) {
+                                                       box.addItem(binding);
+                                                       if (ConstraintValueEditor.this.constraint.getValue() != null && ConstraintValueEditor.this.constraint.getValue().equals(binding)) {
+                                                           box.setSelectedIndex(box.getItemCount() - 1);
                                                        }
                                                    }
                                                });
@@ -429,6 +440,10 @@ public class ConstraintValueEditor extends Composite {
         });
 
         return box;
+    }
+
+    private boolean showMemberOf(final BaseSingleFieldConstraint constraint) {
+        return Objects.equals("memberOf", constraint.getOperator()) || Objects.equals("not memberOf", constraint.getOperator());
     }
 
     /**
@@ -563,6 +578,7 @@ public class ConstraintValueEditor extends Composite {
         boolean showFormulaSelector = !OperatorsOracle.operatorRequiresList(con.getOperator());
         boolean showVariableSelector = !OperatorsOracle.operatorRequiresList(con.getOperator());
         boolean showExpressionSelector = !OperatorsOracle.operatorRequiresList(con.getOperator());
+        final boolean showMemberOfOptions = showMemberOf(con);
 
         if (con instanceof SingleFieldConstraint) {
             SingleFieldConstraint sfc = (SingleFieldConstraint) con;
@@ -603,13 +619,13 @@ public class ConstraintValueEditor extends Composite {
         }
 
         //Divider, if we have any advanced options
-        if (showVariableSelector || showFormulaSelector || showExpressionSelector) {
+        if (showVariableSelector || showFormulaSelector || showExpressionSelector || showMemberOfOptions) {
             form.addRow(new HTML("<hr/>"));
             form.addRow(new SmallLabel(GuidedRuleEditorResources.CONSTANTS.AdvancedOptions()));
         }
 
         //Show variables selector, if there are any variables in scope
-        if (showVariableSelector) {
+        if (showVariableSelector || showMemberOfOptions) {
             List<String> bindingsInScope = this.model.getBoundVariablesInScope(this.constraint);
             if (bindingsInScope.size() > 0 || DataType.TYPE_COLLECTION.equals(this.fieldType)) {
 
@@ -618,25 +634,42 @@ public class ConstraintValueEditor extends Composite {
                 //This Set is used as a 1flag to know whether the button has been added; due to use of callbacks
                 final Set<Button> bindingButtonContainer = new HashSet<>();
 
-                for (String var : bindingsInScope) {
-                    helper.isApplicableBindingsInScope(var,
-                                                       new Callback<Boolean>() {
-                                                           @Override
-                                                           public void callback(final Boolean result) {
-                                                               if (Boolean.TRUE.equals(result)) {
-                                                                   if (!bindingButtonContainer.contains(bindingButton)) {
-                                                                       bindingButtonContainer.add(bindingButton);
-                                                                       bindingButton.addClickHandler(getValueTypeFormOnClickHandler(con,
-                                                                                                                                    form,
-                                                                                                                                    SingleFieldConstraint.TYPE_VARIABLE));
-                                                                       form.addAttributeWithHelp(GuidedRuleEditorResources.CONSTANTS.AVariable(),
-                                                                                                 GuidedRuleEditorResources.CONSTANTS.ABoundVariable(),
-                                                                                                 GuidedRuleEditorResources.CONSTANTS.BoundVariableTip(),
-                                                                                                 bindingButton);
+                if (showMemberOfOptions) {
+                    for (String var : bindingsInScope) {
+                         final String lhsBindingType = model.getLHSBindingType(var);
+                         if(Objects.equals("Collection", lhsBindingType) && !bindingButtonContainer.contains(bindingButton)) {
+                                bindingButtonContainer.add(bindingButton);
+                                bindingButton.addClickHandler(getValueTypeFormOnClickHandler(con,
+                                                                                             form,
+                                                                                             SingleFieldConstraint.TYPE_VARIABLE));
+                                form.addAttributeWithHelp(GuidedRuleEditorResources.CONSTANTS.AVariable(),
+                                                          GuidedRuleEditorResources.CONSTANTS.ABoundVariable(),
+                                                          GuidedRuleEditorResources.CONSTANTS.BoundVariableTip(),
+                                                          bindingButton);
+                        }
+                    }
+                }
+                if (showVariableSelector) {
+                    for (String var : bindingsInScope) {
+                        helper.isApplicableBindingsInScope(var,
+                                                           new Callback<Boolean>() {
+                                                               @Override
+                                                               public void callback(final Boolean result) {
+                                                                   if (Boolean.TRUE.equals(result)) {
+                                                                       if (!bindingButtonContainer.contains(bindingButton)) {
+                                                                           bindingButtonContainer.add(bindingButton);
+                                                                           bindingButton.addClickHandler(getValueTypeFormOnClickHandler(con,
+                                                                                                                                        form,
+                                                                                                                                        SingleFieldConstraint.TYPE_VARIABLE));
+                                                                           form.addAttributeWithHelp(GuidedRuleEditorResources.CONSTANTS.AVariable(),
+                                                                                                     GuidedRuleEditorResources.CONSTANTS.ABoundVariable(),
+                                                                                                     GuidedRuleEditorResources.CONSTANTS.BoundVariableTip(),
+                                                                                                     bindingButton);
+                                                                       }
                                                                    }
                                                                }
-                                                           }
-                                                       });
+                                                           });
+                    }
                 }
             }
         }
