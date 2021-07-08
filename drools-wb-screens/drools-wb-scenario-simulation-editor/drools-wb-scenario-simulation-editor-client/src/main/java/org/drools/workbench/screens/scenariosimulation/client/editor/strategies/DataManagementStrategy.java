@@ -18,8 +18,11 @@ package org.drools.workbench.screens.scenariosimulation.client.editor.strategies
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -47,16 +50,20 @@ import static org.drools.workbench.screens.scenariosimulation.client.utils.Const
 public interface DataManagementStrategy {
 
     Map<String, SimpleClassEntry> SIMPLE_CLASSES_MAP = Collections.unmodifiableMap(Stream.of(
+            new AbstractMap.SimpleEntry<>(ArrayList.class.getSimpleName(), new SimpleClassEntry(ArrayList.class)),
             new AbstractMap.SimpleEntry<>(BigDecimal.class.getSimpleName(), new SimpleClassEntry(BigDecimal.class)),
             new AbstractMap.SimpleEntry<>(BigInteger.class.getSimpleName(), new SimpleClassEntry(BigInteger.class)),
             new AbstractMap.SimpleEntry<>(Boolean.class.getSimpleName(), new SimpleClassEntry(Boolean.class)),
             new AbstractMap.SimpleEntry<>(Byte.class.getSimpleName(), new SimpleClassEntry(Byte.class)),
             new AbstractMap.SimpleEntry<>(Character.class.getSimpleName(), new SimpleClassEntry(Character.class)),
+            new AbstractMap.SimpleEntry<>(Collection.class.getSimpleName(), new SimpleClassEntry(Collection.class)),
             new AbstractMap.SimpleEntry<>(Date.class.getSimpleName(), new SimpleClassEntry(Date.class)),
             new AbstractMap.SimpleEntry<>(Double.class.getSimpleName(), new SimpleClassEntry(Double.class)),
             new AbstractMap.SimpleEntry<>(Float.class.getSimpleName(), new SimpleClassEntry(Float.class)),
             new AbstractMap.SimpleEntry<>(Integer.class.getSimpleName(), new SimpleClassEntry(Integer.class)),
+            new AbstractMap.SimpleEntry<>(List.class.getSimpleName(), new SimpleClassEntry(List.class)),
             new AbstractMap.SimpleEntry<>(Long.class.getSimpleName(), new SimpleClassEntry(Long.class)),
+            new AbstractMap.SimpleEntry<>(Map.class.getSimpleName(), new SimpleClassEntry(Map.class)),
             new AbstractMap.SimpleEntry<>(Number.class.getSimpleName(), new SimpleClassEntry(Number.class)),
             new AbstractMap.SimpleEntry<>(Object.class.getSimpleName(), new SimpleClassEntry(Object.class)),
             new AbstractMap.SimpleEntry<>(Short.class.getSimpleName(), new SimpleClassEntry(Short.class)),
