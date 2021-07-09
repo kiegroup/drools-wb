@@ -22,6 +22,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -60,7 +63,10 @@ public interface DataManagementStrategy {
             new AbstractMap.SimpleEntry<>(Date.class.getSimpleName(), new SimpleClassEntry(Date.class)),
             new AbstractMap.SimpleEntry<>(Double.class.getSimpleName(), new SimpleClassEntry(Double.class)),
             new AbstractMap.SimpleEntry<>(Float.class.getSimpleName(), new SimpleClassEntry(Float.class)),
+            new AbstractMap.SimpleEntry<>(HashMap.class.getSimpleName(), new SimpleClassEntry(HashMap.class)),
             new AbstractMap.SimpleEntry<>(Integer.class.getSimpleName(), new SimpleClassEntry(Integer.class)),
+            new AbstractMap.SimpleEntry<>(LinkedList.class.getSimpleName(), new SimpleClassEntry(LinkedList.class)),
+            new AbstractMap.SimpleEntry<>(LinkedHashMap.class.getSimpleName(), new SimpleClassEntry(LinkedHashMap.class)),
             new AbstractMap.SimpleEntry<>(List.class.getSimpleName(), new SimpleClassEntry(List.class)),
             new AbstractMap.SimpleEntry<>(Long.class.getSimpleName(), new SimpleClassEntry(Long.class)),
             new AbstractMap.SimpleEntry<>(Map.class.getSimpleName(), new SimpleClassEntry(Map.class)),
