@@ -467,7 +467,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         reset(scenarioSimulationEventHandler);
         when(scenarioGridModelMock.isAlreadyAssignedProperty(MULTIPART_VALUE_ELEMENTS)).thenReturn(false);
         when(scenarioGridModelMock.isSelectedColumnEmpty()).thenReturn(true);
-        when(scenarioGridModelMock.isSameSelectedColumnProperty(anyList())).thenReturn(false);
+        //when(scenarioGridModelMock.isSameSelectedColumnProperty(anyList(), factMappingValueType)).thenReturn(false);
         when(scenarioGridModelMock.isSameSelectedColumnType(anyString())).thenReturn(true);
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler, never()).onEvent(isA(ScenarioNotificationEvent.class));
@@ -478,7 +478,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         reset(scenarioSimulationEventHandler);
         when(scenarioGridModelMock.isAlreadyAssignedProperty(MULTIPART_VALUE_ELEMENTS)).thenReturn(false);
         when(scenarioGridModelMock.isSelectedColumnEmpty()).thenReturn(false);
-        when(scenarioGridModelMock.isSameSelectedColumnProperty(anyList())).thenReturn(false);
+        //when(scenarioGridModelMock.isSameSelectedColumnProperty(anyList(), factMappingValueType)).thenReturn(false);
         when(scenarioGridModelMock.isSameSelectedColumnType(anyString())).thenReturn(true);
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler, never()).onEvent(isA(ScenarioNotificationEvent.class));
@@ -499,7 +499,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         reset(scenarioSimulationEventHandler, preserveDeletePopupPresenterMock);
         when(scenarioGridModelMock.isAlreadyAssignedProperty(MULTIPART_VALUE_ELEMENTS)).thenReturn(false);
         when(scenarioGridModelMock.isSelectedColumnEmpty()).thenReturn(true);
-        when(scenarioGridModelMock.isSameSelectedColumnProperty(anyList())).thenReturn(true);
+        //when(scenarioGridModelMock.isSameSelectedColumnProperty(anyList(), factMappingValueType)).thenReturn(true);
         when(scenarioGridModelMock.isSameSelectedColumnType(anyString())).thenReturn(false);
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler, never()).onEvent(isA(ScenarioNotificationEvent.class));
@@ -510,7 +510,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         reset(scenarioSimulationEventHandler);
         when(scenarioGridModelMock.isAlreadyAssignedProperty(MULTIPART_VALUE_ELEMENTS)).thenReturn(false);
         when(scenarioGridModelMock.isSelectedColumnEmpty()).thenReturn(false);
-        when(scenarioGridModelMock.isSameSelectedColumnProperty(anyList())).thenReturn(true);
+        //when(scenarioGridModelMock.isSameSelectedColumnProperty(anyList(), factMappingValueType)).thenReturn(true);
         when(scenarioGridModelMock.isSameSelectedColumnType(anyString())).thenReturn(false);
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler, never()).onEvent(isA(ScenarioNotificationEvent.class));
@@ -531,7 +531,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         reset(scenarioSimulationEventHandler, preserveDeletePopupPresenterMock);
         when(scenarioGridModelMock.isAlreadyAssignedProperty(MULTIPART_VALUE_ELEMENTS)).thenReturn(false);
         when(scenarioGridModelMock.isSelectedColumnEmpty()).thenReturn(true);
-        when(scenarioGridModelMock.isSameSelectedColumnProperty(anyList())).thenReturn(false);
+        //when(scenarioGridModelMock.isSameSelectedColumnProperty(anyList(), factMappingValueType)).thenReturn(false);
         when(scenarioGridModelMock.isSameSelectedColumnType(anyString())).thenReturn(false);
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler, never()).onEvent(isA(ScenarioNotificationEvent.class));
@@ -542,7 +542,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         reset(scenarioSimulationEventHandler);
         when(scenarioGridModelMock.isAlreadyAssignedProperty(MULTIPART_VALUE_ELEMENTS)).thenReturn(false);
         when(scenarioGridModelMock.isSelectedColumnEmpty()).thenReturn(false);
-        when(scenarioGridModelMock.isSameSelectedColumnProperty(anyList())).thenReturn(false);
+        //when(scenarioGridModelMock.isSameSelectedColumnProperty(anyList(), factMappingValueType)).thenReturn(false);
         when(scenarioGridModelMock.isSameSelectedColumnType(anyString())).thenReturn(false);
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler, never()).onEvent(isA(ScenarioNotificationEvent.class));
