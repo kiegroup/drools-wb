@@ -27,6 +27,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -74,7 +75,7 @@ public interface DataManagementStrategy {
             new AbstractMap.SimpleEntry<>(Object.class.getSimpleName(), new SimpleClassEntry(Object.class)),
             new AbstractMap.SimpleEntry<>(Short.class.getSimpleName(), new SimpleClassEntry(Short.class)),
             new AbstractMap.SimpleEntry<>(String.class.getSimpleName(), new SimpleClassEntry(String.class)),
-            // java.time (JSR-310) is not supported by GWT, therefore LocalDate and LocaleDateTime are not natively
+            new AbstractMap.SimpleEntry<>(TreeMap.class.getSimpleName(), new SimpleClassEntry(TreeMap.class)),            // java.time (JSR-310) is not supported by GWT, therefore LocalDate and LocaleDateTime are not natively
             new AbstractMap.SimpleEntry<>(LOCALDATE_SIMPLE_NAME, new SimpleClassEntry(LOCALDATE_SIMPLE_NAME, LOCALDATE_CANONICAL_NAME)),
             new AbstractMap.SimpleEntry<>(LOCALTIME_SIMPLE_NAME, new SimpleClassEntry(LOCALTIME_SIMPLE_NAME, LOCALTIME_CANONICAL_NAME)),
             new AbstractMap.SimpleEntry<>(LOCALDATETIME_SIMPLE_NAME, new SimpleClassEntry(LOCALDATETIME_SIMPLE_NAME, LOCALDATETIME_CANONICAL_NAME)),
