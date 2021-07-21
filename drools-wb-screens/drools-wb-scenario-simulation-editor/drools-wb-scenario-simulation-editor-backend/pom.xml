@@ -164,6 +164,12 @@
       <groupId>org.kie</groupId>
       <artifactId>kie-dmn-model</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>org.wildfly.security</groupId>
+      <artifactId>wildfly-elytron</artifactId>
+      <scope>provided</scope>
+    </dependency>
     <!-- End dependency:analyze requirements -->
 
     <!-- Test dependencies -->
