@@ -166,10 +166,6 @@
       <exclusions>
         <exclusion>
           <groupId>org.jboss.resteasy</groupId>
-          <artifactId>jaxrs-api</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.jboss.resteasy</groupId>
           <artifactId>resteasy-cdi</artifactId>
         </exclusion>
       </exclusions>
@@ -642,6 +638,12 @@
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-rest-backend</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.jboss.resteasy</groupId>
+          <artifactId>resteasy-cdi</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <!-- Uberfire Widget Backend needed -->
