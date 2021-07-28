@@ -29,7 +29,7 @@ import org.junit.runner.RunWith;
 import static org.drools.workbench.services.verifier.plugin.client.testutil.TestUtil.assertOnlyContains;
 
 @RunWith(GwtMockitoTestRunner.class)
-public class DecisionTableAnalyzerWhiteListTest
+public class DecisionTableAnalyzerAllowListTest
         extends AnalyzerUpdateTestBase {
 
     @Override
@@ -53,7 +53,7 @@ public class DecisionTableAnalyzerWhiteListTest
     }
 
     @Test
-    public void defaultWhiteList() throws
+    public void defaultAllowList() throws
             Exception {
 
         analyzerProvider.setConfiguration(new AnalyzerConfigurationMock());
