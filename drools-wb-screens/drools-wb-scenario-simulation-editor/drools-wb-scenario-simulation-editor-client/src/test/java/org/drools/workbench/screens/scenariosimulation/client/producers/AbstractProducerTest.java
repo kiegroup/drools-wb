@@ -16,10 +16,6 @@
 
 package org.drools.workbench.screens.scenariosimulation.client.producers;
 
-import java.lang.annotation.Annotation;
-
-import javax.enterprise.event.Event;
-
 import com.google.gwt.event.shared.EventBus;
 import org.drools.workbench.screens.scenariosimulation.client.AbstractScenarioSimulationTest;
 import org.drools.workbench.screens.scenariosimulation.client.commands.ScenarioSimulationEventHandler;
@@ -31,6 +27,7 @@ import org.drools.workbench.screens.scenariosimulation.client.popup.FileUploadPo
 import org.drools.workbench.screens.scenariosimulation.client.popup.PreserveDeletePopupPresenter;
 import org.junit.Before;
 import org.mockito.Mock;
+import org.uberfire.mocks.EventSourceMock;
 import org.uberfire.workbench.events.NotificationEvent;
 
 import static org.mockito.Matchers.isA;
@@ -56,28 +53,12 @@ public abstract class AbstractProducerTest extends AbstractScenarioSimulationTes
     protected ScenarioSimulationView scenarioSimulationViewMock;
     @Mock
     protected ScenarioContextMenuRegistry scenarioContextMenuRegistryMock;
-
-    protected Event<NotificationEvent> notificationEventNew;
+    @Mock
+    protected EventSourceMock<NotificationEvent> notificationEventNew;
 
     @Before
     public void setup() {
         super.setup();
-        notificationEventNew = new Event<NotificationEvent>() {
-            @Override
-            public void fire(NotificationEvent notificationEvent) {
-
-            }
-
-            @Override
-            public Event<NotificationEvent> select(Annotation... annotations) {
-                return null;
-            }
-
-            @Override
-            public <U extends NotificationEvent> Event<U> select(Class<U> aClass, Annotation... annotations) {
-                return null;
-            }
-        };
         when(eventBusProducerMock.getEventBus()).thenReturn(eventBusMock);
         when(scenarioGridPanelProducerMock.getScenarioSimulationView(isA(EventBus.class))).thenReturn(scenarioSimulationViewMock);
         when(scenarioGridPanelProducerMock.getScenarioContextMenuRegistry()).thenReturn(scenarioContextMenuRegistryMock);
