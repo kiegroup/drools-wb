@@ -29,7 +29,7 @@ public class CheckConfigurationProvider {
             case RULE_ORDER:
             case FIRST_HIT:
             case RESOLVED_HIT:
-                return getWhiteListWithNoRowToRowChecks();
+                return getAllowListWithNoRowToRowChecks();
             case UNIQUE_HIT:
                 return getUniqueHitPolicyChecks();
             case NONE:
@@ -38,7 +38,7 @@ public class CheckConfigurationProvider {
         }
     }
 
-    private static CheckConfiguration getWhiteListWithNoRowToRowChecks() {
+    private static CheckConfiguration getAllowListWithNoRowToRowChecks() {
         final CheckConfiguration checkConfiguration = CheckConfiguration.newDefault();
 
         checkConfiguration.getCheckConfiguration()
