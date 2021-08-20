@@ -230,6 +230,11 @@ public abstract class BaseSynchronizerTest {
         }
 
         @Override
+        public <U extends DynamicValidator> Instance<U> select(TypeLiteral<U> subtype, Annotation... qualifiers) {
+            return null;
+        }
+
+        @Override
         public boolean isUnsatisfied() {
             return true;
         }
@@ -251,12 +256,6 @@ public abstract class BaseSynchronizerTest {
 
         @Override
         public DynamicValidator get() {
-            return null;
-        }
-
-        @Override
-        public <U extends DynamicValidator> Instance<U> select(TypeLiteral<U> subtype, Annotation... qualifiers) {
-            // TODO Auto-generated method stub
             return null;
         }
     }

@@ -46,6 +46,7 @@
       <module name="org.jboss.remote-naming"/>
       <module name="org.jboss.remoting3"/>
       <module name="org.jboss.xnio"/>
+      <module name="org.slf4j"/>
 
 
       <!-- ******************************************************************************************** -->

@@ -16,15 +16,9 @@
 
 package org.drools.workbench.screens.testscenario.client;
 
-import java.lang.annotation.Annotation;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.concurrent.CompletionStage;
 import java.util.function.Supplier;
-
-import javax.enterprise.event.Event;
-import javax.enterprise.event.NotificationOptions;
-import javax.enterprise.util.TypeLiteral;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.models.testscenarios.shared.ExecutionTrace;
@@ -162,6 +156,8 @@ public class ScenarioEditorPresenterTest {
     private AuditPage auditPage;
 
     protected Promises promises;
+    @Mock
+    private EventSourceMock<NotificationEvent> notificationEventMock;
 
     @Mock
     private PerspectiveManager perspectiveManager;
@@ -194,7 +190,7 @@ public class ScenarioEditorPresenterTest {
                 kieView = ScenarioEditorPresenterTest.this.kieView;
                 versionRecordManager = ScenarioEditorPresenterTest.this.versionRecordManager;
                 overviewWidget = ScenarioEditorPresenterTest.this.overviewWidget;
-                notification = makeNotificationEvent();
+                notification = ScenarioEditorPresenterTest.this.notificationEventMock;
                 fileMenuBuilder = ScenarioEditorPresenterTest.this.fileMenuBuilder;
                 projectController = ScenarioEditorPresenterTest.this.projectController;
                 workbenchContext = ScenarioEditorPresenterTest.this.workbenchContext;
@@ -455,42 +451,5 @@ public class ScenarioEditorPresenterTest {
         final Caller<? extends SupportsSaveAndRename<Scenario, Metadata>> serviceCaller = editor.getSaveAndRenameServiceCaller();
 
         assertEquals(fakeService, serviceCaller);
-    }
-
-    private Event<NotificationEvent> makeNotificationEvent() {
-        return new Event<NotificationEvent>() {
-            @Override
-            public void fire(NotificationEvent notificationEvent) {
-            }
-
-            @Override
-            public Event<NotificationEvent> select(Annotation... annotations) {
-                return null;
-            }
-
-            @Override
-            public <U extends NotificationEvent> Event<U> select(Class<U> aClass,
-                                                                 Annotation... annotations) {
-                return null;
-            }
-
-            @Override
-            public <U extends NotificationEvent> CompletionStage<U> fireAsync(U event) {
-                // TODO Auto-generated method stub
-                return null;
-            }
-
-            @Override
-            public <U extends NotificationEvent> CompletionStage<U> fireAsync(U event, NotificationOptions options) {
-                // TODO Auto-generated method stub
-                return null;
-            }
-
-            @Override
-            public <U extends NotificationEvent> Event<U> select(TypeLiteral<U> subtype, Annotation... qualifiers) {
-                // TODO Auto-generated method stub
-                return null;
-            }
-        };
     }
 }
