@@ -27,6 +27,7 @@ import org.drools.core.util.DateUtils;
 import org.drools.core.util.StringUtils;
 import org.drools.workbench.models.guided.dtable.shared.model.ActionInsertFactCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.ActionRetractFactCol52;
+import org.drools.workbench.models.guided.dtable.shared.model.ActionSetFieldCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.ActionWorkItemCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.ActionWorkItemSetFieldCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.AttributeCol52;
@@ -39,8 +40,8 @@ import org.drools.workbench.models.guided.dtable.shared.model.ConditionCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.DTCellValue52;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
 import org.drools.workbench.models.guided.dtable.shared.model.MetadataCol52;
-import org.drools.workbench.models.guided.dtable.shared.util.ColumnUtilitiesBase;
 import org.drools.workbench.screens.guided.dtable.backend.server.conversion.util.ColumnContext;
+import org.drools.workbench.screens.guided.dtable.backend.server.conversion.util.CommaSeparatedListValueConverter;
 import org.drools.workbench.screens.guided.dtable.backend.server.conversion.util.NotificationReporter;
 import org.drools.workbench.screens.guided.dtable.backend.server.conversion.util.Skipper;
 import org.kie.soup.commons.validation.PortablePreconditions;
@@ -57,8 +58,8 @@ public class DataBuilder {
     private final Sheet sheet;
     private final GuidedDecisionTable52 dtable;
     private final ColumnContext columnContext;
-    private final ColumnUtilitiesBase utilsWithRespectForLists;
-    private final ColumnUtilitiesBase utilsWithNoRespectForLists;
+    private final XLSColumnUtilities utilsWithRespectForLists;
+    private final XLSColumnUtilities utilsWithNoRespectForLists;
 
     private int rowCount = FIRST_DATA_ROW;
 
@@ -306,10 +307,10 @@ public class DataBuilder {
 
         private String getStringValue(final DTCellValue52 cell,
                                       final boolean addQuotes) {
-            if (isTheRealCellValueString(sourceColumnIndex) && cell.getStringValue() != null) {
+            if (isTheRealCellValueString(cell) && cell.getStringValue() != null) {
 
                 if (cell.getStringValue() != null && !cell.getStringValue().isEmpty()) {
-                    if (isOperator("in")) {
+                    if (isOperator("in") || isOperator("not in")) {
                         return String.format("(%s)", fixStringValue(cell));
                     } else if (addQuotes) {
                         return String.format("\"%s\"", fixStringValue(cell));
@@ -324,8 +325,7 @@ public class DataBuilder {
                  */
                 if (Objects.equals(DataType.DataTypes.STRING, cell.getDataType())) {
 
-                    xlsRow.createCell(targetColumnIndex)
-                            .setCellValue(cell.getStringValue());
+                    return cell.getStringValue();
                 } else {
 
                     return getValue(cell,
@@ -349,18 +349,55 @@ public class DataBuilder {
         }
 
         private String fixStringValue(final DTCellValue52 cell) {
-            if (cell.getStringValue().length() > 2 && cell.getStringValue().startsWith("\"") && cell.getStringValue().endsWith("\"")) {
+
+            if ((isOperator("in") || isOperator("not in")) && isColumnHardTypeString()) {
+                return new CommaSeparatedListValueConverter(cell.getStringValue()).convert();
+            } else if (cell.getStringValue().length() > 2 && cell.getStringValue().startsWith("\"") && cell.getStringValue().endsWith("\"")) {
                 return cell.getStringValue().substring(1, cell.getStringValue().length() - 1);
             } else {
                 return cell.getStringValue();
             }
         }
 
-        private boolean isTheRealCellValueString(final int sourceColumnIndex) {
-            return !(dtable.getExpandedColumns().get(sourceColumnIndex) instanceof AttributeCol52)
-                    && !(dtable.getExpandedColumns().get(sourceColumnIndex) instanceof MetadataCol52)
-                    && !isFormula(sourceColumnIndex)
-                    && Objects.equals(DataType.DataTypes.STRING, utilsWithNoRespectForLists.getTypeSafeType(dtable.getExpandedColumns().get(sourceColumnIndex)));
+        private boolean isColumnHardTypeString() {
+            return Objects.equals(DataType.TYPE_STRING, getHardColumnType());
+        }
+
+        /**
+         * @return The actual type from the column.
+         */
+        private String getHardColumnType() {
+            BaseColumn baseColumn = dtable.getExpandedColumns().get(sourceColumnIndex);
+
+            if (baseColumn instanceof ConditionCol52) {
+                return ((ConditionCol52) baseColumn).getFieldType();
+            } else if (baseColumn instanceof ActionSetFieldCol52) {
+                return ((ActionSetFieldCol52) baseColumn).getType();
+            } else if (baseColumn instanceof ActionInsertFactCol52) {
+                return ((ActionInsertFactCol52) baseColumn).getType();
+            } else if (baseColumn instanceof ActionInsertFactCol52) {
+                return ((ActionInsertFactCol52) baseColumn).getType();
+            } else {
+                return DataType.TYPE_STRING;
+            }
+        }
+
+        private boolean isTheRealCellValueString(final DTCellValue52 cell) {
+
+            final BaseColumn baseColumn = dtable.getExpandedColumns().get(sourceColumnIndex);
+
+            if (baseColumn instanceof AttributeCol52
+                    || baseColumn instanceof MetadataCol52) {
+                return false;
+            }
+            if (isFormula(sourceColumnIndex)) {
+                return false;
+            }
+            if (baseColumn instanceof BRLActionVariableColumn) {
+                return Objects.equals(DataType.DataTypes.STRING, cell.getDataType());
+            } else {
+                return Objects.equals(DataType.DataTypes.STRING, utilsWithNoRespectForLists.getTypeSafeType(baseColumn));
+            }
         }
 
         private boolean isFormula(final int sourceColumnIndex) {

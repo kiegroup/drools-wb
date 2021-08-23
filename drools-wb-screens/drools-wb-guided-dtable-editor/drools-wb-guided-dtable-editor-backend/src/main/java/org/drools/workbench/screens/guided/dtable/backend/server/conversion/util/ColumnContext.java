@@ -24,14 +24,10 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.drools.workbench.models.datamodel.rule.ActionFieldList;
 import org.drools.workbench.models.datamodel.rule.ActionFieldValue;
-import org.drools.workbench.models.datamodel.rule.BaseSingleFieldConstraint;
 import org.drools.workbench.models.datamodel.rule.FactPattern;
-import org.drools.workbench.models.datamodel.rule.FieldConstraint;
 import org.drools.workbench.models.datamodel.rule.FieldNatureType;
 import org.drools.workbench.models.datamodel.rule.IAction;
 import org.drools.workbench.models.datamodel.rule.IPattern;
-import org.drools.workbench.models.datamodel.rule.SingleFieldConstraint;
-import org.drools.workbench.models.guided.dtable.shared.model.BRLActionColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.BRLColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.BRLConditionColumn;
 
@@ -43,37 +39,34 @@ public class ColumnContext {
 
     private final Map<BRLColumn, List<FromTo>> map = new HashMap<>();
     private final Map<IPattern, List<String>> conditionVariablesByDefinition = new HashMap<>();
+    private final VariableOperators variableOperators = new VariableOperators();
 
     public void put(final BRLColumn brlColumn,
                     final FromTo childColumn) {
         if (!map.containsKey(brlColumn)) {
             map.put(brlColumn, new ArrayList<>());
         }
-        map.get(brlColumn).add(childColumn);
+        if (!map.get(brlColumn).contains(childColumn)) {
+            map.get(brlColumn).add(childColumn);
+        }
     }
 
     public List<FromTo> getCols(final BRLColumn baseColumn) {
         return map.get(baseColumn);
     }
 
-    public List<String> getVariablesInOrderOfUse(final BRLActionColumn brlColumn) {
-
-        final List<String> result = new ArrayList<>();
-        for (final IAction iAction : brlColumn.getDefinition()) {
-            result.addAll(getVariablesInOrderOfUse(iAction));
-        }
-        return result;
-    }
-
-    public List<String> getVariablesInOrderOfUse(final IAction iAction) {
-        final List<String> result = new ArrayList<>();
+    public List<ValuePlaceHolder> getVariablesInOrderOfUse(final IAction iAction) {
+        final List<ValuePlaceHolder> result = new ArrayList<>();
 
         if (iAction instanceof ActionFieldList) {
 
             for (final ActionFieldValue fieldValue : ((ActionFieldList) iAction).getFieldValues()) {
-                if (fieldValue.getNature() == FieldNatureType.TYPE_TEMPLATE) {
-                    final String variable = fieldValue.getValue();
-                    result.add(variable);
+                if (fieldValue.getNature() == FieldNatureType.TYPE_LITERAL) {
+                    result.add(new ValuePlaceHolder(ValuePlaceHolder.Type.VALUE,
+                                                    fieldValue.getValue()));
+                } else if (fieldValue.getNature() == FieldNatureType.TYPE_TEMPLATE) {
+                    result.add(new ValuePlaceHolder(ValuePlaceHolder.Type.VARIABLE,
+                                                    fieldValue.getValue()));
                 }
             }
         }
@@ -97,14 +90,9 @@ public class ColumnContext {
 
         if (iPattern instanceof FactPattern) {
             addBoundName(((FactPattern) iPattern).getBoundName());
-
-            for (final FieldConstraint constraint : ((FactPattern) iPattern).getConstraintList().getConstraints()) {
-                if (constraint instanceof SingleFieldConstraint && ((SingleFieldConstraint) constraint).getConstraintValueType() == BaseSingleFieldConstraint.TYPE_TEMPLATE) {
-                    final String variable = ((SingleFieldConstraint) constraint).getValue();
-                    result.add(variable);
-                    conditionVariablesByDefinition.get(iPattern).add(variable);
-                }
-            }
+            result.addAll(new ConstraintVisitor(iPattern,
+                                                conditionVariablesByDefinition,
+                                                variableOperators).visit());
         }
         return result;
     }
@@ -129,5 +117,9 @@ public class ColumnContext {
 
     public String getNextFreeColumnFactName() {
         return "brlColumnFact" + brlActionColumnCount++;
+    }
+
+    public VariableOperators getVariableOperators() {
+        return variableOperators;
     }
 }

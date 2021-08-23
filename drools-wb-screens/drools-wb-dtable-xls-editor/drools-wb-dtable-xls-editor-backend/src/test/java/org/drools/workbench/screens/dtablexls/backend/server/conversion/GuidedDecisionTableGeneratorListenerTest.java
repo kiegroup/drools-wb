@@ -1701,7 +1701,7 @@ public class GuidedDecisionTableGeneratorListenerTest {
 
         assertTrue(conditionCol0fp.getConstraint(2) instanceof SingleFieldConstraint);
         final SingleFieldConstraint conditionCol0fpsfc2 = (SingleFieldConstraint) conditionCol0fp.getConstraint(2);
-        assertEquals("isBlacklisted(\"asd\")",
+        assertEquals("isInDenyList(\"asd\")",
                      conditionCol0fpsfc2.getFieldName());
         assertEquals("==",
                      conditionCol0fpsfc2.getOperator());
@@ -1748,7 +1748,7 @@ public class GuidedDecisionTableGeneratorListenerTest {
                      conditionCol0param2.getFieldType());
         assertEquals("java.lang.String",
                      conditionCol0param2.getFactType());
-        assertEquals("isBlacklisted(\"asd\")",
+        assertEquals("isInDenyList(\"asd\")",
                      conditionCol0param2.getFactField());
 
         //Check individual action columns

@@ -394,7 +394,7 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
         return setCell(rowIndex, columnIndex, () -> {
             ScenarioGridCell newCell = new ScenarioGridCell((ScenarioGridCellValue) value);
             FactMapping factMappingByIndex = abstractScesimModel.getScesimModelDescriptor().getFactMappingByIndex(columnIndex);
-            if (ScenarioSimulationSharedUtils.isCollection((factMappingByIndex.getClassName()))) {
+            if (ScenarioSimulationSharedUtils.isCollectionOrMap((factMappingByIndex.getClassName()))) {
                 newCell.setListMap(ScenarioSimulationSharedUtils.isList((factMappingByIndex.getClassName())));
             }
             return newCell;
@@ -682,23 +682,26 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
     /**
      * Returns <code>true</code> if property mapped to the selected column is the same as the provided one
      * @param propertyNameElements
+     * @param factMappingValueType
      * @return
      */
-    public boolean isSameSelectedColumnProperty(List<String> propertyNameElements) {
-        return selectedColumn == null || isSameSelectedColumnProperty(getColumns().indexOf(selectedColumn), propertyNameElements);
+    public boolean isSameSelectedColumnProperty(List<String> propertyNameElements, FactMappingValueType factMappingValueType) {
+        return selectedColumn == null || isSameSelectedColumnProperty(getColumns().indexOf(selectedColumn), propertyNameElements, factMappingValueType);
     }
 
     /**
      * Returns <code>true</code> if property mapped to the column at given index is the same as the provided one
      * @param columnIndex
      * @param propertyNameElements
+     * @param factMappingValueType
      * @return
      */
-    public boolean isSameSelectedColumnProperty(int columnIndex, List<String> propertyNameElements) {
+    public boolean isSameSelectedColumnProperty(int columnIndex, List<String> propertyNameElements, FactMappingValueType factMappingValueType) {
         String propertyName = String.join(".", propertyNameElements);
         ScesimModelDescriptor simulationDescriptor = abstractScesimModel.getScesimModelDescriptor();
         final FactMapping factMappingByIndex = simulationDescriptor.getFactMappingByIndex(columnIndex);
-        return factMappingByIndex.getExpressionAlias().equals(propertyName);
+        String expressionElement = factMappingByIndex.getExpressionElements().stream().map(ExpressionElement::getStep).collect(Collectors.joining("."));
+        return Objects.equals(expressionElement, propertyName) && Objects.equals(factMappingValueType, factMappingByIndex.getFactMappingValueType());
     }
 
     /**
@@ -972,7 +975,7 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
                                                                         factMappingByIndex.getClassName());
             setCell(rowIndex, columnIndex, () -> {
                 ScenarioGridCell newCell = new ScenarioGridCell(new ScenarioGridCellValue(null, placeHolder));
-                if (ScenarioSimulationSharedUtils.isCollection((factMappingByIndex.getClassName()))) {
+                if (ScenarioSimulationSharedUtils.isCollectionOrMap((factMappingByIndex.getClassName()))) {
                     newCell.setListMap(ScenarioSimulationSharedUtils.isList((factMappingByIndex.getClassName())));
                 }
                 return newCell;
@@ -1102,7 +1105,7 @@ public abstract class AbstractScesimGridModel<T extends AbstractScesimModel<E>, 
                                                                ScenarioSimulationModel.Type modelType,
                                                                FactMappingValueType valueType) {
         boolean isRuleScenario = Objects.equals(ScenarioSimulationModel.Type.RULE, modelType);
-        if (ScenarioSimulationSharedUtils.isCollection(className) && Objects.equals(FactMappingValueType.NOT_EXPRESSION, valueType)) {
+        if (ScenarioSimulationSharedUtils.isCollectionOrMap(className) && Objects.equals(FactMappingValueType.NOT_EXPRESSION, valueType)) {
             return collectionEditorSingletonDOMElementFactory;
         }
         if (Objects.equals(FactMappingValueType.EXPRESSION, valueType) && isRuleScenario) {

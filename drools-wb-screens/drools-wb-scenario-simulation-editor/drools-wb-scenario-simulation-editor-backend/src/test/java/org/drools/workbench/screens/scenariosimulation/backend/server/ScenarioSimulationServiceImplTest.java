@@ -16,6 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.backend.server;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.inject.Named;
@@ -47,7 +48,8 @@ import org.kie.workbench.common.services.shared.project.KieModule;
 import org.kie.workbench.common.services.shared.project.KieModuleService;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.backend.vfs.PathFactory;
 import org.uberfire.ext.editor.commons.backend.service.SaveAndRenameServiceImpl;
@@ -56,9 +58,7 @@ import org.uberfire.ext.editor.commons.service.CopyService;
 import org.uberfire.ext.editor.commons.service.DeleteService;
 import org.uberfire.ext.editor.commons.service.RenameService;
 import org.uberfire.io.IOService;
-import org.uberfire.java.nio.base.options.CommentedOption;
 import org.uberfire.java.nio.file.FileAlreadyExistsException;
-import org.uberfire.java.nio.file.OpenOption;
 
 import static org.drools.scenariosimulation.api.model.ScenarioSimulationModel.Type;
 import static org.junit.Assert.assertEquals;
@@ -67,10 +67,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyMap;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -82,6 +81,11 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ScenarioSimulationServiceImplTest {
+
+    private static final String ORG_DROOLS = "org.drools";
+    private static final String ORG_KIE = "org.kie";
+    private static final String ORG_JBPM = "org.jbpm";
+
 
     @Mock
     protected KieServiceOverviewLoader overviewLoaderMock;
@@ -98,46 +102,32 @@ public class ScenarioSimulationServiceImplTest {
     private PathResolver pathResolverMock;
     @Mock
     private DeleteService deleteServiceMock;
-
     @Mock
     private RenameService renameServiceMock;
-
     @Mock
     private CopyService copyServiceMock;
-
     @Mock
     private User userMock;
-
     @Mock
     private ScenarioRunnerServiceImpl scenarioRunnerServiceMock;
-
     @Mock
     private POMService pomServiceMock;
-
     @Mock
     private org.uberfire.java.nio.file.Path activatorPathMock;
-
     @Mock
     private KieModuleService kieModuleServiceMock;
-
     @Mock
     private KieModule kieModuleMock;
-
     @Mock
     private POM projectPomMock;
-
     @Mock
     private GAV gavMock;
-
     @Mock
     private Dependencies dependenciesMock;
-
     @Mock
     private Package packageMock;
-
     @Mock
     private ScenarioSimulationBuilder scenarioSimulationBuilderMock;
-
     @Mock
     private DMNTypeService dmnTypeServiceMock;
 
@@ -158,15 +148,14 @@ public class ScenarioSimulationServiceImplTest {
     private Path path = PathFactory.newPath("contextPath", "file:///contextPath");
 
     @Before
-    public void setup() throws Exception {
+    public void setup() {
         Set<Package> testPackages = new HashSet<>();
         Package testPackage = new Package(path, path, path, path, path, "Test", "", "");
         testPackages.add(testPackage);
         when(kieModuleServiceMock.resolveModule(any())).thenReturn(kieModuleMock);
-        when(kieModuleServiceMock.resolvePackages(any(KieModule.class))).thenReturn(testPackages);
-        when(kieModuleServiceMock.newPackage(any(), anyString())).thenReturn(testPackage);
+        when(kieModuleServiceMock.resolvePackages(Mockito.<KieModule>any())).thenReturn(testPackages);
+        when(kieModuleServiceMock.newPackage(any(), any())).thenReturn(testPackage);
         when(kieModuleServiceMock.resolveDefaultPackage(any())).thenReturn(testPackage);
-        when(ioServiceMock.exists(activatorPathMock)).thenReturn(false);
 
         when(kieModuleServiceMock.resolveModule(any())).thenReturn(kieModuleMock);
         when(kieModuleMock.getPom()).thenReturn(projectPomMock);
@@ -174,7 +163,7 @@ public class ScenarioSimulationServiceImplTest {
         when(gavMock.getGroupId()).thenReturn("Test");
         when(projectPomMock.getDependencies()).thenReturn(dependenciesMock);
         when(dependenciesMock.iterator()).thenReturn(new Dependencies().iterator());
-        when(ioServiceMock.exists(any(org.uberfire.java.nio.file.Path.class))).thenReturn(false);
+        when(ioServiceMock.exists(any())).thenReturn(false);
         when(packageMock.getPackageTestSrcPath()).thenReturn(path);
         when(scenarioSimulationBuilderMock.createSimulation(any(), any(), any())).thenReturn(new Simulation());
         when(scenarioSimulationBuilderMock.createBackground(any(), any(), any())).thenReturn(new Background());
@@ -183,14 +172,14 @@ public class ScenarioSimulationServiceImplTest {
     }
 
     @Test
-    public void init() throws Exception {
+    public void init() {
         service.init();
 
         verify(saveAndRenameServiceMock).init(service);
     }
 
     @Test
-    public void delete() throws Exception {
+    public void delete() {
         service.delete(path,
                        "Removing this");
         verify(deleteServiceMock).delete(path,
@@ -198,7 +187,7 @@ public class ScenarioSimulationServiceImplTest {
     }
 
     @Test
-    public void rename() throws Exception {
+    public void rename() {
         service.rename(path,
                        "newName.scesim",
                        "comment");
@@ -218,7 +207,7 @@ public class ScenarioSimulationServiceImplTest {
     }
 
     @Test
-    public void copyToDirectory() throws Exception {
+    public void copyToDirectory() {
         final Path folder = mock(Path.class);
         service.copy(path,
                      "newName.scesim",
@@ -231,7 +220,7 @@ public class ScenarioSimulationServiceImplTest {
     }
 
     @Test
-    public void saveAndRename() throws Exception {
+    public void saveAndRename() {
         final Metadata metadata = mock(Metadata.class);
         final ScenarioSimulationModel model = new ScenarioSimulationModel();
         service.saveAndRename(path,
@@ -247,8 +236,7 @@ public class ScenarioSimulationServiceImplTest {
     }
 
     @Test
-    public void save() throws Exception {
-
+    public void save() {
         final Path returnPath = service.save(this.path,
                                              new ScenarioSimulationModel(),
                                              new Metadata(),
@@ -258,11 +246,11 @@ public class ScenarioSimulationServiceImplTest {
         verify(ioServiceMock).write(any(org.uberfire.java.nio.file.Path.class),
                                     anyString(),
                                     anyMap(),
-                                    any(CommentedOption.class));
+                                    any());
     }
 
     @Test
-    public void createRULEScenario() throws Exception {
+    public void createRULEScenario() {
         doReturn(false).when(ioServiceMock).exists(any());
         ScenarioSimulationModel model = new ScenarioSimulationModel();
         assertNull(model.getSimulation());
@@ -281,11 +269,11 @@ public class ScenarioSimulationServiceImplTest {
         assertNotNull(model.getSettings());
         verify(ioServiceMock, times(2)).write(any(org.uberfire.java.nio.file.Path.class),
                                               anyString(),
-                                              any(CommentedOption.class));
+                                              any());
     }
 
     @Test
-    public void createDMNScenario() throws Exception {
+    public void createDMNScenario() {
         doReturn(false).when(ioServiceMock).exists(any());
         ScenarioSimulationModel model = new ScenarioSimulationModel();
         assertNull(model.getSimulation());
@@ -304,7 +292,7 @@ public class ScenarioSimulationServiceImplTest {
         assertNotNull(model.getSettings());
         verify(ioServiceMock, times(2)).write(any(org.uberfire.java.nio.file.Path.class),
                                               anyString(),
-                                              any(CommentedOption.class));
+                                              any());
     }
 
     @Test(expected = FileAlreadyExistsException.class)
@@ -343,7 +331,7 @@ public class ScenarioSimulationServiceImplTest {
         verify(ioServiceMock, times(1))
                 .write(any(org.uberfire.java.nio.file.Path.class),
                        anyString(),
-                       any(OpenOption.class));
+                       any());
 
         reset(ioServiceMock);
         when(ioServiceMock.exists(any())).thenReturn(true);
@@ -352,7 +340,7 @@ public class ScenarioSimulationServiceImplTest {
         verify(ioServiceMock, never())
                 .write(any(org.uberfire.java.nio.file.Path.class),
                        anyString(),
-                       any(OpenOption.class));
+                       any());
     }
 
     @Test
@@ -376,16 +364,16 @@ public class ScenarioSimulationServiceImplTest {
         reset(ioServiceMock);
         when(kieModuleServiceMock.resolvePackages(any(KieModule.class))).thenReturn(new HashSet<>());
         service.removeOldActivatorIfExists(existingActivatorPathMock, kieModuleMock);
-        verify(ioServiceMock, times(1)).deleteIfExists(eq(existingActivatorPathMock));
+        verify(ioServiceMock, times(1)).deleteIfExists(existingActivatorPathMock);
     }
 
     @Test
     public void ensureDependenciesTest() {
         service.ensureDependencies(kieModuleMock);
 
-        verify(pomServiceMock, times(1)).save(any(Path.class),
+        verify(pomServiceMock, times(1)).save(any(),
                                               any(POM.class),
-                                              any(Metadata.class),
+                                              any(),
                                               anyString());
 
         reset(pomServiceMock);
@@ -393,9 +381,9 @@ public class ScenarioSimulationServiceImplTest {
 
         service.ensureDependencies(kieModuleMock);
 
-        verify(pomServiceMock, never()).save(any(Path.class),
+        verify(pomServiceMock, never()).save(any(),
                                              any(POM.class),
-                                             any(Metadata.class),
+                                             any(),
                                              anyString());
     }
 
@@ -442,9 +430,9 @@ public class ScenarioSimulationServiceImplTest {
         ScenarioSimulationModel model = service.load(path);
 
         assertEquals(Type.DMN, model.getSettings().getType());
-        verify(dmnTypeServiceMock, times(1)).initializeNameAndNamespace(any(), any(), anyString());
+        verify(dmnTypeServiceMock, times(1)).initializeNameAndNamespace(any(), any(), any());
 
-        doThrow(new ImpossibleToFindDMNException("")).when(dmnTypeServiceMock).initializeNameAndNamespace(any(), any(), anyString());
+        doThrow(new ImpossibleToFindDMNException("")).when(dmnTypeServiceMock).initializeNameAndNamespace(any(), any(), any());
 
         try {
             service.load(path);
@@ -453,10 +441,27 @@ public class ScenarioSimulationServiceImplTest {
         }
     }
 
-    // RHPAM-2089
     @Test
-    public void checkDependencyForGTable() {
-        GAV gtableDependency = new GAV("org.drools", "drools-workbench-models-guided-dtable", null);
-        assertTrue(service.getDependencies(null).contains(gtableDependency));
+    public void checkDependency() {
+        GAV scesimApiDependency = new GAV(ORG_DROOLS, "drools-scenario-simulation-api", null);
+        GAV scesimBackendDependency = new GAV(ORG_DROOLS, "drools-scenario-simulation-backend", null);
+        GAV droolsCompilerDependency = new GAV(ORG_DROOLS, "drools-compiler", null);
+        GAV gtableDependency = new GAV(ORG_DROOLS, "drools-workbench-models-guided-dtable", null);
+        GAV jbpmBpmn2Dependency = new GAV(ORG_JBPM, "jbpm-bpmn2", null);
+        GAV dmnFeelDependency = new GAV(ORG_KIE, "kie-dmn-feel", null);
+        GAV dmnApi2Dependency = new GAV(ORG_KIE, "kie-dmn-api", null);
+        GAV dmnCoreDependency = new GAV(ORG_KIE, "kie-dmn-core", null);
+
+        List<GAV> dependencies = service.getDependencies(null);
+
+        assertEquals(8, dependencies.size());
+        assertTrue(dependencies.contains(scesimApiDependency));
+        assertTrue(dependencies.contains(scesimBackendDependency));
+        assertTrue(dependencies.contains(droolsCompilerDependency));
+        assertTrue(dependencies.contains(gtableDependency));
+        assertTrue(dependencies.contains(jbpmBpmn2Dependency));
+        assertTrue(dependencies.contains(dmnFeelDependency));
+        assertTrue(dependencies.contains(dmnApi2Dependency));
+        assertTrue(dependencies.contains(dmnCoreDependency));
     }
 }

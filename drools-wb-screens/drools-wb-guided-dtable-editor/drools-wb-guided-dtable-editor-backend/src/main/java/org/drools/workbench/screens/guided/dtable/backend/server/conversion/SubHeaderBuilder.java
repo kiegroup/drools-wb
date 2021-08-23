@@ -17,10 +17,14 @@ package org.drools.workbench.screens.guided.dtable.backend.server.conversion;
 
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.drools.core.util.DateUtils;
+import org.drools.workbench.models.datamodel.rule.ActionCallMethod;
 import org.drools.workbench.models.datamodel.rule.Attribute;
 import org.drools.workbench.models.datamodel.workitems.PortableParameterDefinition;
 import org.drools.workbench.models.datamodel.workitems.PortableWorkDefinition;
@@ -40,11 +44,14 @@ import org.drools.workbench.models.guided.dtable.shared.model.ConditionCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.DescriptionCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
 import org.drools.workbench.models.guided.dtable.shared.model.MetadataCol52;
+import org.drools.workbench.models.guided.dtable.shared.model.Pattern52;
 import org.drools.workbench.screens.guided.dtable.backend.server.conversion.util.ColumnContext;
 import org.drools.workbench.screens.guided.dtable.backend.server.conversion.util.NotificationReporter;
 import org.drools.workbench.screens.guided.dtable.backend.server.conversion.util.Skipper;
 import org.kie.soup.commons.validation.PortablePreconditions;
+import org.kie.soup.project.datamodel.imports.Import;
 import org.kie.soup.project.datamodel.oracle.DataType;
+import org.kie.soup.project.datamodel.oracle.MethodInfo;
 import org.kie.soup.project.datamodel.oracle.PackageDataModelOracle;
 
 import static org.drools.workbench.models.datamodel.rule.BaseSingleFieldConstraint.TYPE_PREDICATE;
@@ -61,6 +68,7 @@ public class SubHeaderBuilder {
     private static final int HEADER_TITLE_ROW = 8;
 
     private final GuidedDecisionTable52 dtable;
+    private final PackageDataModelOracle dmo;
     private final XLSColumnUtilities columnUtilities;
     private final Row headerRow;
     private final Row fieldRow;
@@ -89,6 +97,7 @@ public class SubHeaderBuilder {
                             final PackageDataModelOracle dmo,
                             final ColumnContext columnContext) {
         PortablePreconditions.checkNotNull("sheet", sheet);
+        this.dmo = PortablePreconditions.checkNotNull("dmo", dmo);
         this.dtable = PortablePreconditions.checkNotNull("dtable", dtable);
         this.columnContext = PortablePreconditions.checkNotNull("brlColumnIndex", columnContext);
         brlColumnSubHeaderProvider = new BRLColumnSubHeaderProvider(this,
@@ -159,11 +168,7 @@ public class SubHeaderBuilder {
         } else if (baseColumn instanceof ActionSetFieldCol52) {
             addSetField((ActionSetFieldCol52) baseColumn);
         } else if (baseColumn instanceof ActionInsertFactCol52) {
-            addInsert(baseColumn.getHeader(),
-                      ((ActionInsertFactCol52) baseColumn).getBoundName(),
-                      ((ActionInsertFactCol52) baseColumn).getFactType(),
-                      ((ActionInsertFactCol52) baseColumn).getFactField(),
-                      ((ActionInsertFactCol52) baseColumn).getType());
+            addBRLActionVariableColumn((ActionInsertFactCol52) baseColumn);
         } else if (baseColumn instanceof ActionWorkItemCol52) {
             addWorkItem((ActionWorkItemCol52) baseColumn);
         } else if (baseColumn instanceof ActionRetractFactCol52) {
@@ -227,18 +232,44 @@ public class SubHeaderBuilder {
         fieldRow.createCell(targetColumnIndex).setCellValue("retract( $param );");
     }
 
-    /**
-     * @return true if an insert was created.
-     */
-    public boolean addInsert(final String header,
-                             final String boundName,
-                             final String factType,
-                             final String factField,
-                             final String valueType) {
-        boolean madeInsert = false;
+    private void addBRLActionVariableColumn(final ActionInsertFactCol52 baseColumn) {
+        boolean makeInsert = makeInsert(baseColumn.getBoundName(),
+                                        baseColumn.getFactType());
+        if (makeInsert) {
+            incrementTargetIndex();
+        }
+        addBRLActionVariableColumn(baseColumn.getHeader(),
+                                   baseColumn.getBoundName(),
+                                   baseColumn.getFactType(),
+                                   baseColumn.getFactField(),
+                                   baseColumn.getType());
+    }
+
+    public void addBRLActionVariableColumn(final String header,
+                                           final String boundName,
+                                           final String factType,
+                                           final String factField,
+                                           final String valueType) {
+
+        addHeaderAndTitle(ACTION,
+                          header);
+
+        if (isMethod(factType,
+                     factField)) {
+            fieldRow.createCell(targetColumnIndex).setCellValue(addMethod(boundName,
+                                                                          factField,
+                                                                          getRHSParamWithWrapper(valueType)));
+        } else {
+            fieldRow.createCell(targetColumnIndex).setCellValue(addSetMethod(boundName,
+                                                                             factField,
+                                                                             getRHSParamWithWrapper(valueType)));
+        }
+    }
+
+    public boolean makeInsert(final String boundName,
+                              final String factType) {
 
         if (columnContext.isBoundNameFree(boundName)) {
-            madeInsert = true;
 
             addHeaderAndTitle(ACTION,
                               "");
@@ -249,34 +280,69 @@ public class SubHeaderBuilder {
                                                                                      factType));
 
             columnContext.addBoundName(boundName);
-            incrementTargetIndex();
+            return true;
+        } else {
+            return false;
         }
-
-        addHeaderAndTitle(ACTION,
-                          header);
-
-        fieldRow.createCell(targetColumnIndex).setCellValue(addSetMethod(boundName,
-                                                                         factField,
-                                                                         getRHSParamWithWrapper(valueType)));
-        return madeInsert;
     }
 
-    private String getRHSParamWithWrapper(final String valueType) {
+    /**
+     * Check if this is a method or a mutator (get/set)
+     * However this ignores if the parameter count matches.
+     *
+     * @return
+     */
+    private boolean isMethod(final String factType,
+                             final String factField) {
+        final Optional<String> fqcn = getFQCN(factType);
+        if (fqcn.isPresent()) {
+            for (final Map.Entry<String, List<MethodInfo>> entry : dmo.getModuleMethodInformation().entrySet()) {
+                if (Objects.equals(entry.getKey(), fqcn.get())) {
+                    for (final MethodInfo methodInfo : entry.getValue()) {
+                        if (Objects.equals(methodInfo.getName(), factField)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private Optional<String> getFQCN(final String factType) {
+        final String ending = "." + factType;
+        for (final Import anImport : dtable.getImports().getImports()) {
+            if (anImport.getType().endsWith(ending)) {
+                return Optional.of(anImport.getType());
+            }
+        }
+        return Optional.of(dtable.getPackageName() + ending);
+    }
+
+    public String getRHSParamWithWrapper(final String valueType) {
+        return getRHSParamWithWrapper(valueType,
+                                      "$param");
+    }
+
+    public String getRHSParamWithWrapper(final String valueType,
+                                         final String var) {
 
         switch (valueType) {
 
+            case DataType.TYPE_DATE:
+                return String.format("new java.text.SimpleDateFormat( \"%s\").parse(%s)", DateUtils.getDateFormatMask(), var);
             case DataType.TYPE_NUMERIC_BIGDECIMAL:
-                return "new java.math.BigDecimal(\"$param\")";
+                return String.format("new java.math.BigDecimal(\"%s\")", var);
             case DataType.TYPE_NUMERIC_BIGINTEGER:
-                return "new java.math.BigInteger(\"$param\")";
+                return String.format("new java.math.BigInteger(\"%s\")", var);
             case DataType.TYPE_NUMERIC_DOUBLE:
-                return "$paramd";
+                return var + "d";
             case DataType.TYPE_NUMERIC_FLOAT:
-                return "$paramf";
+                return var + "f";
             case DataType.TYPE_NUMERIC_LONG:
-                return "$paramL";
+                return var + "L";
             default:
-                return "$param";
+                return var;
         }
     }
 
@@ -317,10 +383,44 @@ public class SubHeaderBuilder {
                                                                          value));
     }
 
+    public void addMethodCallSetField(final ActionSetFieldCol52 column,
+                                      final String value) {
+
+        addHeaderAndTitle(ACTION,
+                          column.getHeader());
+        fieldRow.createCell(targetColumnIndex).setCellValue(addSetMethod(column.getBoundName(),
+                                                                         column.getFactField(),
+                                                                         value));
+    }
+
+    public void addMethodCallWithParameters(final String header,
+                                            final ActionCallMethod iAction,
+                                            final String params) {
+
+        addHeaderAndTitle(ACTION,
+                          header);
+        fieldRow.createCell(targetColumnIndex).setCellValue(String.format("%s.%s( %s );",
+                                                                          iAction.getVariable(),
+                                                                          iAction.getMethodName(),
+                                                                          params));
+    }
+
+    public void addMethodCallWithoutParameters(final String header,
+                                               final ActionCallMethod iAction) {
+
+        addHeaderAndTitle(ACTION,
+                          header);
+        fieldRow.createCell(targetColumnIndex).setCellValue(String.format("%s.%s( );",
+                                                                          iAction.getVariable(),
+                                                                          iAction.getMethodName()));
+    }
+
     public void addCondition(final ConditionCol52 column) {
 
         addHeaderAndTitle(CONDITION,
                           column.getHeader());
+
+        checkIfNewPattern(column);
 
         if (column.getConstraintValueType() == TYPE_PREDICATE) {
 
@@ -346,6 +446,13 @@ public class SubHeaderBuilder {
         }
     }
 
+    private void checkIfNewPattern(final ConditionCol52 column) {
+        final Pattern52 pattern = dtable.getPattern(column);
+        if (pattern != null) {
+            columnContext.addBoundName(pattern.getBoundName());
+        }
+    }
+
     private String getTemplate(final int constraintValueType,
                                final String fieldType) {
         if (constraintValueType == TYPE_RET_VALUE) {
@@ -368,6 +475,8 @@ public class SubHeaderBuilder {
             return "==";
         } else if (Objects.equals("!= null", column.getOperator())) {
             return "!=";
+        } else if (column instanceof BRLConditionVariableColumn) {
+            return columnContext.getVariableOperators().getOperator(((BRLConditionVariableColumn) column).getVarName());
         } else {
             return column.getOperator();
         }
@@ -398,6 +507,15 @@ public class SubHeaderBuilder {
 
         fieldRow.createCell(targetColumnIndex).setCellValue(String.format("%s( $param )",
                                                                           column.getMetadata()));
+    }
+
+    private String addMethod(final String boundName,
+                             final String factField,
+                             final String value) {
+        return String.format("%s.%s( %s );",
+                             boundName,
+                             factField,
+                             value);
     }
 
     private String addSetMethod(final String boundName,

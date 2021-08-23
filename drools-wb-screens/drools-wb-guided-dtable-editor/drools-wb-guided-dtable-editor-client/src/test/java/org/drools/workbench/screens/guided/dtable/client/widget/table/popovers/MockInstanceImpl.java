@@ -43,6 +43,11 @@ public class MockInstanceImpl<T> implements Instance<T> {
     }
 
     @Override
+    public <U extends T> Instance<U> select(TypeLiteral<U> subtype, Annotation... qualifiers) {
+        return null;
+    }
+
+    @Override
     public boolean isUnsatisfied() {
         return false;
     }
@@ -66,11 +71,4 @@ public class MockInstanceImpl<T> implements Instance<T> {
     public Iterator<T> iterator() {
         return instances.iterator();
     }
-
-    @Override
-    public <U extends T> Instance<U> select(TypeLiteral<U> subtype, Annotation... qualifiers) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
 }

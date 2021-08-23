@@ -369,7 +369,8 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
                                                factModelTree.getTypeName(),
                                                Collections.unmodifiableList(Arrays.asList(className)),
                                                factModelTree.getFullTypeName(),
-                                               FactMappingValueType.EXPRESSION)));
+                                               FactMappingValueType.EXPRESSION,
+                                               factModelTree.getImportPrefix())));
             } else if (selectedFieldItemView != null) {
                 String baseClass = selectedFieldItemView.getFullPath().get(0);
                 List<String> propertyNameElements = new ArrayList<>(selectedFieldItemView.getFullPath());
@@ -382,15 +383,25 @@ public class TestToolsPresenter extends AbstractSubDockPresenter<TestToolsView> 
                                                factModelTree.getTypeName(),
                                                Collections.unmodifiableList(propertyNameElements),
                                                selectedFieldItemView.getClassName(),
-                                               FactMappingValueType.NOT_EXPRESSION)));
+                                               FactMappingValueType.NOT_EXPRESSION,
+                                               factModelTree.getImportPrefix())));
             }
         }
     }
 
     @Override
     public void reset() {
+        clearFieldsMaps();
         listGroupItemPresenter.reset();
         view.reset();
+    }
+
+    protected void clearFieldsMaps() {
+        dataObjectFieldsMap = new TreeMap<>();
+        simpleJavaTypeFieldsMap = new TreeMap<>();
+        instanceFieldsMap = new TreeMap<>();
+        simpleJavaInstanceFieldsMap = new TreeMap<>();
+        hiddenFieldsMap = new TreeMap<>();
     }
 
     /**

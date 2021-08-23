@@ -94,22 +94,25 @@ import org.kie.workbench.common.command.client.CommandResultBuilder;
 import org.kie.workbench.common.command.client.impl.CommandResultImpl;
 import org.mockito.Mock;
 
+import static org.drools.scenariosimulation.api.utils.ConstantsHolder.IMPORTED_PREFIX;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.CLASS_NAME;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.COLUMN_GROUP;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.COLUMN_INDEX;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FULL_CLASS_NAME;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.FULL_PACKAGE;
+import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.LIST_CLASS_NAME;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.MULTIPART_VALUE;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.MULTIPART_VALUE_ELEMENTS;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.ROW_INDEX;
 import static org.drools.workbench.screens.scenariosimulation.client.TestProperties.VALUE_CLASS_NAME;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyListOf;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -239,7 +242,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
     @Test
     public void unregisterHandlers() {
         scenarioSimulationEventHandler.unregisterHandlers();
-        verify(handlerRegistrationListMock, times(1)).forEach(anyObject());
+        verify(handlerRegistrationListMock, times(1)).forEach(any());
     }
 
     @Test
@@ -304,7 +307,7 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
         ImportEvent event = new ImportEvent(GridWidget.SIMULATION);
         scenarioSimulationEventHandler.onEvent(event);
         verify(fileUploadPopupPresenterMock, times(1))
-                .show(anyListOf(String.class),
+                .show(anyList(),
                       eq(ScenarioSimulationEditorConstants.INSTANCE.selectImportFile()),
                       eq(ScenarioSimulationEditorConstants.INSTANCE.uploadWarning()),
                       eq(ScenarioSimulationEditorConstants.INSTANCE.importLabel()),
@@ -428,33 +431,59 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
 
     @Test
     public void onSetPropertyHeaderEvent() {
-        SetPropertyHeaderEvent event = new SetPropertyHeaderEvent(GridWidget.SIMULATION, FULL_PACKAGE, CLASS_NAME, MULTIPART_VALUE_ELEMENTS, VALUE_CLASS_NAME, FactMappingValueType.NOT_EXPRESSION);
+        SetPropertyHeaderEvent event = new SetPropertyHeaderEvent(GridWidget.SIMULATION, FULL_PACKAGE, CLASS_NAME, MULTIPART_VALUE_ELEMENTS, VALUE_CLASS_NAME, FactMappingValueType.NOT_EXPRESSION, IMPORTED_PREFIX);
         when(scenarioGridModelMock.getSelectedColumn()).thenReturn(null);
         scenarioSimulationEventHandler.onEvent(event);
+        verify(scenarioSimulationEventHandler, never()).onEvent(isA(ScenarioNotificationEvent.class));
         verify(scenarioSimulationEventHandler, never()).commonExecution(isA(SetPropertyHeaderCommand.class), anyBoolean());
+        verify(preserveDeletePopupPresenterMock, never()).show(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(), any() );
+        verify(deletePopupPresenterMock, never()).show(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any());
         //
         doReturn(gridColumnMock).when(scenarioGridModelMock).getSelectedColumn();
         when(scenarioGridModelMock.isAlreadyAssignedProperty(MULTIPART_VALUE_ELEMENTS)).thenReturn(true);
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler, times(1)).onEvent(isA(ScenarioNotificationEvent.class));
         verify(scenarioSimulationEventHandler, never()).commonExecution(isA(SetPropertyHeaderCommand.class), anyBoolean());
+        verify(preserveDeletePopupPresenterMock, never()).show(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(), any() );
+        verify(deletePopupPresenterMock, never()).show(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any());
         //
         reset(scenarioSimulationEventHandler);
         when(scenarioGridModelMock.isAlreadyAssignedProperty(MULTIPART_VALUE_ELEMENTS)).thenReturn(false);
         when(scenarioGridModelMock.isSelectedColumnEmpty()).thenReturn(true);
         scenarioSimulationEventHandler.onEvent(event);
         verify(scenarioSimulationEventHandler, never()).onEvent(isA(ScenarioNotificationEvent.class));
-        verify(scenarioSimulationEventHandler).commonExecution(isA(SetPropertyHeaderCommand.class), eq(true));
+        verify(scenarioSimulationEventHandler, never()).commonExecution(isA(SetPropertyHeaderCommand.class), anyBoolean());
+        verify(preserveDeletePopupPresenterMock, never()).show(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(), any() );
+        verify(deletePopupPresenterMock, never()).show(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any());
         //
         reset(scenarioSimulationEventHandler);
+        when(scenarioGridModelMock.isAlreadyAssignedProperty(MULTIPART_VALUE_ELEMENTS)).thenReturn(false);
         when(scenarioGridModelMock.isSelectedColumnEmpty()).thenReturn(false);
-        when(scenarioGridModelMock.isSameSelectedColumnProperty(anyListOf(String.class))).thenReturn(true);
         scenarioSimulationEventHandler.onEvent(event);
+        verify(scenarioSimulationEventHandler, never()).onEvent(isA(ScenarioNotificationEvent.class));
         verify(scenarioSimulationEventHandler, never()).commonExecution(isA(SetPropertyHeaderCommand.class), anyBoolean());
+        verify(preserveDeletePopupPresenterMock, never()).show(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(), any() );
+        verify(deletePopupPresenterMock, never()).show(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any());
         //
-        when(scenarioGridModelMock.isSameSelectedColumnProperty(anyListOf(String.class))).thenReturn(false);
+        reset(scenarioSimulationEventHandler);
+        when(scenarioGridModelMock.isAlreadyAssignedProperty(MULTIPART_VALUE_ELEMENTS)).thenReturn(false);
+        when(scenarioGridModelMock.isSelectedColumnEmpty()).thenReturn(true);
+        when(scenarioGridModelMock.isSameSelectedColumnProperty(anyList(), any())).thenReturn(false);
         when(scenarioGridModelMock.isSameSelectedColumnType(anyString())).thenReturn(true);
         scenarioSimulationEventHandler.onEvent(event);
+        verify(scenarioSimulationEventHandler, never()).onEvent(isA(ScenarioNotificationEvent.class));
+        verify(scenarioSimulationEventHandler, times(1)).commonExecution(isA(SetPropertyHeaderCommand.class), eq(true));
+        verify(preserveDeletePopupPresenterMock, never()).show(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(), any() );
+        verify(deletePopupPresenterMock, never()).show(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any());
+        //
+        reset(scenarioSimulationEventHandler);
+        when(scenarioGridModelMock.isAlreadyAssignedProperty(MULTIPART_VALUE_ELEMENTS)).thenReturn(false);
+        when(scenarioGridModelMock.isSelectedColumnEmpty()).thenReturn(false);
+        when(scenarioGridModelMock.isSameSelectedColumnProperty(anyList(), any())).thenReturn(false);
+        when(scenarioGridModelMock.isSameSelectedColumnType(anyString())).thenReturn(true);
+        scenarioSimulationEventHandler.onEvent(event);
+        verify(scenarioSimulationEventHandler, never()).onEvent(isA(ScenarioNotificationEvent.class));
+        verify(scenarioSimulationEventHandler, never()).commonExecution(isA(SetPropertyHeaderCommand.class), anyBoolean());
         verify(preserveDeletePopupPresenterMock, times(1))
                 .show(eq(ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioMainTitle()),
                       eq(ScenarioSimulationEditorConstants.INSTANCE.preserveDeleteScenarioMainQuestion()),
@@ -466,19 +495,104 @@ public class ScenarioSimulationEventHandlerTest extends AbstractScenarioSimulati
                       eq(ScenarioSimulationEditorConstants.INSTANCE.deleteValues()),
                       isA(org.uberfire.mvp.Command.class),
                       isA(org.uberfire.mvp.Command.class));
-        verify(scenarioSimulationEventHandler, never()).commonExecution(isA(SetPropertyHeaderCommand.class), anyBoolean());
+        verify(deletePopupPresenterMock, never()).show(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any());
         //
+        reset(scenarioSimulationEventHandler, preserveDeletePopupPresenterMock);
+        when(scenarioGridModelMock.isAlreadyAssignedProperty(MULTIPART_VALUE_ELEMENTS)).thenReturn(false);
+        when(scenarioGridModelMock.isSelectedColumnEmpty()).thenReturn(true);
+        when(scenarioGridModelMock.isSameSelectedColumnProperty(anyList(), any())).thenReturn(true);
         when(scenarioGridModelMock.isSameSelectedColumnType(anyString())).thenReturn(false);
         scenarioSimulationEventHandler.onEvent(event);
+        verify(scenarioSimulationEventHandler, never()).onEvent(isA(ScenarioNotificationEvent.class));
+        verify(scenarioSimulationEventHandler, times(1)).commonExecution(isA(SetPropertyHeaderCommand.class), eq(true));
+        verify(preserveDeletePopupPresenterMock, never()).show(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(), any() );
+        verify(deletePopupPresenterMock, never()).show(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any());
+        //
+        reset(scenarioSimulationEventHandler, deletePopupPresenterMock);
+        when(scenarioGridModelMock.isAlreadyAssignedProperty(MULTIPART_VALUE_ELEMENTS)).thenReturn(false);
+        when(scenarioGridModelMock.isSelectedColumnEmpty()).thenReturn(false);
+        when(scenarioGridModelMock.isSameSelectedColumnProperty(anyList(), any())).thenReturn(true);
+        when(scenarioGridModelMock.isSameSelectedColumnType(anyString())).thenReturn(false);
+        scenarioSimulationEventHandler.onEvent(event);
+        verify(scenarioSimulationEventHandler, never()).onEvent(isA(ScenarioNotificationEvent.class));
+        verify(scenarioSimulationEventHandler, never()).commonExecution(isA(SetPropertyHeaderCommand.class), anyBoolean());
+        verify(preserveDeletePopupPresenterMock, never()).show(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(), any() );
         verify(deletePopupPresenterMock, times(1))
                 .show(eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioMainTitle()),
                       eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioMainQuestion()),
                       eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioText1()),
                       eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioTextQuestion()),
-                      eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioTextDanger()),
+                      isNull(),
                       eq(ScenarioSimulationEditorConstants.INSTANCE.deleteValues()),
                       isA(org.uberfire.mvp.Command.class));
+        //
+        reset(scenarioSimulationEventHandler, preserveDeletePopupPresenterMock, deletePopupPresenterMock);
+        when(scenarioGridModelMock.isAlreadyAssignedProperty(MULTIPART_VALUE_ELEMENTS)).thenReturn(false);
+        when(scenarioGridModelMock.isSelectedColumnEmpty()).thenReturn(true);
+        when(scenarioGridModelMock.isSameSelectedColumnProperty(anyList(), any())).thenReturn(false);
+        when(scenarioGridModelMock.isSameSelectedColumnType(anyString())).thenReturn(false);
+        scenarioSimulationEventHandler.onEvent(event);
+        verify(scenarioSimulationEventHandler, never()).onEvent(isA(ScenarioNotificationEvent.class));
+        verify(scenarioSimulationEventHandler, times(1)).commonExecution(isA(SetPropertyHeaderCommand.class), eq(true));
+        verify(preserveDeletePopupPresenterMock, never()).show(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(), any() );
+        verify(deletePopupPresenterMock, never()).show(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any());
+        //
+        reset(scenarioSimulationEventHandler);
+        when(scenarioGridModelMock.isAlreadyAssignedProperty(MULTIPART_VALUE_ELEMENTS)).thenReturn(false);
+        when(scenarioGridModelMock.isSelectedColumnEmpty()).thenReturn(false);
+        when(scenarioGridModelMock.isSameSelectedColumnProperty(anyList(), any())).thenReturn(false);
+        when(scenarioGridModelMock.isSameSelectedColumnType(anyString())).thenReturn(false);
+        scenarioSimulationEventHandler.onEvent(event);
+        verify(scenarioSimulationEventHandler, never()).onEvent(isA(ScenarioNotificationEvent.class));
         verify(scenarioSimulationEventHandler, never()).commonExecution(isA(SetPropertyHeaderCommand.class), anyBoolean());
+        verify(preserveDeletePopupPresenterMock, never()).show(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(), any() );
+        verify(deletePopupPresenterMock, times(1))
+                .show(eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioMainTitle()),
+                      eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioMainQuestion()),
+                      eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioText1()),
+                      eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioTextQuestion()),
+                      isNull(),
+                      eq(ScenarioSimulationEditorConstants.INSTANCE.deleteValues()),
+                      isA(org.uberfire.mvp.Command.class));
+    }
+
+    @Test
+    public void onSetPropertyHeaderCollectionEvent() {
+        SetPropertyHeaderEvent event = new SetPropertyHeaderEvent(GridWidget.SIMULATION, FULL_PACKAGE, CLASS_NAME, MULTIPART_VALUE_ELEMENTS, LIST_CLASS_NAME, FactMappingValueType.NOT_EXPRESSION, IMPORTED_PREFIX);
+        when(scenarioGridModelMock.isAlreadyAssignedProperty(MULTIPART_VALUE_ELEMENTS)).thenReturn(false);
+        when(scenarioGridModelMock.isSelectedColumnEmpty()).thenReturn(false);
+        when(scenarioGridModelMock.isSameSelectedColumnProperty(anyList(), any())).thenReturn(false);
+        when(scenarioGridModelMock.isSameSelectedColumnType(anyString())).thenReturn(false);
+        scenarioSimulationEventHandler.onEvent(event);
+        verify(scenarioSimulationEventHandler, never()).onEvent(isA(ScenarioNotificationEvent.class));
+        verify(scenarioSimulationEventHandler, never()).commonExecution(isA(SetPropertyHeaderCommand.class), anyBoolean());
+        verify(preserveDeletePopupPresenterMock, never()).show(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(), any() );
+        verify(deletePopupPresenterMock, times(1))
+                .show(eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioMainTitle()),
+                      eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioMainQuestion()),
+                      eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioText1()),
+                      eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioTextQuestion()),
+                      isNull(),
+                      eq(ScenarioSimulationEditorConstants.INSTANCE.deleteValues()),
+                      isA(org.uberfire.mvp.Command.class));
+        //
+        reset(scenarioSimulationEventHandler, deletePopupPresenterMock, preserveDeletePopupPresenterMock);
+        when(scenarioGridModelMock.isAlreadyAssignedProperty(MULTIPART_VALUE_ELEMENTS)).thenReturn(false);
+        when(scenarioGridModelMock.isSelectedColumnEmpty()).thenReturn(false);
+        when(scenarioGridModelMock.isSameSelectedColumnProperty(anyList(), any())).thenReturn(false);
+        when(scenarioGridModelMock.isSameSelectedColumnType(anyString())).thenReturn(true);
+        scenarioSimulationEventHandler.onEvent(event);
+        verify(scenarioSimulationEventHandler, never()).onEvent(isA(ScenarioNotificationEvent.class));
+        verify(scenarioSimulationEventHandler, never()).commonExecution(isA(SetPropertyHeaderCommand.class), anyBoolean());
+        verify(preserveDeletePopupPresenterMock, never()).show(anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), anyString(), any(), any() );
+        verify(deletePopupPresenterMock, times(1))
+                .show(eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioMainTitle()),
+                      eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioMainQuestion()),
+                      eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioText1()),
+                      eq(ScenarioSimulationEditorConstants.INSTANCE.deleteScenarioTextQuestion()),
+                      isNull(),
+                      eq(ScenarioSimulationEditorConstants.INSTANCE.deleteValues()),
+                      isA(org.uberfire.mvp.Command.class));
     }
 
     @Test

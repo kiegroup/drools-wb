@@ -24,6 +24,10 @@ import java.util.stream.Collectors;
 
 import org.jboss.errai.common.client.api.annotations.Portable;
 
+import static org.drools.scenariosimulation.api.utils.ConstantsHolder.VALUE;
+import static org.drools.scenariosimulation.api.utils.ScenarioSimulationSharedUtils.isCollectionOrMap;
+import static org.drools.scenariosimulation.api.utils.ScenarioSimulationSharedUtils.isMap;
+
 /**
  * Class used to recursively represent a given fact with its ModelFields eventually expanded
  */
@@ -53,9 +57,13 @@ public class FactModelTree {
      */
     private Map<String, String> expandableProperties = new HashMap<>();
     private Type type;
+    /**
+     * The import prefix used in case of DMN imported nodes.
+     */
+    private String importPrefix;
 
     /**
-     * Static factory method to be used in DMO context. type is not managed. Managing factName and typeName.
+     * Static factory method to be used in DMO (Rule) context.
      * @param factName
      * @param fullPackage
      * @param simpleProperties
@@ -64,10 +72,66 @@ public class FactModelTree {
      * @return
      */
     public static FactModelTree ofDMO(String factName, String fullPackage, Map<String, PropertyTypeName> simpleProperties, Map<String, List<String>> genericTypesMap, String typeName) {
-        if (typeName == null || factName.equals(typeName)) {
-            return new FactModelTree(factName, fullPackage, simpleProperties, genericTypesMap);
+        return new FactModelTree(factName, fullPackage, simpleProperties, genericTypesMap, Type.UNDEFINED, typeName, null);
+    }
+
+    /**
+     * Static factory method to be used in DMO (Rule) context, to create a Simple Type FactModelTree.
+     * @param factName
+     * @param fullPackage
+     * @param simplePropertyFullClass
+     * @param typeName
+     * @return
+     */
+    public static FactModelTree ofSimpleDMO(String factName, String fullPackage, String simplePropertyFullClass, String typeName) {
+        Map<String, FactModelTree.PropertyTypeName> simpleProperties = new HashMap<>();
+        simpleProperties.put(VALUE, new FactModelTree.PropertyTypeName(simplePropertyFullClass));
+        FactModelTree toReturn = new FactModelTree(factName, fullPackage, simpleProperties, retrieveSimpleGenericTypesMap(simplePropertyFullClass), Type.UNDEFINED, typeName, null);
+        toReturn.setSimple(true);
+        return toReturn;
+    }
+
+    private static Map<String, List<String>> retrieveSimpleGenericTypesMap(String simplePropertyFullClass) {
+        Map<String, List<String>> genericTypesMap = new HashMap<>();
+        if (isCollectionOrMap(simplePropertyFullClass)) {
+            List<String> generics = new ArrayList<>();
+            generics.add(Object.class.getCanonicalName());
+            if (isMap(simplePropertyFullClass)) {
+                generics.add(Object.class.getCanonicalName());
+            }
+            genericTypesMap.put(VALUE, generics);
         }
-        return new FactModelTree(factName, fullPackage, simpleProperties, genericTypesMap, typeName);
+        return genericTypesMap;
+    }
+
+    /**
+     * Static factory method to be used in DMN context.
+     * @param factName
+     * @param simpleProperties
+     * @param genericTypesMap
+     * @param typeName
+     * @param type
+     * @return
+     */
+    public static FactModelTree ofDMN(String factName, String importPrefix, Map<String, PropertyTypeName> simpleProperties, Map<String, List<String>> genericTypesMap, String typeName, Type type) {
+        return new FactModelTree(factName, "", simpleProperties, genericTypesMap, type, typeName, importPrefix);
+    }
+
+    /**
+     * Static factory method to be used in DMN context, to create a Simple Type FactModelTree.
+     * @param factName
+     * @param simplePropertyType
+     * @param genericTypeInfoMap
+     * @param typeName
+     * @param type
+     * @return
+     */
+    public static FactModelTree ofSimpleDMN(String factName, String importPrefix, String simplePropertyType, Map<String, List<String>> genericTypeInfoMap, String typeName, Type type) {
+        Map<String, FactModelTree.PropertyTypeName> simpleProperties = new HashMap<>();
+        simpleProperties.put(VALUE, new FactModelTree.PropertyTypeName(simplePropertyType));
+        FactModelTree toReturn = new FactModelTree(factName, "", simpleProperties, genericTypeInfoMap, type, typeName, importPrefix);
+        toReturn.setSimple(true);
+        return toReturn;
     }
 
     public FactModelTree() {
@@ -95,7 +159,7 @@ public class FactModelTree {
      * @param typeName The typeName of the fact (the className)
      */
     public FactModelTree(String factName, String fullPackage, Map<String, PropertyTypeName> simpleProperties, Map<String, List<String>> genericTypesMap, String typeName) {
-        this(factName, fullPackage, simpleProperties, genericTypesMap, Type.UNDEFINED, typeName);
+        this(factName, fullPackage, simpleProperties, genericTypesMap, Type.UNDEFINED, typeName, "");
     }
 
     /**
@@ -107,17 +171,17 @@ public class FactModelTree {
      * @param type
      */
     public FactModelTree(String factName, String fullPackage, Map<String, PropertyTypeName> simpleProperties, Map<String, List<String>> genericTypesMap, Type type) {
-        this(factName, fullPackage, simpleProperties, genericTypesMap, type, null);
-
+        this(factName, fullPackage, simpleProperties, genericTypesMap, type, null, "");
     }
 
-    public FactModelTree(String factName, String fullPackage, Map<String, PropertyTypeName> simpleProperties, Map<String, List<String>> genericTypesMap, Type type, String typeName) {
+    private FactModelTree(String factName, String fullPackage, Map<String, PropertyTypeName> simpleProperties, Map<String, List<String>> genericTypesMap, Type type, String typeName, String importedPrefix) {
         this.factName = factName;
         this.fullPackage = fullPackage;
         this.simpleProperties = simpleProperties;
         this.genericTypesMap = genericTypesMap;
         this.type = type;
         this.typeName = typeName;
+        this.importPrefix = importedPrefix;
     }
 
     public String getFactName() {
@@ -181,6 +245,10 @@ public class FactModelTree {
         return (fullPackage == null || fullPackage.isEmpty()) ? getTypeName() : fullPackage + "." + getTypeName();
     }
 
+    public String getImportPrefix() {
+        return importPrefix;
+    }
+
     public FactModelTree cloneFactModelTree() {
         Map<String, PropertyTypeName> clonedSimpleProperties = new HashMap<>(simpleProperties);
         Map<String, List<String>> clonedGenericTypesMap =
@@ -195,7 +263,7 @@ public class FactModelTree {
                                 }
 
                         ));
-        FactModelTree toReturn = new FactModelTree(factName, fullPackage, clonedSimpleProperties, clonedGenericTypesMap, type, typeName);
+        FactModelTree toReturn = new FactModelTree(factName, fullPackage, clonedSimpleProperties, clonedGenericTypesMap, type, typeName, importPrefix);
         toReturn.expandableProperties = new HashMap<>(expandableProperties);
         toReturn.isSimple = isSimple;
         return toReturn;
@@ -266,4 +334,3 @@ public class FactModelTree {
         }
     }
 }
-

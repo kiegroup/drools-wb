@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.enterprise.event.Event;
+
 import com.ait.lienzo.client.core.event.NodeDragMoveEvent;
 import com.ait.lienzo.client.core.event.NodeDragMoveHandler;
 import com.ait.lienzo.client.core.event.NodeMouseDoubleClickEvent;
@@ -30,6 +32,7 @@ import com.ait.lienzo.client.core.event.NodeMouseDoubleClickHandler;
 import com.ait.lienzo.client.core.shape.Layer;
 import com.google.gwt.user.client.Command;
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import org.assertj.core.api.Assertions;
 import org.drools.verifier.api.reporting.Issue;
 import org.drools.verifier.api.reporting.Severity;
 import org.drools.workbench.models.datamodel.rule.ActionFieldValue;
@@ -46,7 +49,10 @@ import org.drools.workbench.models.guided.dtable.shared.model.ConditionCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
 import org.drools.workbench.models.guided.dtable.shared.model.MetadataCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.Pattern52;
+import org.drools.workbench.screens.guided.dtable.client.editor.clipboard.Clipboard;
 import org.drools.workbench.screens.guided.dtable.client.editor.search.GuidedDecisionTableSearchableElement;
+import org.drools.workbench.screens.guided.dtable.client.type.GuidedDTableResourceType;
+import org.drools.workbench.screens.guided.dtable.client.widget.analysis.DecisionTableAnalyzerProvider;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.events.cdi.DecisionTableColumnSelectedEvent;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.events.cdi.DecisionTableSelectedEvent;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.events.cdi.DecisionTableSelectionsChangedEvent;
@@ -55,9 +61,18 @@ import org.drools.workbench.screens.guided.dtable.client.widget.table.events.cdi
 import org.drools.workbench.screens.guided.dtable.client.widget.table.events.cdi.RefreshConditionsPanelEvent;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.events.cdi.RefreshMenusEvent;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.events.cdi.RefreshMetaDataPanelEvent;
+import org.drools.workbench.screens.guided.dtable.client.widget.table.lockmanager.GuidedDecisionTableLockManager;
+import org.drools.workbench.screens.guided.dtable.client.widget.table.model.GuidedDecisionTableUiModel;
+import org.drools.workbench.screens.guided.dtable.client.widget.table.model.converters.cell.GridWidgetCellFactory;
+import org.drools.workbench.screens.guided.dtable.client.widget.table.model.converters.column.GridWidgetColumnFactory;
+import org.drools.workbench.screens.guided.dtable.client.widget.table.model.synchronizers.ModelSynchronizer;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.model.synchronizers.ModelSynchronizer.VetoException;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.utilities.DependentEnumsUtilities;
+import org.drools.workbench.screens.guided.dtable.client.widget.table.utilities.EnumLoaderUtilities;
+import org.drools.workbench.screens.guided.dtable.service.GuidedDecisionTableLinkManager;
 import org.drools.workbench.screens.guided.dtable.service.GuidedDecisionTableLinkManager.LinkFoundCallback;
+import org.jboss.errai.common.client.api.Caller;
+import org.jboss.errai.ioc.client.container.SyncBeanManager;
 import org.jboss.errai.security.shared.api.identity.User;
 import org.junit.Before;
 import org.junit.Test;
@@ -65,12 +80,13 @@ import org.junit.runner.RunWith;
 import org.kie.soup.project.datamodel.oracle.DataType;
 import org.kie.soup.project.datamodel.oracle.DropDownData;
 import org.kie.workbench.common.services.datamodel.model.PackageDataModelOracleBaselinePayload;
+import org.kie.workbench.common.services.shared.rulename.RuleNamesService;
 import org.kie.workbench.common.services.verifier.reporting.client.panel.IssueSelectedEvent;
+import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracleFactory;
 import org.kie.workbench.common.widgets.client.search.common.SearchPerformedEvent;
 import org.kie.workbench.common.workbench.client.authz.WorkbenchFeatures;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.uberfire.backend.vfs.ObservablePath;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.client.callbacks.Callback;
 import org.uberfire.client.mvp.UpdatedLockStatusEvent;
@@ -81,6 +97,9 @@ import org.uberfire.ext.wires.core.grids.client.model.impl.BaseGridData;
 import org.uberfire.ext.wires.core.grids.client.widget.grid.GridWidget;
 import org.uberfire.mvp.ParameterizedCommand;
 import org.uberfire.mvp.PlaceRequest;
+import org.uberfire.rpc.SessionInfo;
+import org.uberfire.security.authz.AuthorizationManager;
+import org.uberfire.workbench.events.NotificationEvent;
 
 import static org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTablePresenter.Access.LockedBy.CURRENT_USER;
 import static org.drools.workbench.screens.guided.dtable.client.widget.table.GuidedDecisionTablePresenter.Access.LockedBy.NOBODY;
@@ -118,6 +137,9 @@ public class GuidedDecisionTablePresenterTest extends BaseGuidedDecisionTablePre
 
     @Captor
     private ArgumentCaptor<Map<String, String>> callbackValueCaptor;
+
+    @Captor
+    private ArgumentCaptor<List> listArgumentCaptor;
 
     private int originalHashCode;
 
@@ -226,7 +248,7 @@ public class GuidedDecisionTablePresenterTest extends BaseGuidedDecisionTablePre
         verify(renderer,
                never()).clearHighlights();
         verify(renderer,
-               times(1)).highlightRows(any(Severity.class),
+               times(1)).highlightRows(any(),
                                        any(Set.class));
         verify(view,
                times(1)).draw();
@@ -790,8 +812,8 @@ public class GuidedDecisionTablePresenterTest extends BaseGuidedDecisionTablePre
 
         final ParameterizedCommand<Collection<String>> parentRuleNamesCommand = mock(ParameterizedCommand.class);
 
-        when(ruleNameService.getRuleNames(any(ObservablePath.class),
-                                          any(String.class))).thenReturn(parentRuleNames);
+        when(ruleNameService.getRuleNames(any(),
+                                          any())).thenReturn(parentRuleNames);
 
         dtPresenter.getPackageParentRuleNames(parentRuleNamesCommand);
 
@@ -1778,6 +1800,40 @@ public class GuidedDecisionTablePresenterTest extends BaseGuidedDecisionTablePre
         verify(renderer).clearCellHighlight();
     }
 
+    @Test
+    public void testSort() throws VetoException {
+        reset(gridLayer);
+
+        dtPresenter.onSort(uiModel2MockColumn);
+
+        verify(uiModel).sort(uiModel2MockColumn);
+        verify(gridLayer).draw();
+        verify(analyzerController).sort(listArgumentCaptor.capture());
+
+        final List<Integer> value = listArgumentCaptor.getValue();
+        Assertions.assertThat(value).containsExactly(0, 1, 2);
+    }
+
+    @Test
+    public void testSortReversely() throws VetoException {
+        reset(gridLayer);
+
+        // asc
+        dtPresenter.onSort(uiModel2MockColumn);
+        reset(uiModel);
+        reset(gridLayer);
+        reset(analyzerController);
+        // desc
+        dtPresenter.onSort(uiModel2MockColumn);
+
+        verify(uiModel).sort(uiModel2MockColumn);
+        verify(gridLayer).draw();
+        verify(analyzerController).sort(listArgumentCaptor.capture());
+
+        final List<Integer> value = listArgumentCaptor.getValue();
+        Assertions.assertThat(value).containsExactly(2, 1, 0);
+    }
+
     /*
      * check that valid DT selections change events are fired the correct number of times for a test case
      */
@@ -1807,5 +1863,95 @@ public class GuidedDecisionTablePresenterTest extends BaseGuidedDecisionTablePre
 
         verify(access).setReadOnly(readOnly);
         verify(access).setHasEditableColumns(canEditColumns);
+    }
+
+    @Override
+    protected GuidedDecisionTablePresenter makeGuidedDecisionTablePresenterMock() {
+        return new GuidedDecisionTablePresenterMock(identity,
+                                                    resourceType,
+                                                    ruleNameServiceCaller,
+                                                    decisionTableSelectedEvent,
+                                                    decisionTableColumnSelectedEvent,
+                                                    decisionTableSelectionsChangedEvent,
+                                                    refreshAttributesPanelEvent,
+                                                    refreshMetaDataPanelEvent,
+                                                    refreshConditionsPanelEvent,
+                                                    refreshActionsPanelEvent,
+                                                    refreshMenusEvent,
+                                                    notificationEvent,
+                                                    gridWidgetCellFactory,
+                                                    gridWidgetColumnFactory,
+                                                    oracleFactory,
+                                                    synchronizer,
+                                                    beanManager,
+                                                    lockManager,
+                                                    linkManager,
+                                                    clipboard,
+                                                    decisionTableAnalyzerProvider,
+                                                    enumLoaderUtilities,
+                                                    pluginHandler,
+                                                    authorizationManager,
+                                                    sessionInfo);
+    }
+
+    class GuidedDecisionTablePresenterMock extends GuidedDecisionTablePresenterBaseMock {
+
+        public GuidedDecisionTablePresenterMock(final User identity,
+                                                final GuidedDTableResourceType resourceType,
+                                                final Caller<RuleNamesService> ruleNameService,
+                                                final Event<DecisionTableSelectedEvent> decisionTableSelectedEvent,
+                                                final Event<DecisionTableColumnSelectedEvent> decisionTableColumnSelectedEvent,
+                                                final Event<DecisionTableSelectionsChangedEvent> decisionTableSelectionsChangedEvent,
+                                                final Event<RefreshAttributesPanelEvent> refreshAttributesPanelEvent,
+                                                final Event<RefreshMetaDataPanelEvent> refreshMetaDataPanelEvent,
+                                                final Event<RefreshConditionsPanelEvent> refreshConditionsPanelEvent,
+                                                final Event<RefreshActionsPanelEvent> refreshActionsPanelEvent,
+                                                final Event<RefreshMenusEvent> refreshMenusEvent,
+                                                final Event<NotificationEvent> notificationEvent,
+                                                final GridWidgetCellFactory gridWidgetCellFactory,
+                                                final GridWidgetColumnFactory gridWidgetColumnFactory,
+                                                final AsyncPackageDataModelOracleFactory oracleFactory,
+                                                final ModelSynchronizer synchronizer,
+                                                final SyncBeanManager beanManager,
+                                                final GuidedDecisionTableLockManager lockManager,
+                                                final GuidedDecisionTableLinkManager linkManager,
+                                                final Clipboard clipboard,
+                                                final DecisionTableAnalyzerProvider decisionTableAnalyzerProvider,
+                                                final EnumLoaderUtilities enumLoaderUtilities,
+                                                final PluginHandler pluginHandler,
+                                                final AuthorizationManager authorizationManager,
+                                                final SessionInfo sessionInfo) {
+            super(identity,
+                  resourceType,
+                  ruleNameService,
+                  decisionTableSelectedEvent,
+                  decisionTableColumnSelectedEvent,
+                  decisionTableSelectionsChangedEvent,
+                  refreshAttributesPanelEvent,
+                  refreshMetaDataPanelEvent,
+                  refreshConditionsPanelEvent,
+                  refreshActionsPanelEvent,
+                  refreshMenusEvent,
+                  notificationEvent,
+                  gridWidgetCellFactory,
+                  gridWidgetColumnFactory,
+                  oracleFactory,
+                  synchronizer,
+                  beanManager,
+                  lockManager,
+                  linkManager,
+                  clipboard,
+                  decisionTableAnalyzerProvider,
+                  enumLoaderUtilities,
+                  pluginHandler,
+                  authorizationManager,
+                  sessionInfo);
+        }
+
+        @Override
+        GuidedDecisionTableUiModel makeUiModel() {
+            uiModel = spy(super.makeUiModel());
+            return uiModel;
+        }
     }
 }

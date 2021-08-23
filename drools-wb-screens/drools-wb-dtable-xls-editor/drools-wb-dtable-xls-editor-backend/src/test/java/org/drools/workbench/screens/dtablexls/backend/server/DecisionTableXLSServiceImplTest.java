@@ -41,21 +41,25 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InOrder;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.uberfire.backend.server.util.Paths;
 import org.uberfire.backend.vfs.Path;
 import org.uberfire.ext.editor.commons.service.CopyService;
 import org.uberfire.ext.editor.commons.service.DeleteService;
 import org.uberfire.ext.editor.commons.service.RenameService;
 import org.uberfire.io.IOService;
 import org.uberfire.java.nio.base.options.CommentedOption;
+import org.uberfire.java.nio.file.StandardOpenOption;
 import org.uberfire.workbench.events.ResourceOpenedEvent;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -64,7 +68,8 @@ import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
-@PrepareForTest(IOUtils.class)
+@PrepareForTest({IOUtils.class, Paths.class})
+@PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*", "javax.management.*"})
 @RunWith(PowerMockRunner.class)
 public class DecisionTableXLSServiceImplTest {
 
@@ -101,6 +106,9 @@ public class DecisionTableXLSServiceImplTest {
     private Path path;
 
     @Mock
+    private org.uberfire.java.nio.file.Path nioPath;
+
+    @Mock
     private InputStream inputstream;
 
     @Mock
@@ -120,7 +128,7 @@ public class DecisionTableXLSServiceImplTest {
         when(user.getIdentifier()).thenReturn("user");
 
         when(path.toURI()).thenReturn("file://p0/src/main/resources/dtable.xls");
-        when(inputstream.read(anyObject())).thenReturn(-1);
+        when(inputstream.read(any())).thenReturn(-1);
     }
 
     @Test
@@ -132,6 +140,10 @@ public class DecisionTableXLSServiceImplTest {
         this.service = getServiceWithValidationOverride((tempFile) -> {
             //Do nothing; tests do not use a *real* XLS file
         });
+
+        mockStatic(Paths.class);
+
+        when(Paths.convert(any(Path.class))).thenReturn(nioPath);
 
         service.create(path,
                        inputstream,
@@ -147,6 +159,10 @@ public class DecisionTableXLSServiceImplTest {
         this.service = getServiceWithValidationOverride((tempFile) -> {
             //Do nothing; tests do not use a *real* XLS file
         });
+
+        mockStatic(Paths.class);
+
+        when(Paths.convert(any(Path.class))).thenReturn(nioPath);
 
         service.save(path,
                      inputstream,
@@ -167,13 +183,16 @@ public class DecisionTableXLSServiceImplTest {
 
         when(ioService.write(any(org.uberfire.java.nio.file.Path.class),
                              any(byte[].class),
-                             commentedOptionArgumentCaptor.capture())).thenReturn(null);
+                             any())).thenReturn(null);
 
         this.service = getServiceWithValidationOverride((tempFile) -> {
             //Do nothing; tests do not use a *real* XLS file
         });
 
         mockStatic(IOUtils.class);
+        mockStatic(Paths.class);
+
+        when(Paths.convert(any(Path.class))).thenReturn(nioPath);
 
         service.create(path,
                        inputstream,
@@ -184,11 +203,11 @@ public class DecisionTableXLSServiceImplTest {
 
         inOrder.verify(ioService).startBatch(any());
         inOrder.verify(ioService).write(any(org.uberfire.java.nio.file.Path.class),
-                                        any(byte[].class),
+                                        Mockito.<byte[]>any(),
                                         any(CommentedOption.class));
         inOrder.verify(ioService).endBatch();
 
-        verifyStatic(times(1));
+        verifyStatic(IOUtils.class, times(1));
         IOUtils.copy(eq(inputstream),
                      any(OutputStream.class));
     }
@@ -238,7 +257,8 @@ public class DecisionTableXLSServiceImplTest {
             // this is expected correct behavior
         }
         verify(ioService, never()).newOutputStream(any(org.uberfire.java.nio.file.Path.class), any(CommentedOption.class));
-        verifyStatic(never());
+        verifyStatic(IOUtils.class, never());
+        IOUtils.toByteArray(Mockito.<InputStream>any());
     }
 
     @Test(expected = DecisionTableParseException.class)
@@ -268,7 +288,20 @@ public class DecisionTableXLSServiceImplTest {
     }
 
     @Test
-    public void testValidateFileWithValidContent() throws IOException, URISyntaxException {
+    public void load() {
+        this.service = getServiceWithValidationOverride(null);
+
+        mockStatic(Paths.class);
+        when(Paths.convert(any(Path.class))).thenReturn(nioPath);
+
+        service.load(path, sessionId);
+        verify(ioService, times(1)).newInputStream(nioPath,
+                                                   StandardOpenOption.READ);
+        verify(resourceOpenedEvent, times(1)).fire(isA(ResourceOpenedEvent.class));
+    }
+
+    @Test
+    public void testValidateFileWithValidContent() throws URISyntaxException {
         this.service = getServiceWithValidationOverride(null);
 
         File tempFile = new File(this.getClass().getResource("dummy.xls").toURI());
