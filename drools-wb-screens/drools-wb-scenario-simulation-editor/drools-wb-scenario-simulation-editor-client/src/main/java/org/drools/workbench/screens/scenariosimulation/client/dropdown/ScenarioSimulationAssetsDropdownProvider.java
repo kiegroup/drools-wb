@@ -15,11 +15,17 @@
  */
 package org.drools.workbench.screens.scenariosimulation.client.dropdown;
 
+import java.util.List;
+import java.util.function.Consumer;
+
+import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItem;
 import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdownItemsProvider;
 
 /**
  * Using this to specialize injected instance
  */
 public interface ScenarioSimulationAssetsDropdownProvider extends KieAssetsDropdownItemsProvider {
+
+    void getItems(String type, Consumer<List<KieAssetsDropdownItem>> assetListConsumer);
 
 }

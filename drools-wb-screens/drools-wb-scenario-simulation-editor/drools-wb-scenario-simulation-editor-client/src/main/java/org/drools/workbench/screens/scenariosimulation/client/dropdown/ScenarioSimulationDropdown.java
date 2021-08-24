@@ -26,12 +26,21 @@ import org.kie.workbench.common.widgets.client.assets.dropdown.AbstractKieAssets
 @Named(ScenarioSimulationDropdown.BEAN_NAME)
 public class ScenarioSimulationDropdown extends AbstractKieAssetsDropdown {
 
-    final public static String BEAN_NAME = "ScenarioDropdown";
+    public static final String BEAN_NAME = "ScenarioDropdown";
 
     @Inject
     public ScenarioSimulationDropdown(@Named(ScenarioSimulationDropdownView.BEAN_NAME) ScenarioSimulationDropdownView view,
                                       ScenarioSimulationAssetsDropdownProvider dataProvider) {
         super(view, dataProvider);
+    }
+
+    public void loadAssets(String type) {
+        clear();
+        initializeDropdown(type);
+    }
+
+    public void initializeDropdown(String type) {
+        ((ScenarioSimulationAssetsDropdownProvider)dataProvider).getItems(type, getAssetListConsumer());
     }
 
     public IsWidget asWidget() {

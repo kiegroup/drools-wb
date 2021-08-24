@@ -67,7 +67,7 @@ public class PMMLTypeServiceImplTest extends AbstractPMMLTest {
 
     @Test
     public void retrieveFactModelTuplePmml() {
-        FactModelTuple factModelTuple = pmmlTypeServiceImpl.retrieveFactModelTuple(mock(Path.class), null);
+        FactModelTuple factModelTuple = pmmlTypeServiceImpl.retrieveFactModelTuple(mock(Path.class), null, null);
         // VisibleFacts should match inputs and decisions on given model
         int expectedVisibleFacts = pmmlModelLocal.getMiningFields().size() + pmmlModelLocal.getOutputFields().size();
         assertEquals(expectedVisibleFacts, factModelTuple.getVisibleFacts().size());

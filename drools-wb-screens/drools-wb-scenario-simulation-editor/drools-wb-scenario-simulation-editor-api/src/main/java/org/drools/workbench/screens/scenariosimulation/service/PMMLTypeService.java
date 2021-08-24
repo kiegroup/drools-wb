@@ -26,9 +26,10 @@ public interface PMMLTypeService {
      * Retrieves a <code>FactModelTuple</code> representing the given <b>pmml</b> file
      * @param path
      * @param pmmlPath
+     * @param modelName
      * @return
      * @throws Exception
      */
-    FactModelTuple retrieveFactModelTuple(Path path, String pmmlPath);
+    FactModelTuple retrieveFactModelTuple(Path path, String pmmlPath, String modelName);
 
 }

@@ -37,22 +37,25 @@ public class PMMLSimulationSettingsCreationStrategy extends AbstractSimulationSe
     protected PMMLTypeService pmmlTypeService;
 
     @Override
-    public Simulation createSimulation(Path context, String pmmlFilePath) {
-        return super.createSimulation(context, pmmlFilePath);
+    public Simulation createSimulation(Path context, String filePathModelName) {
+        return super.createSimulation(context, filePathModelName);
     }
 
     @Override
-    public Settings createSettings(Path context, String pmmlFilePath) {
+    public Settings createSettings(Path context, String filePathModelName) {
         Settings toReturn = new Settings();
+        String[] parts = filePathModelName.split("\\|");
         toReturn.setType(ScenarioSimulationModel.Type.PMML);
-        toReturn.setPmmlFilePath(pmmlFilePath);
+        toReturn.setPmmlFilePath(parts[0]);
+        toReturn.setPmmlModelName(parts[1]);
         return toReturn;
     }
 
     // Indirection for test
     @Override
-    protected FactModelTuple getFactModelTuple(Path context, String pmmlFilePath) {
-        return pmmlTypeService.retrieveFactModelTuple(context, pmmlFilePath);
+    protected FactModelTuple getFactModelTuple(Path context, String filePathModelName) {
+        String[] parts = filePathModelName.split("\\|");
+        return pmmlTypeService.retrieveFactModelTuple(context, parts[0], parts[1]);
     }
 
     @Override

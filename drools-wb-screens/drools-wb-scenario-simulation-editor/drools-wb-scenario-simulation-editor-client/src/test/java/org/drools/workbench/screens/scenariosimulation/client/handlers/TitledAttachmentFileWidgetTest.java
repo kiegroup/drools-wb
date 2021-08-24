@@ -66,14 +66,14 @@ public class TitledAttachmentFileWidgetTest extends AbstractNewScenarioTest {
         titledAttachmentFileWidget.selectedPath = "SELECTED_PATH";
         assertNotNull(titledAttachmentFileWidget.selectedPath);
         titledAttachmentFileWidget.clearStatus();
-        verify(titledAttachmentFileWidget, times(1)).updateAssetList();
+        verify(titledAttachmentFileWidget, times(1)).updateAssetList("dmn");
         verify(errorLabelMock, times(1)).setText(eq(null));
         assertNull(titledAttachmentFileWidget.selectedPath);
     }
 
     @Test
     public void updateAssetList() {
-        titledAttachmentFileWidget.updateAssetList();
+        titledAttachmentFileWidget.updateAssetList("dmn");
         verify(scenarioSimulationDropdownMock, times(1)).loadAssets();
     }
 
@@ -94,7 +94,7 @@ public class TitledAttachmentFileWidgetTest extends AbstractNewScenarioTest {
 
     private void commonValidate(String selectedPath, boolean expected) {
         titledAttachmentFileWidget.selectedPath = selectedPath;
-        boolean retrieved = titledAttachmentFileWidget.validate();
+        boolean retrieved = titledAttachmentFileWidget.validate("dmn");
         if (expected) {
             verify(errorLabelMock, times(1)).setText(eq(null));
             assertTrue(retrieved);

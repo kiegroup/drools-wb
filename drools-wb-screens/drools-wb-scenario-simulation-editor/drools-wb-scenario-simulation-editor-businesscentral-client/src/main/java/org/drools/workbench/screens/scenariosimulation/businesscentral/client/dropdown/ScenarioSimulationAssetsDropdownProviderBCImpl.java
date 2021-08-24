@@ -58,16 +58,21 @@ public class ScenarioSimulationAssetsDropdownProviderBCImpl implements ScenarioS
 
     @Override
     public void getItems(Consumer<List<KieAssetsDropdownItem>> assetListConsumer) {
-        updateAssets(response -> addAssets(response, assetListConsumer));
+        updateAssets("*", response -> addAssets(response, assetListConsumer));
     }
 
-    protected void updateAssets(RemoteCallback<AssetQueryResult> callback) {
-        ProjectAssetsQuery query = createProjectQuery();
+    @Override
+    public void getItems(String type, Consumer<List<KieAssetsDropdownItem>> assetListConsumer) {
+        updateAssets(type, response -> addAssets(response, assetListConsumer));
+    }
+
+    protected void updateAssets(String type, RemoteCallback<AssetQueryResult> callback) {
+        ProjectAssetsQuery query = createProjectQuery(type);
         assetQueryService.getAssets(query).call(callback, new DefaultErrorCallback());
     }
 
-    protected ProjectAssetsQuery createProjectQuery() {
-        List<String> suffixes = Collections.singletonList("dmn");
+    protected ProjectAssetsQuery createProjectQuery(String type) {
+        List<String> suffixes = Collections.singletonList(type);
         return new ProjectAssetsQuery(libraryPlaces.getActiveWorkspace(),
                                       "",
                                       0,

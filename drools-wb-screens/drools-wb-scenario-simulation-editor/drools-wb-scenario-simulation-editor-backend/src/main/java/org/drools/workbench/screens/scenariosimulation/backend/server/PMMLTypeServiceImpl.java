@@ -16,7 +16,6 @@
 
 package org.drools.workbench.screens.scenariosimulation.backend.server;
 
-import java.io.File;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -29,13 +28,14 @@ import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.Fact
 import org.drools.workbench.screens.scenariosimulation.service.PMMLTypeService;
 import org.guvnor.common.services.backend.exceptions.ExceptionUtilities;
 import org.jboss.errai.bus.server.annotations.Service;
+import org.kie.api.runtime.KieContainer;
+import org.kie.api.runtime.KieRuntimeFactory;
 import org.kie.pmml.api.enums.DATA_TYPE;
 import org.kie.pmml.api.enums.FIELD_USAGE_TYPE;
 import org.kie.pmml.api.models.MiningField;
 import org.kie.pmml.api.models.OutputField;
 import org.kie.pmml.api.models.PMMLModel;
-import org.kie.pmml.evaluator.assembler.factories.PMMLRuntimeFactoryImpl;
-import org.kie.pmml.evaluator.core.service.PMMLRuntimeInternalImpl;
+import org.kie.pmml.api.runtime.PMMLRuntime;
 import org.uberfire.backend.vfs.Path;
 
 @Service
@@ -45,28 +45,28 @@ public class PMMLTypeServiceImpl
         implements PMMLTypeService {
 
     @Override
-    public FactModelTuple retrieveFactModelTuple(Path path, String pmmlPath) {
-        PMMLModel pmmlModel = getPMMLModel(path, pmmlPath);
+    public FactModelTuple retrieveFactModelTuple(Path path, String pmmlPath, String modelName) {
+        PMMLModel pmmlModel = getPMMLModel(path, modelName);
         SortedMap<String, FactModelTree> visibleFacts = new TreeMap<>();
         SortedMap<String, FactModelTree> hiddenFacts = new TreeMap<>();
         ErrorHolder errorHolder = new ErrorHolder();
 
         for (MiningField miningField : pmmlModel.getMiningFields()) {
-            final DATA_TYPE type = miningField.getDataType();
+            final DATA_TYPE dataType = miningField.getDataType();
             final String name = miningField.getName();
             FactModelTree.Type modelTreeType = isTarget(miningField) ? FactModelTree.Type.PREDICTION : FactModelTree.Type.INPUT;
             try {
-                visibleFacts.put(name, createTopLevelFactModelTree(name, type, modelTreeType));
+                visibleFacts.put(name, createTopLevelFactModelTree(name, dataType, modelTreeType));
             } catch (Exception e) {
                 throw ExceptionUtilities.handleException(e);
             }
         }
 
         for (OutputField outputField : pmmlModel.getOutputFields()) {
-            DATA_TYPE type = outputField.getDataType();
+            DATA_TYPE dataType = outputField.getDataType();
             final String name = outputField.getName();
             try {
-                visibleFacts.put(name, createTopLevelFactModelTree(name, type, FactModelTree.Type.PREDICTION));
+                visibleFacts.put(name, createTopLevelFactModelTree(name, dataType, FactModelTree.Type.PREDICTION));
             } catch (Exception e) {
                 throw ExceptionUtilities.handleException(e);
             }
@@ -78,10 +78,13 @@ public class PMMLTypeServiceImpl
     }
 
     public PMMLModel getPMMLModel(Path path, String modelName) {
-        File pmmlFile = new File(path.toURI());
-        PMMLRuntimeInternalImpl pmmlRuntime =
-                (PMMLRuntimeInternalImpl) new PMMLRuntimeFactoryImpl().getPMMLRuntimeFromFile(pmmlFile);
-        return pmmlRuntime.getPMMLModel(modelName).orElseThrow(() -> new RuntimeException("Unable to find model " + modelName));
+        PMMLRuntime pmmlRuntime = getPMMLRuntime(path);
+        return pmmlRuntime.getPMMLModel(modelName).orElseThrow(() -> new RuntimeException("Unable to find model " + modelName + " in path " + path));
+    }
+
+    public PMMLRuntime getPMMLRuntime(Path path) {
+        KieContainer kieContainer = getKieContainer(path);
+        return KieRuntimeFactory.of(kieContainer.getKieBase()).get(PMMLRuntime.class);
     }
 
     /**
@@ -93,7 +96,7 @@ public class PMMLTypeServiceImpl
      * @return
      */
     protected FactModelTree createTopLevelFactModelTree(String factName, DATA_TYPE type, FactModelTree.Type fmType) {
-        return FactModelTree.ofSimplePMML(factName, type.getName(), type.getName(), fmType);
+        return FactModelTree.ofSimplePMML(factName, type.getMappedClass().getCanonicalName(), type.getMappedClass().getCanonicalName(), fmType);
     }
 
     public static boolean isTarget(final MiningField miningField) {

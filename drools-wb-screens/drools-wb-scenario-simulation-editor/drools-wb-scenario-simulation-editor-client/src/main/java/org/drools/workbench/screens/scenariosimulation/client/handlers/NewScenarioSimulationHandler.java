@@ -132,7 +132,7 @@ public class NewScenarioSimulationHandler
                 value = uploadWidget.getSelectedPath();
                 break;
             case PMML:
-                value = String.format("%s|%s", uploadWidget.getSelectedPath(), uploadWidget.getModelName());
+                value = uploadWidget.getSelectedPath() + "|" + uploadWidget.getModelName();
                 break;
             case RULE:
             default:

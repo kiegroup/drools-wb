@@ -51,12 +51,12 @@ public class SourceTypeSelectorTest {
     public void onValueChange() {
         reset(uploadWidgetMock);
         ValueChangeEvent eventMock = mock(ValueChangeEvent.class);
-        doReturn(false).when(sourceTypeSelector).isDMNSelected();
+        doReturn(false).when(sourceTypeSelector).isDMNOrPMMLSelected();
         sourceTypeSelector.onValueChange(eventMock);
-        verify(uploadWidgetMock, never()).updateAssetList();
-        doReturn(true).when(sourceTypeSelector).isDMNSelected();
+        verify(uploadWidgetMock, never()).updateAssetList("dmn");
+        doReturn(true).when(sourceTypeSelector).isDMNOrPMMLSelected();
         sourceTypeSelector.onValueChange(eventMock);
-        verify(uploadWidgetMock, times(1)).updateAssetList();
+        verify(uploadWidgetMock, times(1)).updateAssetList("dmn");
     }
 
     @Test
@@ -84,11 +84,11 @@ public class SourceTypeSelectorTest {
     }
 
     private void commonValidate(boolean isDMNSelected, boolean validate, boolean expected) {
-        doReturn(isDMNSelected).when(sourceTypeSelector).isDMNSelected();
-        doReturn(validate).when(uploadWidgetMock).validate();
+        doReturn(isDMNSelected).when(sourceTypeSelector).isDMNOrPMMLSelected();
+        doReturn(validate).when(uploadWidgetMock).validate("dmn");
         boolean retrieved = sourceTypeSelector.validate();
         if (isDMNSelected) {
-            verify(uploadWidgetMock, times(1)).validate();
+            verify(uploadWidgetMock, times(1)).validate("dmn");
         }
         if (expected) {
             assertTrue(retrieved);

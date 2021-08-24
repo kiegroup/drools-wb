@@ -98,25 +98,25 @@ public class ScenarioSimulationAssetsDropdownProviderTest {
                                                                                                           libraryPlacesMock,
                                                                                                           assetQueryServiceMock) {
             @Override
-            protected ProjectAssetsQuery createProjectQuery() {
+            protected ProjectAssetsQuery createProjectQuery(String type) {
                 return projectAssetsQuery;
             }
         });
-        projectAssetsQuery = scenarioSimulationAssetsDropdownProvider.createProjectQuery();
+        projectAssetsQuery = scenarioSimulationAssetsDropdownProvider.createProjectQuery("dmn");
     }
 
     @Test
     public void getItems() {
         Consumer<List<KieAssetsDropdownItem>> assetListConsumerMock = mock(Consumer.class);
-        doAnswer(invocation -> null).when(scenarioSimulationAssetsDropdownProvider).updateAssets(isA(RemoteCallback.class));
+        doAnswer(invocation -> null).when(scenarioSimulationAssetsDropdownProvider).updateAssets(isA(String.class), isA(RemoteCallback.class));
         scenarioSimulationAssetsDropdownProvider.getItems(assetListConsumerMock);
-        verify(scenarioSimulationAssetsDropdownProvider, times(1)).updateAssets(isA(RemoteCallback.class));
+        verify(scenarioSimulationAssetsDropdownProvider, times(1)).updateAssets(isA(String.class), isA(RemoteCallback.class));
     }
 
     @Test
     public void updateAssets() {
         RemoteCallback<AssetQueryResult> remoteCallbackMock = mock(RemoteCallback.class);
-        scenarioSimulationAssetsDropdownProvider.updateAssets(remoteCallbackMock);
+        scenarioSimulationAssetsDropdownProvider.updateAssets("dmn", remoteCallbackMock);
         verify(assetQueryServiceMock, times(1)).getAssets(eq(projectAssetsQuery));
         verify(invokerMock, times(1)).call(eq(remoteCallbackMock), isA(DefaultErrorCallback.class));
     }
@@ -128,7 +128,7 @@ public class ScenarioSimulationAssetsDropdownProviderTest {
                                                                                                           assetQueryServiceMock) {
 
         });
-        final ProjectAssetsQuery retrieved = scenarioSimulationAssetsDropdownProvider.createProjectQuery();
+        final ProjectAssetsQuery retrieved = scenarioSimulationAssetsDropdownProvider.createProjectQuery("dmn");
         assertEquals(1000,retrieved.getAmount());
         assertEquals(0, retrieved.getStartIndex());
         assertEquals("", retrieved.getFilter());
