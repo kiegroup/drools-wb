@@ -680,7 +680,6 @@
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-rest-backend</artifactId>
-      <scope>runtime</scope>
       <exclusions>
         <exclusion>
           <groupId>org.jboss.resteasy</groupId>
