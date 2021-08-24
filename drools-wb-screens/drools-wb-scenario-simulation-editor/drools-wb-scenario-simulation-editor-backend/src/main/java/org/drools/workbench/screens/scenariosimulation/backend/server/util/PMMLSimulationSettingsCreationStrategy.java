@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2021 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.scenariosimulation.api.model.Settings;
 import org.drools.scenariosimulation.api.model.Simulation;
 import org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTuple;
-import org.drools.workbench.screens.scenariosimulation.service.DMNTypeService;
+import org.drools.workbench.screens.scenariosimulation.service.PMMLTypeService;
 import org.uberfire.backend.vfs.Path;
 
 import static org.drools.scenariosimulation.api.model.FactMappingType.EXPECT;
@@ -31,28 +31,28 @@ import static org.drools.scenariosimulation.api.model.FactMappingType.GIVEN;
 import static org.drools.workbench.screens.scenariosimulation.model.typedescriptor.FactModelTree.Type;
 
 @ApplicationScoped
-public class DMNSimulationSettingsCreationStrategy extends AbstractSimulationSettingsCreationStrategy {
+public class PMMLSimulationSettingsCreationStrategy extends AbstractSimulationSettingsCreationStrategy {
 
     @Inject
-    protected DMNTypeService dmnTypeService;
+    protected PMMLTypeService pmmlTypeService;
 
     @Override
-    public Simulation createSimulation(Path context, String dmnFilePath) {
-        return super.createSimulation(context, dmnFilePath);
+    public Simulation createSimulation(Path context, String pmmlFilePath) {
+        return super.createSimulation(context, pmmlFilePath);
     }
 
     @Override
-    public Settings createSettings(Path context, String dmnFilePath) {
+    public Settings createSettings(Path context, String pmmlFilePath) {
         Settings toReturn = new Settings();
-        toReturn.setType(ScenarioSimulationModel.Type.DMN);
-        toReturn.setDmnFilePath(dmnFilePath);
-        dmnTypeService.initializeNameAndNamespace(toReturn, context, dmnFilePath);
+        toReturn.setType(ScenarioSimulationModel.Type.PMML);
+        toReturn.setPmmlFilePath(pmmlFilePath);
         return toReturn;
     }
 
     // Indirection for test
-    protected FactModelTuple getFactModelTuple(Path context, String dmnFilePath) {
-        return dmnTypeService.retrieveFactModelTuple(context, dmnFilePath);
+    @Override
+    protected FactModelTuple getFactModelTuple(Path context, String pmmlFilePath) {
+        return pmmlTypeService.retrieveFactModelTuple(context, pmmlFilePath);
     }
 
     @Override
@@ -60,10 +60,11 @@ public class DMNSimulationSettingsCreationStrategy extends AbstractSimulationSet
         switch (modelTreeType) {
             case INPUT:
                 return GIVEN;
-            case DECISION:
+            case PREDICTION:
                 return EXPECT;
             default:
                 throw new IllegalArgumentException("Impossible to map");
         }
     }
+
 }

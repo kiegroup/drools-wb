@@ -44,6 +44,7 @@ public class TitledAttachmentFileWidget extends Composite {
     protected ScenarioSimulationDropdown scenarioSimulationDropdown;
     protected Caller<ScenarioSimulationService> scenarioSimulationService;
     protected String selectedPath;
+    protected String modelName;
 
     public TitledAttachmentFileWidget(String title,
                                       Caller<ScenarioSimulationService> scenarioSimulationService, ScenarioSimulationDropdown scenarioSimulationDropdown) {
@@ -72,6 +73,7 @@ public class TitledAttachmentFileWidget extends Composite {
         updateAssetList();
         errorLabel.setText(null);
         selectedPath = null;
+        modelName = null;
     }
 
     public void updateAssetList() {
@@ -80,6 +82,10 @@ public class TitledAttachmentFileWidget extends Composite {
 
     public String getSelectedPath() {
         return selectedPath;
+    }
+
+    public String getModelName() {
+        return modelName;
     }
 
     public boolean validate() {

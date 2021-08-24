@@ -131,6 +131,9 @@ public class NewScenarioSimulationHandler
             case DMN:
                 value = uploadWidget.getSelectedPath();
                 break;
+            case PMML:
+                value = String.format("%s|%s", uploadWidget.getSelectedPath(), uploadWidget.getModelName());
+                break;
             case RULE:
             default:
                 value = null;
