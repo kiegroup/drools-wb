@@ -18,6 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,41 +55,63 @@ public class SourceTypeSelectorTest {
         doReturn(false).when(sourceTypeSelector).isDMNOrPMMLSelected();
         sourceTypeSelector.onValueChange(eventMock);
         verify(uploadWidgetMock, never()).updateAssetList("dmn");
+        verify(uploadWidgetMock, never()).updateAssetList("pmml");
         doReturn(true).when(sourceTypeSelector).isDMNOrPMMLSelected();
+        doReturn(ScenarioSimulationModel.Type.DMN).when(sourceTypeSelector).getSelectedType();
         sourceTypeSelector.onValueChange(eventMock);
         verify(uploadWidgetMock, times(1)).updateAssetList("dmn");
+        doReturn(ScenarioSimulationModel.Type.PMML).when(sourceTypeSelector).getSelectedType();
+        sourceTypeSelector.onValueChange(eventMock);
+        verify(uploadWidgetMock, times(1)).updateAssetList("pmml");
     }
 
     @Test
     public void validateDMO() {
-        commonValidate(false, false, true);
+        commonValidate(ScenarioSimulationModel.Type.RULE, false, true);
     }
 
     @Test
     public void validateInvalidDMN() {
-        commonValidate(true, false, false);
+        commonValidate(ScenarioSimulationModel.Type.DMN, false, false);
     }
 
     @Test
     public void validateValidDMN() {
-        commonValidate(true, true, true);
+        commonValidate(ScenarioSimulationModel.Type.DMN, true, true);
+    }
+
+    @Test
+    public void validateInvalidPMML() {
+        commonValidate(ScenarioSimulationModel.Type.PMML, false, false);
+    }
+
+    @Test
+    public void validateValidPMML() {
+        commonValidate(ScenarioSimulationModel.Type.PMML, true, true);
     }
 
     @Test
     public void addRadioButtons() {
-        reset(uploadWidgetMock);
-        sourceTypeSelector.addRadioButtons();
-        assertEquals(3, sourceTypeSelector.radioButtonList.size());
-        verify(uploadWidgetMock, times(1)).setVisible(false);
-
+        for (ScenarioSimulationModel.Type type : ScenarioSimulationModel.Type.values()) {
+            reset(uploadWidgetMock);
+            reset(sourceTypeSelector);
+            boolean dmnOrPMMLSelected = !type.equals(ScenarioSimulationModel.Type.RULE);
+            doReturn(dmnOrPMMLSelected).when(sourceTypeSelector).isDMNOrPMMLSelected();
+            doReturn(type).when(sourceTypeSelector).getSelectedType();
+            sourceTypeSelector.addRadioButtons();
+            assertEquals(3, sourceTypeSelector.radioButtonList.size());
+            verify(uploadWidgetMock, times(1)).setVisible(type.name().toLowerCase(), dmnOrPMMLSelected);
+        }
     }
 
-    private void commonValidate(boolean isDMNSelected, boolean validate, boolean expected) {
+    private void commonValidate(ScenarioSimulationModel.Type type, boolean validate, boolean expected) {
+        boolean isDMNSelected = !type.equals(ScenarioSimulationModel.Type.RULE);
         doReturn(isDMNSelected).when(sourceTypeSelector).isDMNOrPMMLSelected();
-        doReturn(validate).when(uploadWidgetMock).validate("dmn");
+        doReturn(type).when(sourceTypeSelector).getSelectedType();
+        doReturn(validate).when(uploadWidgetMock).validate(type.name().toLowerCase());
         boolean retrieved = sourceTypeSelector.validate();
         if (isDMNSelected) {
-            verify(uploadWidgetMock, times(1)).validate("dmn");
+            verify(uploadWidgetMock, times(1)).validate(type.name().toLowerCase());
         }
         if (expected) {
             assertTrue(retrieved);

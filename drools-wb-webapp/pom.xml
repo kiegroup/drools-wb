@@ -114,7 +114,7 @@
     <dependency>
       <groupId>org.jboss.errai</groupId>
       <artifactId>errai-cdi-jboss</artifactId>
-      <scope>runtime</scope>
+      <scope>provided</scope>
       <exclusions>
         <exclusion>
           <groupId>ant</groupId>
@@ -123,10 +123,6 @@
         <exclusion>
           <groupId>xalan</groupId>
           <artifactId>xalan</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>net.sourceforge.htmlunit</groupId>
-          <artifactId>htmlunit</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -147,39 +143,14 @@
     <dependency>
       <groupId>org.apache.lucene</groupId>
       <artifactId>lucene-core</artifactId>
-      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-services-backend</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>com.thoughtworks.xstream</groupId>
-          <artifactId>xstream</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.powermock</groupId>
-          <artifactId>powermock-api-mockito2</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.powermock</groupId>
-          <artifactId>powermock-module-junit4</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.jboss.errai</groupId>
       <artifactId>errai-bus</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>io.netty</groupId>
-          <artifactId>netty-codec-http</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>io.netty</groupId>
-          <artifactId>netty-handler</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.jboss.errai</groupId>
@@ -342,7 +313,6 @@
     <dependency>
       <groupId>org.kie</groupId>
       <artifactId>kie-ci</artifactId>
-      <scope>runtime</scope>
     </dependency>
 
     <dependency>
@@ -353,12 +323,6 @@
     <dependency>
       <groupId>org.kie.server</groupId>
       <artifactId>kie-server-api</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>org.kie</groupId>
-          <artifactId>kie-pmml-dependencies</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
@@ -633,12 +597,6 @@
     <dependency>
       <groupId>org.kie.workbench.screens</groupId>
       <artifactId>kie-wb-common-server-ui-backend</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.kie.server</groupId>
-      <artifactId>kie-server-controller-openshift</artifactId>
-      <scope>runtime</scope>
     </dependency>
 
     <dependency>
@@ -1122,7 +1080,6 @@
     <dependency>
       <groupId>org.kie.workbench.forms</groupId>
       <artifactId>kie-wb-common-forms-backend-services</artifactId>
-
     </dependency>
 
     <!-- DMN Editor -->
@@ -1241,25 +1198,21 @@
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-metadata-commons-io</artifactId>
-      <scope>runtime</scope>
     </dependency>
 
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-metadata-backend-lucene</artifactId>
-      <scope>runtime</scope>
     </dependency>
 
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-metadata-backend-elasticsearch</artifactId>
-      <scope>runtime</scope>
     </dependency>
 
     <dependency>
       <groupId>org.uberfire</groupId>
       <artifactId>uberfire-metadata-backend-infinispan</artifactId>
-      <scope>runtime</scope>
     </dependency>
 
     <!-- UberFire -->
@@ -1494,7 +1447,6 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.google.gwt.gwtmockito</groupId>
@@ -1662,7 +1614,7 @@
         <artifactId>gwt-maven-plugin</artifactId>
         <configuration>
           <deploy>${project.build.directory}/gwt-symbols-deploy</deploy>
-          <extraJvmArgs>-Xmx8G -Xms1024m -Xss1M -XX:CompileThreshold=7000 -Derrai.jboss.home=${wildfly.home} -Derrai.marshalling.server.classOutput=${project.build.outputDirectory} -Derrai.dynamic_validation.enabled=true -Djava.io.tmpdir=${project.build.directory}</extraJvmArgs>
+          <extraJvmArgs>-Xmx16G -Xms1024m -Xss1M -XX:CompileThreshold=7000 -Derrai.jboss.home=${wildfly.home} -Derrai.marshalling.server.classOutput=${project.build.outputDirectory} -Derrai.dynamic_validation.enabled=true -Djava.io.tmpdir=${project.build.directory}</extraJvmArgs>
           <module>org.drools.workbench.DroolsWorkbench</module>
           <logLevel>INFO</logLevel>
           <noServer>false</noServer>

@@ -58,9 +58,9 @@ public class PMMLTypeServiceImplTest extends AbstractPMMLTest {
         assertEquals("testPath", retrieved.getFactName());
         assertEquals(1, retrieved.getSimpleProperties().size());
         assertTrue(retrieved.getSimpleProperties().containsKey(VALUE));
-        assertEquals(simpleString.getName(), retrieved.getSimpleProperties().get(VALUE).getTypeName());
+        assertEquals(simpleString.getMappedClass().getCanonicalName(), retrieved.getSimpleProperties().get(VALUE).getTypeName());
         assertFalse(retrieved.getSimpleProperties().get(VALUE).getBaseTypeName().isPresent());
-        assertEquals(simpleString.getName(), retrieved.getSimpleProperties().get(VALUE).getPropertyTypeNameToVisualize());
+        assertEquals(simpleString.getMappedClass().getCanonicalName(), retrieved.getSimpleProperties().get(VALUE).getPropertyTypeNameToVisualize());
         assertTrue(retrieved.getExpandableProperties().isEmpty());
         assertTrue(retrieved.getGenericTypesMap().isEmpty());
     }
@@ -68,17 +68,17 @@ public class PMMLTypeServiceImplTest extends AbstractPMMLTest {
     @Test
     public void retrieveFactModelTuplePmml() {
         FactModelTuple factModelTuple = pmmlTypeServiceImpl.retrieveFactModelTuple(mock(Path.class), null, null);
-        // VisibleFacts should match inputs and decisions on given model
+        // VisibleFacts should match inputs and predictions on given model
         int expectedVisibleFacts = pmmlModelLocal.getMiningFields().size() + pmmlModelLocal.getOutputFields().size();
         assertEquals(expectedVisibleFacts, factModelTuple.getVisibleFacts().size());
-        // Verify each inputDataNode has been correctly mapped
+        // Verify each miningField has been correctly mapped
         pmmlModelLocal.getMiningFields().forEach(miningField -> verifyFactModelTree(factModelTuple, miningField));
-        // Verify each decisionNode has been correctly mapped
+        // Verify each outputField has been correctly mapped
         pmmlModelLocal.getOutputFields().forEach(outputField -> verifyFactModelTree(factModelTuple, outputField));
     }
 
     /**
-     * Verify the <code>FactModelTree</code> generated for a <b>given</b> <code>PMMLNode</code> (<code>InputDataNode</code> or <code>DecisionNode</code>)
+     * Verify the <code>FactModelTree</code> generated for a <b>given</b> <code>MiningField</code>
      * @param factModelTuple
      * @param miningField
      */
@@ -96,7 +96,7 @@ public class PMMLTypeServiceImplTest extends AbstractPMMLTest {
     }
 
     /**
-     * Verify the <code>FactModelTree</code> generated for a <b>given</b> <code>PMMLNode</code> (<code>InputDataNode</code> or <code>DecisionNode</code>)
+     * Verify the <code>FactModelTree</code> generated for a <b>given</b> <code>OutputField</code>
      * @param factModelTuple
      * @param outputField
      */
@@ -113,13 +113,13 @@ public class PMMLTypeServiceImplTest extends AbstractPMMLTest {
     }
 
     /**
-     * Verify the <code>FactModelTree</code> generated for a <b>simple</b> (<b>not collection</b>) <code>DATA_TYPE</code>
+     * Verify the <code>FactModelTree</code> generated for a <code>DATA_TYPE</code>
      * @param mappedFactModelTree
      * @param originalType
      */
     private void verifyDATA_TYPE(FactModelTree mappedFactModelTree, DATA_TYPE originalType) {
-        assertTrue(mappedFactModelTree.getSimpleProperties().containsKey(VALUE)); // otherwise a simple one
-        assertEquals(originalType.getName(), mappedFactModelTree.getSimpleProperties().get(VALUE).getTypeName());
-        assertEquals(originalType.getName(), mappedFactModelTree.getSimpleProperties().get(VALUE).getPropertyTypeNameToVisualize());
+        assertTrue(mappedFactModelTree.getSimpleProperties().containsKey(VALUE));
+        assertEquals(originalType.getMappedClass().getCanonicalName(), mappedFactModelTree.getSimpleProperties().get(VALUE).getTypeName());
+        assertEquals(originalType.getMappedClass().getCanonicalName(), mappedFactModelTree.getSimpleProperties().get(VALUE).getPropertyTypeNameToVisualize());
     }
 }

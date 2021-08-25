@@ -18,6 +18,7 @@ package org.drools.workbench.screens.scenariosimulation.client.handlers;
 
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwtmockito.GwtMockitoTestRunner;
+import org.drools.scenariosimulation.api.model.ScenarioSimulationModel;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.gwtbootstrap3.client.ui.FormLabel;
 import org.gwtbootstrap3.client.ui.html.Span;
@@ -66,15 +67,18 @@ public class TitledAttachmentFileWidgetTest extends AbstractNewScenarioTest {
         titledAttachmentFileWidget.selectedPath = "SELECTED_PATH";
         assertNotNull(titledAttachmentFileWidget.selectedPath);
         titledAttachmentFileWidget.clearStatus();
-        verify(titledAttachmentFileWidget, times(1)).updateAssetList("dmn");
+        verify(titledAttachmentFileWidget, times(1)).updateAssetList("*");
         verify(errorLabelMock, times(1)).setText(eq(null));
         assertNull(titledAttachmentFileWidget.selectedPath);
     }
 
     @Test
     public void updateAssetList() {
-        titledAttachmentFileWidget.updateAssetList("dmn");
-        verify(scenarioSimulationDropdownMock, times(1)).loadAssets();
+        for (ScenarioSimulationModel.Type type : ScenarioSimulationModel.Type.values()) {
+            String typeName = type.name().toLowerCase();
+            titledAttachmentFileWidget.updateAssetList(typeName);
+            verify(scenarioSimulationDropdownMock, times(1)).loadAssets(typeName);
+        }
     }
 
     @Test
@@ -96,7 +100,7 @@ public class TitledAttachmentFileWidgetTest extends AbstractNewScenarioTest {
         titledAttachmentFileWidget.selectedPath = selectedPath;
         boolean retrieved = titledAttachmentFileWidget.validate("dmn");
         if (expected) {
-            verify(errorLabelMock, times(1)).setText(eq(null));
+            verify(errorLabelMock, times(1)).setText("");
             assertTrue(retrieved);
         } else {
             verify(errorLabelMock, times(1)).setText(eq(ScenarioSimulationEditorConstants.INSTANCE.chooseValidDMNAsset()));
