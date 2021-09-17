@@ -636,12 +636,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.kie.server</groupId>
-      <artifactId>kie-server-controller-openshift</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-
-    <dependency>
       <groupId>org.kie.workbench.screens</groupId>
       <artifactId>kie-wb-common-server-ui-client</artifactId>
       <scope>provided</scope>
@@ -1122,7 +1116,6 @@
     <dependency>
       <groupId>org.kie.workbench.forms</groupId>
       <artifactId>kie-wb-common-forms-backend-services</artifactId>
-
     </dependency>
 
     <!-- DMN Editor -->
@@ -1490,12 +1483,12 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- Test dependencies -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <scope>test</scope>
     </dependency>
+
+    <!-- Test dependencies -->
     <dependency>
       <groupId>com.google.gwt.gwtmockito</groupId>
       <artifactId>gwtmockito</artifactId>
