@@ -1,0 +1,4 @@
+org/drools/workbench/screens/scenariosimulation/webapp/backend/IOServiceNio2WrapperProviderImpl.class
+org/drools/workbench/screens/scenariosimulation/webapp/workarounds/ExperimentalActivitiesAuthorizationManagerMock.class
+org/drools/workbench/screens/scenariosimulation/webapp/client/editor/AbstractScenarioSimulationEditorKogitoScreen.class
+classlist.mf

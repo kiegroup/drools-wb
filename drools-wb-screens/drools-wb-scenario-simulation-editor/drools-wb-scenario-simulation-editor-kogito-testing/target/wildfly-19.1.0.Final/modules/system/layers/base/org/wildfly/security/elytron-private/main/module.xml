@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ JBoss, Home of Professional Open Source.
+  ~ Copyright 2015, Red Hat, Inc., and individual contributors
+  ~ as indicated by the @author tags. See the copyright.txt file in the
+  ~ distribution for a full listing of individual contributors.
+  ~
+  ~ This is free software; you can redistribute it and/or modify it
+  ~ under the terms of the GNU Lesser General Public License as
+  ~ published by the Free Software Foundation; either version 2.1 of
+  ~ the License, or (at your option) any later version.
+  ~
+  ~ This software is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ Lesser General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Lesser General Public
+  ~ License along with this software; if not, write to the Free
+  ~ Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+  ~ 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+  -->
+<module name="org.wildfly.security.elytron-private" xmlns="urn:jboss:module:1.8">
+    <properties>
+        <!--
+             Although this module is private see the module 'org.wildfly.security.elytron' for the re-exported public API.
+         -->
+        <property name="jboss.api" value="private"/>
+    </properties>
+
+    <exports>
+        <exclude path="org/wildfly/security/_private"/>
+        <exclude path="org/wildfly/security/manager/_private"/>
+        <exclude path="org/wildfly/security/sasl/digest/_private"/>
+        <exclude path="org/wildfly/security/util/_private"/>
+    </exports>
+
+    <resources>
+        <resource-root path="wildfly-elytron-asn1-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-audit-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-auth-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-auth-server-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-auth-server-deprecated-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-auth-server-http-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-auth-server-sasl-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-auth-util-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-base-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-client-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-credential-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-credential-source-deprecated-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-credential-source-impl-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-credential-store-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-digest-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-http-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-http-basic-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-http-bearer-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-http-cert-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-http-digest-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-http-deprecated-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-http-form-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-http-spnego-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-http-sso-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-http-util-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-jacc-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-jaspi-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-json-util-1.11.4.Final.jar"/>
+        <!-- <artifact name="${org.wildfly.security:wildfly-elytron-jwt}"/> To be added as independent module in WildFly -->
+        <resource-root path="wildfly-elytron-keystore-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-mechanism-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-mechanism-digest-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-mechanism-http-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-mechanism-gssapi-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-mechanism-oauth2-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-mechanism-scram-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-password-impl-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-permission-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-provider-util-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-realm-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-realm-jdbc-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-realm-ldap-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-realm-token-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-sasl-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-sasl-auth-util-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-sasl-anonymous-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-sasl-deprecated-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-sasl-digest-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-sasl-entity-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-sasl-external-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-sasl-gs2-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-sasl-gssapi-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-sasl-localuser-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-sasl-oauth2-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-sasl-otp-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-sasl-plain-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-sasl-scram-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-security-manager-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-security-manager-action-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-ssl-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-util-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-x500-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-x500-cert-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-x500-cert-acme-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-x500-cert-util-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-x500-deprecated-1.11.4.Final.jar"/>
+        <resource-root path="wildfly-elytron-x500-principal-1.11.4.Final.jar"/>
+    </resources>
+
+    <dependencies>
+        <module name="java.logging"/>
+        <module name="java.naming"/>
+        <module name="java.security.jgss"/>
+        <module name="java.security.sasl"/>
+        <module name="java.sql"/>
+        <module name="java.xml"/>
+        <module name="javax.json.api"/>
+        <module name="jdk.security.auth"/>
+        <module name="jdk.unsupported"/>
+        <module name="org.jboss.logging"/>
+        <module name="org.jboss.logmanager"/>
+        <module name="org.jboss.modules"/>
+        <module name="org.jboss.threads"/>
+        <module name="javax.security.jacc.api" optional="true"/>
+        <module name="javax.security.auth.message.api"/>
+        <module name="javax.servlet.api" optional="true"/>
+        <module name="org.wildfly.common"/>
+        <module name="javax.xml.ws.api" optional="true"/>
+        <module name="org.jboss.ws.spi" optional="true"/>
+        <!--
+        This is only exported because some of the ElytronXmlParser methods throw an exception in this module. If other
+        modules use the parser, they need to have visibility to this module.
+        -->
+        <module name="org.wildfly.client.config" export="true"/>
+    </dependencies>
+</module>

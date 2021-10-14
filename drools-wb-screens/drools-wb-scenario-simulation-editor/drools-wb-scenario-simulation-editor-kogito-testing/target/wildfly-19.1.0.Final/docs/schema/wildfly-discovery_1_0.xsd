@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--
+  ~ JBoss, Home of Professional Open Source.
+  ~ Copyright 2016, Red Hat, Inc., and individual contributors
+  ~ as indicated by the @author tags. See the copyright.txt file in the
+  ~ distribution for a full listing of individual contributors.
+  ~
+  ~ This is free software; you can redistribute it and/or modify it
+  ~ under the terms of the GNU Lesser General Public License as
+  ~ published by the Free Software Foundation; either version 2.1 of
+  ~ the License, or (at your option) any later version.
+  ~
+  ~ This software is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ Lesser General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Lesser General Public
+  ~ License along with this software; if not, write to the Free
+  ~ Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+  ~ 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+  -->
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="urn:jboss:domain:discovery:1.0"
+           xmlns="urn:jboss:domain:discovery:1.0"
+           elementFormDefault="qualified"
+           attributeFormDefault="unqualified"
+           version="1.0">
+
+    <xs:element name="subsystem" type="subsystemType">
+        <xs:annotation>
+            <xs:documentation>
+                The discovery subsystem root element.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:complexType name="subsystemType">
+        <xs:annotation>
+            <xs:documentation>
+                The discovery subsystem root type.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="aggregate-provider" type="aggregateType">
+                <xs:annotation>
+                    <xs:documentation>
+                        An aggregating discovery provider element.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="static-provider" type="staticType">
+                <xs:annotation>
+                    <xs:documentation>
+                        A static discovery provider definition element.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="aggregateType">
+        <xs:annotation>
+            <xs:documentation>
+                A provider which aggregates multiple other providers into one.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The name of this provider.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="providers" type="providersType" use="optional">
+            <xs:annotation>
+                <xs:documentation>
+                    The list of providers which make up this provider.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="staticType">
+        <xs:annotation>
+            <xs:documentation>
+                A provider which contains a list of static services.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:choice>
+            <xs:element name="service" type="serviceType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>
+                        A single service definition within the service list.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:choice>
+        <xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The name of this provider.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="serviceType">
+        <xs:annotation>
+            <xs:documentation>
+                A definition of a single static service.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="attribute" type="attributeType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>
+                        A single attribute in this attribute list.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="abstract-type" type="xs:string" use="optional">
+            <xs:annotation>
+                <xs:documentation>
+                    The abstract type of the service being advertised.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="abstract-type-authority" type="xs:string" use="optional">
+            <xs:annotation>
+                <xs:documentation>
+                    The name of the authority which defined the abstract service type.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="uri" type="xs:anyURI" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The concrete URI of the service being advertised.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="uri-scheme-authority" type="xs:string" use="optional">
+            <xs:annotation>
+                <xs:documentation>
+                    The name of the authority which defined the concrete URI scheme.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="attributeType">
+        <xs:annotation>
+            <xs:documentation>
+                A service's attribute definition.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="name" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    The attribute name.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="value" type="xs:string" use="optional">
+            <xs:annotation>
+                <xs:documentation>
+                    The attribute value.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <xs:simpleType name="providersType">
+        <xs:annotation>
+            <xs:documentation>
+                A list of providers.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:list itemType="xs:string"/>
+    </xs:simpleType>
+</xs:schema>

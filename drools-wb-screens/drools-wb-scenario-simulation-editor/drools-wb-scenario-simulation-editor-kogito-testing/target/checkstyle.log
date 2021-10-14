@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="8.19">
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-testing/src/main/java/org/drools/workbench/screens/scenariosimulation/webapp/client/dropdown/ScenarioSimulationKogitoLoadingScesimDropdown.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-testing/src/main/java/org/drools/workbench/screens/scenariosimulation/webapp/client/dropdown/ScenarioSimulationKogitoLoadingScesimAssetsDropdownProviderImpl.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-testing/src/main/java/org/drools/workbench/screens/scenariosimulation/webapp/client/dropdown/ScenarioSimulationKogitoTestingCreationAssetsDropdownProviderImpl.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-testing/src/main/java/org/drools/workbench/screens/scenariosimulation/webapp/client/popup/ScenarioSimulationKogitoLoadingScesimPopupView.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-testing/src/main/java/org/drools/workbench/screens/scenariosimulation/webapp/client/popup/ScenarioSimulationKogitoLoadingScesimPopupPresenter.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-testing/src/main/java/org/drools/workbench/screens/scenariosimulation/webapp/client/workarounds/TestingPerspectiveConfiguration.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-testing/src/main/java/org/drools/workbench/screens/scenariosimulation/webapp/client/workarounds/KogitoTestingAsyncPackageDataModelOracle.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-testing/src/main/java/org/drools/workbench/screens/scenariosimulation/webapp/client/services/ScenarioSimulationKogitoTestingResourceContentService.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-testing/src/main/java/org/drools/workbench/screens/scenariosimulation/webapp/client/services/TestingVFSService.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-testing/src/main/java/org/drools/workbench/screens/scenariosimulation/webapp/client/editor/ScenarioSimulationEditorKogitoTestingScreen.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-testing/src/test/java/org/drools/workbench/screens/scenariosimulation/webapp/client/services/TestingVFSServiceTest.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-testing/src/test/java/org/drools/workbench/screens/scenariosimulation/webapp/client/services/ScenarioSimulationKogitoTestingResourceContentServiceTest.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-testing/src/main/resources/META-INF/ErraiApp.properties">
+</file>
+</checkstyle>

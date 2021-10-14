@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ JBoss, Home of Professional Open Source.
+  ~ Copyright (c) 2011, Red Hat, Inc., and individual contributors
+  ~ as indicated by the @author tags. See the copyright.txt file in the
+  ~ distribution for a full listing of individual contributors.
+  ~
+  ~ This is free software; you can redistribute it and/or modify it
+  ~ under the terms of the GNU Lesser General Public License as
+  ~ published by the Free Software Foundation; either version 2.1 of
+  ~ the License, or (at your option) any later version.
+  ~
+  ~ This software is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ Lesser General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Lesser General Public
+  ~ License along with this software; if not, write to the Free
+  ~ Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+  ~ 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+  -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://java.sun.com/xml/ns/javaee"
+           xmlns:javaee="http://java.sun.com/xml/ns/javaee"
+           xmlns:jboss="http://www.jboss.com/xml/ns/javaee"           
+           elementFormDefault="qualified"
+           attributeFormDefault="unqualified"
+           version="2.0">
+
+   <!-- xs:include schemaLocation="ejb-jar_3_1.xsd"/ -->
+   <!--
+   <xs:include schemaLocation="http://java.sun.com/xml/ns/javaee/ejb-jar_3_1.xsd"/>
+   -->
+
+   <xs:import namespace="http://www.jboss.com/xml/ns/javaee"/>
+
+   <xs:redefine schemaLocation="http://java.sun.com/xml/ns/javaee/ejb-jar_3_1.xsd">
+      <xs:complexType name="assembly-descriptorType">
+         <xs:complexContent>
+            <xs:extension base="javaee:assembly-descriptorType">
+               <xs:sequence>
+                  <xs:element ref="javaee:assembly-descriptor-entry" minOccurs="0" maxOccurs="unbounded"/>
+               </xs:sequence>
+            </xs:extension>
+         </xs:complexContent>
+      </xs:complexType>
+   </xs:redefine>
+
+   <xs:redefine schemaLocation="http://java.sun.com/xml/ns/javaee/ejb-jar_3_1.xsd">
+      <xs:complexType name="container-transactionType">
+         <xs:complexContent>
+            <xs:extension base="javaee:container-transactionType">
+               <xs:sequence>
+                  <xs:element ref="javaee:container-transaction-entry" minOccurs="0" maxOccurs="unbounded"/>
+               </xs:sequence>
+            </xs:extension>
+         </xs:complexContent>
+      </xs:complexType>
+   </xs:redefine>
+
+   <xs:element name="assembly-descriptor-entry" abstract="true" type="javaee:jboss-assembly-descriptor-entryType"/>
+
+   <xs:complexType abstract="true" name="jboss-assembly-descriptor-entryType">
+      <xs:sequence>
+         <xs:element name="description"
+                     type="javaee:descriptionType"
+                     minOccurs="0"
+                     maxOccurs="unbounded"/>
+      </xs:sequence>
+   </xs:complexType>
+
+   <xs:complexType name="jboss-assembly-descriptor-bean-entryType">
+      <xs:complexContent>
+         <xs:extension base="javaee:jboss-assembly-descriptor-entryType">
+            <xs:sequence>
+               <xs:element name="ejb-name"
+                           type="javaee:string"/>
+            </xs:sequence>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+
+   <xs:complexType name="jboss-assembly-descriptor-bean-method-entryType">
+      <xs:complexContent>
+         <xs:extension base="javaee:jboss-assembly-descriptor-bean-entryType">
+            <xs:sequence>
+               <xs:element name="method"
+                           type="javaee:named-methodType"
+                           minOccurs="0"/>
+            </xs:sequence>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+
+   <xs:complexType name="jboss-assembly-descriptor-method-entryType">
+      <xs:complexContent>
+         <xs:extension base="javaee:jboss-assembly-descriptor-entryType">
+            <xs:sequence>
+               <xs:element name="method"
+                           type="javaee:methodType"
+                           maxOccurs="unbounded"/>
+            </xs:sequence>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+
+   <xs:element name="container-transaction-entry" abstract="true" type="javaee:jboss-container-transaction-entryType"/>
+
+   <xs:complexType abstract="true" name="jboss-container-transaction-entryType"/>
+
+   <xs:complexType name="jboss-ejb-beanType">
+      <xs:sequence>
+         <xs:group ref="javaee:descriptionGroup"/>
+         <xs:element name="ejb-name"
+                     type="javaee:ejb-nameType"/>
+         <xs:element name="mapped-name"
+                     type="javaee:xsdStringType"
+                     minOccurs="0"/>
+         <xs:group ref="javaee:jndiEnvironmentRefsGroup"/>
+      </xs:sequence>
+   </xs:complexType>
+
+   <xs:complexType name="jboss-ejb-jarType">
+      <xs:complexContent>
+         <xs:extension base="javaee:ejb-jarType">
+            <xs:sequence>
+               <xs:element ref="jboss:enterprise-beans" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attribute name="impl-version" type="javaee:dewey-versionType" fixed="2.0" use="required"/>
+         </xs:extension>
+      </xs:complexContent>
+   </xs:complexType>
+
+   <!--
+      The standard enterprise-beansType starts with a choice which mandates at least one element.
+      This effectively makes it non-extensible.
+   -->
+   <xs:complexType name="jboss-enterprise-beansType">
+      <!--
+      <xs:complexContent>
+         <xs:extension base="javaee:enterprise-beansType">
+            <xs:choice maxOccurs="unbounded">
+               <xs:element ref="jboss:ejb" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:choice>
+         </xs:extension>
+      </xs:complexContent>
+      -->
+      <xs:annotation>
+        <xs:documentation>
+
+          The enterprise-beansType declares one or more enterprise
+          beans. Each bean can be a session, entity or message-driven
+          bean.
+
+        </xs:documentation>
+      </xs:annotation>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element ref="jboss:ejb"/>
+        <xs:element name="session"
+                     type="javaee:session-beanType">
+          <!--
+          <xs:unique name="session-ejb-local-ref-name-uniqueness">
+            <xs:annotation>
+              <xs:documentation>
+
+                The ejb-ref-name element contains the name of
+                an EJB reference. The EJB reference is an entry in
+                the component's environment and is relative to the
+                java:comp/env context.  The name must be unique within
+                the component.
+
+                It is recommended that name be prefixed with "ejb/".
+
+              </xs:documentation>
+            </xs:annotation>
+            <xs:selector xpath="javaee:ejb-local-ref"/>
+            <xs:field xpath="javaee:ejb-ref-name"/>
+          </xs:unique>
+          <xs:unique name="session-ejb-ref-name-uniqueness">
+            <xs:annotation>
+              <xs:documentation>
+
+                The ejb-ref-name element contains the name of an EJB
+                reference. The EJB reference is an entry in the
+                component's environment and is relative to the
+                java:comp/env context. The name must be unique
+                within the component.
+
+                It is recommended that name is prefixed with "ejb/".
+
+              </xs:documentation>
+            </xs:annotation>
+            <xs:selector xpath="javaee:ejb-ref"/>
+            <xs:field xpath="javaee:ejb-ref-name"/>
+          </xs:unique>
+          <xs:unique name="session-resource-env-ref-uniqueness">
+            <xs:annotation>
+              <xs:documentation>
+
+                The resource-env-ref-name element specifies the name
+                of a resource environment reference; its value is
+                the environment entry name used in the component
+                code. The name is a JNDI name relative to the
+                java:comp/env context and must be unique within an
+                component.
+
+              </xs:documentation>
+            </xs:annotation>
+            <xs:selector xpath="javaee:resource-env-ref"/>
+            <xs:field xpath="javaee:resource-env-ref-name"/>
+          </xs:unique>
+          <xs:unique name="session-message-destination-ref-uniqueness">
+            <xs:annotation>
+              <xs:documentation>
+
+                The message-destination-ref-name element specifies the name
+                of a message destination reference; its value is
+                the message destination reference name used in the component
+                code. The name is a JNDI name relative to the
+                java:comp/env context and must be unique within an
+                component.
+
+              </xs:documentation>
+            </xs:annotation>
+            <xs:selector xpath="javaee:message-destination-ref"/>
+            <xs:field xpath="javaee:message-destination-ref-name"/>
+          </xs:unique>
+          <xs:unique name="session-res-ref-name-uniqueness">
+            <xs:annotation>
+              <xs:documentation>
+
+                The res-ref-name element specifies the name of a
+                resource manager connection factory reference.  The name
+                is a JNDI name relative to the java:comp/env context.
+                The name must be unique within an component.
+
+              </xs:documentation>
+            </xs:annotation>
+            <xs:selector xpath="javaee:resource-ref"/>
+            <xs:field xpath="javaee:res-ref-name"/>
+          </xs:unique>
+          <xs:unique name="session-env-entry-name-uniqueness">
+            <xs:annotation>
+              <xs:documentation>
+
+                The env-entry-name element contains the name of a
+                component's environment entry.  The name is a JNDI
+                name relative to the java:comp/env context.  The
+                name must be unique within an component.
+
+              </xs:documentation>
+            </xs:annotation>
+            <xs:selector xpath="javaee:env-entry"/>
+            <xs:field xpath="javaee:env-entry-name"/>
+          </xs:unique>
+          -->
+        </xs:element>
+        <xs:element name="entity"
+                     type="javaee:entity-beanType">
+          <!--
+          <xs:unique name="entity-ejb-local-ref-name-uniqueness">
+            <xs:annotation>
+              <xs:documentation>
+
+                The ejb-ref-name element contains the name of
+                an EJB reference. The EJB reference is an entry in
+                the component's environment and is relative to the
+                java:comp/env context.  The name must be unique within
+                the component.
+
+                It is recommended that name be prefixed with "ejb/".
+
+              </xs:documentation>
+            </xs:annotation>
+            <xs:selector xpath="javaee:ejb-local-ref"/>
+            <xs:field xpath="javaee:ejb-ref-name"/>
+          </xs:unique>
+          <xs:unique name="entity-ejb-ref-name-uniqueness">
+            <xs:annotation>
+              <xs:documentation>
+
+                The ejb-ref-name element contains the name of an EJB
+                reference. The EJB reference is an entry in the
+                component's environment and is relative to the
+                java:comp/env context. The name must be unique
+                within the component.
+
+                It is recommended that name is prefixed with "ejb/".
+
+              </xs:documentation>
+            </xs:annotation>
+            <xs:selector xpath="javaee:ejb-ref"/>
+            <xs:field xpath="javaee:ejb-ref-name"/>
+          </xs:unique>
+          <xs:unique name="entity-resource-env-ref-uniqueness">
+            <xs:annotation>
+              <xs:documentation>
+
+                The resource-env-ref-name element specifies the name
+                of a resource environment reference; its value is
+                the environment entry name used in the component
+                code. The name is a JNDI name relative to the
+                java:comp/env context and must be unique within an
+                component.
+
+              </xs:documentation>
+            </xs:annotation>
+            <xs:selector xpath="javaee:resource-env-ref"/>
+            <xs:field xpath="javaee:resource-env-ref-name"/>
+          </xs:unique>
+          <xs:unique name="entity-message-destination-ref-uniqueness">
+            <xs:annotation>
+              <xs:documentation>
+
+                The message-destination-ref-name element specifies the name
+                of a message destination reference; its value is
+                the message destination reference name used in the component
+                code. The name is a JNDI name relative to the
+                java:comp/env context and must be unique within an
+                component.
+
+              </xs:documentation>
+            </xs:annotation>
+            <xs:selector xpath="javaee:message-destination-ref"/>
+            <xs:field xpath="javaee:message-destination-ref-name"/>
+          </xs:unique>
+          <xs:unique name="entity-res-ref-name-uniqueness">
+            <xs:annotation>
+              <xs:documentation>
+
+                The res-ref-name element specifies the name of a
+                resource manager connection factory reference.  The name
+                is a JNDI name relative to the java:comp/env context.
+                The name must be unique within an component.
+
+              </xs:documentation>
+            </xs:annotation>
+            <xs:selector xpath="javaee:resource-ref"/>
+            <xs:field xpath="javaee:res-ref-name"/>
+          </xs:unique>
+          <xs:unique name="entity-env-entry-name-uniqueness">
+            <xs:annotation>
+              <xs:documentation>
+
+                The env-entry-name element contains the name of a
+                component's environment entry.  The name is a JNDI
+                name relative to the java:comp/env context.  The
+                name must be unique within an component.
+
+              </xs:documentation>
+            </xs:annotation>
+            <xs:selector xpath="javaee:env-entry"/>
+            <xs:field xpath="javaee:env-entry-name"/>
+          </xs:unique>
+          -->
+        </xs:element>
+        <xs:element name="message-driven"
+                     type="javaee:message-driven-beanType">
+          <!--
+          <xs:unique name="messaged-ejb-local-ref-name-uniqueness">
+            <xs:annotation>
+              <xs:documentation>
+
+                The ejb-ref-name element contains the name of
+                an EJB reference. The EJB reference is an entry in
+                the component's environment and is relative to the
+                java:comp/env context.  The name must be unique within
+                the component.
+
+                It is recommended that name be prefixed with "ejb/".
+
+              </xs:documentation>
+            </xs:annotation>
+            <xs:selector xpath="javaee:ejb-local-ref"/>
+            <xs:field xpath="javaee:ejb-ref-name"/>
+          </xs:unique>
+          <xs:unique name="messaged-ejb-ref-name-uniqueness">
+            <xs:annotation>
+              <xs:documentation>
+
+                The ejb-ref-name element contains the name of an EJB
+                reference. The EJB reference is an entry in the
+                component's environment and is relative to the
+                java:comp/env context. The name must be unique
+                within the component.
+
+                It is recommended that name is prefixed with "ejb/".
+
+              </xs:documentation>
+            </xs:annotation>
+            <xs:selector xpath="javaee:ejb-ref"/>
+            <xs:field xpath="javaee:ejb-ref-name"/>
+          </xs:unique>
+          <xs:unique name="messaged-resource-env-ref-uniqueness">
+            <xs:annotation>
+              <xs:documentation>
+
+                The resource-env-ref-name element specifies the name
+                of a resource environment reference; its value is
+                the environment entry name used in the component
+                code. The name is a JNDI name relative to the
+                java:comp/env context and must be unique within an
+                component.
+
+              </xs:documentation>
+            </xs:annotation>
+            <xs:selector xpath="javaee:resource-env-ref"/>
+            <xs:field xpath="javaee:resource-env-ref-name"/>
+          </xs:unique>
+          <xs:unique name="messaged-message-destination-ref-uniqueness">
+            <xs:annotation>
+              <xs:documentation>
+
+                The message-destination-ref-name element specifies the name
+                of a message destination reference; its value is
+                the message destination reference name used in the component
+                code. The name is a JNDI name relative to the
+                java:comp/env context and must be unique within an
+                component.
+
+              </xs:documentation>
+            </xs:annotation>
+            <xs:selector xpath="javaee:message-destination-ref"/>
+            <xs:field xpath="javaee:message-destination-ref-name"/>
+          </xs:unique>
+          <xs:unique name="messaged-res-ref-name-uniqueness">
+            <xs:annotation>
+              <xs:documentation>
+
+                The res-ref-name element specifies the name of a
+                resource manager connection factory reference.  The name
+                is a JNDI name relative to the java:comp/env context.
+                The name must be unique within an component.
+
+              </xs:documentation>
+            </xs:annotation>
+            <xs:selector xpath="javaee:resource-ref"/>
+            <xs:field xpath="javaee:res-ref-name"/>
+          </xs:unique>
+          <xs:unique name="messaged-env-entry-name-uniqueness">
+            <xs:annotation>
+              <xs:documentation>
+
+                The env-entry-name element contains the name of a
+                component's environment entry.  The name is a JNDI
+                name relative to the java:comp/env context.  The
+                name must be unique within an component.
+
+              </xs:documentation>
+            </xs:annotation>
+            <xs:selector xpath="javaee:env-entry"/>
+            <xs:field xpath="javaee:env-entry-name"/>
+          </xs:unique>
+          -->
+        </xs:element>
+      </xs:choice>
+      <xs:attribute name="id"
+                     type="xs:ID"/>
+   </xs:complexType>
+</xs:schema>

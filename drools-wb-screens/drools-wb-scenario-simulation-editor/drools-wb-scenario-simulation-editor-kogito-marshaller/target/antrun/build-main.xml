@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="maven-antrun-" default="main"  >
+<target name="main">
+  <copy includeemptydirs="false" todir="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-marshaller/target/classes" failonerror="false" quiet="true">
+    <fileset dir="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-marshaller/target/classes"/>
+    <globmapper from="*Constants.properties" to="*Constants_default.properties"/>
+  </copy>
+</target>
+</project>

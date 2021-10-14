@@ -1,0 +1,2 @@
+JBoss-Product-Release-Name: WildFly Full
+JBoss-Product-Release-Version: 19.1.0.Final

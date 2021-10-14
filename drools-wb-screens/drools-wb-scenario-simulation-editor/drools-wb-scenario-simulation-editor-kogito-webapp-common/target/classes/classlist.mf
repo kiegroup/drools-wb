@@ -1,0 +1,3 @@
+org.drools.workbench.screens.scenariosimulation.webapp.workarounds.ExperimentalActivitiesAuthorizationManagerMock
+org.drools.workbench.screens.scenariosimulation.webapp.client.editor.AbstractScenarioSimulationEditorKogitoScreen
+org.drools.workbench.screens.scenariosimulation.webapp.backend.IOServiceNio2WrapperProviderImpl

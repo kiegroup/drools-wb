@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="8.19">
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/main/java/org/drools/workbench/screens/scenariosimulation/kogito/client/dropdown/ScenarioSimulationKogitoScesimFilesDropdownView.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/main/java/org/drools/workbench/screens/scenariosimulation/kogito/client/dropdown/ScenarioSimulationKogitoScesimFilesDropdownProviderKogitoImpl.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/main/java/org/drools/workbench/screens/scenariosimulation/kogito/client/dropdown/ScenarioSimulationKogitoScesimFilesDropdown.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/main/java/org/drools/workbench/screens/scenariosimulation/kogito/client/dropdown/ScenarioSimulationKogitoCreationAssetsDropdownProvider.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/main/java/org/drools/workbench/screens/scenariosimulation/kogito/client/dropdown/ScenarioSimulationKogitoCreationAssetsDropdown.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/main/java/org/drools/workbench/screens/scenariosimulation/kogito/client/popup/ScenarioSimulationKogitoCreationPopupView.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/main/java/org/drools/workbench/screens/scenariosimulation/kogito/client/popup/ScenarioSimulationKogitoCreationPopupPresenter.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/main/java/org/drools/workbench/screens/scenariosimulation/kogito/client/popup/ScenarioSimulationKogitoCreationPopup.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/main/java/org/drools/workbench/screens/scenariosimulation/kogito/client/producer/ScenarioSimulationKogitoProducer.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/main/java/org/drools/workbench/screens/scenariosimulation/kogito/client/converters/JSInteropApiConverter.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/main/java/org/drools/workbench/screens/scenariosimulation/kogito/client/converters/ApiJSInteropConverter.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/main/java/org/drools/workbench/screens/scenariosimulation/kogito/client/menu/KogitoGridContextMenu.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/main/java/org/drools/workbench/screens/scenariosimulation/kogito/client/docks/KogitoEditorDock.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/main/java/org/drools/workbench/screens/scenariosimulation/kogito/client/dmo/KogitoAsyncPackageDataModelOracle.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/main/java/org/drools/workbench/screens/scenariosimulation/kogito/client/commands/ScenarioSimulationKogitoStateControlManager.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/main/java/org/drools/workbench/screens/scenariosimulation/kogito/client/dmn/ClientDMNType.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/main/java/org/drools/workbench/screens/scenariosimulation/kogito/client/dmn/ScenarioSimulationKogitoDMNDataManager.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/main/java/org/drools/workbench/screens/scenariosimulation/kogito/client/dmn/KogitoScenarioSimulationBuilder.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/main/java/org/drools/workbench/screens/scenariosimulation/kogito/client/dmn/feel/BuiltInType.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/main/java/org/drools/workbench/screens/scenariosimulation/kogito/client/dmn/package-info.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/main/java/org/drools/workbench/screens/scenariosimulation/kogito/client/handlers/ScenarioSimulationKogitoDocksHandler.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/main/java/org/drools/workbench/screens/scenariosimulation/kogito/client/services/ScenarioSimulationKogitoResourceContentService.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/main/java/org/drools/workbench/screens/scenariosimulation/kogito/client/services/ScenarioSimulationKogitoDMNMarshallerService.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/main/java/org/drools/workbench/screens/scenariosimulation/kogito/client/editor/strategies/KogitoDMODataManagementStrategy.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/main/java/org/drools/workbench/screens/scenariosimulation/kogito/client/editor/strategies/KogitoDMNDataManagementStrategy.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/main/java/org/drools/workbench/screens/scenariosimulation/kogito/client/editor/ScenarioSimulationEditorKogitoWrapper.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/test/java/org/drools/workbench/screens/scenariosimulation/kogito/client/handler/ScenarioSimulationKogitoDocksHandlerTest.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/test/java/org/drools/workbench/screens/scenariosimulation/kogito/client/popup/ScenarioSimulationKogitoCreationPopupViewTest.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/test/java/org/drools/workbench/screens/scenariosimulation/kogito/client/popup/ScenarioSimulationKogitoCreationPopupPresenterTest.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/test/java/org/drools/workbench/screens/scenariosimulation/kogito/client/producer/ScenarioSimulationKogitoProducerTest.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/test/java/org/drools/workbench/screens/scenariosimulation/kogito/client/converters/JSInteropApiConverterTest.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/test/java/org/drools/workbench/screens/scenariosimulation/kogito/client/menu/KogitoGridContextMenuTest.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/test/java/org/drools/workbench/screens/scenariosimulation/kogito/client/docks/KogitoEditorDockTest.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/test/java/org/drools/workbench/screens/scenariosimulation/kogito/client/commands/ScenarioSimulationKogitoStateControlManagerTest.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/test/java/org/drools/workbench/screens/scenariosimulation/kogito/client/dmn/ScenarioSimulationKogitoDMNDataManagerTest.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/test/java/org/drools/workbench/screens/scenariosimulation/kogito/client/dmn/KogitoScenarioSimulationBuilderTest.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/test/java/org/drools/workbench/screens/scenariosimulation/kogito/client/services/ScenarioSimulationKogitoDMNMarshallerServiceTest.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/test/java/org/drools/workbench/screens/scenariosimulation/kogito/client/editor/strategies/KogitoDMODataManagementStrategyTest.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/test/java/org/drools/workbench/screens/scenariosimulation/kogito/client/editor/strategies/KogitoDMNDataManagementStrategyTest.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/test/java/org/drools/workbench/screens/scenariosimulation/kogito/client/editor/ScenarioSimulationEditorKogitoWrapperTest.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-client/src/main/resources/META-INF/ErraiApp.properties">
+</file>
+</checkstyle>

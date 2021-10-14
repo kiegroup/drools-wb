@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="8.19">
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-webapp-common/src/main/java/org/drools/workbench/screens/scenariosimulation/webapp/backend/IOServiceNio2WrapperProviderImpl.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-webapp-common/src/main/java/org/drools/workbench/screens/scenariosimulation/webapp/workarounds/ExperimentalActivitiesAuthorizationManagerMock.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-webapp-common/src/main/java/org/drools/workbench/screens/scenariosimulation/webapp/client/editor/AbstractScenarioSimulationEditorKogitoScreen.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-webapp-common/src/test/java/org/drools/workbench/screens/scenariosimulation/webapp/client/editor/AbstractScenarioSimulationEditorKogitoScreenTest.java">
+</file>
+<file name="/Users/ederign/src/kie/kiegroup-all/drools-wb/drools-wb-screens/drools-wb-scenario-simulation-editor/drools-wb-scenario-simulation-editor-kogito-webapp-common/src/main/resources/META-INF/ErraiApp.properties">
+</file>
+</checkstyle>
