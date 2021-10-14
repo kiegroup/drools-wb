@@ -1631,7 +1631,11 @@
       <groupId>com.google.elemental2</groupId>
       <artifactId>elemental2-promise</artifactId>
     </dependency>
-
+    <dependency>
+      <groupId>org.wildfly.client</groupId>
+      <artifactId>wildfly-client-config</artifactId>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <build>
