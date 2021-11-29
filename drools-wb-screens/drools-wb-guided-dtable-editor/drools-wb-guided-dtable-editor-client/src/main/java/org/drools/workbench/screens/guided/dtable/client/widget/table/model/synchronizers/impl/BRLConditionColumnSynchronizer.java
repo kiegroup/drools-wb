@@ -139,7 +139,10 @@ public class BRLConditionColumnSynchronizer extends BaseColumnSynchronizer<BaseC
         if (!(metaData instanceof ColumnMetaData)) {
             return false;
         }
-        return ((ColumnMetaData) metaData).getColumn() instanceof BRLConditionColumn;
+        final boolean isBRLConditionColumn = ((ColumnMetaData) metaData).getColumn() instanceof BRLConditionColumn;
+        final boolean isBRLConditionVariableColumn = ((ColumnMetaData) metaData).getColumn() instanceof BRLConditionVariableColumn;
+
+        return isBRLConditionColumn || isBRLConditionVariableColumn;
     }
 
     @Override
@@ -149,20 +152,30 @@ public class BRLConditionColumnSynchronizer extends BaseColumnSynchronizer<BaseC
             return;
         }
 
-        final BRLConditionColumn column = (BRLConditionColumn) metaData.getColumn();
+        if (metaData.getColumn() instanceof BRLConditionColumn) {
+            final BRLConditionColumn column = (BRLConditionColumn) metaData.getColumn();
 
-        //If Pattern has been updated and there was only one child column then original Pattern will be deleted
-        final Set<String> bindings = getPatternBindings(column);
-        for (String binding : bindings) {
-            if (rm.isBoundFactUsed(binding)) {
-                throw new VetoDeletePatternInUseException();
+            //If Pattern has been updated and there was only one child column then original Pattern will be deleted
+            final Set<String> bindings = getPatternBindings(column);
+            for (String binding : bindings) {
+                if (rm.isBoundFactUsed(binding)) {
+                    throw new VetoDeletePatternInUseException();
+                }
             }
-        }
 
-        doDelete(column);
+            doDelete(column);
+        } else if (metaData.getColumn() instanceof BRLConditionVariableColumn) {
+            doDelete((BRLConditionVariableColumn) metaData.getColumn());
+        }
     }
 
-    private void doDelete(final BRLConditionColumn column) throws VetoException {
+    private void doDelete(final BRLConditionVariableColumn column) {
+        final int iFirstColumnIndex = model.getExpandedColumns().indexOf(column);
+        synchroniseDeleteColumn(iFirstColumnIndex);
+        model.getBRLColumn(column).getChildColumns().remove(column);
+    }
+
+    private void doDelete(final BRLConditionColumn column) {
         if (column.getChildColumns().size() > 0) {
             final int iFirstColumnIndex = model.getExpandedColumns().indexOf(column.getChildColumns().get(0));
             for (int iColumnIndex = 0; iColumnIndex < column.getChildColumns().size(); iColumnIndex++) {

@@ -578,6 +578,44 @@ public class BRLConditionColumnSynchronizerTest extends BaseSynchronizerTest {
     }
 
     @Test
+    public void testDeleteVariableColumn() throws VetoException {
+        final BRLConditionColumn column = new BRLConditionColumn();
+        final BRLConditionVariableColumn columnV0 = new BRLConditionVariableColumn("$age",
+                                                                                   DataType.TYPE_NUMERIC_INTEGER,
+                                                                                   "Applicant",
+                                                                                   "age");
+        final BRLConditionVariableColumn columnV1 = new BRLConditionVariableColumn("$name",
+                                                                                   DataType.TYPE_STRING,
+                                                                                   "Applicant",
+                                                                                   "name");
+        column.getChildColumns().add(columnV0);
+        column.getChildColumns().add(columnV1);
+        column.setHeader("col1");
+        columnV0.setHeader("col1v0");
+        columnV1.setHeader("col1v1");
+
+        modelSynchronizer.appendColumn(column);
+
+        assertEquals(5,
+                     model.getExpandedColumns().size());
+        assertEquals(1,
+                     model.getConditions().size());
+
+        assertEquals(5,
+                     uiModel.getColumns().size());
+
+        modelSynchronizer.deleteColumn(columnV0);
+
+        assertEquals(4,
+                     model.getExpandedColumns().size());
+        assertEquals(1,
+                     model.getConditions().size());
+
+        assertEquals(4,
+                     uiModel.getColumns().size());
+    }
+
+    @Test
     public void checkBRLFragmentConditionCannotBeDeletedWithAction() throws VetoException {
         final BRLConditionColumn column = new BRLConditionColumn();
         column.setDefinition(Collections.singletonList(new FactPattern("Applicant") {{
