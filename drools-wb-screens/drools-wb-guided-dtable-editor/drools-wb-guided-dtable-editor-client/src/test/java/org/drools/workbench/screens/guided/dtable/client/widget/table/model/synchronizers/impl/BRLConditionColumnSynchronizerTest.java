@@ -608,6 +608,8 @@ public class BRLConditionColumnSynchronizerTest extends BaseSynchronizerTest {
 
         assertEquals(4,
                      model.getExpandedColumns().size());
+        assertEquals("col1v1",
+                     model.getExpandedColumns().get(3).getHeader());
         assertEquals(1,
                      model.getConditions().size());
 
