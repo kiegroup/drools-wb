@@ -28,6 +28,7 @@ import org.guvnor.common.services.shared.test.TestResultMessage;
 import org.guvnor.structure.server.config.ConfigurationService;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kie.api.KieServices;
@@ -161,6 +162,7 @@ public class ScenarioRunnerServiceTest {
     }
 
     @Test
+    @Ignore( "Connects to github. Not reliable.")
     public void testIsGithubContributor() throws Exception {
         initKieSession("isGithubContributor.gdst");
         testScenario("testContributors.scenario", true);
