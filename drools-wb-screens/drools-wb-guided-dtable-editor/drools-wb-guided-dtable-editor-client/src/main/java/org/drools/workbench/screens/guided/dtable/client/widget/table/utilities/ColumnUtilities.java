@@ -18,6 +18,9 @@ package org.drools.workbench.screens.guided.dtable.client.widget.table.utilities
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -29,6 +32,7 @@ import org.drools.workbench.models.guided.dtable.shared.model.AttributeCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.BaseColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.ConditionCol52;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
+import org.drools.workbench.models.guided.dtable.shared.model.Pattern52;
 import org.drools.workbench.models.guided.dtable.shared.util.ColumnUtilitiesBase;
 import org.drools.workbench.screens.guided.dtable.client.resources.GuidedDecisionTableResources;
 import org.drools.workbench.screens.guided.dtable.client.widget.table.columns.control.ColumnLabelWidget;
@@ -38,12 +42,15 @@ import org.kie.soup.project.datamodel.oracle.DataType;
 import org.kie.workbench.common.services.shared.preferences.ApplicationPreferences;
 import org.kie.workbench.common.widgets.client.datamodel.AsyncPackageDataModelOracle;
 
+import static org.drools.workbench.screens.guided.dtable.client.widget.table.utilities.EnumLoaderUtilities.convertDropDownData;
+
 /**
  * Utilities for Columns
  */
 public class ColumnUtilities
         extends ColumnUtilitiesBase {
 
+    private Map<String, Map<String, String>> enumLookUpsCache = new HashMap<>();
     private final AsyncPackageDataModelOracle oracle;
 
     public ColumnUtilities(final GuidedDecisionTable52 model,
@@ -107,6 +114,49 @@ public class ColumnUtilities
         return new String[0];
     }
 
+    public Map<String, String> getValueListLookups(final BaseColumn column) {
+        String[] valueList = getValueList(column);
+        if (valueList != null && valueList.length > 0) {
+            return convertDropDownData(valueList);
+        } else {
+
+            if (column instanceof ConditionCol52) {
+                return getEnums((ConditionCol52) column);
+            } else if (column instanceof ActionSetFieldCol52) {
+                return getEnums((ActionSetFieldCol52) column);
+            } else if (column instanceof ActionInsertFactCol52) {
+                return getEnums((ActionInsertFactCol52) column);
+            } else {
+                return Collections.emptyMap();
+            }
+        }
+    }
+
+    private Map<String, String> getEnums(final ActionInsertFactCol52 column) {
+        final String key = getBoundFactType(column.getBoundName()) + "." + column.getFactField();
+        if (enumLookUpsCache.containsKey(key)) {
+            return enumLookUpsCache.get(key);
+        }
+        return Collections.emptyMap();
+    }
+
+    private Map<String, String> getEnums(final ActionSetFieldCol52 column) {
+        final String key = getBoundFactType(column.getBoundName()) + "." + column.getFactField();
+        if (enumLookUpsCache.containsKey(key)) {
+            return enumLookUpsCache.get(key);
+        }
+        return Collections.emptyMap();
+    }
+
+    private Map<String, String> getEnums(final ConditionCol52 column) {
+        final Pattern52 pattern = model.getPattern(column);
+        final String key = pattern.getFactType() + "." + column.getFactField();
+        if (enumLookUpsCache.containsKey(key)) {
+            return enumLookUpsCache.get(key);
+        }
+        return Collections.emptyMap();
+    }
+
     private String[] getValueList(final AttributeCol52 col) {
         if ("no-loop".equals(col.getAttribute()) || "enabled".equals(col.getAttribute())) {
             return new String[]{"true", "false"};
@@ -119,6 +169,7 @@ public class ColumnUtilities
             return parseValueList(col.getFieldType(),
                                   col.getValueList());
         }
+
         return new String[0];
     }
 
@@ -220,5 +271,11 @@ public class ColumnUtilities
             return true;
         }
         return false;
+    }
+
+    public void addEnumLookUp(final String factName,
+                              final String factField,
+                              final Map<String, String> result) {
+        enumLookUpsCache.put(factName + "." + factField, result);
     }
 }

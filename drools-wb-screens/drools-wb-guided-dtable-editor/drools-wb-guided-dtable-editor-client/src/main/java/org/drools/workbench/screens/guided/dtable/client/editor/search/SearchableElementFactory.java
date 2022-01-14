@@ -16,6 +16,8 @@
 
 package org.drools.workbench.screens.guided.dtable.client.editor.search;
 
+import java.util.Map;
+
 import javax.inject.Inject;
 
 import org.drools.workbench.models.guided.dtable.shared.model.DTCellValue52;
@@ -50,18 +52,30 @@ public class SearchableElementFactory {
                                                                       final DTCellValue52 cellValue52,
                                                                       final GuidedDecisionTableView widget,
                                                                       final GuidedDecisionTable52 model,
+                                                                      final Map<String, String> valueListLookup,
                                                                       final GuidedDecisionTableModellerView.Presenter modeller) {
 
         final GuidedDecisionTableSearchableElement searchableElement = new GuidedDecisionTableSearchableElement();
 
         searchableElement.setHighlightHelper(highlightHelper);
         searchableElement.setModeller(modeller);
-        searchableElement.setValue(cellUtilities.asString(cellValue52));
+        searchableElement.setValue(getValue(cellValue52,
+                                            valueListLookup));
         searchableElement.setRow(row);
         searchableElement.setColumn(column);
         searchableElement.setWidget(widget);
         searchableElement.setModel(model);
 
         return searchableElement;
+    }
+
+    private String getValue(final DTCellValue52 cellValue52,
+                            final Map<String, String> valueListLookup) {
+        final String value = cellUtilities.asString(cellValue52);
+        if (valueListLookup.containsKey(value)) {
+            return valueListLookup.get(value);
+        } else {
+            return value;
+        }
     }
 }

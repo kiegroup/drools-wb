@@ -156,9 +156,9 @@ public class EnumLoaderUtilities {
         return key;
     }
 
-    public Map<String, String> convertDropDownData(final String[] dropDownItems) {
+    public static Map<String, String> convertDropDownData(final String[] dropDownItems) {
         final Map<String, String> convertedDropDownData = new TreeMap<String, String>();
-        if (dropDownItems.length == 0) {
+        if (dropDownItems == null || dropDownItems.length == 0) {
             return convertedDropDownData;
         }
         for (int i = 0; i < dropDownItems.length; i++) {
