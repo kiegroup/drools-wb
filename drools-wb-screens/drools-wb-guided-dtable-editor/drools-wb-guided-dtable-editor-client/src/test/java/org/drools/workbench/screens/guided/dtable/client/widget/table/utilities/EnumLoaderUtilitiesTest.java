@@ -103,8 +103,6 @@ public class EnumLoaderUtilitiesTest {
                never()).execute();
         verify(onFetchCompleteCommand,
                never()).execute();
-        verify(enumLoaderUtilities,
-               never()).convertDropDownData(any(String[].class));
     }
 
     @Test
@@ -139,8 +137,6 @@ public class EnumLoaderUtilitiesTest {
                never()).execute();
         verify(onFetchCompleteCommand,
                never()).execute();
-        verify(enumLoaderUtilities,
-               times(1)).convertDropDownData(any(String[].class));
     }
 
     @Test
@@ -181,8 +177,6 @@ public class EnumLoaderUtilitiesTest {
                times(1)).execute();
         verify(onFetchCompleteCommand,
                times(1)).execute();
-        verify(enumLoaderUtilities,
-               times(1)).convertDropDownData(any(String[].class));
         verify(view,
                times(1)).batch();
     }

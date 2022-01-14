@@ -18,7 +18,9 @@ package org.drools.workbench.screens.guided.dtable.client.editor;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -260,14 +262,20 @@ public class GuidedDecisionTableEditorPresenter extends BaseGuidedDecisionTableE
 
     @Override
     public List<GuidedDecisionTableSearchableElement> getSearchableElements() {
-
         final List<GuidedDecisionTableSearchableElement> searchableElements = new ArrayList<>();
         final GuidedDecisionTable52 model = getContentSupplier().get();
         final List<List<DTCellValue52>> data = model.getData();
 
+        final ValueListLookUpsByColumnIndex valueListLookUpsByColumnIndex = new ValueListLookUpsByColumnIndex();
+
         for (int row = 0, dataSize = data.size(); row < dataSize; row++) {
             for (int column = 0; column < data.get(row).size(); column++) {
-                searchableElements.add(makeSearchableElement(data, row, column, model));
+                searchableElements.add(makeSearchableElement(data,
+                                                             row,
+                                                             column,
+                                                             model,
+                                                             valueListLookUpsByColumnIndex.getValueListLookUp(model,
+                                                                                                              column)));
             }
         }
 
@@ -277,9 +285,12 @@ public class GuidedDecisionTableEditorPresenter extends BaseGuidedDecisionTableE
     private GuidedDecisionTableSearchableElement makeSearchableElement(final List<List<DTCellValue52>> data,
                                                                        final int row,
                                                                        final int column,
-                                                                       final GuidedDecisionTable52 model) {
+                                                                       final GuidedDecisionTable52 model,
+                                                                       final Map<String, String> valueListLookup) {
+
         final DTCellValue52 cellValue52 = data.get(row).get(column);
-        return searchableElementFactory.makeSearchableElement(row, column, cellValue52, null, model, modeller);
+
+        return searchableElementFactory.makeSearchableElement(row, column, cellValue52, null, model, valueListLookup, modeller);
     }
 
     protected RemoteCallback<GuidedDecisionTableEditorContent> getLoadContentSuccessCallback(final ObservablePath path,
@@ -480,5 +491,33 @@ public class GuidedDecisionTableEditorPresenter extends BaseGuidedDecisionTableE
 
     void scheduleClosure(final Scheduler.ScheduledCommand command) {
         Scheduler.get().scheduleDeferred(command);
+    }
+
+    class ValueListLookUpsByColumnIndex {
+
+        final Map<Integer, Map<String, String>> values = new HashMap<>();
+
+        private Map<String, String> getValueListLookUp(final GuidedDecisionTable52 model,
+                                                       final int columnIndex) {
+            if (values.containsKey(columnIndex)) {
+                return values.get(columnIndex);
+            } else {
+
+                final Map<String, String> valueListLookUpFromActiveDocument = getValueListLookUpFromActiveDocument(model,
+                                                                                                                   columnIndex);
+                values.put(columnIndex,
+                           valueListLookUpFromActiveDocument);
+                return valueListLookUpFromActiveDocument;
+            }
+        }
+
+        private Map<String, String> getValueListLookUpFromActiveDocument(final GuidedDecisionTable52 model,
+                                                                         final int columnIndex) {
+            if (model.getExpandedColumns().size() > columnIndex) {
+                return getActiveDocument().getValueListLookups(model.getExpandedColumns().get(columnIndex));
+            } else {
+                return new HashMap<>();
+            }
+        }
     }
 }

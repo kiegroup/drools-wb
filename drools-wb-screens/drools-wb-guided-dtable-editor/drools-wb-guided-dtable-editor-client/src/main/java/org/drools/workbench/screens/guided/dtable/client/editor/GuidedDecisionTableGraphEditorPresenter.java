@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -343,7 +344,8 @@ public class GuidedDecisionTableGraphEditorPresenter extends BaseGuidedDecisionT
                 for (int line = 0; line < data.get(row).size(); line++) {
 
                     final DTCellValue52 cellValue52 = data.get(row).get(line);
-                    final GuidedDecisionTableSearchableElement searchableElement = searchableElementFactory.makeSearchableElement(row, line, cellValue52, widget, model, modeller);
+                    final Map<String, String> valueListLookup = widget.getPresenter().getValueListLookups(model.getExpandedColumns().get(line));
+                    final GuidedDecisionTableSearchableElement searchableElement = searchableElementFactory.makeSearchableElement(row, line, cellValue52, widget, model, valueListLookup, modeller);
 
                     searchableElement.setWidget(widget);
                     searchableElements.add(searchableElement);
