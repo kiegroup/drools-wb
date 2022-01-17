@@ -26,8 +26,14 @@ import java.util.Set;
 
 import javax.enterprise.context.Dependent;
 
+import org.drools.workbench.models.datamodel.rule.CompositeFactPattern;
+import org.drools.workbench.models.datamodel.rule.CompositeFieldConstraint;
+import org.drools.workbench.models.datamodel.rule.FactPattern;
+import org.drools.workbench.models.datamodel.rule.FieldConstraint;
+import org.drools.workbench.models.datamodel.rule.IFactPattern;
 import org.drools.workbench.models.datamodel.rule.IPattern;
 import org.drools.workbench.models.datamodel.rule.RuleModel;
+import org.drools.workbench.models.datamodel.rule.SingleFieldConstraint;
 import org.drools.workbench.models.guided.dtable.shared.model.BRLConditionColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.BRLConditionVariableColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.BaseColumn;
@@ -172,7 +178,63 @@ public class BRLConditionColumnSynchronizer extends BaseColumnSynchronizer<BaseC
     private void doDelete(final BRLConditionVariableColumn column) {
         final int iFirstColumnIndex = model.getExpandedColumns().indexOf(column);
         synchroniseDeleteColumn(iFirstColumnIndex);
-        model.getBRLColumn(column).getChildColumns().remove(column);
+        final BRLConditionColumn brlColumn = model.getBRLColumn(column);
+        brlColumn.getChildColumns().remove(column);
+
+        for (IPattern iPattern : brlColumn.getDefinition()) {
+            if (iPattern instanceof FactPattern) {
+                removePattern(column, (FactPattern) iPattern);
+            } else if (iPattern instanceof CompositeFactPattern) {
+                for (IFactPattern childPattern : ((CompositeFactPattern) iPattern).getPatterns()) {
+                    if (childPattern instanceof FactPattern) {
+                        removePattern(column,
+                                      (FactPattern) childPattern);
+                    }
+                }
+            }
+        }
+    }
+
+    private void removePattern(final BRLConditionVariableColumn column,
+                               final FactPattern factPattern) {
+        int index = -1;
+        final FieldConstraint[] constraints = factPattern.getConstraintList().getConstraints();
+        for (int i = 0; i < constraints.length; i++) {
+            FieldConstraint constraint = constraints[i];
+            if (constraint instanceof CompositeFieldConstraint) {
+                final CompositeFieldConstraint compositeFieldConstraint = (CompositeFieldConstraint) constraint;
+                final int compositeFieldConstraintIndexByVar = getCompositeFieldConstraintIndexByVar(compositeFieldConstraint,
+                                                                                                     column.getVarName());
+
+                if (compositeFieldConstraintIndexByVar >= 0) {
+                    compositeFieldConstraint.removeConstraint(compositeFieldConstraintIndexByVar);
+                    return;
+                }
+            } else if (constraint instanceof SingleFieldConstraint) {
+                if (((SingleFieldConstraint) constraint).getValue().equals(column.getVarName())) {
+                    index = i;
+                    break;
+                }
+            }
+        }
+
+        if (index >= 0) {
+            factPattern.getConstraintList().removeConstraint(index);
+        }
+    }
+
+    private int getCompositeFieldConstraintIndexByVar(final CompositeFieldConstraint compositeFieldConstraint,
+                                                      final String varName) {
+        int index = -1;
+        for (FieldConstraint fieldConstraint : compositeFieldConstraint.getConstraints()) {
+            if (fieldConstraint instanceof SingleFieldConstraint) {
+                if (((SingleFieldConstraint) fieldConstraint).getValue().equals(varName)) {
+                    return index + 1;
+                }
+            }
+            index++;
+        }
+        return index;
     }
 
     private void doDelete(final BRLConditionColumn column) {
