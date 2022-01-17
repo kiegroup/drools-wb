@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.drools.workbench.models.datamodel.rule.ActionCallMethod;
+import org.drools.workbench.models.datamodel.rule.CompositeFieldConstraint;
 import org.drools.workbench.models.datamodel.rule.FactPattern;
 import org.drools.workbench.models.datamodel.rule.SingleFieldConstraint;
 import org.drools.workbench.models.guided.dtable.shared.model.ActionSetFieldCol52;
@@ -541,7 +542,21 @@ public class BRLConditionColumnSynchronizerTest extends BaseSynchronizerTest {
 
     @Test
     public void testDelete() throws VetoException {
+
         final BRLConditionColumn column = new BRLConditionColumn();
+
+        final FactPattern e = new FactPattern();
+        e.setFactType("Applicant");
+        final CompositeFieldConstraint constraint = new CompositeFieldConstraint();
+        final SingleFieldConstraint nameConstraint = new SingleFieldConstraint("Applicant", "name", DataType.TYPE_STRING, null);
+        nameConstraint.setValue("$name");
+        constraint.addConstraint(nameConstraint);
+        final SingleFieldConstraint ageConstraint = new SingleFieldConstraint("Applicant", "age", DataType.TYPE_NUMERIC_INTEGER, null);
+        ageConstraint.setValue("$age");
+        constraint.addConstraint(ageConstraint);
+        e.addConstraint(constraint);
+        column.getDefinition().add(e);
+
         final BRLConditionVariableColumn columnV0 = new BRLConditionVariableColumn("$age",
                                                                                    DataType.TYPE_NUMERIC_INTEGER,
                                                                                    "Applicant",
@@ -575,6 +590,116 @@ public class BRLConditionColumnSynchronizerTest extends BaseSynchronizerTest {
 
         assertEquals(3,
                      uiModel.getColumns().size());
+    }
+
+    @Test
+    public void testDeleteBRLConditionVariableColumn() throws VetoException {
+
+        final BRLConditionColumn column = new BRLConditionColumn();
+
+        final FactPattern factPattern = new FactPattern();
+        factPattern.setFactType("Applicant");
+        final SingleFieldConstraint nameConstraint = new SingleFieldConstraint("Applicant", "name", DataType.TYPE_STRING, null);
+        nameConstraint.setValue("$name");
+        factPattern.addConstraint(nameConstraint);
+        final SingleFieldConstraint ageConstraint = new SingleFieldConstraint("Applicant", "age", DataType.TYPE_NUMERIC_INTEGER, null);
+        ageConstraint.setValue("$age");
+        factPattern.addConstraint(ageConstraint);
+        column.getDefinition().add(factPattern);
+
+        final BRLConditionVariableColumn columnV0 = new BRLConditionVariableColumn("$age",
+                                                                                   DataType.TYPE_NUMERIC_INTEGER,
+                                                                                   "Applicant",
+                                                                                   "age");
+        final BRLConditionVariableColumn columnV1 = new BRLConditionVariableColumn("$name",
+                                                                                   DataType.TYPE_STRING,
+                                                                                   "Applicant",
+                                                                                   "name");
+        column.getChildColumns().add(columnV0);
+        column.getChildColumns().add(columnV1);
+        column.setHeader("col1");
+        columnV0.setHeader("col1v0");
+        columnV1.setHeader("col1v1");
+
+        modelSynchronizer.appendColumn(column);
+
+        assertEquals(5,
+                     model.getExpandedColumns().size());
+        assertEquals(1,
+                     model.getConditions().size());
+
+        assertEquals(5,
+                     uiModel.getColumns().size());
+        assertEquals(2,
+                     ((FactPattern) column.getDefinition().get(0)).getFieldConstraints().length);
+
+        modelSynchronizer.deleteColumn(columnV1);
+
+        assertEquals(4,
+                     model.getExpandedColumns().size());
+        assertEquals(1,
+                     model.getConditions().size());
+
+        assertEquals(4,
+                     uiModel.getColumns().size());
+        assertEquals(1,
+                     ((FactPattern) column.getDefinition().get(0)).getFieldConstraints().length);
+    }
+
+    @Test
+    public void testDeleteBRLConditionVariableColumnFromCompositeFieldConstraint() throws VetoException {
+
+        final BRLConditionColumn column = new BRLConditionColumn();
+
+        final FactPattern factPattern = new FactPattern();
+        factPattern.setFactType("Applicant");
+        final CompositeFieldConstraint constraint = new CompositeFieldConstraint();
+        final SingleFieldConstraint nameConstraint = new SingleFieldConstraint("Applicant", "name", DataType.TYPE_STRING, null);
+        nameConstraint.setValue("$name");
+        constraint.addConstraint(nameConstraint);
+        final SingleFieldConstraint ageConstraint = new SingleFieldConstraint("Applicant", "age", DataType.TYPE_NUMERIC_INTEGER, null);
+        ageConstraint.setValue("$age");
+        constraint.addConstraint(ageConstraint);
+        factPattern.addConstraint(constraint);
+        column.getDefinition().add(factPattern);
+
+        final BRLConditionVariableColumn columnV0 = new BRLConditionVariableColumn("$age",
+                                                                                   DataType.TYPE_NUMERIC_INTEGER,
+                                                                                   "Applicant",
+                                                                                   "age");
+        final BRLConditionVariableColumn columnV1 = new BRLConditionVariableColumn("$name",
+                                                                                   DataType.TYPE_STRING,
+                                                                                   "Applicant",
+                                                                                   "name");
+        column.getChildColumns().add(columnV0);
+        column.getChildColumns().add(columnV1);
+        column.setHeader("col1");
+        columnV0.setHeader("col1v0");
+        columnV1.setHeader("col1v1");
+
+        modelSynchronizer.appendColumn(column);
+
+        assertEquals(5,
+                     model.getExpandedColumns().size());
+        assertEquals(1,
+                     model.getConditions().size());
+
+        assertEquals(5,
+                     uiModel.getColumns().size());
+        assertEquals(2,
+                     ((CompositeFieldConstraint)((FactPattern) column.getDefinition().get(0)).getFieldConstraints()[0]).getConstraints().length);
+
+        modelSynchronizer.deleteColumn(columnV1);
+
+        assertEquals(4,
+                     model.getExpandedColumns().size());
+        assertEquals(1,
+                     model.getConditions().size());
+
+        assertEquals(4,
+                     uiModel.getColumns().size());
+        assertEquals(1,
+                     ((CompositeFieldConstraint)((FactPattern) column.getDefinition().get(0)).getFieldConstraints()[0]).getConstraints().length);
     }
 
     @Test
