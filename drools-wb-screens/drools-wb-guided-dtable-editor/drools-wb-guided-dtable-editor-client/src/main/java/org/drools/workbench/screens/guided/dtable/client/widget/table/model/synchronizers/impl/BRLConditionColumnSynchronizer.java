@@ -223,7 +223,7 @@ public class BRLConditionColumnSynchronizer extends BaseColumnSynchronizer<BaseC
         int index = -1;
         for (FieldConstraint fieldConstraint : compositeFieldConstraint.getConstraints()) {
             if (fieldConstraint instanceof SingleFieldConstraint) {
-                if (((SingleFieldConstraint) fieldConstraint).getValue().equals(varName)) {
+                if (Objects.equals(((SingleFieldConstraint) fieldConstraint).getValue(), varName)) {
                     return index + 1;
                 }
             }
