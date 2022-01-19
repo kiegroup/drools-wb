@@ -197,7 +197,6 @@ public class BRLConditionColumnSynchronizer extends BaseColumnSynchronizer<BaseC
 
     private void removePattern(final BRLConditionVariableColumn column,
                                final FactPattern factPattern) {
-        int index = -1;
         final FieldConstraint[] constraints = factPattern.getConstraintList().getConstraints();
         for (int i = 0; i < constraints.length; i++) {
             FieldConstraint constraint = constraints[i];
@@ -212,14 +211,10 @@ public class BRLConditionColumnSynchronizer extends BaseColumnSynchronizer<BaseC
                 }
             } else if (constraint instanceof SingleFieldConstraint) {
                 if (((SingleFieldConstraint) constraint).getValue().equals(column.getVarName())) {
-                    index = i;
-                    break;
+                    factPattern.getConstraintList().removeConstraint(i);
+                    return;
                 }
             }
-        }
-
-        if (index >= 0) {
-            factPattern.getConstraintList().removeConstraint(index);
         }
     }
 
