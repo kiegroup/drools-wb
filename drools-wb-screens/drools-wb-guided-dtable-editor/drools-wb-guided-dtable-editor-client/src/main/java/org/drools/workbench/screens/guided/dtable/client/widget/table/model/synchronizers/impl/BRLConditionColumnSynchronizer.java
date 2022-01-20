@@ -230,7 +230,7 @@ public class BRLConditionColumnSynchronizer extends BaseColumnSynchronizer<BaseC
             }
             index++;
         }
-        return index;
+        return -1;
     }
 
     private void doDelete(final BRLConditionColumn column) {
