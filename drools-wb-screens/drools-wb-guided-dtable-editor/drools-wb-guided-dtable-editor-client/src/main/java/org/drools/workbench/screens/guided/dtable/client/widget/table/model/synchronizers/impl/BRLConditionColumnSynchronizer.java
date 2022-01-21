@@ -22,12 +22,19 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.enterprise.context.Dependent;
 
+import org.drools.workbench.models.datamodel.rule.CompositeFactPattern;
+import org.drools.workbench.models.datamodel.rule.CompositeFieldConstraint;
+import org.drools.workbench.models.datamodel.rule.FactPattern;
+import org.drools.workbench.models.datamodel.rule.FieldConstraint;
+import org.drools.workbench.models.datamodel.rule.IFactPattern;
 import org.drools.workbench.models.datamodel.rule.IPattern;
 import org.drools.workbench.models.datamodel.rule.RuleModel;
+import org.drools.workbench.models.datamodel.rule.SingleFieldConstraint;
 import org.drools.workbench.models.guided.dtable.shared.model.BRLConditionColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.BRLConditionVariableColumn;
 import org.drools.workbench.models.guided.dtable.shared.model.BaseColumn;
@@ -139,7 +146,10 @@ public class BRLConditionColumnSynchronizer extends BaseColumnSynchronizer<BaseC
         if (!(metaData instanceof ColumnMetaData)) {
             return false;
         }
-        return ((ColumnMetaData) metaData).getColumn() instanceof BRLConditionColumn;
+        final boolean isBRLConditionColumn = ((ColumnMetaData) metaData).getColumn() instanceof BRLConditionColumn;
+        final boolean isBRLConditionVariableColumn = ((ColumnMetaData) metaData).getColumn() instanceof BRLConditionVariableColumn;
+
+        return isBRLConditionColumn || isBRLConditionVariableColumn;
     }
 
     @Override
@@ -149,20 +159,81 @@ public class BRLConditionColumnSynchronizer extends BaseColumnSynchronizer<BaseC
             return;
         }
 
-        final BRLConditionColumn column = (BRLConditionColumn) metaData.getColumn();
+        if (metaData.getColumn() instanceof BRLConditionColumn) {
+            final BRLConditionColumn column = (BRLConditionColumn) metaData.getColumn();
 
-        //If Pattern has been updated and there was only one child column then original Pattern will be deleted
-        final Set<String> bindings = getPatternBindings(column);
-        for (String binding : bindings) {
-            if (rm.isBoundFactUsed(binding)) {
-                throw new VetoDeletePatternInUseException();
+            //If Pattern has been updated and there was only one child column then original Pattern will be deleted
+            final Set<String> bindings = getPatternBindings(column);
+            for (String binding : bindings) {
+                if (rm.isBoundFactUsed(binding)) {
+                    throw new VetoDeletePatternInUseException();
+                }
             }
-        }
 
-        doDelete(column);
+            doDelete(column);
+        } else if (metaData.getColumn() instanceof BRLConditionVariableColumn) {
+            doDelete((BRLConditionVariableColumn) metaData.getColumn());
+        }
     }
 
-    private void doDelete(final BRLConditionColumn column) throws VetoException {
+    private void doDelete(final BRLConditionVariableColumn column) {
+        final int iFirstColumnIndex = model.getExpandedColumns().indexOf(column);
+        synchroniseDeleteColumn(iFirstColumnIndex);
+        final BRLConditionColumn brlColumn = model.getBRLColumn(column);
+        brlColumn.getChildColumns().remove(column);
+
+        for (IPattern iPattern : brlColumn.getDefinition()) {
+            if (iPattern instanceof FactPattern) {
+                removePattern(column, (FactPattern) iPattern);
+            } else if (iPattern instanceof CompositeFactPattern) {
+                for (IFactPattern childPattern : ((CompositeFactPattern) iPattern).getPatterns()) {
+                    if (childPattern instanceof FactPattern) {
+                        removePattern(column,
+                                      (FactPattern) childPattern);
+                    }
+                }
+            }
+        }
+    }
+
+    private void removePattern(final BRLConditionVariableColumn column,
+                               final FactPattern factPattern) {
+        final FieldConstraint[] constraints = factPattern.getConstraintList().getConstraints();
+        for (int i = 0; i < constraints.length; i++) {
+            FieldConstraint constraint = constraints[i];
+            if (constraint instanceof CompositeFieldConstraint) {
+                final CompositeFieldConstraint compositeFieldConstraint = (CompositeFieldConstraint) constraint;
+                final int compositeFieldConstraintIndexByVar = getCompositeFieldConstraintIndexByVar(compositeFieldConstraint,
+                                                                                                     column.getVarName());
+
+                if (compositeFieldConstraintIndexByVar >= 0) {
+                    compositeFieldConstraint.removeConstraint(compositeFieldConstraintIndexByVar);
+                    return;
+                }
+            } else if (constraint instanceof SingleFieldConstraint) {
+                if (((SingleFieldConstraint) constraint).getValue().equals(column.getVarName())) {
+                    factPattern.getConstraintList().removeConstraint(i);
+                    return;
+                }
+            }
+        }
+    }
+
+    private int getCompositeFieldConstraintIndexByVar(final CompositeFieldConstraint compositeFieldConstraint,
+                                                      final String varName) {
+        int index = -1;
+        for (FieldConstraint fieldConstraint : compositeFieldConstraint.getConstraints()) {
+            if (fieldConstraint instanceof SingleFieldConstraint) {
+                if (Objects.equals(((SingleFieldConstraint) fieldConstraint).getValue(), varName)) {
+                    return index + 1;
+                }
+            }
+            index++;
+        }
+        return -1;
+    }
+
+    private void doDelete(final BRLConditionColumn column) {
         if (column.getChildColumns().size() > 0) {
             final int iFirstColumnIndex = model.getExpandedColumns().indexOf(column.getChildColumns().get(0));
             for (int iColumnIndex = 0; iColumnIndex < column.getChildColumns().size(); iColumnIndex++) {
