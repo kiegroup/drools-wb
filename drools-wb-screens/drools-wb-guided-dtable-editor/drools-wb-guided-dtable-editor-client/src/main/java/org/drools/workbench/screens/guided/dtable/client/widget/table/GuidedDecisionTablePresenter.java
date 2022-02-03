@@ -811,8 +811,7 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
 
     @Override
     public Map<String, String> getValueListLookups(final BaseColumn column) {
-        final String[] dropDownItems = columnUtilities.getValueList(column);
-        return enumLoaderUtilities.convertDropDownData(dropDownItems);
+        return columnUtilities.getValueListLookups(column);
     }
 
     @Override
@@ -824,7 +823,10 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
                                                             factField,
                                                             this.dependentEnumsUtilities.getCurrentValueMap(context));
         enumLoaderUtilities.getEnums(enumDefinition,
-                                     callback,
+                                     result -> {
+                                         columnUtilities.addEnumLookUp(factType, factField, result);
+                                         callback.callback(result);
+                                     },
                                      this,
                                      () -> view.showBusyIndicator(CommonConstants.INSTANCE.RefreshingList()),
                                      () -> view.hideBusyIndicator());
@@ -1005,7 +1007,6 @@ public class GuidedDecisionTablePresenter implements GuidedDecisionTableView.Pre
                                                               column));
         callback.execute();
     }
-
 
     @Override
     public void onSort(final GridColumn gridColumn) {

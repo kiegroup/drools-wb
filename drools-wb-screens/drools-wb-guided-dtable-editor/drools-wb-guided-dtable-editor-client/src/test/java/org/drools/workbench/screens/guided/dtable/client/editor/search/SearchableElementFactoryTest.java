@@ -16,6 +16,8 @@
 
 package org.drools.workbench.screens.guided.dtable.client.editor.search;
 
+import java.util.HashMap;
+
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.drools.workbench.models.guided.dtable.shared.model.DTCellValue52;
 import org.drools.workbench.models.guided.dtable.shared.model.GuidedDecisionTable52;
@@ -55,7 +57,7 @@ public class SearchableElementFactoryTest {
         final GuidedDecisionTableModellerView.Presenter modeller = mock(GuidedDecisionTableModellerView.Presenter.class);
         final GuidedDecisionTable52 model = mock(GuidedDecisionTable52.class);
 
-        final GuidedDecisionTableSearchableElement element = factory.makeSearchableElement(row, column, cellValue52, null, model, modeller);
+        final GuidedDecisionTableSearchableElement element = factory.makeSearchableElement(row, column, cellValue52, null, model, new HashMap<>(), modeller);
 
         assertEquals(row, element.getRow());
         assertEquals(column, element.getColumn());

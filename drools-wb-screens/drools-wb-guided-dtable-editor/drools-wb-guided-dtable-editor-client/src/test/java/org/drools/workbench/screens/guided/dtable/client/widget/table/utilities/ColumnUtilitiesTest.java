@@ -16,6 +16,7 @@
 package org.drools.workbench.screens.guided.dtable.client.widget.table.utilities;
 
 import java.util.Arrays;
+import java.util.Map;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.assertj.core.api.Assertions;
@@ -144,6 +145,14 @@ public class ColumnUtilitiesTest {
         column.setValueList("a,1,1.1, ,-1, 123,456 , -789 ");
         final String[] valueList = utilities.getValueList(column);
         Assertions.assertThat(valueList).containsExactly("1", "-1", "123", "456", "-789");
+
+      final   Map<String, String> valueListLookups = utilities.getValueListLookups(column);
+        assertEquals(5, valueListLookups.size());
+        assertEquals("1",valueListLookups.get("1"));
+        assertEquals("-1",valueListLookups.get("-1"));
+        assertEquals("123",valueListLookups.get("123"));
+        assertEquals("456",valueListLookups.get("456"));
+        assertEquals("-789",valueListLookups.get("-789"));
     }
 
     @Test
@@ -153,6 +162,11 @@ public class ColumnUtilitiesTest {
         column.setValueList("1=One,2=Two");
         final String[] valueList = utilities.getValueList(column);
         Assertions.assertThat(valueList).containsExactly("1=One", "2=Two");
+
+        final   Map<String, String> valueListLookups = utilities.getValueListLookups(column);
+        assertEquals(2, valueListLookups.size());
+        assertEquals("One",valueListLookups.get("1"));
+        assertEquals("Two",valueListLookups.get("2"));
     }
 
     @Test
