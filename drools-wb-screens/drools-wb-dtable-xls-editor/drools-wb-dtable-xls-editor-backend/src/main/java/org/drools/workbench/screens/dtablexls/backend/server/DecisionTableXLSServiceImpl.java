@@ -22,7 +22,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
@@ -226,6 +230,37 @@ public class DecisionTableXLSServiceImpl
 
     @Override
     public String getSource(final Path path) {
+        final StringBuilder result = new StringBuilder();
+        final org.uberfire.java.nio.file.Path convert = Paths.convert(path);
+
+        final Properties properties = getProperties(convert);
+        if (properties.isEmpty()) {
+            String str = loadSingle(path);
+            result.append(str);
+        } else {
+            final String sheets = (String) properties.get("sheets");
+            for (String sheetName : Arrays.stream(sheets.split(",")).map(x -> x.trim()).collect(Collectors.toCollection(ArrayList::new))) {
+
+                final String compile = loadSheet(convert, sheetName);
+                result.append(compile);
+            }
+        }
+
+        return result.toString();
+    }
+
+    private String loadSheet(final org.uberfire.java.nio.file.Path convert, final String sheetName) {
+        try (final InputStream inputStream = ioService.newInputStream(convert,
+                                                                      StandardOpenOption.READ)) {
+            final SpreadsheetCompiler compiler = new SpreadsheetCompiler();
+
+            return compiler.compile(inputStream, sheetName);
+        } catch (Exception e) {
+            throw new SourceGenerationFailedException(e.getMessage());
+        }
+    }
+
+    private String loadSingle(final Path path) {
         try (final InputStream inputStream = ioService.newInputStream(Paths.convert(path),
                                                                       StandardOpenOption.READ)) {
             final SpreadsheetCompiler compiler = new SpreadsheetCompiler();
@@ -233,6 +268,22 @@ public class DecisionTableXLSServiceImpl
         } catch (Exception e) {
             throw new SourceGenerationFailedException(e.getMessage());
         }
+    }
+
+    private Properties getProperties(final org.uberfire.java.nio.file.Path path) {
+
+        final org.uberfire.java.nio.file.Path pathToProperties = path.getParent().resolve(path.getFileName() + ".properties");
+        final Properties properties = new Properties();
+        if (ioService.exists(pathToProperties)) {
+            try (final InputStream inputStream = ioService.newInputStream(pathToProperties,
+                                                                          StandardOpenOption.READ)) {
+                properties.load(inputStream);
+            } catch (IOException e) {
+                throw new SourceGenerationFailedException(e.getMessage());
+            }
+        }
+
+        return properties;
     }
 
     @Override
