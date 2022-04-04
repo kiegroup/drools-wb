@@ -1195,12 +1195,8 @@
 
     <!-- Required for PMML integration. These are provided/optional scope in kie-dmn-core -->
     <dependency>
-      <groupId>com.sun.xml.bind</groupId>
-      <artifactId>jaxb-impl</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.sun.xml.bind</groupId>
-      <artifactId>jaxb-core</artifactId>
+      <groupId>org.glassfish.jaxb</groupId>
+      <artifactId>jaxb-runtime</artifactId>
     </dependency>
 
     <!-- PMML Text Editor -->
@@ -1456,7 +1452,7 @@
     </dependency>
 
     <dependency>
-      <groupId>com.sun.xml.bind</groupId>
+      <groupId>org.glassfish.jaxb</groupId>
       <artifactId>jaxb-xjc</artifactId>
       <scope>provided</scope>
     </dependency>
