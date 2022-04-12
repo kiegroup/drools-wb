@@ -86,7 +86,6 @@ public class ScenarioSimulationServiceImplTest {
     private static final String ORG_KIE = "org.kie";
     private static final String ORG_JBPM = "org.jbpm";
 
-
     @Mock
     protected KieServiceOverviewLoader overviewLoaderMock;
     @Mock
@@ -446,6 +445,7 @@ public class ScenarioSimulationServiceImplTest {
         GAV scesimApiDependency = new GAV(ORG_DROOLS, "drools-scenario-simulation-api", null);
         GAV scesimBackendDependency = new GAV(ORG_DROOLS, "drools-scenario-simulation-backend", null);
         GAV droolsCompilerDependency = new GAV(ORG_DROOLS, "drools-compiler", null);
+        GAV dtableDependency = new GAV(ORG_DROOLS, "drools-decisiontables", null);
         GAV gtableDependency = new GAV(ORG_DROOLS, "drools-workbench-models-guided-dtable", null);
         GAV jbpmBpmn2Dependency = new GAV(ORG_JBPM, "jbpm-bpmn2", null);
         GAV dmnFeelDependency = new GAV(ORG_KIE, "kie-dmn-feel", null);
@@ -454,11 +454,12 @@ public class ScenarioSimulationServiceImplTest {
 
         List<GAV> dependencies = service.getDependencies(null);
 
-        assertEquals(8, dependencies.size());
+        assertEquals(9, dependencies.size());
         assertTrue(dependencies.contains(scesimApiDependency));
         assertTrue(dependencies.contains(scesimBackendDependency));
         assertTrue(dependencies.contains(droolsCompilerDependency));
         assertTrue(dependencies.contains(gtableDependency));
+        assertTrue(dependencies.contains(dtableDependency));
         assertTrue(dependencies.contains(jbpmBpmn2Dependency));
         assertTrue(dependencies.contains(dmnFeelDependency));
         assertTrue(dependencies.contains(dmnApi2Dependency));
