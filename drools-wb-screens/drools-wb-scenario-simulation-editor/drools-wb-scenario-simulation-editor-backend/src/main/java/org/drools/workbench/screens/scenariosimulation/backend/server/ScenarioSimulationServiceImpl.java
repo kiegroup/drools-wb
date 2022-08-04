@@ -457,6 +457,8 @@ public class ScenarioSimulationServiceImpl
         return Arrays.asList(new GAV(ORG_DROOLS, "drools-scenario-simulation-api", kieVersion),
                              new GAV(ORG_DROOLS, "drools-scenario-simulation-backend", kieVersion),
                              new GAV(ORG_DROOLS, "drools-compiler", kieVersion),
+                             // needed to compile xml decision table
+                             new GAV(ORG_DROOLS, "drools-decisiontables", kieVersion),
                              // needed to compile guided decision table
                              new GAV(ORG_DROOLS, "drools-workbench-models-guided-dtable", kieVersion),
                              // needed in case of BPMN file in the project, but not used directly by scesim
