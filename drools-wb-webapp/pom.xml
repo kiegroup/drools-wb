@@ -1046,6 +1046,20 @@
       <scope>provided</scope>
     </dependency>
 
+    <!-- Stunner JBPM2 Integration need -->
+    <dependency>
+      <groupId>org.kie.workbench.stunner</groupId>
+      <artifactId>kie-wb-common-stunner-jbpm-designer-integration-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.kie.workbench.stunner</groupId>
+      <artifactId>kie-wb-common-stunner-jbpm-designer-integration-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.kie.workbench.stunner</groupId>
+      <artifactId>kie-wb-common-stunner-jbpm-designer-integration-shared</artifactId>
+    </dependency>
+
     <!-- Stunner Project integration -->
     <dependency>
       <groupId>org.kie.workbench.stunner</groupId>
@@ -1782,6 +1796,11 @@
             <compileSourcesArtifact>org.kie.workbench.stunner:kie-wb-common-stunner-widgets</compileSourcesArtifact>
             <compileSourcesArtifact>org.kie.workbench.stunner:kie-wb-common-stunner-forms-api</compileSourcesArtifact>
             <compileSourcesArtifact>org.kie.workbench.stunner:kie-wb-common-stunner-forms-client</compileSourcesArtifact>
+
+            <!-- Stunner JBPM2 Integration -->
+            <compileSourcesArtifact>org.kie.workbench.stunner:kie-wb-common-stunner-jbpm-designer-integration-client</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.stunner:kie-wb-common-stunner-jbpm-designer-integration-api</compileSourcesArtifact>
+            <compileSourcesArtifact>org.kie.workbench.stunner:kie-wb-common-stunner-jbpm-designer-integration-shared</compileSourcesArtifact>
 
             <!-- Stunner Project integration -->
             <compileSourcesArtifact>org.kie.workbench.stunner:kie-wb-common-stunner-project-api</compileSourcesArtifact>
