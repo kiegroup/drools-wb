@@ -151,6 +151,21 @@ public class FactModelTreeTest {
     }
 
     @Test
+    public void ofPMML() {
+        FactModelTree factModelTree = FactModelTree.ofPMML(FACT_NAME, IMPORT_PREFIX, Collections.emptyMap(), FACT_TYPE, FactModelTree.Type.INPUT);
+        assertEquals(FACT_NAME, factModelTree.getFactName());
+        assertEquals(FACT_TYPE, factModelTree.getTypeName());
+        assertEquals("", factModelTree.getFullPackage());
+        assertEquals(FACT_TYPE, factModelTree.getFullTypeName());
+        assertEquals(FACT_NAME, factModelTree.getFactName());
+        assertEquals(0, factModelTree.getSimpleProperties().size());
+        assertEquals(0, factModelTree.getGenericTypesMap().size());
+        assertEquals(FactModelTree.Type.INPUT, factModelTree.getType());
+        assertFalse(factModelTree.isSimple());
+        assertEquals(IMPORT_PREFIX, factModelTree.getImportPrefix());
+    }
+
+    @Test
     public void ofSimpleDMN() {
         FactModelTree factModelTree = FactModelTree.ofSimpleDMN(FACT_NAME, IMPORT_PREFIX, SIMPLE_PROPERTY_TYPE, Collections.emptyMap(), FACT_TYPE, FactModelTree.Type.INPUT);
         assertEquals(FACT_NAME, factModelTree.getFactName());

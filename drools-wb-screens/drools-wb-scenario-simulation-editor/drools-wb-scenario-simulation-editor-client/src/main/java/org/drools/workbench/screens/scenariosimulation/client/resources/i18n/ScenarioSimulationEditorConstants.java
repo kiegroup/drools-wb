@@ -256,6 +256,12 @@ public interface ScenarioSimulationEditorConstants
 
     String chooseValidDMNAsset();
 
+    String choosePMML();
+
+    String chooseValidPMMLAsset();
+
+    String insertPMMLModelName();
+
     String removeCollectionMainTitle();
 
     String removeCollectionMainQuestion();

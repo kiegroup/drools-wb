@@ -23,10 +23,12 @@ import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import org.drools.workbench.screens.scenariosimulation.client.dropdown.ScenarioSimulationDropdown;
 import org.drools.workbench.screens.scenariosimulation.client.resources.i18n.ScenarioSimulationEditorConstants;
 import org.drools.workbench.screens.scenariosimulation.service.ScenarioSimulationService;
 import org.gwtbootstrap3.client.ui.FormLabel;
+import org.gwtbootstrap3.client.ui.Input;
 import org.gwtbootstrap3.client.ui.constants.ElementTags;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.client.ui.constants.Styles;
@@ -38,12 +40,16 @@ import org.kie.workbench.common.widgets.client.assets.dropdown.KieAssetsDropdown
 public class TitledAttachmentFileWidget extends Composite {
 
     protected FlowPanel fields = GWT.create(FlowPanel.class);
+    protected VerticalPanel pmmlFields = GWT.create(VerticalPanel.class);
     protected Div divElement = GWT.create(Div.class);
     protected FormLabel titleLabel = GWT.create(FormLabel.class);
     protected Span errorLabel = GWT.create(Span.class);
+    protected Span pmmlModelLabel = GWT.create(Span.class);
+    protected Input pmmlModelText = GWT.create(Input.class);
     protected ScenarioSimulationDropdown scenarioSimulationDropdown;
     protected Caller<ScenarioSimulationService> scenarioSimulationService;
     protected String selectedPath;
+    protected String selectedType = "dmn";
 
     public TitledAttachmentFileWidget(String title,
                                       Caller<ScenarioSimulationService> scenarioSimulationService, ScenarioSimulationDropdown scenarioSimulationDropdown) {
@@ -59,37 +65,81 @@ public class TitledAttachmentFileWidget extends Composite {
         fields.add(divElement);
         fields.add(this.scenarioSimulationDropdown.asWidget());
         fields.add(this.errorLabel);
+        pmmlModelLabel.setText(ScenarioSimulationEditorConstants.INSTANCE.insertPMMLModelName());
+        pmmlFields.add(this.pmmlModelLabel);
+        pmmlFields.add(this.pmmlModelText);
+        fields.add(pmmlFields);
+        pmmlFields.setVisible(false);
         initWidget(fields);
         scenarioSimulationDropdown.init();
         scenarioSimulationDropdown.registerOnChangeHandler(() -> {
             final Optional<KieAssetsDropdownItem> value = scenarioSimulationDropdown.getValue();
             selectedPath = value.map(KieAssetsDropdownItem::getValue).orElse(null);
-            validate();
+            validate(selectedType);
         });
     }
 
-    public void clearStatus() {
-        updateAssetList();
-        errorLabel.setText(null);
-        selectedPath = null;
+    public void setVisible(String type, boolean visible) {
+        selectedType = type;
+        setVisible(visible);
+        if (visible) {
+            switch (selectedType) {
+                case "dmn":
+                    titleLabel.setText(ScenarioSimulationEditorConstants.INSTANCE.chooseDMN());
+                    errorLabel.setText(ScenarioSimulationEditorConstants.INSTANCE.chooseValidDMNAsset());
+                    break;
+                case "pmml":
+                    titleLabel.setText(ScenarioSimulationEditorConstants.INSTANCE.choosePMML());
+                    errorLabel.setText(ScenarioSimulationEditorConstants.INSTANCE.chooseValidPMMLAsset());
+                    break;
+                default:
+                    errorLabel.setText("");
+            }
+            pmmlFields.setVisible(selectedType.equals("pmml"));
+        }
+        setVisible(this.getElement(), visible);
     }
 
-    public void updateAssetList() {
-        scenarioSimulationDropdown.loadAssets();
+    public void clearStatus() {
+        updateAssetList("*");
+        errorLabel.setText(null);
+        selectedPath = null;
+        pmmlModelText.setText(null);
+    }
+
+    public void updateAssetList(String type) {
+        scenarioSimulationDropdown.loadAssets(type);
     }
 
     public String getSelectedPath() {
         return selectedPath;
     }
 
-    public boolean validate() {
-        boolean toReturn = selectedPath != null && !selectedPath.isEmpty();
-        if (!toReturn) {
-            errorLabel.setText(ScenarioSimulationEditorConstants.INSTANCE.chooseValidDMNAsset());
-        } else {
-            errorLabel.setText(null);
+    public String getModelName() {
+        return pmmlModelText.getText();
+    }
+
+    public boolean validate(String type) {
+        boolean isPathSelected = selectedPath != null && !selectedPath.isEmpty();
+        String toSet = "";
+        if (!isPathSelected) {
+            switch (type) {
+                case "dmn":
+                    toSet = ScenarioSimulationEditorConstants.INSTANCE.chooseValidDMNAsset();
+                    break;
+                case "pmml":
+                    toSet = ScenarioSimulationEditorConstants.INSTANCE.chooseValidPMMLAsset();
+                    break;
+                default:
+                    toSet = "";
+            }
         }
-        return toReturn;
+        boolean isModelNameSet = !type.equals("pmml") || !pmmlModelText.getText().isEmpty();
+        if (!isModelNameSet) {
+            toSet += " " + ScenarioSimulationEditorConstants.INSTANCE.insertPMMLModelName();
+        }
+        errorLabel.setText(toSet);
+        return isPathSelected && isModelNameSet;
     }
 
     /**

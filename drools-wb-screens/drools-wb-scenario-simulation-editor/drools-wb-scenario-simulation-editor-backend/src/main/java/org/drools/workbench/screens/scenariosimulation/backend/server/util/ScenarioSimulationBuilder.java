@@ -35,12 +35,17 @@ public class ScenarioSimulationBuilder {
     @Inject
     protected DMNSimulationSettingsCreationStrategy dmnSimulationCreationStrategy;
 
+    @Inject
+    protected PMMLSimulationSettingsCreationStrategy pmmlSimulationCreationStrategy;
+
     public Simulation createSimulation(Path context, ScenarioSimulationModel.Type type, String value) {
         switch (type) {
             case RULE:
                 return ruleSimulationCreationStrategy.createSimulation(context, value);
             case DMN:
                 return dmnSimulationCreationStrategy.createSimulation(context, value);
+            case PMML:
+                return pmmlSimulationCreationStrategy.createSimulation(context, value);
             default:
                 throw new IllegalStateException(ERROR_MESSAGE + type);
         }
@@ -52,6 +57,8 @@ public class ScenarioSimulationBuilder {
                 return ruleSimulationCreationStrategy.createBackground(context, value);
             case DMN:
                 return dmnSimulationCreationStrategy.createBackground(context, value);
+            case PMML:
+                return pmmlSimulationCreationStrategy.createBackground(context, value);
             default:
                 throw new IllegalStateException(ERROR_MESSAGE + type);
         }
@@ -63,6 +70,8 @@ public class ScenarioSimulationBuilder {
                 return ruleSimulationCreationStrategy.createSettings(context,value);
             case DMN:
                 return dmnSimulationCreationStrategy.createSettings( context,value);
+            case PMML:
+                return pmmlSimulationCreationStrategy.createSettings(context, value);
             default:
                 throw new IllegalStateException(ERROR_MESSAGE + type);
         }

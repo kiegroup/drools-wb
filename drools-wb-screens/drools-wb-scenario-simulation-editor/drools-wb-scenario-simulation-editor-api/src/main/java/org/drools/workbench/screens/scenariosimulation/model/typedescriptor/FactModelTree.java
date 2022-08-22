@@ -16,6 +16,7 @@
 package org.drools.workbench.screens.scenariosimulation.model.typedescriptor;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,7 @@ public class FactModelTree {
     public enum Type {
         INPUT,
         DECISION,
+        PREDICTION,
         UNDEFINED
     }
 
@@ -118,6 +120,18 @@ public class FactModelTree {
     }
 
     /**
+     * Static factory method to be used in PMML context.
+     * @param factName
+     * @param simpleProperties
+     * @param typeName
+     * @param type
+     * @return
+     */
+    public static FactModelTree ofPMML(String factName, String importPrefix, Map<String, PropertyTypeName> simpleProperties, String typeName, Type type) {
+        return new FactModelTree(factName, "", simpleProperties, Collections.emptyMap(), type, typeName, importPrefix);
+    }
+
+    /**
      * Static factory method to be used in DMN context, to create a Simple Type FactModelTree.
      * @param factName
      * @param simplePropertyType
@@ -130,6 +144,22 @@ public class FactModelTree {
         Map<String, FactModelTree.PropertyTypeName> simpleProperties = new HashMap<>();
         simpleProperties.put(VALUE, new FactModelTree.PropertyTypeName(simplePropertyType));
         FactModelTree toReturn = new FactModelTree(factName, "", simpleProperties, genericTypeInfoMap, type, typeName, importPrefix);
+        toReturn.setSimple(true);
+        return toReturn;
+    }
+
+    /**
+     * Static factory method to be used in DMN context, to create a Simple Type FactModelTree.
+     * @param factName
+     * @param simplePropertyType
+     * @param typeName
+     * @param type
+     * @return
+     */
+    public static FactModelTree ofSimplePMML(String factName, String simplePropertyType, String typeName, Type type) {
+        Map<String, FactModelTree.PropertyTypeName> simpleProperties = new HashMap<>();
+        simpleProperties.put(VALUE, new FactModelTree.PropertyTypeName(simplePropertyType));
+        FactModelTree toReturn = new FactModelTree(factName, "", simpleProperties, Collections.emptyMap(), type, typeName, "");
         toReturn.setSimple(true);
         return toReturn;
     }
@@ -273,7 +303,7 @@ public class FactModelTree {
     public String toString() {
         return "FactModelTree{" +
                 "factName='" + factName + '\'' +
-                "typeName='" + typeName + '\'' +
+                ", typeName='" + typeName + '\'' +
                 ", simpleProperties=" + simpleProperties +
                 ", expandableProperties=" + expandableProperties +
                 '}';

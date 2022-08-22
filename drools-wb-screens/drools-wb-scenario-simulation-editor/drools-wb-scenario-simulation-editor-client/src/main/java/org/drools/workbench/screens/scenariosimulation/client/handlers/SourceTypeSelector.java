@@ -40,25 +40,25 @@ public class SourceTypeSelector extends VerticalPanel implements ValueChangeHand
 
     @Override
     public void onValueChange(ValueChangeEvent<Boolean> event) {
-        final boolean dmnSelected = isDMNSelected();
-        uploadWidget.setVisible(dmnSelected);
-        if (dmnSelected) {
-            uploadWidget.updateAssetList();
+        final boolean dmnOrPmmlSelected = isDMNOrPMMLSelected();
+        uploadWidget.setVisible(getSelectedType().name().toLowerCase(), dmnOrPmmlSelected);
+        if (dmnOrPmmlSelected) {
+            uploadWidget.updateAssetList(getSelectedType().name().toLowerCase());
         }
     }
 
     public boolean validate() {
-        if (isDMNSelected()) {
-            return uploadWidget.validate();
+        if (isDMNOrPMMLSelected()) {
+            return uploadWidget.validate(getSelectedType().name().toLowerCase());
         } else {
             return true;
         }
     }
 
-    public boolean isDMNSelected() {
+    public boolean isDMNOrPMMLSelected() {
         return radioButtonList.stream()
                 .filter(CheckBox::getValue)
-                .anyMatch(radioButton -> radioButton.getText().equalsIgnoreCase(ScenarioSimulationModel.Type.DMN.name()));
+                .anyMatch(radioButton -> radioButton.getText().equalsIgnoreCase(ScenarioSimulationModel.Type.DMN.name()) || radioButton.getText().equalsIgnoreCase(ScenarioSimulationModel.Type.PMML.name()));
     }
 
     /**
@@ -85,6 +85,6 @@ public class SourceTypeSelector extends VerticalPanel implements ValueChangeHand
             radioButtonList.add(radioButton);
             add(radioButton);
         }
-        uploadWidget.setVisible(isDMNSelected());
+        uploadWidget.setVisible(getSelectedType().name().toLowerCase(), isDMNOrPMMLSelected());
     }
 }
