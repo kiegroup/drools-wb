@@ -1255,12 +1255,6 @@
 
     <dependency>
       <groupId>org.uberfire</groupId>
-      <artifactId>uberfire-metadata-backend-elasticsearch</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.uberfire</groupId>
       <artifactId>uberfire-metadata-backend-infinispan</artifactId>
       <scope>runtime</scope>
     </dependency>
