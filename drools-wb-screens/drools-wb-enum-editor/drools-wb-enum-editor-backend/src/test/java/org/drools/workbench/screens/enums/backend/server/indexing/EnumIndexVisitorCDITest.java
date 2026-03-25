@@ -18,6 +18,7 @@ package org.drools.workbench.screens.enums.backend.server.indexing;
 
 import java.util.Set;
 
+import org.assertj.core.api.Assertions;
 import org.guvnor.test.CDITestSetup;
 import org.junit.After;
 import org.junit.Before;
