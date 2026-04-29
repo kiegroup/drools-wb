@@ -129,6 +129,11 @@
         <artifactId>powermock-core</artifactId>
         <version>${version.org.powermock}</version>
       </dependency>
+      <dependency>
+        <groupId>org.codehaus.plexus</groupId>
+        <artifactId>plexus-utils</artifactId>
+        <version>3.6.1</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
